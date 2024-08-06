@@ -38,12 +38,8 @@ route::get('/logout',[LoginController::class,'logout'])->name('logout');
 
 
 
-Route::group(['middleware' => ['auth','ceklevel:admin,guru,siswa']], function (){
+Route::group(['middleware' => ['auth','ceklevel:admin,bendahara']], function (){
     route::get('/home',[HomeController::class,'index'])->name('home');
-    // Route::get('/home', [HomeController::class, 'home'])->name('home');
-Route::get('/jumlah_suara', [HomeController::class, 'showJumlahSuara'])->name('jumlah_suara');
-    
-    // route::get('/home',[HomeController::class,'penghargaan'])->name('home');
     
 });
 

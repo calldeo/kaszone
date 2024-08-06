@@ -10,7 +10,7 @@
 		</div>
 		
 		<ul class="metismenu" id="menu">
-			@if (auth()->user()->level=="guru"|| auth()->user()->level == "admin"|| auth()->user()->level == "siswa")
+			@if (auth()->user()->level=="bendahara"|| auth()->user()->level == "admin"|| auth()->user()->level == "siswa")
 			<li class="nav-label first"></li>
 			<li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
 					<i class="flaticon-144-layout"></i>
