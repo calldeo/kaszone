@@ -4,8 +4,7 @@
 
 <head>
     @include('template.headerr')
-    <title>KasZone | {{auth()->user()->level}} | Add</title>
-
+    <title>E-vote | {{auth()->user()->level}} | Edit</title>
 </head>
 <body>
 
@@ -71,15 +70,9 @@
                     <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="javascript:void(0)">Form</a></li>
-                            <li class="breadcrumb-item active"><a href="javascript:void(0)">Bendahara</a></li>
+                            <li class="breadcrumb-item active"><a href="javascript:void(0)">Validation</a></li>
                         </ol>
                     </div>
-                        @if(session('error'))
-                            <div class="alert alert-danger alert-dismissible fade show">
-                                <strong>Error!</strong> {{ session('error') }}
-                                <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span></button>
-                            </div>
-                            @endif
                 </div>
                 <!-- row -->
                 <div class="row">
@@ -87,45 +80,42 @@
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Add</h4>
+                                <h4 class="card-title">Edit Data Kategori</h4>
                             </div>
                             <div class="card-body">
                                 <div class="basic-form">
-                                    <form class="form-valide-with-icon" action="/kategori/store" method="post" enctype="multipart/form-data">
+                                    <form action="/kategori/{{ $category->id }}" method="POST" enctype="multipart/form-data">
+                                        @method('put')
                                         @csrf
-                                        <div class="form-group">
-                                            <label class="text-label">Name *</label>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
-                                                </div>
-                                                <input type="text" class="form-control" id="val-username1" name="name" placeholder="Enter a name.." value="{{old('name')}}"required>
-                                            </div>
-                                            @error('name')
-                                            <span class="mt-4 text-danger">{{$message}}</span>
-                                            @enderror
+                                       <div class="form-group">
+                                    <label class="text-label">Name *</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"> <i class="fa fa-user"></i> </span>
                                         </div>
-                                           <div class="form-group">
-                                            <label class="text-label">Description *</label>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
-                                                </div>
-                                                <input type="text" class="form-control" id="val-username1" name="description" placeholder="Enter a description.." value="{{old('description')}}"required>
-                                            </div>
-                                            @error('description')
-                                            <span class="mt-4 text-danger">{{$message}}</span>
-                                            @enderror
+                                        <input type="text" class="form-control" id="val-username1" name="name" value="{{ $category->name }}" placeholder="Enter a name.." required>
+                                    </div>
+                                </div>
+                                 <div class="form-group">
+                                    <label class="text-label">Description *</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"> <i class="fa fa-user"></i> </span>
                                         </div>
+                                        <input type="text" class="form-control" id="val-username1" name="description" value="{{ $category->description }}" placeholder="Enter a name.." required>
+                                    </div>
+                                </div>
+                                   
+                              
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input id="checkbox1" class="form-check-input" type="checkbox" required>
+                                <label for="checkbox1" class="form-check-label">Check me out *</label>
+                            </div>
+                        </div>
 
-                                        <div class="form-group">
-                                            <div class="form-check">
-                                                <input id="checkbox1" class="form-check-input" type="checkbox" required>
-                                                <label for="checkbox1" class="form-check-label">Check me out *</label>
-                                            </div>
-                                        </div>
                                         <button type="submit" class="btn mr-2 btn-primary">Submit</button>
-                                         <button type="submit" class="btn btn-light" onclick="redirectToKategori()">Cancel</button>
+                                          <button type="submit" class="btn btn-light" onclick="redirectToKategori()">Cancel</button>
                                     </form>
                                 </div>
                             </div>
@@ -171,7 +161,4 @@
     <!-- Required vendors -->
  @include('template.scripts')
 </body>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
-
-
 </html>

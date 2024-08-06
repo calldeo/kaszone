@@ -91,7 +91,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="basic-form">
-                                    <form class="form-valide-with-icon" action="/guruu/store" method="post" enctype="multipart/form-data">
+                                    <form class="form-valide-with-icon" action="/bendahara/store" method="post" enctype="multipart/form-data">
                                         @csrf
                                         <div class="form-group">
                                             <label class="text-label">Name *</label>
@@ -105,10 +105,55 @@
                                             <span class="mt-4 text-danger">{{$message}}</span>
                                             @enderror
                                         </div>
+                                          <div class="form-group">
+                                            <label class="text-label">Email *</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                                                </div>
+                                                <input type="email" class="form-control" id="val-username1" name="email" placeholder="Enter a email.."  value="{{old('email')}}" required>
+                                            </div>
+                                            @error('email')
+                                            <span class="mt-4 text-danger">{{$message}}</span>
+                                            @enderror
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="text-label">Password *</label>
+                                            <div class="input-group transparent-append">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                                                </div>
+                                                <input type="password" class="form-control" id="dz-password" name="password" placeholder="Choose a safe one..">
+                                                <div class="input-group-append show-pass ">
+                                                    <span class="input-group-text "> 
+                                                        <i class="fa fa-eye-slash"></i>
+                                                        <i class="fa fa-eye"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            @error('password')
+                                            <span class="mt-4 text-danger">{{$message}}</span>
+                                            @enderror
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Select list (select one): *</label>
+                                            <select class="form-control default-select" id="sel1" name="level" required>
+                                                <option  value="">--PILIH LEVEL--</option>
+                                                <option  value="bendahara">Bendahara</option>
+                                                {{-- <option  value="guru">Guru</option>
+                                                <option  value="siswa">Siswa</option> --}}
+                                            </select>
+                                            @error('level')
+                                            <span class="mt-4 text-danger">{{$message}}</span>
+                                            @enderror
+                                        </div>
+                                        <div class="form-group">
                                             <div class="form-check">
                                                 <input id="checkbox1" class="form-check-input" type="checkbox" required>
                                                 <label for="checkbox1" class="form-check-label">Check me out *</label>
                                             </div>
+                                        </div>
+                                    
                                         </div>
                                         <button type="submit" class="btn mr-2 btn-primary">Submit</button>
                                          <button type="submit" class="btn btn-light" onclick="redirectToBendahara()">Cancel</button>

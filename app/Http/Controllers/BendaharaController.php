@@ -12,6 +12,7 @@ use Carbon\Carbon;
 
 class BendaharaController extends Controller
 {
+    
     public function bendahara(Request $request)
     {
 
@@ -21,6 +22,10 @@ class BendaharaController extends Controller
         // Meneruskan data ke tampilan
         return view('halaman.bendahara', compact('users'));
     }
+
+    
+
+
 public function destroy($id)
 {
     try {
@@ -159,15 +164,15 @@ public function update(Request $request, $id)
     }
 
 
-    public function guruimportexcel(Request $request) {
+    public function bendaharaimportexcel(Request $request) {
 
         // DB::table('users')->where('level','guru')->delete();
-        User::query()->where('level','guru')->delete();
+        User::query()->where('level','bendahara')->delete();
         $file=$request->file('file');
         $namafile = $file->getClientOriginalName();
-        $file->move('DataGuru', $namafile);
+        $file->move('DataBendahara', $namafile);
 
-        Excel::import(new UserImport, public_path('/DataGuru/'.$namafile));
+        Excel::import(new UserImport, public_path('/DataBendahara/'.$namafile));
         return redirect('/bendahara')->with('success', 'Data Berhasil Ditambahkan');
         
     }

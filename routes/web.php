@@ -48,11 +48,18 @@ Route::group(['middleware' => ['auth','ceklevel:admin,bendahara']], function (){
 
 
 
+route::get('/table',[AdminController::class,'table'])->name('table');
+route::get('/tab',[AdminController::class,'tab'])->name('tab');
+route::get('/teb',[AdminController::class,'teb'])->name('teb');
+
+
+
 
 
 route::get('/admin/search',[AdminController::class,'search'])->name('admin.search');
 route::get('/admin',[AdminController::class,'admin'])->name('admin');
-Route::delete('/admin/{id}', [AdminController::class,'destroy'])->name('admin.destroy');
+// Route::delete('/admin/{id}', [AdminController::class,'destroy'])->name('admin.destroy');
+Route::delete('/admin/{id}/destroy', [AdminController::class, 'destroy'])->name('admin.destroy');
 route::get('/add_admin',[AdminController::class,'add_admin'])->name('add_admin');
 Route::post('/admin/store',[AdminController::class,'store']);
 Route::get('/admin/{id}/edit_admin  ',[AdminController::class,'edit']);
@@ -60,12 +67,13 @@ Route::put('/admin/{id}',[AdminController::class,'update']);
 
 
 
-Route::post('/importguru', [BendaharaController::class, 'guruimportexcel'])->name('import-guru');
+Route::post('/importbendahara', [BendaharaController::class, 'bendaharaimportexcel'])->name('import-bendahara');
 route::get('/guru/search',[BendaharaController::class,'search'])->name('guru.search');
 route::get('/bendahara',[BendaharaController::class,'bendahara'])->name('bendahara');
-Route::delete('/guruu/{id}', [BendaharaController::class,'destroy'])->name('guruu.destroy');
+// Route::delete('/bendahara/{id}', [BendaharaController::class,'destroy'])->name('bendahara.destroy');
+Route::delete('/bendahara/{id}/destroy', [BendaharaController::class, 'destroy'])->name('bendahara.destroy');
 route::get('/add_bendahara',[BendaharaController::class,'add_bendahara'])->name('add_bendahara');
-Route::post('/guruu/store',[BendaharaController::class,'store']);
+Route::post('/bendahara/store',[BendaharaController::class,'store']);
 Route::get('/bendahara/{id}/edit_bendahara  ',[BendaharaController::class,'edit']);
 Route::put('/guruu/{id}',[BendaharaController::class,'update']);
 
@@ -85,6 +93,12 @@ Route::put('/siswaa/{id}',[SiswaaController::class,'update']);
 Route::get('/kategori', [CategoryController::class, 'index']);
 route::get('/add_kategori',[CategoryController::class,'add_kategori'])->name('add_kategori');
 Route::post('/kategori/store',[CategoryController::class,'store']);
+Route::delete('/kategori/{id}', [CategoryController::class,'destroy'])->name('kategori.destroy');
+Route::get('/kategori/{id}/edit_kategori  ',[CategoryController::class,'edit']);
+Route::put('/kategori/{id}',[CategoryController::class,'update']);
+Route::post('/importkategori', [CategoryController::class, 'kategoriimportexcel'])->name('import-kategori');
+
+
 // Route::get('/categories/{id}', [CategoryController::class, 'show']);
 // Route::post('/categories', [CategoryController::class, 'store']);
 // Route::put('/categories/{id}', [CategoryController::class, 'update']);

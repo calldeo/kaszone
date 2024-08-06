@@ -33,9 +33,9 @@
     }
 	</script>
     <script>
-    function redirectToSiswa() {
+    function redirectToKategori() {
         // Ganti URL dengan URL halaman admin yang diinginkan
-        window.location.href = "/siswaa";
+        window.location.href = "/kategori";
     }
 	</script>
 	

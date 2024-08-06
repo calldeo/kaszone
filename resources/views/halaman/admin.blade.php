@@ -43,11 +43,11 @@
                         <div class="card-header">
                             <h4 class="card-title">Data Admin</h4>
                             <div class="text-right">
-                          <div class="input-group search-area right d-lg-inline-flex d-none">
+                          {{-- <div class="input-group search-area right d-lg-inline-flex d-none">
                             <form id="searchForm">
                                 <input id="searchInput" type="text" class="form-control" placeholder="Cari sesuatu di sini..." name="query">
                             </form>
-                          </div>
+                          </div> --}}
                     
                     <a href="/add_admin" class="btn btn-success" title="Add">
                         <i class="fa fa-plus"></i>
@@ -76,6 +76,7 @@
                                 <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span></button>
                             </div>
                             @endif
+                            <link href="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.css" rel="stylesheet">
                             <div class="table-responsive">
                                 <table id="adminTable" class="table table-responsive-md">
                                     <thead>
@@ -86,14 +87,14 @@
                                                     <label class="custom-control-label" for="checkAll"></label>
                                                 </div>
                                             </th>
-                                            <th><strong>ID</strong></th>
-                                            <th><strong>Nama/Email</strong></th>
+                                            <th><strong>Nama</strong></th>
+                                            <th><strong>Email</strong></th>
                                             <th><strong>Level</strong></th>
                                             {{-- <th><strong>Status</strong></th> --}}
-                                            <th style="text-align: center"><strong>Option</strong></th>
+                                            <th><strong>Option</strong></th>
                                         </tr>
                                     </thead>
-                                    <tbody  id="adminTableBody">
+                                    {{-- <tbody  id="adminTableBody">
                                         @foreach($users as $g)
                                         @if($g->level == 'admin')
                                         <tr>
@@ -116,7 +117,7 @@
                                                 </div>
                                             </td>
                                             <td><span class="badge badge-lg badge-secondary light">{{$g->level}}</span></td>
-                                           
+                                            --}}
 {{--                                                 
                                             <td>
                                                 @if($g->status_pemilihan == 'Belum Memilih')
@@ -127,7 +128,7 @@
                                                     <i class="fa fa-circle text-success mr-1"></i>Sudah Memilih</div>
                                                 @endif
                                             </td>                                             --}}
-                                            <td class="text-align: left;">
+                                            {{-- <td class="text-align: left;">
                                                 <div class="d-flex justify-content-center">
                                                 <form id="editForm_{{ $g->id }}" action="/admin/{{ $g->id }}/edit_admin" method="GET">
                                                     <button type="submit" class="btn btn-warning shadow btn-xs sharp"><i class="fa fa-pencil"></i></button>
@@ -145,12 +146,12 @@
                                         </tr>
                                         @endif
                                         @endforeach
-                                    </tbody>
+                                    </tbody> --}}
                                 </table>
                             </div>
                         </div>
                                <div class="d-flex justify-content-end">
-                    {{ $users->links() }}
+                    {{-- {{ $users->links() }} --}}
                 </div>
                     </div>
                 </div>
@@ -273,7 +274,9 @@
         });
     </script>
 
-
+<input type="hidden" id="table-url" value="{{ route('table') }}">
+<script src="{{ asset('main.js') }}"></script>
+<script src="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.js"></script>
 
 
 </body>
