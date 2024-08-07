@@ -55,7 +55,13 @@
 				</a>
 			   
 			</li>
-			<li><a  href="/siswaa" aria-expanded="false">
+			<li><a  href="/pemasukan" aria-expanded="false">
+					<i class="flaticon-044-file"></i>
+					<span class="nav-text">Data Pemasukan</span>
+				</a>
+			   
+			</li>
+			<li><a  href="/pengeluaran" aria-expanded="false">
 					<i class="flaticon-044-file"></i>
 					<span class="nav-text">Data Pengeluaran</span>
 				</a>

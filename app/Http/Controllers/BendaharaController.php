@@ -47,17 +47,9 @@ public function destroy($id)
     public function add_bendahara()
     {
         // return view('tambah.add_guruu');
-         $settings = SettingWaktu::all();
-
-            $expired = false;
-    foreach ($settings as $setting) {
-        if (Carbon::now()->greaterThanOrEqualTo($setting->waktu)) {
-            $expired = true;
-            break;
-        }
-    }
+       
         // Meneruskan data ke tampilan
-        return view('tambah.add_bendahara', compact('expired','settings'));
+        return view('tambah.add_bendahara');
     }
 
     public function store(Request $request)
@@ -95,17 +87,9 @@ public function destroy($id)
     $guruu = User::find($id);
     // Jangan mengirimkan password ke tampilan
     unset($guruu->password);
-      $settings = SettingWaktu::all();
+     
 
-            $expired = false;
-    foreach ($settings as $setting) {
-        if (Carbon::now()->greaterThanOrEqualTo($setting->waktu)) {
-            $expired = true;
-            break;
-        }
-    }
-
-    return view('edit.edit_bendahara', compact('settings', 'expired','guruu'));
+    return view('edit.edit_bendahara', compact('guruu'));
 }
 
 public function update(Request $request, $id)

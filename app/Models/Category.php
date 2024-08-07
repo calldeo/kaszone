@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Pemasukan;
+use App\Models\Pengeluaran;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Category extends Model
 {
@@ -16,8 +18,10 @@ class Category extends Model
 
     // Mengizinkan mass assignment untuk field berikut
     protected $fillable = [
+        // 'id',
         'name',
         'description',
+        
     ];
 
     // Anda dapat menambahkan attribute yang perlu di-hidden dari serialization di sini
@@ -29,4 +33,12 @@ class Category extends Model
     protected $casts = [
         // 'example_date_field' => 'datetime',
     ];
+     public function pemasukan()
+    {
+        return $this->hasMany(Pemasukan::class, 'id');
+    }
+      public function pengeluaran()
+    {
+        return $this->hasMany(Pengeluaran::class, 'id');
+    }
 }

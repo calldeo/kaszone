@@ -1,14 +1,17 @@
 <?php
 
+use App\Models\Pengeluaran;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\LoginController;
 
-use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\BendaharaController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\SiswaaController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\BendaharaController;
+use App\Http\Controllers\PemasukanController;
+use App\Http\Controllers\PengeluaranController;
 
 
 /*
@@ -51,6 +54,9 @@ Route::group(['middleware' => ['auth','ceklevel:admin,bendahara']], function (){
 route::get('/table',[AdminController::class,'table'])->name('table');
 route::get('/tab',[AdminController::class,'tab'])->name('tab');
 route::get('/teb',[AdminController::class,'teb'])->name('teb');
+route::get('/tob',[AdminController::class,'tob'])->name('tob');
+route::get('/tabe',[AdminController::class,'tabe'])->name('tabe');
+
 
 
 
@@ -93,16 +99,33 @@ Route::put('/siswaa/{id}',[SiswaaController::class,'update']);
 Route::get('/kategori', [CategoryController::class, 'index']);
 route::get('/add_kategori',[CategoryController::class,'add_kategori'])->name('add_kategori');
 Route::post('/kategori/store',[CategoryController::class,'store']);
-Route::delete('/kategori/{id}', [CategoryController::class,'destroy'])->name('kategori.destroy');
+Route::delete('/kategori/{id}/destroy', [CategoryController::class,'destroy'])->name('kategori.destroy');
 Route::get('/kategori/{id}/edit_kategori  ',[CategoryController::class,'edit']);
 Route::put('/kategori/{id}',[CategoryController::class,'update']);
 Route::post('/importkategori', [CategoryController::class, 'kategoriimportexcel'])->name('import-kategori');
+Route::get('/cetaklaporan',[CategoryController::class,'cetaklaporan'])->name('cetaklaporan');
 
 
-// Route::get('/categories/{id}', [CategoryController::class, 'show']);
-// Route::post('/categories', [CategoryController::class, 'store']);
-// Route::put('/categories/{id}', [CategoryController::class, 'update']);
-// Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
-// Route::get('/categories/search', [CategoryController::class, 'search']);
-// Route::post('/categories/import', [CategoryController::class, 'import']);
-// Route::get('/categories/export', [CategoryController::class, 'export']);
+route::get('/pemasukan',[PemasukanController::class,'index'])->name('index');
+Route::get('/add_pemasukan', [PemasukanController::class, 'create']);
+Route::post('/pemasukan/store', [PemasukanController::class, 'store']);
+// Route::delete('/pemasukan/{id_data}/destroy', [PemasukanController::class,'destroy'])->name('pemasukan.destroy');
+Route::delete('/pemasukan/{id}/destroy', [PemasukanController::class, 'destroy'])->name('pemasukan.destroy');
+Route::get('/pemasukan/{id_pemasukan}/edit_pemasukan',[PemasukanController::class,'edit']);
+Route::put('/pemasukan/{id_pemasukan}', [PemasukanController::class, 'update'])->name('update');
+
+
+
+route::get('/pengeluaran',[PengeluaranController::class,'index'])->name('index');
+Route::get('/add_pengeluaran', [PengeluaranController::class, 'create']);
+Route::post('/pengeluaran/store', [PengeluaranController::class, 'store']);
+Route::delete('/pengeluaran/{id}/destroy', [PengeluaranController::class, 'destroy'])->name('pengeluaran.destroy');
+Route::get('/pengeluaran/{id_pengeluaran}/edit_pengeluaran',[PengeluaranController::class,'edit']);
+Route::put('/pengeluaran/{id_pengeluaran}', [PengeluaranController::class, 'update'])->name('update');
+
+
+
+
+
+
+

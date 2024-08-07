@@ -6,6 +6,8 @@ use DB;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Category;
+use App\Models\Pemasukan;
+use App\Models\Pengeluaran;
 use App\Models\SettingWaktu;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
@@ -68,17 +70,9 @@ class AdminController extends Controller
 
     public function add_admin()
     {
-        $settings = SettingWaktu::all();
-        $expired = false;
+      
 
-        foreach ($settings as $setting) {
-            if (Carbon::now()->greaterThanOrEqualTo($setting->waktu)) {
-                $expired = true;
-                break;
-            }
-        }
-
-        return view('tambah.add_admin', compact('settings', 'expired'));
+        return view('tambah.add_admin');
     }
 
     public function store(Request $request)
@@ -116,17 +110,8 @@ class AdminController extends Controller
         $admin = User::find($id);
         unset($admin->password); // Jangan mengirimkan password ke tampilan
 
-        $settings = SettingWaktu::all();
-        $expired = false;
 
-        foreach ($settings as $setting) {
-            if (Carbon::now()->greaterThanOrEqualTo($setting->waktu)) {
-                $expired = true;
-                break;
-            }
-        }
-
-        return view('edit.edit_admin', compact('settings', 'expired', 'admin'));
+        return view('edit.edit_admin', compact( 'admin'));
     }
 
     public function update(Request $request, $id)
@@ -158,15 +143,7 @@ class AdminController extends Controller
 
     public function search(Request $request)
     {
-        $settings = SettingWaktu::all();
-        $expired = false;
-
-        foreach ($settings as $setting) {
-            if (Carbon::now()->greaterThanOrEqualTo($setting->waktu)) {
-                $expired = true;
-                break;
-            }
-        }
+       
 
         // Dapatkan input pencarian
         $searchTerm = $request->input('search');
@@ -268,6 +245,62 @@ class AdminController extends Controller
             ->make(true);
     }
 }
+
+
+    public function tob(Request $request)
+    {
+        if ($request->ajax()) {
+            $pemasukan = Pemasukan::with('category')->select(['id_data', 'name', 'description', 'date', 'jumlah', 'id']);
+
+            return DataTables::of($pemasukan)
+                ->addIndexColumn()
+                ->addColumn('category', function ($row) {
+                    return $row->category ? $row->category->name : 'Tidak ada kategori';
+                })
+                ->addColumn('opsi', function ($row) {
+                    return '
+                    <div class="d-flex align-items-center">
+                        <a href="/pemasukan/' . $row->id . '/d" class="btn btn-info btn-xs mr-1"><i class="fa fa-eye"></i></a>
+                        <a href="/pemasukan/' . $row->id_data . '/edit_pemasukan" class="btn btn-warning btn-xs mr-1"><i class="fa fa-pencil"></i></a>
+                        <form action="/pemasukan/' . $row->id . '/destroy" method="POST" style="display:inline;">
+                            ' . csrf_field() . '
+                            ' . method_field('DELETE') . '
+                            <button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>
+                        </form>
+                    </div>';
+                })
+                ->rawColumns(['opsi'])
+                ->make(true);
+        }
+    }
+
+
+ public function tabe(Request $request)
+    {
+        if ($request->ajax()) {
+            $pengeluaran = Pengeluaran::with('category')->select(['id_data', 'name', 'description', 'date', 'jumlah', 'id']);
+
+            return DataTables::of($pengeluaran)
+                ->addIndexColumn()
+                ->addColumn('category', function ($row) {
+                    return $row->category ? $row->category->name : 'Tidak ada kategori';
+                })
+                ->addColumn('opsi', function ($row) {
+                    return '
+                    <div class="d-flex align-items-center">
+                        <a href="/pengeluaran/' . $row->id . '/d" class="btn btn-info btn-xs mr-1"><i class="fa fa-eye"></i></a>
+                        <a href="/pengeluaran/' . $row->id_data . '/edit_pengeluaran" class="btn btn-warning btn-xs mr-1"><i class="fa fa-pencil"></i></a>
+                        <form action="/pengeluaran/' . $row->id . '/destroy" method="POST" style="display:inline;">
+                            ' . csrf_field() . '
+                            ' . method_field('DELETE') . '
+                            <button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>
+                        </form>
+                    </div>';
+                })
+                ->rawColumns(['opsi'])
+                ->make(true);
+        }
+    }
 
 
 }

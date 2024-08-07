@@ -48,38 +48,8 @@
                                 <input id="searchInput" type="text" class="form-control" placeholder="Cari sesuatu di sini..." name="query">
                             </form>
                           </div> --}}
-                      <button type="button" class="btn btn-warning ml-2" title="Import" data-toggle="modal" data-target="#importModal">
-            <i class="fa fa-upload"></i> 
-        </button>
-        <!-- Modal untuk impor data guru -->
-        <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="importModalLabel">Import Data Kategori</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        
-                        <!-- Form untuk mengunggah file Excel -->
-                        <form action="{{ route('import-kategori') }}" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            <div class="form-group">
-                                <label for="file">Pilih File Excel</label>
-                                <input type="file" class="form-control-file" id="file" name="file" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Import</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <a href="/cetaklaporan" target="blank" class="btn btn-info ml-2" title="Print Report">
-                                    <i class="fa fa-print"></i> 
-                               </a>
-                    <a href="/add_kategori" class="btn btn-success ml-2" title="Add">
+                    
+                    <a href="/add_pengeluaran" class="btn btn-success" title="Add">
                         <i class="fa fa-plus"></i>
                     </a>
                 </div>
@@ -108,7 +78,7 @@
                             @endif
                             <link href="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.css" rel="stylesheet">
                             <div class="table-responsive">
-                                <table id="kategoriTable" class="table table-responsive-md">
+                                <table id="pengeluaranTable" class="table table-responsive-md">
                                     <thead>
                                         <tr>
                                             <th style="width:50px;">
@@ -117,65 +87,16 @@
                                                     <label class="custom-control-label" for="checkAll"></label>
                                                 </div>
                                             </th>
-                                            <th><strong>Nama Category</strong></th>
-                                            <th><strong>Descripction</strong></th>
+                                            <th><strong>Nama</strong></th>
+                                            <th><strong>Deksripsi</strong></th>
+                                            <th><strong>Kategori</strong></th>
+                                            <th><strong>Tanggal</strong></th>   
+                                            <th><strong>Jumlah(Rp)</strong></th>
                                             {{-- <th><strong>Status</strong></th> --}}
                                             <th><strong>Option</strong></th>
                                         </tr>
                                     </thead>
-                                    {{-- <tbody  id="adminTableBody">
-                                        @foreach($users as $g)
-                                        @if($g->level == 'admin')
-                                        <tr>
-                                            <td>
-                                                <div class="custom-control custom-checkbox checkbox-secondary check-lg mr-3">
-                                                    <input type="checkbox" class="custom-control-input" id="customCheckBox2" required="">
-                                                    <label class="custom-control-label" for="customCheckBox2"></label>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <h6>{{$g->id}}</h6>
-                                            </td>
-                                            <td>
-                                                <div class="media style-1">
-                                                    <span class="icon-name mr-2 bgl-info text-secondary">{{ substr($g->name, 0, 1) }}</span>
-                                                    <div class="media-body">
-                                                        <h6>{{ $g->name }}</h6>
-                                                        <span>{{ $g->email }}</a></span>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td><span class="badge badge-lg badge-secondary light">{{$g->level}}</span></td>
-                                            --}}
-{{--                                                 
-                                            <td>
-                                                @if($g->status_pemilihan == 'Belum Memilih')
-                                                <div class="d-flex align-items-center">
-                                                    <i class="fa fa-circle text-warning mr-1"></i>Belum Memilih</div>
-                                                @elseif($g->status_pemilihan == 'Sudah Memilih')
-                                                <div class="d-flex align-items-center">
-                                                    <i class="fa fa-circle text-success mr-1"></i>Sudah Memilih</div>
-                                                @endif
-                                            </td>                                             --}}
-                                            {{-- <td class="text-align: left;">
-                                                <div class="d-flex justify-content-center">
-                                                <form id="editForm_{{ $g->id }}" action="/admin/{{ $g->id }}/edit_admin" method="GET">
-                                                    <button type="submit" class="btn btn-warning shadow btn-xs sharp"><i class="fa fa-pencil"></i></button>
-                                                </form>
-
-                                                <div class="mx-1"></div> <!-- Tambahkan jarak di sini -->
-
-                                                <form id="deleteForm_{{ $g->id }}" action="{{ route('admin.destroy', $g->id) }}" method="POST" class="delete-form">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="button" class="btn btn-danger shadow btn-xs sharp delete-btn" data-id="{{ $g->id }}"><i class="fa fa-trash"></i></button>
-                                                </form>
-                                            </div>
-                                            </td>
-                                        </tr>
-                                        @endif
-                                        @endforeach
-                                    </tbody> --}}
+                                 
                                 </table>
                             </div>
                         </div>
@@ -202,7 +123,6 @@
     <!-- Scripts -->
     <!-- Required vendors -->
     @include('template.scripts')
-    
 
     <!-- Pencarian -->
     <script>
@@ -304,7 +224,7 @@
         });
     </script>
 
-<input type="hidden" id="table-url" value="{{ route('teb') }}">
+<input type="hidden" id="table-url" value="{{ route('tabe') }}">
 <script src="{{ asset('main.js') }}"></script>
 <script src="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.js"></script>
 

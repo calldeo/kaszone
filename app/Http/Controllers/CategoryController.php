@@ -106,4 +106,14 @@ public function kategoriimportexcel(Request $request) {
         return redirect('/kategori')->with('success', 'Data Berhasil Ditambahkan');
         
     }
+  public function cetaklaporan()
+    {
+        // Dapatkan calon dengan jumlah suara terbanyak
+       
+       $category = Category::all();
+
+
+    return view('halaman.cetaklaporan',compact('category'));
+    }
+    
 }
