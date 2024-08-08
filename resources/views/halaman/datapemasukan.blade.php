@@ -3,7 +3,7 @@
 
 <head>
     @include('template.headerr')
-    <title>E-vote | {{auth()->user()->level}} | Admin</title>
+    <title>KasZone | {{auth()->user()->level}} | Pemasukan</title>
     
 </head>
 
@@ -25,13 +25,13 @@
                 <div class="col-sm-6 p-md-0">
                     <div class="welcome-text">
                         <h4>Hi, welcome back!</h4>
-                        <p class="mb-0">Data Admin</p>
+                        <p class="mb-0">Data Pemasukan</p>
                     </div>
                 </div>
                 <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="javascript:void(0)">Table</a></li>
-                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Admin</a></li>
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Pemasukan</a></li>
                     </ol>
                 </div>
             </div>
@@ -41,7 +41,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title">Data Admin</h4>
+                            <h4 class="card-title">Data Pemasukan</h4>
                             <div class="text-right">
                           {{-- <div class="input-group search-area right d-lg-inline-flex d-none">
                             <form id="searchForm">
@@ -227,7 +227,81 @@
 <input type="hidden" id="table-url" value="{{ route('tob') }}">
 <script src="{{ asset('main.js') }}"></script>
 <script src="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.js"></script>
+ 
 
+    
+    <!-- Modal HTML -->
+    <div class="modal fade" id="adminDetailModal" tabindex="-1" role="dialog" aria-labelledby="adminDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="adminDetailModalLabel">Detail Pemasukan</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>No:</strong><br />
+                            <strong>Nama:</strong><br />
+                            <strong>Deskripsi:</strong><br />
+                            <strong>Tanggal:</strong><br />
+                            <strong>Jumlah:</strong><br />
+                        </div>
+                        <div class="col-sm-8">
+                            <div id="id_data"></div>
+                            <div id="name"></div>
+                            <div id="description"></div>
+                            <div id="date"></div>
+                            <div id="jumlah"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+  
+    <script>
+        $(document).ready(function() {
+            $('#kategoriTable').DataTable();
+            
+            $('#adminDetailModal').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget); // Tombol yang memicu modal
+                var url = button.data('url'); // Ambil info dari atribut data-*
+                
+                var modal = $(this);
+                
+                // Kosongkan konten modal sebelum memuat data baru
+                modal.find('#id_data').text('');
+                modal.find('#name').text('');
+                modal.find('#description').text('');
+                modal.find('#date').text('');
+                modal.find('#jumlah').text('');
+                
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    success: function(data) {
+                        // Isi modal dengan data baru
+                        modal.find('#id_data').text(data.id_data || 'N/A');
+                        modal.find('#name').text(data.name || 'N/A');
+                        modal.find('#description').text(data.description || 'N/A');
+                        modal.find('#date').text(data.date || 'N/A');
+                        modal.find('#jumlah').text(data.jumlah || 'N/A');
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(xhr.responseText); // Tampilkan pesan kesalahan di konsol
+                        modal.find('.modal-body').html('Terjadi kesalahan saat memuat detail');
+                    }
+                });
+            });
+        });
+        </script>
 
 </body>
 

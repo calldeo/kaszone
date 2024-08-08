@@ -4,6 +4,8 @@
 <head>
     @include('template.headerr')
     <title>E-vote | {{auth()->user()->level}} | Add Pemasukan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
 </head>
 
 <body>
@@ -62,53 +64,85 @@
                         <div class="card-body">
                             <div class="basic-form">
                                 <form class="form-valide-with-icon" action="/pemasukan/store" method="post">
-                                    @csrf
-                                    <div class="form-group">
-                                        <label class="text-label">Name *</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"> <i class="fa fa-user"></i> </span>
-                                            </div>
-                                            <input type="text" class="form-control" name="name" placeholder="Enter name.." value="{{ old('name') }}" required>
+                                   @csrf
+                                <div class="form-group">
+                                    <label class="text-label">Nama Pemasukan*</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"> <i class="fa fa-user"></i> </span>
                                         </div>
-                                        @error('name')
-                                        <span class="mt-4 text-danger">{{ $message }}</span>
-                                        @enderror
+                                        <input type="text" class="form-control" name="name" placeholder="Enter name.." value="{{ old('name') }}" required>
                                     </div>
+                                    @error('name')
+                                    <span class="mt-2 text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
 
-                                    <div class="form-group">
-                                        <label class="text-label">Description</label>
-                                        <textarea class="form-control" name="description" placeholder="Enter description..">{{ old('description') }}</textarea>
-                                    </div>
+                                <div class="form-group">
+                                    <label class="text-label">Deskripsi</label>
+                                    <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-book"></i> <!-- Ikon buku -->
+                                                </span>
+                                            </div>
+                             <textarea class="form-control" name="description" placeholder="Enter description..">{{ old('description') }}</textarea>
 
-                                    <div class="form-group">
-                                        <label class="text-label">Date *</label>
-                                        <input type="date" class="form-control" name="date" value="{{ old('date') }}" required>
-                                        @error('date')
-                                        <span class="mt-4 text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
+                                        </div>
+                                </div>
 
-                                    <div class="form-group">
-                                        <label class="text-label">Jumlah *</label>
-                                        <input type="number" step="0.01" class="form-control" name="jumlah" placeholder="Enter amount.." value="{{ old('jumlah') }}" required>
-                                        @error('jumlah')
-                                        <span class="mt-4 text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
+                                <div class="form-group">
+                                    <label class="text-label">Date *</label>
+                                     <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-calendar"></i> <!-- Ikon kalender -->
+                                                </span>
+                                            </div>
+                                             <input type="date" class="form-control" name="date" value="{{ old('date') }}" required>
+                                    @error('date')
+                                    <span class="mt-2 text-danger">{{ $message }}</span>
+                                    @enderror
+                                   
+                                </div>
 
-                                    <div class="form-group">
-                                        <label class="text-label">Category *</label>
-                                        <select class="form-control default-select" name="category_id" required>
-                                            <option value="">--PILIH KATEGORI--</option>
-                                            @foreach($categories as $category)
-                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                            @endforeach
-                                        </select>
-                                        @error('category_id')
-                                        <span class="mt-4 text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
+                                <div class="form-group">
+                                    <label class="text-label">Jumlah *</label>
+                                      <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-dollar-sign"></i> <!-- Ikon dolar -->
+                                                </span>
+                                            </div>
+                                             <input type="number" step="0.01" class="form-control" name="jumlah" placeholder="Enter amount.." value="{{ old('jumlah') }}" required>
+                                    @error('jumlah')
+                                    <span class="mt-2 text-danger">{{ $message }}</span>
+                                    @enderror
+                                        </div>
+                                  
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="text-label">Category *</label>
+                                     <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-list"></i> <!-- Ikon daftar -->
+                                                </span>
+                                            </div>
+                                          <select class="form-control default-select" name="category_id" required>
+                                        <option value="">--PILIH KATEGORI--</option>
+                                        @foreach($categories as $category)
+                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('category_id')
+                                    <span class="mt-2 text-danger">{{ $message }}</span>
+                                    @enderror
+                                        </div>
+                                    
+                                </div>
+
 
                                     <button type="submit" class="btn mr-2 btn-primary">Submit</button>
                                     <button type="button" class="btn btn-light" onclick="window.location.href='/pemasukan'">Cancel</button>

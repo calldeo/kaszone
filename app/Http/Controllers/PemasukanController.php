@@ -93,7 +93,8 @@ $category = Category::all();
             'description' => ['required', 'min:3', 'max:255'],
             'date' => ['required', 'date'],
             'jumlah' => ['required', 'numeric'],
-            'category_id' => ['required', 'exists:categories,id'],
+             'category_id' => ['nullable', 'exists:categories,id'],
+
         ]);
 
         // Cari data pemasukan berdasarkan ID
@@ -110,11 +111,21 @@ $category = Category::all();
             'description' => $request->description,
             'date' => $request->date,
             'jumlah' => $request->jumlah,
-            'category_id' => $request->category_id,
+                   'category_id' => $request->category_id ?? $pemasukan->category_id, // Gunakan nilai kategori yang ada jika tidak ada yang baru
+
         ]);
 //  return view('halaman.datapemasukan', compact('id_data','pemasukan'));
         // Arahkan kembali ke halaman pemasukan dengan pesan sukses
         return redirect('/pemasukan')->with('update_success', 'Data pemasukan berhasil diperbarui.');
     }
-
+// Method untuk mendapatkan detail kategori
+    public function showDetail($id)
+    {
+        $pemasukan = Pemasukan::find($id);
+        if ($pemasukan) {
+            return response()->json($pemasukan);
+        } else {
+            return response()->json(['message' => 'pemasukan tidak ditemukan.'], 404);
+        }
+    }
 }

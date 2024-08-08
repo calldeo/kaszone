@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\KategoriImport;
 use App\Exports\CategoriesExport;
 use App\Imports\CategoriesImport;
-use App\Imports\KategoriImport;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
 
 
 class CategoryController extends Controller
@@ -97,13 +99,38 @@ public function update(Request $request, $id)
 public function kategoriimportexcel(Request $request) {
 
         // DB::table('users')->where('level','guru')->delete();
-        Category::query()->where('name','description')->delete();
-        $file=$request->file('file');
+       
+    // Mulai transaksi database
+    DB::beginTransaction();
+    
+    try {
+        // Hapus semua data lama dari tabel Category
+        Category::query()->delete();
+        
+        // Pindahkan file ke folder DataKategori
+        $file = $request->file('file');
         $namafile = $file->getClientOriginalName();
         $file->move('DataKategori', $namafile);
 
+        // Impor data dari file Excel
         Excel::import(new KategoriImport, public_path('/DataKategori/'.$namafile));
+
+        // Commit transaksi jika semua operasi berhasil
+        DB::commit();
+
+        // Hapus file setelah impor selesai
+        Storage::delete($namafile);
+
         return redirect('/kategori')->with('success', 'Data Berhasil Ditambahkan');
+    } catch (\Exception $e) {
+        // Rollback transaksi jika terjadi kesalahan
+        DB::rollBack();
+
+        // Log error jika diperlukan
+        \Log::error('Import kategori failed: ' . $e->getMessage());
+
+        return redirect('/kategori')->with('error', 'Terjadi kesalahan saat mengimpor data');
+    }
         
     }
   public function cetaklaporan()
@@ -116,14 +143,15 @@ public function kategoriimportexcel(Request $request) {
     return view('halaman.cetaklaporan',compact('category'));
     }
     
-    // Method untuk mendapatkan detail admin
-     public function showDetail($id)
-     {
-         $category = Category::find($id);
-         if ($category) {
-             return response()->json($category);
-         } else {
-             return response()->json(['message' => 'Kategori tidak ditemukan.'], 404);
-         }
-     }
+    // Method untuk mendapatkan detail kategori
+public function showDetail($id)
+{
+    $category = Category::find($id);
+    if ($category) {
+        return response()->json($category);
+    } else {
+        return response()->json(['message' => 'Kategori tidak ditemukan.'], 404);
+    }
+}
+
 }

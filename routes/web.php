@@ -1,9 +1,12 @@
 <?php
 
 use App\Models\Pengeluaran;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
+use App\Exports\PengeluaranExport;
+// use Maatwebsite\Excel\Facades\Excel;
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SiswaController;
@@ -13,7 +16,6 @@ use App\Http\Controllers\BendaharaController;
 use App\Http\Controllers\PemasukanController;
 use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\Auth\RegisterController;
-
 
 
 /*
@@ -131,9 +133,18 @@ Route::put('/pengeluaran/{id_pengeluaran}', [PengeluaranController::class, 'upda
 
 // Route::get('kategori/teb', [CategoryController::class, 'teb'])->name('kategori.teb');
 Route::get('/kategori/{id}/detail', [CategoryController::class, 'showDetail'])->name('kategori.showDetail');
+Route::get('/cetaklaporan',[CategoryController::class,'cetaklaporan'])->name('cetaklaporan');
+Route::get('/cetakpgl',[PengeluaranController::class,'cetakpgl'])->name('cetakpgl');
+Route::get('pemasukan/tob', [PemasukanController::class, 'tob'])->name('pemasukan.tob');
+Route::get('/pemasukan/{id}/detail', [PemasukanController::class, 'showDetail'])->name('pemasukan.showDetail');
+Route::get('pengeluaran/tabe', [PengeluaranController::class, 'tabe'])->name('pengeluaran.tabe');
+Route::get('/pengeluaran/{id}/detail', [PengeluaranController::class, 'showDetail'])->name('pengeluaran.showDetail');
 
+Route::get('/export-pengeluaran', function () {
+    return Excel::download(new PengeluaranExport, 'pengeluaran.xlsx');
+});
 
-
-
+Route::get('/pengeluaran', [PengeluaranController::class, 'index'])->name('pengeluaran.index');
+Route::get('/pengeluaran/data', [AdminController::class, 'tabe'])->name('admin.tabe');
 
 

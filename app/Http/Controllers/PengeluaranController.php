@@ -79,41 +79,77 @@ class PengeluaranController extends Controller
 public function edit($id_data)
 {
     $pengeluaran = Pengeluaran::find($id_data);
-$category = Category::all();
-//  $pemasukan = DB::table('datapemasukan')->get();
+    $category = Category::all();
 
-    return view('edit.edit_pengeluaran', compact('id_data','pengeluaran','category'));
+    return view('edit.edit_pengeluaran', compact('id_data', 'pengeluaran', 'category'));
 }
 
-  public function update(Request $request, $id_data)
+public function update(Request $request, $id_data)
+{
+    // Validasi input
+    $request->validate([
+        'name' => ['required', 'min:3', 'max:30'],
+        'description' => ['required', 'min:3', 'max:255'],
+        'date' => ['required', 'date'],
+        'jumlah' => ['required', 'numeric'],
+        'category_id' => ['nullable', 'exists:categories,id'],
+    ]);
+
+    // Cari data pengeluaran berdasarkan ID
+    $pengeluaran = Pengeluaran::find($id_data);
+
+    // Jika data pengeluaran tidak ditemukan, arahkan kembali dengan pesan error
+    if (!$pengeluaran) {
+        return redirect('/pengeluaran')->with('error', 'Data pengeluaran tidak ditemukan.');
+    }
+
+    // Update data pengeluaran
+    $pengeluaran->update([
+        'name' => $request->name,
+        'description' => $request->description,
+        'date' => $request->date,
+        'jumlah' => $request->jumlah,
+        'category_id' => $request->category_id ?? $pengeluaran->category_id, // Gunakan nilai kategori yang ada jika tidak ada yang baru
+    ]);
+
+    // Arahkan kembali ke halaman pengeluaran dengan pesan sukses
+    return redirect('/pengeluaran')->with('update_success', 'Data pengeluaran berhasil diperbarui.');
+}
+
+public function cetakpgl()
     {
-        // Validasi input
-        $request->validate([
-            'name' => ['required', 'min:3', 'max:30'],
-            'description' => ['required', 'min:3', 'max:255'],
-            'date' => ['required', 'date'],
-            'jumlah' => ['required', 'numeric'],
-            'category_id' => ['required', 'exists:categories,id'],
-        ]);
+        // Dapatkan calon dengan jumlah suara terbanyak
+       
+       $pengeluaran = Pengeluaran::all();
 
-        // Cari data pemasukan berdasarkan ID
-         $pengeluaran = Pengeluaran::find($id_data);
 
-        // Jika data pemasukan tidak ditemukan, arahkan kembali dengan pesan error
-        // if (!$pemasukan) {
-        //     return redirect('/datapemasukan')->with('error', 'Data pemasukan tidak ditemukan.');
-        // }
+    return view('halaman.cetakpgl',compact('pengeluaran'));
+    }
+ public function showDetail($id)
+    {
+        $pengeluaran = Pengeluaran::find($id);
+        if ($pengeluaran) {
+            return response()->json($pengeluaran);
+        } else {
+            return response()->json(['message' => 'pengeluaran tidak ditemukan.'], 404);
+        }
+    }
 
-        // Update data pemasukan
-        $pengeluaran->update([
-            'name' => $request->name,
-            'description' => $request->description,
-            'date' => $request->date,
-            'jumlah' => $request->jumlah,
-            'category_id' => $request->category_id,
-        ]);
-//  return view('halaman.datapemasukan', compact('id_data','pemasukan'));
-        // Arahkan kembali ke halaman pemasukan dengan pesan sukses
-        return redirect('/pengeluaran')->with('update_success', 'Data pengeluaran berhasil diperbarui.');
+    public function data()
+    {
+        $pengeluaran = Pengeluaran::query();
+
+        return User::of($pengeluaran)
+            ->addColumn('checkbox', function ($row) {
+                return '<input type="checkbox" class="custom-control-input" id="check_' . $row->id . '">';
+            })
+            ->addColumn('action', function ($row) {
+                return '<a href="/pengeluaran/' . $row->id . '/edit" class="btn btn-warning btn-sm">Edit</a>
+                        <form action="/pengeluaran/' . $row->id . '" method="POST" style="display:inline;">
+                            ' . csrf_field() . method_field('DELETE') . '
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>';
+            })
+            ->make(true);
     }
 }

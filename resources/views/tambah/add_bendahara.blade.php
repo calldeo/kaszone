@@ -4,7 +4,7 @@
 
 <head>
     @include('template.headerr')
-    <title>KasZone | {{auth()->user()->level}} | Add</title>
+    <title>E-vote | {{auth()->user()->level}} | Add</title>
 
 </head>
 <body>
@@ -74,13 +74,13 @@
                             <li class="breadcrumb-item active"><a href="javascript:void(0)">Bendahara</a></li>
                         </ol>
                     </div>
-                        @if(session('error'))
+                </div>
+                  @if(session('error'))
                             <div class="alert alert-danger alert-dismissible fade show">
                                 <strong>Error!</strong> {{ session('error') }}
                                 <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span></button>
                             </div>
                             @endif
-                </div>
                 <!-- row -->
                 <div class="row">
                 
@@ -105,7 +105,7 @@
                                             <span class="mt-4 text-danger">{{$message}}</span>
                                             @enderror
                                         </div>
-                                          <div class="form-group">
+                                        <div class="form-group">
                                             <label class="text-label">Email *</label>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
@@ -136,7 +136,7 @@
                                             @enderror
                                         </div>
                                         <div class="form-group">
-                                            <label>Select list (select one): *</label>
+                                            <label>Level *</label>
                                             <select class="form-control default-select" id="sel1" name="level" required>
                                                 <option  value="">--PILIH LEVEL--</option>
                                                 <option  value="bendahara">Bendahara</option>
@@ -147,16 +147,39 @@
                                             <span class="mt-4 text-danger">{{$message}}</span>
                                             @enderror
                                         </div>
+                                         <div class="form-group">
+                                            <label>Jenis Kelamin *</label>
+                                            <select class="form-control default-select" id="sel1" name="kelamin" required>
+                                                <option  value="">--Jenis Kelamin--</option>
+                                                <option  value="laki-laki">Laki-Laki</option>
+                                                <option  value="perempuan">Perempuan</option>
+                                                {{-- <option  value="guru">Guru</option>
+                                                <option  value="siswa">Siswa</option> --}}
+                                            </select>
+                                            @error('kelamin')
+                                            <span class="mt-4 text-danger">{{$message}}</span>
+                                            @enderror
+                                        </div>
+                                         <div class="form-group">
+                                            <label class="text-label">Alamat *</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                                                </div>
+                                                <input type="text" class="form-control" id="val-username1" name="alamat" placeholder="Enter a email.."  value="{{old('email')}}" required>
+                                            </div>
+                                            @error('email')
+                                            <span class="mt-4 text-danger">{{$message}}</span>
+                                            @enderror
+                                        </div>
                                         <div class="form-group">
                                             <div class="form-check">
                                                 <input id="checkbox1" class="form-check-input" type="checkbox" required>
                                                 <label for="checkbox1" class="form-check-label">Check me out *</label>
                                             </div>
                                         </div>
-                                    
-                                        </div>
                                         <button type="submit" class="btn mr-2 btn-primary">Submit</button>
-                                         <button type="submit" class="btn btn-light" onclick="redirectToBendahara()">Cancel</button>
+                                        <button type="submit" class="btn btn-light" onclick="redirectToAdmin()">Cancel</button>
                                     </form>
                                 </div>
                             </div>
@@ -201,8 +224,8 @@
     *************-->
     <!-- Required vendors -->
  @include('template.scripts')
+ 
 </body>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
 
 
 </html>

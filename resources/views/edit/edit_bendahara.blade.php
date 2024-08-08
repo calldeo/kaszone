@@ -64,13 +64,13 @@
                     <div class="col-sm-6 p-md-0">
                         <div class="welcome-text">
                             <h4>Hi, welcome back!</h4>
-                            <p class="mb-0">Validation</p>
+                            <p class="mb-0">Bendahara</p>
                         </div>
                     </div>
                     <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="javascript:void(0)">Form</a></li>
-                            <li class="breadcrumb-item active"><a href="javascript:void(0)">Validation</a></li>
+                            <li class="breadcrumb-item active"><a href="javascript:void(0)">Edit Bendahara</a></li>
                         </ol>
                     </div>
                 </div>
@@ -118,18 +118,41 @@
                                         <i class="fa fa-eye"></i>
                                     </span>
                                 </div>
+                                
                             </div>
-                             <label class="text-label"style="color: red;">* Jika tidak ingin mengganti password maka tidak perlu diisi </label>
+                            <label class="text-label"style="color: red;">* Jika tidak ingin mengganti password maka tidak perlu diisi </label>
                         </div>
                         <div class="form-group">
-                            <label>Select list (select one): *</label>
+                            <label>Level *</label>
                             <select class="form-control default-select" id="sel1" name="level" required>
                                 <option value="">--PILIH LEVEL--</option>
-                                {{-- <option value="admin">Admin</option> --}}
-                               <option value="bendahara">Bendahara</option>
-                                {{-- <option value="siswa">Siswa</option> --}} --}}
+                                <option value="bendahara">Bendahara</option>
+                                {{-- <option value="guruu">Guru</option>
+                                <option value="siswa">Siswa</option> --}}
                             </select>
+
                         </div>
+                        
+                        <div class="form-group">
+                            <label>Jenis Kelamin*</label>
+                            <select class="form-control default-select" id="sel1" name="kelamin" required>
+                                <option value="">-- JENIS KELAMIN--</option>
+                                <option value="laki-laki">Laki-Laki</option>
+                                <option value="perempuan">Perempuan</option>
+                                {{-- <option value="guru">Guru</option>
+                                <option value="siswa">Siswa</option> --}}
+                            </select>
+
+                        </div>
+                        <div class="form-group">
+                                    <label class="text-label">Alamat *</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                                        </div>
+                                        <input type="text" class="form-control" id="val-username1" name="alamat" placeholder="Enter a email.." value="{{ $guruu->alamat }}" required>
+                                    </div>
+                                </div>
                         <div class="form-group">
                             <div class="form-check">
                                 <input id="checkbox1" class="form-check-input" type="checkbox" required>
@@ -138,7 +161,7 @@
                         </div>
 
                                         <button type="submit" class="btn mr-2 btn-primary">Submit</button>
-                                          <button type="submit" class="btn btn-light" onclick="redirectToGuruu()">Cancel</button>
+                                       <button type="submit" class="btn btn-light" onclick="redirectToAdmin()">Cancel</button>
                                     </form>
                                 </div>
                             </div>

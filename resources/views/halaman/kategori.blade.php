@@ -320,10 +320,9 @@ $(document).ready(function() {
             url: url,
             method: 'GET',
             success: function(data) {
-                modal.find('#Id').text(data.id);
-                modal.find('#Name').text(data.name);
-                modal.find('#Email').text(data.email);
-                modal.find('#adminLevel').text(data.level);
+                modal.find('#id').text(data.id);
+                modal.find('#name').text(data.name);
+                modal.find('#description').text(data.description);
             },
             error: function(xhr, status, error) {
                 console.log(xhr.responseText); // Tampilkan pesan kesalahan di konsol
@@ -333,18 +332,17 @@ $(document).ready(function() {
     });
 });
 
+
     </script>
     
     
 
 <!-- Modal HTML -->
-<!-- Modal HTML -->
-<!-- Modal HTML -->
 <div class="modal fade" id="adminDetailModal" tabindex="-1" role="dialog" aria-labelledby="adminDetailModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="adminDetailModalLabel">Detail Admin</h5>
+                <h5 class="modal-title" id="adminDetailModalLabel">Detail Kategori</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -354,14 +352,12 @@ $(document).ready(function() {
                     <div class="col-sm-4">
                         <strong>No:</strong><br />
                         <strong>Nama:</strong><br />
-                        <strong>Deksripsi</strong><br />
-                       
+                        <strong>Deskripsi:</strong><br />
                     </div>
                     <div class="col-sm-8">
                         <div id="id"></div>
                         <div id="name"></div>
                         <div id="description"></div>
-                        {{-- <div id="adminLevel"></div> --}}
                     </div>
                 </div>
             </div>
@@ -372,21 +368,7 @@ $(document).ready(function() {
     </div>
 </div>
 
-<!-- Input tersembunyi untuk URL DataTables -->
-<!-- Tabel tempat DataTables diterapkan -->
-<table id="kategoriTable" class="display">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Nama</th>
-            <th>Deksripsi</th>
-            
-        </tr>
-    </thead>
-</table>
 
-<!-- Skrip custom untuk menginisialisasi DataTables -->
-<script src="{{ asset('js/main.js') }}"></script>
 </body>
 
 </html>

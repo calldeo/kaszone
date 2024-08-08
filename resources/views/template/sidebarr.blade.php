@@ -55,18 +55,21 @@
 				</a>
 			   
 			</li>
-			<li><a  href="/pemasukan" aria-expanded="false">
-					<i class="flaticon-044-file"></i>
-					<span class="nav-text">Data Pemasukan</span>
-				</a>
-			   
-			</li>
-			<li><a  href="/pengeluaran" aria-expanded="false">
-					<i class="flaticon-044-file"></i>
-					<span class="nav-text">Data Pengeluaran</span>
-				</a>
-			   
-			</li>
+			@endif
+            {{-- Only allow access to "Data Pemasukan" and "Data Pengeluaran" for admin and bendahara --}}
+            @if (auth()->user()->level == "admin" || auth()->user()->level == "bendahara")
+                <li><a href="/pemasukan" aria-expanded="false">
+                        <i class="flaticon-044-file"></i>
+                        <span class="nav-text">Data Pemasukan</span>
+                    </a>
+                </li>
+                <li><a href="/pengeluaran" aria-expanded="false">
+                        <i class="flaticon-044-file"></i>
+                        <span class="nav-text">Data Pengeluaran</span>
+                    </a>
+                </li>
+            @endif
+        </ul>
 			{{-- <li><a  href="/calonosis" aria-expanded="false">
 					<i class="flaticon-044-file"></i>
 					<span class="nav-text">Data Calon OSIS</span>
@@ -91,7 +94,7 @@
 				</a>
 			   
 			</li> --}}
-		@endif
+		
 		</ul>
 		<div class="copyright">
 			<p><strong>E-Vote </strong> © 2024 All Rights Reserved</p>

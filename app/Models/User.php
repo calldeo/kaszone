@@ -33,9 +33,11 @@ class User extends Authenticatable
         'id',
         'name',
         'level',
+        'kelamin',
         'kelas',
         'email',
         'password',
+        'alamat',
     ];
 
     /**

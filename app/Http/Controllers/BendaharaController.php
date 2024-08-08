@@ -59,6 +59,8 @@ public function destroy($id)
         'level' => 'required',
         'email' => 'required|unique:users,email',
         'password' => ['required', 'min:8', 'max:12'],
+        'kelamin' => 'required',
+        'alamat' => ['required', 'min:3', 'max:30'],
     ]);
 
 
@@ -73,6 +75,8 @@ public function destroy($id)
             'level' => $request->level,
             'email' => $request->email,
             'password' => bcrypt($request->password),
+            'kelamin' => $request->kelamin,
+            'alamat' => $request->alamat,
         ]);
 
         // Redirect dengan pesan sukses
@@ -101,12 +105,16 @@ public function update(Request $request, $id)
         'level' => 'required',
         'email' => 'required|email|unique:users,email,' . $guruu->id,
         'password' => ['nullable', 'min:8', 'max:12'], // Mengubah menjadi nullable
+         'kelamin' => 'required',
+         'alamat' => ['required', 'min:3', 'max:30'],
     ]);
 
     $data = [
         'name' => $request->name,
         'level' => $request->level,
         'email' => $request->email,
+        'kelamin' => $request->kelamin,
+            'alamat' => $request->alamat,
     ];
 
     // Menambahkan password ke data hanya jika ada input password

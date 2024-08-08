@@ -123,14 +123,36 @@
                             <label class="text-label"style="color: red;">* Jika tidak ingin mengganti password maka tidak perlu diisi </label>
                         </div>
                         <div class="form-group">
-                            <label>Select list (select one): *</label>
+                            <label>Level *</label>
                             <select class="form-control default-select" id="sel1" name="level" required>
                                 <option value="">--PILIH LEVEL--</option>
                                 <option value="admin">Admin</option>
                                 {{-- <option value="guru">Guru</option>
                                 <option value="siswa">Siswa</option> --}}
                             </select>
+
                         </div>
+                        
+                        <div class="form-group">
+                            <label>Jenis Kelamin*</label>
+                            <select class="form-control default-select" id="sel1" name="kelamin" required>
+                                <option value="">-- JENIS KELAMIN--</option>
+                                <option value="laki-laki">Laki-Laki</option>
+                                <option value="perempuan">Perempuan</option>
+                                {{-- <option value="guru">Guru</option>
+                                <option value="siswa">Siswa</option> --}}
+                            </select>
+
+                        </div>
+                        <div class="form-group">
+                                    <label class="text-label">Alamat *</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                                        </div>
+                                        <input type="text" class="form-control" id="val-username1" name="alamat" placeholder="Enter a email.." value="{{ $admin->alamat }}" required>
+                                    </div>
+                                </div>
                         <div class="form-group">
                             <div class="form-check">
                                 <input id="checkbox1" class="form-check-input" type="checkbox" required>

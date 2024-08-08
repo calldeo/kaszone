@@ -17,44 +17,34 @@ class UsersTableSeeder extends Seeder
     {
         DB::table('users')->insert([
             [
-                'name' => 'Gilang Nugraha',
+                'name' => 'Deo Andreas',
                 'level' => 'admin',
-                'kelas' => 'XII RPL',
-                'email' => 'gilang32nugraha@gmail.com',
-                'email_verified_at' => null,
-                'password' => bcrypt('123123123'),  // Menggunakan bcrypt untuk enkripsi password
-                'status_pemilihan' => 'Belum Memilih',
-                'remember_token' => Str::random(10),
-                'deleted_at' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'Vishal',
-                'level' => 'guru',
+                'kelamin' => 'laki-laki',
                 'kelas' => null,
-                'email' => 'vishal@gmail.com',
-                'email_verified_at' => now(),
-                'password' => bcrypt('123123123'),  // Menggunakan bcrypt
-                'status_pemilihan' => 'Belum Memilih',
+                'email' => 'deo@gmail.com',
+                'email_verified_at' => null,
+                'password' => bcrypt('callmedeo'),  // Menggunakan bcrypt untuk enkripsi password
+                'alamat' => 'Bondowoso',
                 'remember_token' => Str::random(10),
                 'deleted_at' => null,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'name' => 'Restu Aji',
-                'level' => 'siswa',
-                'kelas' => 'XII RPL 1',
-                'email' => 'adi.putra@example.com',
-                'email_verified_at' => null,
-                'password' => bcrypt('123123123'),  // Menggunakan bcrypt
-                'status_pemilihan' => 'Belum Memilih',
+                'name' => 'Restu',
+                'level' => 'bendahara',
+                'kelamin' => 'laki-laki',
+                'kelas' => null,
+                'email' => 'restu@gmail.com',
+                'email_verified_at' => now(),
+                'password' => bcrypt('callmedeo'),  // Menggunakan bcrypt
+                'alamat' => 'Bondowoso',
                 'remember_token' => Str::random(10),
                 'deleted_at' => null,
                 'created_at' => now(),
                 'updated_at' => now(),
-            ]
+            ],
+           
         ]);
     }
 }

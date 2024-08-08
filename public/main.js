@@ -17,6 +17,9 @@ $(document).ready(function(){
             { data: 'name', name: 'name' },
             { data: 'email', name: 'email' },
             { data: 'level', name: 'level' },
+            { data: 'kelamin', name: 'kelamin' },
+            { data: 'alamat', name: 'alamat' },
+
             { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
         ],
         columnDefs: [
@@ -43,6 +46,9 @@ $(document).ready(function(){
             { data: 'name', name: 'name' },
             { data: 'email', name: 'email' },
             { data: 'level', name: 'level' },
+            { data: 'kelamin', name: 'kelamin' },
+            { data: 'alamat', name: 'alamat' },
+
             { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
         ],
         columnDefs: [

@@ -136,7 +136,7 @@
                                             @enderror
                                         </div>
                                         <div class="form-group">
-                                            <label>Select list (select one): *</label>
+                                            <label>Level *</label>
                                             <select class="form-control default-select" id="sel1" name="level" required>
                                                 <option  value="">--PILIH LEVEL--</option>
                                                 <option  value="admin">Admin</option>
@@ -144,6 +144,31 @@
                                                 <option  value="siswa">Siswa</option> --}}
                                             </select>
                                             @error('level')
+                                            <span class="mt-4 text-danger">{{$message}}</span>
+                                            @enderror
+                                        </div>
+                                         <div class="form-group">
+                                            <label>Jenis Kelamin *</label>
+                                            <select class="form-control default-select" id="sel1" name="kelamin" required>
+                                                <option  value="">--Jenis Kelamin--</option>
+                                                <option  value="laki-laki">Laki-Laki</option>
+                                                <option  value="perempuan">Perempuan</option>
+                                                {{-- <option  value="guru">Guru</option>
+                                                <option  value="siswa">Siswa</option> --}}
+                                            </select>
+                                            @error('kelamin')
+                                            <span class="mt-4 text-danger">{{$message}}</span>
+                                            @enderror
+                                        </div>
+                                         <div class="form-group">
+                                            <label class="text-label">Alamat *</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                                                </div>
+                                                <input type="text" class="form-control" id="val-username1" name="alamat" placeholder="Enter a email.."  value="{{old('email')}}" required>
+                                            </div>
+                                            @error('email')
                                             <span class="mt-4 text-danger">{{$message}}</span>
                                             @enderror
                                         </div>

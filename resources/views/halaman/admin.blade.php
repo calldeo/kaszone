@@ -90,6 +90,9 @@
                                             <th><strong>Nama</strong></th>
                                             <th><strong>Email</strong></th>
                                             <th><strong>Level</strong></th>
+                                            <th><strong>Jenis Kelamin</strong></th>
+                                            <th><strong>Alamat</strong></th>
+
                                             {{-- <th><strong>Status</strong></th> --}}
                                             <th><strong>Option</strong></th>
                                         </tr>

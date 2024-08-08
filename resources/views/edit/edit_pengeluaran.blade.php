@@ -3,6 +3,7 @@
 <head>
     @include('template.headerr')
     <title>E-vote | {{ auth()->user()->level }} | Edit</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
     <!-- Preloader start -->
@@ -16,37 +17,6 @@
     <!-- Content body start -->
     <div class="content-body">
         <div class="container-fluid">
-            <!-- Modal for Add Project -->
-            <div class="modal fade" id="addProjectSidebar">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Create Project</h5>
-                            <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-                        </div>
-                        <div class="modal-body">
-                            <form>
-                                <div class="form-group">
-                                    <label class="text-black font-w500">Project Name</label>
-                                    <input type="text" class="form-control" name="project_name">
-                                </div>
-                                <div class="form-group">
-                                    <label class="text-black font-w500">Deadline</label>
-                                    <input type="date" class="form-control" name="deadline">
-                                </div>
-                                <div class="form-group">
-                                    <label class="text-black font-w500">Client Name</label>
-                                    <input type="text" class="form-control" name="client_name">
-                                </div>
-                                <div class="form-group">
-                                    <button type="button" class="btn btn-primary">CREATE</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Page Title and Breadcrumb -->
             <div class="row page-titles mx-0">
                 <div class="col-sm-6 p-md-0">
@@ -68,71 +38,90 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title">Edit Data Kategori</h4>
+                            <h4 class="card-title">Edit Data Pengeluaran</h4>
                         </div>
                         <div class="card-body">
                             <div class="basic-form">
                                 <form action="/pengeluaran/{{ $id_data }}" method="POST" enctype="multipart/form-data">
                                     @method('PUT')
                                     @csrf
+
                                     <div class="form-group">
-                                        <label class="text-label">Nama *</label>
+                                        <label class="text-label">Nama Pengeluaran *</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-money-bill-wave"></i> <!-- Ikon uang -->
+                                                </span>
                                             </div>
                                             <input type="text" class="form-control" id="val-username1" name="name" value="{{ old('name', $pengeluaran->name ?? '') }}" placeholder="Masukkan nama.." required>
                                         </div>
                                     </div>
+
                                     <div class="form-group">
                                         <label class="text-label">Deskripsi *</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-book"></i> <!-- Ikon buku -->
+                                                </span>
                                             </div>
-                                            <input type="text" class="form-control" id="val-description" name="description" value="{{ old('description', $pengeluaran->description ?? '') }}" placeholder="Masukkan deskripsi.." required>
+                                            <textarea class="form-control" id="val-description" name="description" placeholder="Masukkan deskripsi.." required>{{ old('description', $pengeluaran->description ?? '') }}</textarea>
                                         </div>
                                     </div>
+
                                     <div class="form-group">
                                         <label class="text-label">Tanggal *</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-calendar"></i> <!-- Ikon kalender -->
+                                                </span>
                                             </div>
-                                            <input type="date" class="form-control" id="val-date" name="date" value="" required>
+                                            <input type="date" class="form-control" id="val-date" name="date" value="{{ old('date', $pengeluaran->date ?? '') }}" required>
                                         </div>
                                     </div>
+
                                     <div class="form-group">
                                         <label class="text-label">Jumlah *</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fa fa-money"></i></span>
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-dollar-sign"></i> <!-- Ikon dolar -->
+                                                </span>
                                             </div>
                                             <input type="number" class="form-control" id="val-jumlah" name="jumlah" value="{{ old('jumlah', $pengeluaran->jumlah ?? '') }}" placeholder="Masukkan jumlah.." required>
                                         </div>
                                     </div>
+
                                     <div class="form-group">
                                         <label class="text-label">Kategori *</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fa fa-list"></i></span>
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-list"></i> <!-- Ikon daftar -->
+                                                </span>
                                             </div>
-                                            <select class="form-control default-select" id="val-category" name="category_id" required>
+                                            <select class="form-control default-select" id="val-category" name="category_id">
                                                 <option value="">--Pilih Kategori--</option>
-                                                @foreach($category as $category)
-                                                    <option value="{{ $category->id }}" {{ old('category_id', $pengeluaran->category_id ?? '') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                                                @foreach($category as $cat)
+                                                    <option value="{{ $cat->id }}" {{ old('category_id', $pengeluaran->category_id ?? '') == $cat->id ? 'selected' : '' }}>
+                                                        {{ $cat->name }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                         </div>
                                     </div>
+
                                     <div class="form-group">
                                         <div class="form-check">
                                             <input id="checkbox1" class="form-check-input" type="checkbox" required>
                                             <label for="checkbox1" class="form-check-label">Check me out *</label>
                                         </div>
                                     </div>
+
                                     <button type="submit" class="btn mr-2 btn-primary">Submit</button>
-                                    <button type="button" class="btn btn-light" onclick="redirectToKategori()">Cancel</button>
+                                    <button type="button" class="btn btn-light" onclick="redirectToPengeluaran()">Cancel</button>
                                 </form>
                             </div>
                         </div>
@@ -155,7 +144,7 @@
     @include('template.scripts')
 
     <script>
-        function redirectToKategori() {
+        function redirectToPengeluaran() {
             window.location.href = "/pengeluaran";
         }
     </script>

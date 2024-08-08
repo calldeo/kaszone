@@ -3,7 +3,7 @@
 
 <head>
     @include('template.headerr')
-    <title>E-vote | {{auth()->user()->level}} | Admin</title>
+    <title>KasZone| {{auth()->user()->level}} | Bendahara</title>
     
 </head>
 
@@ -25,13 +25,13 @@
                 <div class="col-sm-6 p-md-0">
                     <div class="welcome-text">
                         <h4>Hi, welcome back!</h4>
-                        <p class="mb-0">Data Admin</p>
+                        <p class="mb-0">Data Bendahara</p>
                     </div>
                 </div>
                 <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="javascript:void(0)">Table</a></li>
-                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Admin</a></li>
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Bendahara</a></li>
                     </ol>
                 </div>
             </div>
@@ -41,7 +41,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title">Data Admin</h4>
+                            <h4 class="card-title">Data Bendahara</h4>
                             <div class="text-right">
                           {{-- <div class="input-group search-area right d-lg-inline-flex d-none">
                             <form id="searchForm">
@@ -117,6 +117,8 @@
                                             <th><strong>Nama</strong></th>
                                             <th><strong>Email</strong></th>
                                             <th><strong>Level</strong></th>
+                                            <th><strong>Jenis Kelamin</strong></th>
+                                            <th><strong>Alamat</strong></th>
                                             {{-- <th><strong>Status</strong></th> --}}
                                             <th><strong>Option</strong></th>
                                         </tr>

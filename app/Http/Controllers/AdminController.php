@@ -29,13 +29,14 @@ class AdminController extends Controller
     public function table(Request $request)
     {
         if ($request->ajax()) {
-            $admins = User::where('level', 'admin')->select(['id', 'name', 'email', 'level'])->get();
+            $admins = User::where('level', 'admin')->select(['id', 'name', 'email', 'level','kelamin','alamat'])->get();
 
             return DataTables::of($admins)
                 ->addIndexColumn() // Menambahkan indeks otomatis
                 ->addColumn('opsi', function ($row) {
                     return '
                         <div class="d-flex align-items-center">
+                        
                             <form action="/admin/' . $row->id . '/edit_admin" method="GET" class="mr-1">
                                 <button type="submit" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></button>
                             </form>
@@ -87,6 +88,8 @@ class AdminController extends Controller
             'level' => 'required',
             'email' => 'required|unique:users,email',
             'password' => ['required', 'min:8', 'max:12'],
+            'kelamin' => 'required',
+            'alamat' => ['required', 'min:3', 'max:30'],
         ]);
 
         $user = User::where('name', $request->name)->orWhere('email', $request->email)->first();
@@ -100,6 +103,8 @@ class AdminController extends Controller
             'level' => $request->level,
             'email' => $request->email,
             'password' => bcrypt($request->password),
+             'kelamin' => $request->kelamin,
+            'alamat' => $request->alamat,
         ]);
 
         return redirect('/admin')->with('success', 'Data Berhasil Ditambahkan');
@@ -123,12 +128,18 @@ class AdminController extends Controller
             'level' => 'required',
             'email' => 'required|email|unique:users,email,' . $admin->id,
             'password' => ['nullable', 'min:8', 'max:12'], // Mengubah menjadi nullable
+            'kelamin' => 'required',
+            'alamat' => ['required', 'min:3', 'max:30'],
+
         ]);
 
         $data = [
             'name' => $request->name,
             'level' => $request->level,
             'email' => $request->email,
+            'kelamin' => $request->kelamin,
+            'alamat' => $request->alamat,
+
         ];
 
         // Menambahkan password ke data hanya jika ada input password
@@ -193,10 +204,16 @@ class AdminController extends Controller
         }
     }
 
-    public function tab(Request $request)
+
+
+
+
+
+
+    public function tab(Request $request) // BENDAHARA
     {
         if ($request->ajax()) {
-            $admins = User::where('level', 'bendahara')->select(['id', 'name', 'email', 'level'])->get();
+            $admins = User::where('level', 'bendahara')->select(['id', 'name', 'email', 'level','kelamin','alamat'])->get();
 
             return DataTables::of($admins)
                 ->addIndexColumn() // Menambahkan indeks otomatis
@@ -219,7 +236,9 @@ class AdminController extends Controller
         }
     }
 
-   public function teb(Request $request)
+
+
+   public function teb(Request $request) // KATEGORI
 {
     if ($request->ajax()) {
         $categories = Category::select(['id', 'name', 'description'])->get();
@@ -230,8 +249,8 @@ class AdminController extends Controller
                 return '
                     <div class="d-flex align-items-center">
                     <button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/kategori/' . $row->id . '/detail">
-                        <i class="fa fa-info-circle"></i>
-                    </button>
+                    <i class="fa fa-eye"></i>
+                    </button>
                         <form action="/kategori/' . $row->id . '/edit_kategori" method="GET" class="mr-1">
                             <button type="submit" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></button>
                         </form>
@@ -250,7 +269,8 @@ class AdminController extends Controller
 }
 
 
-    public function tob(Request $request)
+
+    public function tob(Request $request) // PEMASUKAN
     {
         if ($request->ajax()) {
             $pemasukan = Pemasukan::with('category')->select(['id_data', 'name', 'description', 'date', 'jumlah', 'id']);
@@ -263,7 +283,9 @@ class AdminController extends Controller
                 ->addColumn('opsi', function ($row) {
                     return '
                     <div class="d-flex align-items-center">
-                        <a href="/pemasukan/' . $row->id . '/d" class="btn btn-info btn-xs mr-1"><i class="fa fa-eye"></i></a>
+                      <button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/pemasukan/' . $row->id . '/detail">
+                    <i class="fa fa-eye"></i>
+                    </button>
                         <a href="/pemasukan/' . $row->id_data . '/edit_pemasukan" class="btn btn-warning btn-xs mr-1"><i class="fa fa-pencil"></i></a>
                         <form action="/pemasukan/' . $row->id . '/destroy" method="POST" style="display:inline;">
                             ' . csrf_field() . '
@@ -278,7 +300,9 @@ class AdminController extends Controller
     }
 
 
- public function tabe(Request $request)
+
+
+ public function tabe(Request $request) // PENGELUARAN
     {
         if ($request->ajax()) {
             $pengeluaran = Pengeluaran::with('category')->select(['id_data', 'name', 'description', 'date', 'jumlah', 'id']);
@@ -291,7 +315,9 @@ class AdminController extends Controller
                 ->addColumn('opsi', function ($row) {
                     return '
                     <div class="d-flex align-items-center">
-                        <a href="/pengeluaran/' . $row->id . '/d" class="btn btn-info btn-xs mr-1"><i class="fa fa-eye"></i></a>
+                      <button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/pengeluaran/' . $row->id . '/detail">
+                    <i class="fa fa-eye"></i>
+                    </button>
                         <a href="/pengeluaran/' . $row->id_data . '/edit_pengeluaran" class="btn btn-warning btn-xs mr-1"><i class="fa fa-pencil"></i></a>
                         <form action="/pengeluaran/' . $row->id . '/destroy" method="POST" style="display:inline;">
                             ' . csrf_field() . '
