@@ -229,6 +229,9 @@ class AdminController extends Controller
             ->addColumn('opsi', function ($row) {
                 return '
                     <div class="d-flex align-items-center">
+                    <button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/kategori/' . $row->id . '/detail">
+                        <i class="fa fa-info-circle"></i>
+                    </button>
                         <form action="/kategori/' . $row->id . '/edit_kategori" method="GET" class="mr-1">
                             <button type="submit" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></button>
                         </form>

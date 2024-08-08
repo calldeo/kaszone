@@ -116,4 +116,14 @@ public function kategoriimportexcel(Request $request) {
     return view('halaman.cetaklaporan',compact('category'));
     }
     
+    // Method untuk mendapatkan detail admin
+     public function showDetail($id)
+     {
+         $category = Category::find($id);
+         if ($category) {
+             return response()->json($category);
+         } else {
+             return response()->json(['message' => 'Kategori tidak ditemukan.'], 404);
+         }
+     }
 }

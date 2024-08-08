@@ -12,6 +12,8 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BendaharaController;
 use App\Http\Controllers\PemasukanController;
 use App\Http\Controllers\PengeluaranController;
+use App\Http\Controllers\Auth\RegisterController;
+
 
 
 /*
@@ -34,7 +36,11 @@ route::get('/login',[LoginController::class,'halamanlogin'])->name('login');
 route::post('/postlogin',[LoginController::class,'postlogin'])->name('postlogin');
 route::get('/logout',[LoginController::class,'logout'])->name('logout');
 
+// Menampilkan form registrasi
+Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register');
 
+// Memproses registrasi
+Route::post('/postregister', [RegisterController::class, 'register']);
 
 
 
@@ -123,6 +129,8 @@ Route::delete('/pengeluaran/{id}/destroy', [PengeluaranController::class, 'destr
 Route::get('/pengeluaran/{id_pengeluaran}/edit_pengeluaran',[PengeluaranController::class,'edit']);
 Route::put('/pengeluaran/{id_pengeluaran}', [PengeluaranController::class, 'update'])->name('update');
 
+// Route::get('kategori/teb', [CategoryController::class, 'teb'])->name('kategori.teb');
+Route::get('/kategori/{id}/detail', [CategoryController::class, 'showDetail'])->name('kategori.showDetail');
 
 
 

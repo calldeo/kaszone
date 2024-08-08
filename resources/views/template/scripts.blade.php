@@ -39,6 +39,12 @@
     }
 	</script>
 	
+    <script>
+    function redirectToLogin() {
+        // Ganti URL dengan URL halaman admin yang diinginkan
+        window.location.href = "/login";
+    }
+	</script>
 {{-- <script>
     $(document).ready(function() {
         // Submit form on input change
