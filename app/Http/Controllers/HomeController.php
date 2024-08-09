@@ -2,17 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Osis;
 use App\Models\User;
-use Illuminate\Http\Request;
+use App\Models\Pemasukan;
 use App\Models\SettingWaktu;
-use Carbon\Carbon;
+use Illuminate\Http\Request;
+
 class HomeController extends Controller
 {
     public function index()
     {
        
-            return view('home');
+           $totalPemasukan = Pemasukan::sum('jumlah');
+            return view('home', compact('totalPemasukan'));
       
         
     }

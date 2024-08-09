@@ -77,25 +77,29 @@
                 <tr>
                     <th>No. </th>
                     <th>Nama Pengeluaran</th>
-                    <th>Deksripsi</th>
+                    <th>Deskripsi</th>
                     <th>Kategori</th>
                     <th>Tanggal</th>
                     <th>Jumlah</th>
-
                 </tr>
             </thead>
             <tbody>
-                @foreach ($pengeluaran as $ct)
+                @foreach ($pengeluaran as $index => $ct)
                 <tr>
-                    <td style="text-align: center;">{{ $ct->id }}</td>
+                    <td style="text-align: center;">{{ $index + 1 }}</td>
                     <td style="text-align: center;">{{ $ct->name }}</td>
                     <td style="text-align: center;">{{ $ct->description }}</td>
                     <td style="text-align: center;">{{ $ct->category->name}}</td>
                     <td style="text-align: center;">{{ $ct->date}}</td>
-                    <td style="text-align: center;">{{ $ct->jumlah}}</td>
-
+                    <td style="text-align: center;">{{ number_format($ct->jumlah, 0, ',', '.') }}</td>
                 </tr>
                 @endforeach
+                <tr>
+                    <td colspan="5" style="text-align: right; font-weight: bold;">Total Jumlah:</td>
+                    <td style="text-align: center; font-weight: bold;">
+                        {{ number_format($pengeluaran->sum('jumlah'), 0, ',', '.') }}
+                    </td>
+                </tr>
             </tbody>
         </table>
         
@@ -104,8 +108,8 @@
             {{-- <img src="/foto_kepala_sekolah/tanda_tangan.png" alt="Tanda Tangan Kepala Sekolah" style="width: 150px;"> --}}
             {{-- <p style="margin-bottom: 20px;">Kepala Sekolah</p>
             <p style="margin-top: 70px;">...................</p>
-        </div>
-    </div> --}}
+        </div> --}}
+    </div> 
     <script>
         window.print();
     </script>

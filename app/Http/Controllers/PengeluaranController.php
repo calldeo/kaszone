@@ -6,7 +6,7 @@ use App\Models\Category;
 use App\Models\Pengeluaran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use PDF;
 class PengeluaranController extends Controller
 {
     //
@@ -121,9 +121,12 @@ public function cetakpgl()
         // Dapatkan calon dengan jumlah suara terbanyak
        
        $pengeluaran = Pengeluaran::all();
+       $pdf = PDF::loadview('halaman.cetakpgl',compact('pengeluaran'));
+       $pdf->setPaper('A4','potrait');
+       return $pdf->stream('pengeluaran.pdf');
 
 
-    return view('halaman.cetakpgl',compact('pengeluaran'));
+    // return view('halaman.cetakpgl',compact('pengeluaran'));
     }
  public function showDetail($id)
     {
