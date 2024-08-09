@@ -47,6 +47,19 @@
                 <input type="password" name="password_confirmation" id="password_confirmation" class="mt-1 block w-full border custom-border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-3" required>
                 <p id="passwordConfirmationError" class="error-message hidden">Konfirmasi kata sandi harus diisi dan harus sama dengan kata sandi.</p>
             </div>
+            <div class="mb-4">
+                <label for="name" class="block text-sm font-medium text-gray-700">Alamat</label>
+                <input type="text" name="alamat" id="alamat" class="mt-1 block w-full border custom-border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-3" required>
+                <p id="nameError" class="error-message hidden">Alamat harus diisi.</p>
+            </div>
+            <div class="mb-6">
+                <label for="level" class="block text-sm font-medium text-gray-700">Jenis Kelamin</label>
+                <select name="kelamin" id="kelamin" class="mt-1 block w-full border custom-border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-3" required>
+                    <option value="" disabled selected>Jenis Kelamin</option>
+                    <option value="laki-laki">Laki-Laki</option>
+                    <option value="perempuan">Perempuan</option>
+                </select>
+            </div>
             <div class="mb-6">
                 <label for="level" class="block text-sm font-medium text-gray-700">Peran</label>
                 <select name="level" id="level" class="mt-1 block w-full border custom-border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-3" required>

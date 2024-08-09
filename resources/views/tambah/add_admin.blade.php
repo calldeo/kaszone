@@ -172,6 +172,7 @@
                                             <span class="mt-4 text-danger">{{$message}}</span>
                                             @enderror
                                         </div>
+                                        
                                         <div class="form-group">
                                             <div class="form-check">
                                                 <input id="checkbox1" class="form-check-input" type="checkbox" required>

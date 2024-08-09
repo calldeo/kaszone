@@ -29,6 +29,11 @@ class RegisterController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|confirmed|min:8',
             'level' => 'required|string|in:admin,bendahara', // Validasi level dengan opsi baru
+            'alamat' => ['required', 'min:3', 'max:30'],
+            'kelamin' => 'required',
+
+
+            
         ]);
         
         if ($validator->fails()) {
@@ -43,6 +48,9 @@ class RegisterController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'level' => $request->level,  // Menambahkan kolom level
+            'alamat'=> $request->alamat,
+            'kelamin'=> $request->kelamin,
+
         ]);
 
         // Redirect ke halaman login setelah pendaftaran berhasil
