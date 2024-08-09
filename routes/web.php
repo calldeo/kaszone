@@ -1,9 +1,9 @@
 <?php
 
 use App\Models\Pengeluaran;
+use App\Exports\PengeluaranExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Route;
-use App\Exports\PengeluaranExport;
 // use Maatwebsite\Excel\Facades\Excel;
 
 use App\Http\Controllers\HomeController;
@@ -15,6 +15,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BendaharaController;
 use App\Http\Controllers\PemasukanController;
 use App\Http\Controllers\PengeluaranController;
+use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\Auth\RegisterController;
 
 
@@ -44,7 +45,8 @@ Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('
 // Memproses registrasi
 Route::post('/postregister', [RegisterController::class, 'register']);
 
-
+Route::get('/profile/edit', [UserProfileController::class, 'edit'])->name('profile.edit');
+Route::put('/profile/update', [UserProfileController::class, 'update'])->name('profile.update');
 
 
 
