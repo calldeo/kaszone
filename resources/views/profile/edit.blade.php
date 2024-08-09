@@ -57,6 +57,19 @@
                                 <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     @method('PUT')
+
+                                    <div class="form-group">
+                                        <label>Foto Profil</label>
+                                        <div class="mb-3">
+                                            <img src="{{ asset('storage/' . auth()->user()->poto) }}" alt="Foto Profil" class="rounded-circle" width="150" height="150">
+                                        </div>
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" name="foto_profil">
+                                            <label class="custom-file-label">Pilih file</label>
+                                        </div>
+                                        <label class="text-label" style="color: red;">* Jika tidak ada perubahan, tidak perlu diisi</label>
+                                    </div>
+
                                     <div class="form-group">
                                         <label class="text-label">Name *</label>
                                         <div class="input-group">
@@ -76,16 +89,16 @@
                                             <input type="email" class="form-control" name="email" value="{{ auth()->user()->email }}" required>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="form-group">
                                         <label>Kelamin *</label>
                                         <select class="form-control default-select" name="kelamin" disabled>
                                             <option value="laki-laki" {{ auth()->user()->kelamin == 'laki-laki' ? 'selected' : '' }}>Laki - Laki</option>
                                             <option value="perempuan" {{ auth()->user()->kelamin == 'perempuan' ? 'selected' : '' }}>Perempuan</option>
-                                            <!-- Tambahkan opsi level lain jika diperlukan -->
                                         </select>
                                         <input type="hidden" name="kelamin" value="{{ auth()->user()->kelamin }}">
                                     </div>
+
                                     <div class="form-group">
                                         <label class="text-label">Alamat *</label>
                                         <div class="input-group">
@@ -95,6 +108,7 @@
                                             <input type="text" class="form-control" name="alamat" value="{{ auth()->user()->alamat }}" required>
                                         </div>
                                     </div>
+
                                     <div class="form-group">
                                         <label class="text-label">Password *</label>
                                         <div class="input-group transparent-append">
@@ -117,7 +131,6 @@
                                         <select class="form-control default-select" name="level" disabled>
                                             <option value="admin" {{ auth()->user()->level == 'admin' ? 'selected' : '' }}>Admin</option>
                                             <option value="bendahara" {{ auth()->user()->level == 'bendahara' ? 'selected' : '' }}>Bendahara</option>
-                                            <!-- Tambahkan opsi level lain jika diperlukan -->
                                         </select>
                                         <input type="hidden" name="level" value="{{ auth()->user()->level }}">
                                     </div>

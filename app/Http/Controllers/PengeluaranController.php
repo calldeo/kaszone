@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use PDF;
 use App\Models\Category;
+use App\Models\Pemasukan;
 use App\Models\Pengeluaran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use PDF;
+
 class PengeluaranController extends Controller
 {
     //
@@ -16,8 +18,7 @@ class PengeluaranController extends Controller
          // Menggunakan pagination
         return view('halaman.datapengeluaran', compact('pengeluaran'));
     }
-
-     public function create()
+public function create()
     {
         $categories = Category::all(); // Mengambil semua kategori
         return view('tambah.add_pengeluaran', compact('categories'));
@@ -29,35 +30,66 @@ class PengeluaranController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'date' => 'required|date',
-            'jumlah' => 'required|numeric',
+            'jumlah' => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
         ]);
 
-     DB::beginTransaction();
-     try {
-        //code... 
-        $pengeluaran = new Pengeluaran();
-        $pengeluaran->name = $request->name;
-        $pengeluaran->description = $request->description;
-        $pengeluaran->date = $request->date;
-        $pengeluaran->jumlah = $request->jumlah;
-        $pengeluaran->id = $request->category_id;
-       
+        // Memulai transaksi database
+        DB::beginTransaction();
 
-        
-        // dd($pemasukan);
-        $pengeluaran->save();
-        DB::commit();
-     } catch (\Throwable $th) {
-        DB::rollback();
-        return redirect('/pengeluaran')->with('success', 'Pemasukan gagal ditambahkan!' . $th->getMessage());
+        try {
+            // Ambil total pemasukan yang tersedia dari semua record pemasukan
+            $totalPemasukanTersedia = Pemasukan::sum('jumlah');
 
-        //throw $th;
-     }
-        return redirect('/pengeluaran')->with('success', 'Pemasukan berhasil ditambahkan!');
-       
-        // Pemasukan::create($request->all());
+            // Mengecek apakah jumlah pengeluaran melebihi pemasukan yang tersedia
+            if ($request->jumlah > $totalPemasukanTersedia) {
+                return redirect()->back()->with('error', 'Jumlah pengeluaran melebihi pemasukan yang tersedia.');
+            }
 
+            // Menambahkan data pengeluaran baru
+            $pengeluaran = new Pengeluaran();
+            $pengeluaran->name = $request->name;
+            $pengeluaran->description = $request->description;
+            $pengeluaran->date = $request->date;
+            $pengeluaran->jumlah = $request->jumlah;
+            $pengeluaran->id = $request->category_id;
+            $pengeluaran->save();
+
+            // Kurangi total pemasukan yang tersedia sesuai dengan jumlah pengeluaran
+            $this->kurangiPemasukan($request->jumlah);
+
+            // Commit transaksi jika semua operasi berhasil
+            DB::commit();
+
+            return redirect('/pengeluaran')->with('success', 'Pengeluaran berhasil ditambahkan.');
+        } catch (\Throwable $th) {
+            // Rollback transaksi jika terjadi error
+            DB::rollback();
+
+            return redirect('/pengeluaran')->with('error', 'Pemasukan gagal ditambahkan! ' . $th->getMessage());
+        }
+    }
+
+     private function kurangiPemasukan($jumlah)
+    {
+        // Ambil semua pemasukan yang masih memiliki total_available > 0
+        $pemasukans = Pemasukan::where('jumlah', '>', 0)->orderBy('id_data')->get();
+
+        foreach ($pemasukans as $pemasukan) {
+            if ($jumlah <= 0) {
+                break;
+            }
+
+            if ($pemasukan->jumlah >= $jumlah) {
+                $pemasukan->jumlah -= $jumlah;
+                $pemasukan->save();
+                $jumlah = 0;
+            } else {
+                $jumlah -= $pemasukan->jumlah;
+                $pemasukan->jumlah = 0;
+                $pemasukan->save();
+            }
+        }
     }
 
     public function destroy($id_data)
@@ -130,12 +162,20 @@ public function cetakpgl()
     }
  public function showDetail($id)
     {
-        $pengeluaran = Pengeluaran::find($id);
-        if ($pengeluaran) {
-            return response()->json($pengeluaran);
-        } else {
-            return response()->json(['message' => 'pengeluaran tidak ditemukan.'], 404);
-        }
+        $pengeluaran = Pengeluaran::with('category')->find($id);
+
+    if (!$pengeluaran) {
+        return response()->json(['message' => 'Pengeluaran not found'], 404);
+    }
+
+    return response()->json([
+        'id_data' => $pengeluaran->id,
+        'name' => $pengeluaran->name,
+        'description' => $pengeluaran->description,
+        'date' => $pengeluaran->date,
+        'jumlah' => $pengeluaran->jumlah,
+        'category_name' => $pengeluaran->category->name, // Ambil nama kategori
+    ]);
     }
 
     public function data()

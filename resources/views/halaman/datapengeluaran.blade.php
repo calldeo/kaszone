@@ -63,6 +63,13 @@
 
                         </div>
                         <div class="card-body">
+                            @if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show">
+        <strong>Error!</strong> {{ session('error') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span><i class="fa fa-times"></i></span></button>
+    </div>
+@endif
+
                             @if(session('success'))
                             <div class="alert alert-success alert-dismissible fade show">
                                 <svg viewbox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
@@ -256,6 +263,7 @@
                             <strong>Deskripsi:</strong><br />
                             <strong>Tanggal:</strong><br />
                             <strong>Jumlah:</strong><br />
+                            <strong>Kategori:</strong><br />
                         </div>
                         <div class="col-sm-8">
                             <div id="id_data"></div>
@@ -263,6 +271,7 @@
                             <div id="description"></div>
                             <div id="date"></div>
                             <div id="jumlah"></div>
+                            <div id="category"></div> 
                         </div>
                     </div>
                 </div>
@@ -273,43 +282,46 @@
         </div>
     </div>
     
-  
-    <script>
-        $(document).ready(function() {
-            $('#kategoriTable').DataTable();
+  <script>
+    $(document).ready(function() {
+        $('#kategoriTable').DataTable();
+        
+        $('#adminDetailModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget); // Tombol yang memicu modal
+            var url = button.data('url'); // Ambil URL dari atribut data-url
             
-            $('#adminDetailModal').on('show.bs.modal', function(event) {
-                var button = $(event.relatedTarget); // Tombol yang memicu modal
-                var url = button.data('url'); // Ambil info dari atribut data-*
-                
-                var modal = $(this);
-                
-                // Kosongkan konten modal sebelum memuat data baru
-                modal.find('#id_data').text('');
-                modal.find('#name').text('');
-                modal.find('#description').text('');
-                modal.find('#date').text('');
-                modal.find('#jumlah').text('');
-                
-                $.ajax({
-                    url: url,
-                    method: 'GET',
-                    success: function(data) {
-                        // Isi modal dengan data baru
-                        modal.find('#id_data').text(data.id_data || 'N/A');
-                        modal.find('#name').text(data.name || 'N/A');
-                        modal.find('#description').text(data.description || 'N/A');
-                        modal.find('#date').text(data.date || 'N/A');
-                        modal.find('#jumlah').text(data.jumlah || 'N/A');
-                    },
-                    error: function(xhr, status, error) {
-                        console.log(xhr.responseText); // Tampilkan pesan kesalahan di konsol
-                        modal.find('.modal-body').html('Terjadi kesalahan saat memuat detail');
-                    }
-                });
+            var modal = $(this);
+            
+            // Kosongkan konten modal sebelum memuat data baru
+            modal.find('#id_data').text('');
+            modal.find('#name').text('');
+            modal.find('#description').text('');
+            modal.find('#date').text('');
+            modal.find('#jumlah').text('');
+            modal.find('#category').text(''); // Kosongkan kategori
+            
+            // Panggil AJAX untuk mendapatkan data detail
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success: function(data) {
+                    // Isi modal dengan data baru
+                    modal.find('#id_data').text(data.id_data || 'N/A');
+                    modal.find('#name').text(data.name || 'N/A');
+                    modal.find('#description').text(data.description || 'N/A');
+                    modal.find('#date').text(data.date || 'N/A');
+                    modal.find('#jumlah').text(data.jumlah || 'N/A');
+                    modal.find('#category').text(data.category_name || 'N/A');
+                },
+                error: function(xhr, status, error) {
+                    console.log(xhr.responseText); // Tampilkan pesan kesalahan di konsol
+                    modal.find('.modal-body').html('Terjadi kesalahan saat memuat detail');
+                }
             });
         });
-        </script>
+    });
+</script>
+
 
 <script>
             $(document).ready(function() {

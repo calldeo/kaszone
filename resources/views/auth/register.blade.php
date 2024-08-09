@@ -56,6 +56,7 @@
                 </select>
             </div>
             <button type="submit" class="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">Daftar</button>
+            <a href="{{ url('/login') }}" class="block mt-4 text-center text-indigo-600 hover:text-indigo-800">Cancel</a>
         </form>
 
         <script>

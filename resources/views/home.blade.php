@@ -3,46 +3,16 @@
 
 <head>
     @include('template.headerr')
-    <title>KasZone | {{auth()->user()->level}} |  Dashboard </title>
-    <style>
-        .card {
-            border: 1px solid #e1e1e1;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-            background-color: #ffffff;
-            text-align: center;
-        }
-
-        .card-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .card-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #007bff;
-        }
-    </style>
+    <title>E-vote | Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 
 <body>
-
-    <!-- Preloader start -->
     @include('template.topbarr')
-    <!-- Header end -->
-
-    <!-- Sidebar start -->
     @include('template.sidebarr')
-    <!-- Sidebar end -->
 
-    <!-- Content body start -->
     <div class="content-body">
         <div class="container-fluid">
-            <!-- Add Project -->
             <div class="row page-titles mx-0">
                 <div class="col-sm-6 p-md-0">
                     <div class="welcome-text">
@@ -52,43 +22,70 @@
                 </div>
                 <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">Table</a></li>
-                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
                     </ol>
                 </div>
             </div>
 
-            <!-- Card for Total Income -->
+            <!-- Card untuk Menampilkan Data Keuangan -->
             <div class="row">
+                <!-- Card Total Pemasukan -->
                 <div class="col-lg-4 col-md-6">
                     <div class="card">
-                        <div class="card-title">Saldo</div>
-                        <div class="card-value">Rp{{ number_format($totalPemasukan, 0, ',', '.') }}</div>
+                        <div class="card-body">
+                            <div class="media">
+                                <span class="mr-3"><i class="fas fa-wallet"></i></span>
+                                <div class="media-body">
+                                    <h5 class="mb-1">Total Pemasukan</h5>
+                                    <h3 class="card-text">Rp {{ number_format($totalPemasukan, 2, ',', '.') }}</h3>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <!-- Card Total Pengeluaran -->
                 <div class="col-lg-4 col-md-6">
                     <div class="card">
-                        <div class="card-title">Total Pemasukan</div>
-                        <div class="card-value">Rp{{ number_format($totalPemasukan, 0, ',', '.') }}</div>
+                        <div class="card-body">
+                            <div class="media">
+                                <span class="mr-3"><i class="fas fa-shopping-cart"></i></span>
+                                <div class="media-body">
+                                    <h5 class="mb-1">Total Pengeluaran</h5>
+                                    <h3 class="card-text">Rp {{ number_format($totalPengeluaran, 2, ',', '.') }}</h3>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <!-- You can add more cards here -->
+
+                <!-- Card Saldo -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="media">
+                                <span class="mr-3"><i class="fas fa-money-bill-wave"></i></span>
+                                <div class="media-body">
+                                    <h5 class="mb-1">Saldo</h5>
+                                    <h3 class="card-text">Rp {{ number_format($saldo, 2, ',', '.') }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <!-- End of Card Section -->
 
         </div>
     </div>
-    <!-- Content body end -->
 
-    <!-- Main wrapper end -->
+    <div class="footer">
+        <div class="copyright">
+            <p>Copyright © Designed & Developed by <a href="/home" target="_blank">SYNC</a> 2024</p>
+        </div>
+    </div>
 
-    <!-- Scripts -->
-    <!-- Required vendors -->
     @include('template.scripts')
-
-    <!-- Sweet Alert -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
-
 </body>
 
 </html>

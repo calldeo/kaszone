@@ -80,12 +80,12 @@
                             </a>
                         </li>
                     
-                        <li class="nav-item dropdown header-profile">
+                      <li class="nav-item dropdown header-profile">
                             <a class="nav-link" href="#" role="button" data-toggle="dropdown">
-                                <img src="{{ asset('dash/images/mamo.jpeg') }}" width="20" alt="">
+                                <img src="{{ auth()->user()->poto ? asset('storage/' . auth()->user()->poto) : asset('dash/images/mamo.jpeg') }}" width="20" alt="">
                                 <div class="header-info">
-                                    <span>{{auth()->user()->name}}</span>
-                                    <small>{{auth()->user()->level}}</small>
+                                    <span>{{ auth()->user()->name }}</span>
+                                    <small>{{ auth()->user()->level }}</small>
                                 </div>
                             </a>
                             
