@@ -320,7 +320,7 @@ class AdminController extends Controller
                     </button>
                     <a href="/pengeluaran/' . $row->id_data . '/edit_pengeluaran" class="btn btn-warning btn-xs mr-1"><i class="fas fa-pencil-alt"></i>
 </a>
-                        <form action="/pengeluaran/' . $row->id . '/destroy" method="POST" style="display:inline;">
+                        <form action="/pengeluaran/' . $row->id_data . '/destroy" method="POST" style="display:inline;">
                             ' . csrf_field() . '
                             ' . method_field('DELETE') . '
                             <button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>

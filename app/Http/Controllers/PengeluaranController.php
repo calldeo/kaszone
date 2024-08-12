@@ -56,7 +56,7 @@ public function create()
             $pengeluaran->save();
 
             // Kurangi total pemasukan yang tersedia sesuai dengan jumlah pengeluaran
-            $this->kurangiPemasukan($request->jumlah);
+            // $this->kurangiPemasukan($request->jumlah);
 
             // Commit transaksi jika semua operasi berhasil
             DB::commit();
@@ -70,27 +70,6 @@ public function create()
         }
     }
 
-     private function kurangiPemasukan($jumlah)
-    {
-        // Ambil semua pemasukan yang masih memiliki total_available > 0
-        $pemasukans = Pemasukan::where('jumlah', '>', 0)->orderBy('id_data')->get();
-
-        foreach ($pemasukans as $pemasukan) {
-            if ($jumlah <= 0) {
-                break;
-            }
-
-            if ($pemasukan->jumlah >= $jumlah) {
-                $pemasukan->jumlah -= $jumlah;
-                $pemasukan->save();
-                $jumlah = 0;
-            } else {
-                $jumlah -= $pemasukan->jumlah;
-                $pemasukan->jumlah = 0;
-                $pemasukan->save();
-            }
-        }
-    }
 
     public function destroy($id_data)
 {
