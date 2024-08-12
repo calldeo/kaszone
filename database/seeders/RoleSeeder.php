@@ -16,7 +16,7 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        //
+        
         Role::updateorcreate(
             [
                 'name'=>'admin',
@@ -30,6 +30,7 @@ class RoleSeeder extends Seeder
             ],
             ['name'=>'bendahara']
         );
+     
 
     }
 }

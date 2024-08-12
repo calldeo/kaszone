@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use PDF;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Imports\KategoriImport;
@@ -137,10 +138,10 @@ public function kategoriimportexcel(Request $request) {
     {
         // Dapatkan calon dengan jumlah suara terbanyak
        
-       $category = Category::all();
-
-
-    return view('halaman.cetaklaporan',compact('category'));
+      $category = Category::all();
+       $pdf = PDF::loadview('halaman.cetaklaporan',compact('category'));
+       $pdf->setPaper('A4','potrait');
+       return $pdf->stream('kategori.pdf');
     }
     
     // Method untuk mendapatkan detail kategori
@@ -154,4 +155,9 @@ public function showDetail($id)
     }
 }
 
+public function downloadTemplate()
+{
+    $filePath = public_path('templates/template-category.xlsx'); // Path ke file template
+    return response()->download($filePath);
+}
 }

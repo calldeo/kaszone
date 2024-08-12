@@ -110,7 +110,7 @@ Route::get('/cetaklaporan',[CategoryController::class,'cetaklaporan'])->name('ce
 route::get('/pemasukan',[PemasukanController::class,'index'])->name('index');
 Route::get('/add_pemasukan', [PemasukanController::class, 'create']);
 Route::post('/pemasukan/store', [PemasukanController::class, 'store']);
-Route::delete('/pemasukan/{id}/destroy', [PemasukanController::class, 'destroy'])->name('pemasukan.destroy');
+Route::delete('/pemasukan/{id_data}/destroy', [PemasukanController::class, 'destroy'])->name('pemasukan.destroy');
 Route::get('/pemasukan/{id_pemasukan}/edit_pemasukan',[PemasukanController::class,'edit']);
 Route::put('/pemasukan/{id_pemasukan}', [PemasukanController::class, 'update'])->name('update');
 
@@ -139,4 +139,9 @@ Route::get('/pengeluaran', [PengeluaranController::class, 'index'])->name('penge
 Route::get('/pengeluaran/data', [AdminController::class, 'tabe'])->name('admin.tabe');
 Route::get('pengeluaran/tabe', [PengeluaranController::class, 'tabe'])->name('pengeluaran.tabe');
 Route::get('/pengeluaran/{id_data}/detail', [PengeluaranController::class, 'showDetail'])->name('pengeluaran.showDetail');
+Route::get('/download-template-kategori', [CategoryController::class, 'downloadTemplate'])->name('download-template-kategori');
 
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -287,7 +287,7 @@ class AdminController extends Controller
                     <i class="fa fa-eye"></i>
                     </button>
                         <a href="/pemasukan/' . $row->id_data . '/edit_pemasukan" class="btn btn-warning btn-xs mr-1"><i class="fa fa-pencil"></i></a>
-                        <form action="/pemasukan/' . $row->id . '/destroy" method="POST" style="display:inline;">
+                        <form action="/pemasukan/' . $row->id_data . '/destroy" method="POST" style="display:inline;">
                             ' . csrf_field() . '
                             ' . method_field('DELETE') . '
                             <button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>
