@@ -76,6 +76,18 @@
             </div>
             <!-- End of Card Section -->
 
+            <!-- Grafik Total Pemasukan vs Pengeluaran -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Grafik Pemasukan vs Pengeluaran</h5>
+                            <canvas id="financialChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -86,6 +98,38 @@
     </div>
 
     @include('template.scripts')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        const ctx = document.getElementById('financialChart').getContext('2d');
+        const financialChart = new Chart(ctx, {
+            type: 'bar', // Tipe grafik batang
+            data: {
+                labels: ['Total Pemasukan', 'Total Pengeluaran'], // Label untuk sumbu X
+                datasets: [{
+                    label: 'Jumlah (Rp)',
+                    data: [{{ $totalPemasukan }}, {{ $totalPengeluaran }}], // Data Pemasukan dan Pengeluaran
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 99, 132, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 99, 132, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
 </body>
 
 </html>

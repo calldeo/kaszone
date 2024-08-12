@@ -73,6 +73,10 @@
                             <button type="submit" class="btn btn-primary">Import</button>
                         </form>
                     </div>
+                      <!-- Tombol untuk mendownload template Excel -->
+                <a href="{{ route('download-template-kategori') }}" class="btn btn-secondary mb-3">
+                    <i class="fa fa-download"></i> Download Template Excel
+                </a>
                 </div>
             </div>
         </div>

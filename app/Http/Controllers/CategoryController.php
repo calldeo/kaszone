@@ -153,5 +153,9 @@ public function showDetail($id)
         return response()->json(['message' => 'Kategori tidak ditemukan.'], 404);
     }
 }
-
+public function downloadTemplate()
+{
+    $filePath = public_path('templates/template-category.xlsx'); // Path ke file template
+    return response()->download($filePath);
+}
 }
