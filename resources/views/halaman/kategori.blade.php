@@ -62,7 +62,8 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        
+                          <!-- Tombol untuk mendownload template Excel -->
+                
                         <!-- Form untuk mengunggah file Excel -->
                         <form action="{{ route('import-kategori') }}" method="POST" enctype="multipart/form-data">
                             @csrf
@@ -73,12 +74,20 @@
                             <button type="submit" class="btn btn-primary">Import</button>
                         </form>
                     </div>
+<<<<<<< HEAD
                       <!-- Tombol untuk mendownload template Excel -->
                 <a href="{{ route('download-template-kategori') }}" class="btn btn-secondary mb-3">
                     <i class="fa fa-download"></i> Download Template Excel
                 </a>
                 </div>
                
+=======
+                     <a href="{{ route('download-template-kategori') }}" class="btn btn-secondary mb-3">
+                    <i class="fa fa-download"></i> Download Template Excel
+                </a>
+                </div>
+                
+>>>>>>> 3e681953d539019cf1e5b0ded99060edf102f345
             </div>
         </div>
         <a href="/cetaklaporan" target="blank" class="btn btn-info ml-2" title="Print Report">
