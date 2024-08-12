@@ -105,6 +105,8 @@ Route::get('/kategori/{id}/edit_kategori  ',[CategoryController::class,'edit']);
 Route::put('/kategori/{id}',[CategoryController::class,'update']);
 Route::post('/importkategori', [CategoryController::class, 'kategoriimportexcel'])->name('import-kategori');
 Route::get('/cetaklaporan',[CategoryController::class,'cetaklaporan'])->name('cetaklaporan');
+Route::get('/download-template-kategori', [CategoryController::class, 'downloadTemplate'])->name('download-template-kategori');
+
 
 
 route::get('/pemasukan',[PemasukanController::class,'index'])->name('index');
