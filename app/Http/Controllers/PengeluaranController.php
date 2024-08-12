@@ -116,36 +116,39 @@ public function edit($id_data)
     return view('edit.edit_pengeluaran', compact('id_data', 'pengeluaran', 'category'));
 }
 
-public function update(Request $request, $id_data)
-{
-    // Validasi input
-    $request->validate([
-        'name' => ['required', 'min:3', 'max:30'],
-        'description' => ['required', 'min:3', 'max:255'],
-        'date' => ['required', 'date'],
-        'jumlah' => ['required', 'numeric'],
-        'category_id' => ['nullable', 'exists:categories,id'],
-    ]);
 
-    // Cari data pengeluaran berdasarkan ID
-    $pengeluaran = Pengeluaran::find($id_data);
+  public function update(Request $request, $id_data)
+    {
+        // Validasi input
+        $request->validate([
+            'name' => ['required', 'min:3', 'max:30'],
+            'description' => ['required', 'min:3', 'max:255'],
+            'date' => ['required', 'date'],
+            'jumlah' => ['required', 'numeric'],
+             'id' => ['nullable', 'exists:categories,id'],
 
-    // Jika data pengeluaran tidak ditemukan, arahkan kembali dengan pesan error
-    if (!$pengeluaran) {
-        return redirect('/pengeluaran')->with('error', 'Data pengeluaran tidak ditemukan.');
-    }
+        ]);
 
-    // Update data pengeluaran
-    $pengeluaran->update([
-        'name' => $request->name,
-        'description' => $request->description,
-        'date' => $request->date,
-        'jumlah' => $request->jumlah,
-        'category_id' => $request->category_id ?? $pengeluaran->category_id, // Gunakan nilai kategori yang ada jika tidak ada yang baru
-    ]);
+        // Cari data pemasukan berdasarkan ID
+         $pengeluaran = Pengeluaran::find($id_data);
 
-    // Arahkan kembali ke halaman pengeluaran dengan pesan sukses
-    return redirect('/pengeluaran')->with('update_success', 'Data pengeluaran berhasil diperbarui.');
+        // Jika data pengeluaran tidak ditemukan, arahkan kembali dengan pesan error
+        // if (!$pengeluaran) {
+        //     return redirect('/datapengeluaran')->with('error', 'Data pengeluaran tidak ditemukan.');
+        // }
+
+        // Update data pengeluaran
+        $pengeluaran->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'date' => $request->date,
+            'jumlah' => $request->jumlah,
+            'id' => $request->id ?? $pengeluaran->id, // Gunakan nilai kategori yang ada jika tidak ada yang baru
+
+        ]);
+//  return view('halaman.datapengeluaran', compact('id_data','pengeluaran'));
+        // Arahkan kembali ke halaman pengeluaran dengan pesan sukses
+        return redirect('/pengeluaran')->with('update_success', 'Data pengeluaran berhasil diperbarui.');
 }
 
 public function cetakpgl()
@@ -160,9 +163,9 @@ public function cetakpgl()
 
     // return view('halaman.cetakpgl',compact('pengeluaran'));
     }
- public function showDetail($id)
+ public function showDetail($id_data)
     {
-        $pengeluaran = Pengeluaran::with('category')->find($id);
+        $pengeluaran = Pengeluaran::with('category')->find($id_data);
 
     if (!$pengeluaran) {
         return response()->json(['message' => 'Pengeluaran not found'], 404);

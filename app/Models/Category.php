@@ -15,6 +15,7 @@ class Category extends Model
     // Jika Anda menggunakan tabel yang tidak sesuai dengan konvenssi plural,
     // Anda bisa menyebutkan nama tabel dengan cara ini.
     protected $table = 'categories';
+    protected $primaryKey = 'id';
 
     // Mengizinkan mass assignment untuk field berikut
     protected $fillable = [

@@ -93,25 +93,24 @@
                                             <input type="number" class="form-control" id="val-jumlah" name="jumlah" value="{{ old('jumlah', $pengeluaran->jumlah ?? '') }}" placeholder="Masukkan jumlah.." required>
                                         </div>
                                     </div>
-
-                                    <div class="form-group">
-                                        <label class="text-label">Kategori *</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="fas fa-list"></i> <!-- Ikon daftar -->
-                                                </span>
-                                            </div>
-                                            <select class="form-control default-select" id="val-category" name="category_id">
-                                                <option value="">--Pilih Kategori--</option>
-                                                @foreach($category as $cat)
-                                                    <option value="{{ $cat->id }}" {{ old('category_id', $pengeluaran->category_id ?? '') == $cat->id ? 'selected' : '' }}>
-                                                        {{ $cat->name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
+      <div class="form-group">
+    <label class="text-label">Kategori *</label>
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text">
+                <i class="fas fa-list"></i> <!-- Ikon daftar -->
+            </span>
+        </div>
+        <select class="form-control default-select" id="val-category" name="id">
+            <option value="">--Pilih Kategori--</option>
+            @foreach($category as $cat)
+                <option value="{{ $cat->id }}" {{ old('id', $pengeluaran->id) == $cat->id ? 'selected' : '' }}>
+                    {{ $cat->name }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+</div>
 
                                     <div class="form-group">
                                         <div class="form-check">

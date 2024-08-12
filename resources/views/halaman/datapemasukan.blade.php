@@ -125,72 +125,7 @@
     @include('template.scripts')
 
     <!-- Pencarian -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function() {
-    let searchInput = document.getElementById('searchInput');
-
-    searchInput.addEventListener('input', function() {
-        let searchValue = searchInput.value;
-
-        fetch('/admin/search?search=' + encodeURIComponent(searchValue))
-            .then(response => response.json())
-            .then(data => {
-                updateTable(data);
-            })
-            .catch(error => console.error('Error:', error));
-    });
-
-            function updateTable(data) {
-                let adminTableBody = document.getElementById('adminTableBody');
-                adminTableBody.innerHTML = '';
-
-                data.forEach(g => {
-                    let statusLabel = g.status_pemilihan == 'Belum Memilih' ? 'Belum Memilih' : 'Sudah Memilih';
-
-                    let row = `
-                        <tr>
-                            <td>
-                                <div class="custom-control custom-checkbox checkbox-secondary check-lg mr-3">
-                                    <input type="checkbox" class="custom-control-input" id="customCheckBox_${g.id}" required="">
-                                    <label class="custom-control-label" for="customCheckBox_${g.id}"></label>
-                                </div>
-                            </td>
-                            <td><h6>${g.id}</h6></td>
-                            <td>
-                                <div class="media style-1">
-                                    <span class="icon-name mr-2 bgl-info text-secondary">${g.name.substring(0, 1)}</span>
-                                    <div class="media-body">
-                                        <h6>${g.name}</h6>
-                                        <span>${g.email}</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><span class="badge badge-lg badge-secondary light">${g.level}</span></td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <i class="fa fa-circle ${g.status_pemilihan == 'Sudah Memilih' ? 'text-success' : 'text-warning'} mr-1"></i>
-                                    ${g.status_pemilihan}
-                                </div>
-                            </td>
-                            <td class="text-align: left;">
-                                <div class="d-flex justify-content-center">
-                                    <form id="editForm_${g.id}" action="/admin/${g.id}/edit_admin" method="GET">
-                                        <button type="submit" class="btn btn-warning shadow btn-xs sharp"><i class="fa fa-pencil"></i></button>
-                                    </form>
-                                    <div class="mx-1"></div>
-                                    <form id="deleteForm_${g.id}" action="/admin/${g.id}/delete" method="POST" class="delete-form">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <button type="submit" class="btn btn-danger shadow btn-xs sharp delete-btn" data-id="${g.id}"><i class="fa fa-trash"></i></button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-                    adminTableBody.insertAdjacentHTML('beforeend', row);
-                });
-            }
-        });
-    </script>
+ 
 
     <!-- Sweet Alert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
@@ -235,7 +170,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="adminDetailModalLabel">Detail Pemasukan</h5>
+                    <h5 class="modal-title" id="adminDetailModalLabel">Detail Pengeluaran</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -248,6 +183,8 @@
                             <strong>Deskripsi:</strong><br />
                             <strong>Tanggal:</strong><br />
                             <strong>Jumlah:</strong><br />
+                            <strong>Kategori:</strong><br />
+
                         </div>
                         <div class="col-sm-8">
                             <div id="id_data"></div>
@@ -255,6 +192,7 @@
                             <div id="description"></div>
                             <div id="date"></div>
                             <div id="jumlah"></div>
+                            <div id="category"></div> 
                         </div>
                     </div>
                 </div>
@@ -282,6 +220,8 @@
                 modal.find('#description').text('');
                 modal.find('#date').text('');
                 modal.find('#jumlah').text('');
+            modal.find('#category').text(''); // Kosongkan kategori
+
                 
                 $.ajax({
                     url: url,
@@ -293,6 +233,8 @@
                         modal.find('#description').text(data.description || 'N/A');
                         modal.find('#date').text(data.date || 'N/A');
                         modal.find('#jumlah').text(data.jumlah || 'N/A');
+                    modal.find('#category').text(data.category_name || 'N/A');
+
                     },
                     error: function(xhr, status, error) {
                         console.log(xhr.responseText); // Tampilkan pesan kesalahan di konsol
@@ -302,6 +244,7 @@
             });
         });
         </script>
+
 
 </body>
 

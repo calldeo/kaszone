@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Pengeluaran extends Model
 {
     protected $table = 'datapengeluaran';
+    protected $primaryKey = 'id_data';
 
     protected $fillable = [
         'name',

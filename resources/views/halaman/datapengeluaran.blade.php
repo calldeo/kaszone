@@ -5,6 +5,7 @@
     @include('template.headerr')
     <title>KasZone | {{auth()->user()->level}} | Pengeluaran</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
 
     
 </head>
@@ -244,7 +245,7 @@
 <script src="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.js"></script>
  
 
-    
+  
     <!-- Modal HTML -->
     <div class="modal fade" id="adminDetailModal" tabindex="-1" role="dialog" aria-labelledby="adminDetailModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -264,6 +265,7 @@
                             <strong>Tanggal:</strong><br />
                             <strong>Jumlah:</strong><br />
                             <strong>Kategori:</strong><br />
+
                         </div>
                         <div class="col-sm-8">
                             <div id="id_data"></div>
@@ -282,71 +284,48 @@
         </div>
     </div>
     
-  <script>
-    $(document).ready(function() {
-        $('#kategoriTable').DataTable();
-        
-        $('#adminDetailModal').on('show.bs.modal', function(event) {
-            var button = $(event.relatedTarget); // Tombol yang memicu modal
-            var url = button.data('url'); // Ambil URL dari atribut data-url
+  
+    <script>
+        $(document).ready(function() {
+            $('#kategoriTable').DataTable();
             
-            var modal = $(this);
-            
-            // Kosongkan konten modal sebelum memuat data baru
-            modal.find('#id_data').text('');
-            modal.find('#name').text('');
-            modal.find('#description').text('');
-            modal.find('#date').text('');
-            modal.find('#jumlah').text('');
+            $('#adminDetailModal').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget); // Tombol yang memicu modal
+                var url = button.data('url'); // Ambil info dari atribut data-*
+                
+                var modal = $(this);
+                
+                // Kosongkan konten modal sebelum memuat data baru
+                modal.find('#id_data').text('');
+                modal.find('#name').text('');
+                modal.find('#description').text('');
+                modal.find('#date').text('');
+                modal.find('#jumlah').text('');
             modal.find('#category').text(''); // Kosongkan kategori
-            
-            // Panggil AJAX untuk mendapatkan data detail
-            $.ajax({
-                url: url,
-                method: 'GET',
-                success: function(data) {
-                    // Isi modal dengan data baru
-                    modal.find('#id_data').text(data.id_data || 'N/A');
-                    modal.find('#name').text(data.name || 'N/A');
-                    modal.find('#description').text(data.description || 'N/A');
-                    modal.find('#date').text(data.date || 'N/A');
-                    modal.find('#jumlah').text(data.jumlah || 'N/A');
+
+                
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    success: function(data) {
+                        // Isi modal dengan data baru
+                        modal.find('#id_data').text(data.id_data || 'N/A');
+                        modal.find('#name').text(data.name || 'N/A');
+                        modal.find('#description').text(data.description || 'N/A');
+                        modal.find('#date').text(data.date || 'N/A');
+                        modal.find('#jumlah').text(data.jumlah || 'N/A');
                     modal.find('#category').text(data.category_name || 'N/A');
-                },
-                error: function(xhr, status, error) {
-                    console.log(xhr.responseText); // Tampilkan pesan kesalahan di konsol
-                    modal.find('.modal-body').html('Terjadi kesalahan saat memuat detail');
-                }
+
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(xhr.responseText); // Tampilkan pesan kesalahan di konsol
+                        modal.find('.modal-body').html('Terjadi kesalahan saat memuat detail');
+                    }
+                });
             });
         });
-    });
-</script>
+        </script>
 
-
-<script>
-            $(document).ready(function() {
-    var table = $('#pengeluaranTable').DataTable();
-
-    // Jika Anda perlu re-inisialisasi tabel, hapus inisialisasi sebelumnya
-    $('#pengeluaranTable').DataTable().clear().destroy();
-
-    // Inisialisasi kembali DataTable
-    table = $('#pengeluaranTable').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: "{{ route('admin.tabe') }}",
-        columns: [
-            // { data: 'checkbox', name: 'checkbox', orderable: false, searchable: false },
-            { data: 'nama', name: 'nama' },
-            { data: 'deskripsi', name: 'deskripsi' },
-            { data: 'kategori', name: 'kategori' },
-            { data: 'tanggal', name: 'tanggal' },
-            { data: 'jumlah', name: 'jumlah' },
-            { data: 'action', name: 'action', orderable: false, searchable: false }
-        ]
-    });
-});
-            </script>
 </body>
 
 </html>

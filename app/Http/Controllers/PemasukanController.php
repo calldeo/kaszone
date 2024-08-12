@@ -93,7 +93,7 @@ $category = Category::all();
             'description' => ['required', 'min:3', 'max:255'],
             'date' => ['required', 'date'],
             'jumlah' => ['required', 'numeric'],
-             'category_id' => ['nullable', 'exists:categories,id'],
+             'id' => ['nullable', 'exists:categories,id'],
 
         ]);
 
@@ -111,7 +111,7 @@ $category = Category::all();
             'description' => $request->description,
             'date' => $request->date,
             'jumlah' => $request->jumlah,
-                   'category_id' => $request->category_id ?? $pemasukan->category_id, // Gunakan nilai kategori yang ada jika tidak ada yang baru
+            'id' => $request->id ?? $pemasukan->id, // Gunakan nilai kategori yang ada jika tidak ada yang baru
 
         ]);
 //  return view('halaman.datapemasukan', compact('id_data','pemasukan'));
@@ -119,13 +119,21 @@ $category = Category::all();
         return redirect('/pemasukan')->with('update_success', 'Data pemasukan berhasil diperbarui.');
     }
 // Method untuk mendapatkan detail kategori
-    public function showDetail($id)
+   public function showDetail($id_data)
     {
-        $pemasukan = Pemasukan::find($id);
-        if ($pemasukan) {
-            return response()->json($pemasukan);
-        } else {
-            return response()->json(['message' => 'pemasukan tidak ditemukan.'], 404);
-        }
+        $pemasukan = Pemasukan::with('category')->find($id_data);
+
+    if (!$pemasukan) {
+        return response()->json(['message' => 'Pengeluaran not found'], 404);
+    }
+
+    return response()->json([
+        'id_data' => $pemasukan->id,
+        'name' => $pemasukan->name,
+        'description' => $pemasukan->description,
+        'date' => $pemasukan->date,
+        'jumlah' => $pemasukan->jumlah,
+        'category_name' => $pemasukan->category->name, // Ambil nama kategori
+    ]);
     }
 }

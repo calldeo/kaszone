@@ -38,11 +38,9 @@ route::get('/',[LoginController::class,'landing'])->name('landing');
 route::get('/login',[LoginController::class,'halamanlogin'])->name('login');
 route::post('/postlogin',[LoginController::class,'postlogin'])->name('postlogin');
 route::get('/logout',[LoginController::class,'logout'])->name('logout');
-
-// Menampilkan form registrasi
+// Menampilkan form registrasi // Memproses registrasi
 Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register');
 
-// Memproses registrasi
 Route::post('/postregister', [RegisterController::class, 'register']);
 
 Route::get('/profile/edit', [UserProfileController::class, 'edit'])->name('profile.edit');
@@ -96,14 +94,7 @@ Route::put('/guruu/{id}',[BendaharaController::class,'update']);
 
 
 
-Route::post('/importsiswa', [SiswaaController::class, 'siswaimportexcel'])->name('import-siswa');
-route::get('/siswa/search',[SiswaaController::class,'search'])->name('siswa.search');
-route::get('/siswaa',[SiswaaController::class,'siswaa'])->name('siswaa');
-Route::delete('/siswaa/{id}', [SiswaaController::class,'destroy'])->name('siswaa.destroy');
-route::get('/add_siswaa',[siswaaController::class,'add_siswaa'])->name('add_siswaa');
-Route::post('/siswaa/store',[SiswaaController::class,'store']);
-Route::get('/siswaa/{id}/edit_siswaa  ',[SiswaaController::class,'edit']);
-Route::put('/siswaa/{id}',[SiswaaController::class,'update']);
+
 
 
 Route::get('/kategori', [CategoryController::class, 'index']);
@@ -119,7 +110,6 @@ Route::get('/cetaklaporan',[CategoryController::class,'cetaklaporan'])->name('ce
 route::get('/pemasukan',[PemasukanController::class,'index'])->name('index');
 Route::get('/add_pemasukan', [PemasukanController::class, 'create']);
 Route::post('/pemasukan/store', [PemasukanController::class, 'store']);
-// Route::delete('/pemasukan/{id_data}/destroy', [PemasukanController::class,'destroy'])->name('pemasukan.destroy');
 Route::delete('/pemasukan/{id}/destroy', [PemasukanController::class, 'destroy'])->name('pemasukan.destroy');
 Route::get('/pemasukan/{id_pemasukan}/edit_pemasukan',[PemasukanController::class,'edit']);
 Route::put('/pemasukan/{id_pemasukan}', [PemasukanController::class, 'update'])->name('update');
@@ -138,9 +128,8 @@ Route::get('/kategori/{id}/detail', [CategoryController::class, 'showDetail'])->
 Route::get('/cetaklaporan',[CategoryController::class,'cetaklaporan'])->name('cetaklaporan');
 Route::get('/cetakpgl',[PengeluaranController::class,'cetakpgl'])->name('cetakpgl');
 Route::get('pemasukan/tob', [PemasukanController::class, 'tob'])->name('pemasukan.tob');
-Route::get('/pemasukan/{id}/detail', [PemasukanController::class, 'showDetail'])->name('pemasukan.showDetail');
-Route::get('pengeluaran/tabe', [PengeluaranController::class, 'tabe'])->name('pengeluaran.tabe');
-Route::get('/pengeluaran/{id}/detail', [PengeluaranController::class, 'showDetail'])->name('pengeluaran.showDetail');
+Route::get('/pemasukan/{id_data}/detail', [PemasukanController::class, 'showDetail'])->name('pemasukan.showDetail');
+
 
 Route::get('/export-pengeluaran', function () {
     return Excel::download(new PengeluaranExport, 'pengeluaran.xlsx');
@@ -148,5 +137,6 @@ Route::get('/export-pengeluaran', function () {
 
 Route::get('/pengeluaran', [PengeluaranController::class, 'index'])->name('pengeluaran.index');
 Route::get('/pengeluaran/data', [AdminController::class, 'tabe'])->name('admin.tabe');
-
+Route::get('pengeluaran/tabe', [PengeluaranController::class, 'tabe'])->name('pengeluaran.tabe');
+Route::get('/pengeluaran/{id_data}/detail', [PengeluaranController::class, 'showDetail'])->name('pengeluaran.showDetail');
 

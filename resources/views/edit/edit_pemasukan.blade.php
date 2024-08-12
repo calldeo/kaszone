@@ -124,23 +124,24 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="text-label">Kategori *</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="fas fa-list"></i> <!-- Ikon daftar -->
-                                                </span>
-                                            </div>
-                                            <select class="form-control default-select" id="val-category" name="category_id">
-                                                <option value="">--Pilih Kategori--</option>
-                                                @foreach($category as $cat)
-                                                    <option value="{{ $cat->id }}" {{ old('category_id', $pemasukan->category_id ?? '') == $cat->id ? 'selected' : '' }}>
-                                                        {{ $cat->name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
+    <label class="text-label">Kategori *</label>
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text">
+                <i class="fas fa-list"></i> <!-- Ikon daftar -->
+            </span>
+        </div>
+        <select class="form-control default-select" id="val-category" name="id">
+            <option value="">--Pilih Kategori--</option>
+            @foreach($category as $cat)
+                <option value="{{ $cat->id }}" {{ old('id', $pemasukan->id) == $cat->id ? 'selected' : '' }}>
+                    {{ $cat->name }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+</div>
+
                                     <div class="form-group">
                                         <div class="form-check">
                                             <input id="checkbox1" class="form-check-input" type="checkbox" required>

@@ -283,7 +283,7 @@ class AdminController extends Controller
                 ->addColumn('opsi', function ($row) {
                     return '
                     <div class="d-flex align-items-center">
-                      <button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/pemasukan/' . $row->id . '/detail">
+                      <button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/pemasukan/' . $row->id_data . '/detail">
                     <i class="fa fa-eye"></i>
                     </button>
                         <a href="/pemasukan/' . $row->id_data . '/edit_pemasukan" class="btn btn-warning btn-xs mr-1"><i class="fa fa-pencil"></i></a>
@@ -315,10 +315,11 @@ class AdminController extends Controller
                 ->addColumn('opsi', function ($row) {
                     return '
                     <div class="d-flex align-items-center">
-                      <button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/pengeluaran/' . $row->id . '/detail">
+                      <button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/pengeluaran/' . $row->id_data . '/detail">
                     <i class="fa fa-eye"></i>
                     </button>
-                        <a href="/pengeluaran/' . $row->id_data . '/edit_pengeluaran" class="btn btn-warning btn-xs mr-1"><i class="fa fa-pencil"></i></a>
+                    <a href="/pengeluaran/' . $row->id_data . '/edit_pengeluaran" class="btn btn-warning btn-xs mr-1"><i class="fas fa-pencil-alt"></i>
+</a>
                         <form action="/pengeluaran/' . $row->id . '/destroy" method="POST" style="display:inline;">
                             ' . csrf_field() . '
                             ' . method_field('DELETE') . '
