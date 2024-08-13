@@ -141,3 +141,4 @@ Route::get('pengeluaran/tabe', [PengeluaranController::class, 'tabe'])->name('pe
 Route::get('/pengeluaran/{id_data}/detail', [PengeluaranController::class, 'showDetail'])->name('pengeluaran.showDetail');
 
 Route::get('/download-template-kategori', [CategoryController::class, 'downloadTemplate'])->name('download-template-kategori');
+//contoh
