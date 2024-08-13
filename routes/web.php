@@ -49,12 +49,15 @@ Route::put('/profile/update', [UserProfileController::class, 'update'])->name('p
 
 
 
-Route::group(['middleware' => ['auth','ceklevel:admin,bendahara']], function (){
-    route::get('/home',[HomeController::class,'index'])->name('home');
+// Route::group(['middleware' => ['auth','ceklevel:admin,bendahara']], function (){
+//     route::get('/home',[HomeController::class,'index'])->name('home');
     
+// });
+
+Route::group(['middleware' => ['permission:home']], function (){
+
+    route::get('/home',[HomeController::class,'index'])->name('home');
 });
-
-
 
 
 
@@ -68,77 +71,79 @@ route::get('/tabe',[AdminController::class,'tabe'])->name('tabe');
 
 
 
+Route::group(['middleware' => ['permission:admin']], function (){
 
-
-route::get('/admin/search',[AdminController::class,'search'])->name('admin.search');
-route::get('/admin',[AdminController::class,'admin'])->name('admin');
-// Route::delete('/admin/{id}', [AdminController::class,'destroy'])->name('admin.destroy');
-Route::delete('/admin/{id}/destroy', [AdminController::class, 'destroy'])->name('admin.destroy');
-route::get('/add_admin',[AdminController::class,'add_admin'])->name('add_admin');
-Route::post('/admin/store',[AdminController::class,'store']);
-Route::get('/admin/{id}/edit_admin  ',[AdminController::class,'edit']);
-Route::put('/admin/{id}',[AdminController::class,'update']);
-
-
-
-Route::post('/importbendahara', [BendaharaController::class, 'bendaharaimportexcel'])->name('import-bendahara');
-route::get('/guru/search',[BendaharaController::class,'search'])->name('guru.search');
-route::get('/bendahara',[BendaharaController::class,'bendahara'])->name('bendahara');
-// Route::delete('/bendahara/{id}', [BendaharaController::class,'destroy'])->name('bendahara.destroy');
-Route::delete('/bendahara/{id}/destroy', [BendaharaController::class, 'destroy'])->name('bendahara.destroy');
-route::get('/add_bendahara',[BendaharaController::class,'add_bendahara'])->name('add_bendahara');
-Route::post('/bendahara/store',[BendaharaController::class,'store']);
-Route::get('/bendahara/{id}/edit_bendahara  ',[BendaharaController::class,'edit']);
-Route::put('/guruu/{id}',[BendaharaController::class,'update']);
-
-
-
-
-
-
-
-Route::get('/kategori', [CategoryController::class, 'index']);
-route::get('/add_kategori',[CategoryController::class,'add_kategori'])->name('add_kategori');
-Route::post('/kategori/store',[CategoryController::class,'store']);
-Route::delete('/kategori/{id}/destroy', [CategoryController::class,'destroy'])->name('kategori.destroy');
-Route::get('/kategori/{id}/edit_kategori  ',[CategoryController::class,'edit']);
-Route::put('/kategori/{id}',[CategoryController::class,'update']);
-Route::post('/importkategori', [CategoryController::class, 'kategoriimportexcel'])->name('import-kategori');
-Route::get('/cetaklaporan',[CategoryController::class,'cetaklaporan'])->name('cetaklaporan');
-
-
-route::get('/pemasukan',[PemasukanController::class,'index'])->name('index');
-Route::get('/add_pemasukan', [PemasukanController::class, 'create']);
-Route::post('/pemasukan/store', [PemasukanController::class, 'store']);
-Route::delete('/pemasukan/{id}/destroy', [PemasukanController::class, 'destroy'])->name('pemasukan.destroy');
-Route::get('/pemasukan/{id_pemasukan}/edit_pemasukan',[PemasukanController::class,'edit']);
-Route::put('/pemasukan/{id_pemasukan}', [PemasukanController::class, 'update'])->name('update');
-
-
-
-route::get('/pengeluaran',[PengeluaranController::class,'index'])->name('index');
-Route::get('/add_pengeluaran', [PengeluaranController::class, 'create']);
-Route::post('/pengeluaran/store', [PengeluaranController::class, 'store']);
-Route::delete('/pengeluaran/{id}/destroy', [PengeluaranController::class, 'destroy'])->name('pengeluaran.destroy');
-Route::get('/pengeluaran/{id_pengeluaran}/edit_pengeluaran',[PengeluaranController::class,'edit']);
-Route::put('/pengeluaran/{id_pengeluaran}', [PengeluaranController::class, 'update'])->name('update');
-
-// Route::get('kategori/teb', [CategoryController::class, 'teb'])->name('kategori.teb');
-Route::get('/kategori/{id}/detail', [CategoryController::class, 'showDetail'])->name('kategori.showDetail');
-Route::get('/cetaklaporan',[CategoryController::class,'cetaklaporan'])->name('cetaklaporan');
-Route::get('/cetakpgl',[PengeluaranController::class,'cetakpgl'])->name('cetakpgl');
-Route::get('pemasukan/tob', [PemasukanController::class, 'tob'])->name('pemasukan.tob');
-Route::get('/pemasukan/{id_data}/detail', [PemasukanController::class, 'showDetail'])->name('pemasukan.showDetail');
-
-
-Route::get('/export-pengeluaran', function () {
-    return Excel::download(new PengeluaranExport, 'pengeluaran.xlsx');
+    route::get('/admin',[AdminController::class,'admin'])->name('admin');
+    route::get('/admin/search',[AdminController::class,'search'])->name('admin.search');
+    Route::delete('/admin/{id}/destroy', [AdminController::class, 'destroy'])->name('admin.destroy');
+    route::get('/add_admin',[AdminController::class,'add_admin'])->name('add_admin');
+    Route::post('/admin/store',[AdminController::class,'store']);
+    Route::get('/admin/{id}/edit_admin  ',[AdminController::class,'edit']);
+    Route::put('/admin/{id}',[AdminController::class,'update']);
 });
 
-Route::get('/pengeluaran', [PengeluaranController::class, 'index'])->name('pengeluaran.index');
-Route::get('/pengeluaran/data', [AdminController::class, 'tabe'])->name('admin.tabe');
-Route::get('pengeluaran/tabe', [PengeluaranController::class, 'tabe'])->name('pengeluaran.tabe');
-Route::get('/pengeluaran/{id_data}/detail', [PengeluaranController::class, 'showDetail'])->name('pengeluaran.showDetail');
 
-Route::get('/download-template-kategori', [CategoryController::class, 'downloadTemplate'])->name('download-template-kategori');
-//contoh
+Route::group(['middleware' => ['permission:bendahara']], function (){
+
+    Route::post('/importbendahara', [BendaharaController::class, 'bendaharaimportexcel'])->name('import-bendahara');
+    route::get('/bendahara',[BendaharaController::class,'bendahara'])->name('bendahara');
+    Route::delete('/bendahara/{id}/destroy', [BendaharaController::class, 'destroy'])->name('bendahara.destroy');
+    route::get('/add_bendahara',[BendaharaController::class,'add_bendahara'])->name('add_bendahara');
+    Route::post('/bendahara/store',[BendaharaController::class,'store']);
+    Route::get('/bendahara/{id}/edit_bendahara  ',[BendaharaController::class,'edit']);
+    Route::put('/guruu/{id}',[BendaharaController::class,'update']);
+});
+
+
+
+
+
+Route::group(['middleware' => ['permission:kategori']], function (){
+
+    Route::get('/kategori', [CategoryController::class, 'index']);
+    route::get('/add_kategori',[CategoryController::class,'add_kategori'])->name('add_kategori');
+    Route::post('/kategori/store',[CategoryController::class,'store']);
+    Route::delete('/kategori/{id}/destroy', [CategoryController::class,'destroy'])->name('kategori.destroy');
+    Route::get('/kategori/{id}/edit_kategori  ',[CategoryController::class,'edit']);
+    Route::put('/kategori/{id}',[CategoryController::class,'update']);
+    Route::post('/importkategori', [CategoryController::class, 'kategoriimportexcel'])->name('import-kategori');
+    Route::get('/cetaklaporan',[CategoryController::class,'cetaklaporan'])->name('cetaklaporan');
+    Route::get('/kategori/{id}/detail', [CategoryController::class, 'showDetail'])->name('kategori.showDetail');
+
+});
+
+Route::group(['middleware' => ['permission:datapemasukan']], function (){
+
+    route::get('/pemasukan',[PemasukanController::class,'index'])->name('index');
+    Route::get('/add_pemasukan', [PemasukanController::class, 'create']);
+    Route::post('/pemasukan/store', [PemasukanController::class, 'store']);
+    Route::delete('/pemasukan/{id}/destroy', [PemasukanController::class, 'destroy'])->name('pemasukan.destroy');
+    Route::get('/pemasukan/{id_pemasukan}/edit_pemasukan',[PemasukanController::class,'edit']);
+    Route::put('/pemasukan/{id_pemasukan}', [PemasukanController::class, 'update'])->name('update');
+    Route::get('pemasukan/tob', [PemasukanController::class, 'tob'])->name('pemasukan.tob');
+    Route::get('/pemasukan/{id_data}/detail', [PemasukanController::class, 'showDetail'])->name('pemasukan.showDetail');
+
+
+});
+
+Route::group(['middleware' => ['permission:datapengeluaran']], function (){
+
+    route::get('/pengeluaran',[PengeluaranController::class,'index'])->name('index');
+    Route::get('/add_pengeluaran', [PengeluaranController::class, 'create']);
+    Route::post('/pengeluaran/store', [PengeluaranController::class, 'store']);
+    Route::delete('/pengeluaran/{id}/destroy', [PengeluaranController::class, 'destroy'])->name('pengeluaran.destroy');
+    Route::get('/pengeluaran/{id_pengeluaran}/edit_pengeluaran',[PengeluaranController::class,'edit']);
+    Route::put('/pengeluaran/{id_pengeluaran}', [PengeluaranController::class, 'update'])->name('update');
+    Route::get('/cetakpgl',[PengeluaranController::class,'cetakpgl'])->name('cetakpgl');
+
+    
+    Route::get('/export-pengeluaran', function () {
+        return Excel::download(new PengeluaranExport, 'pengeluaran.xlsx');});
+
+    Route::get('/pengeluaran', [PengeluaranController::class, 'index'])->name('pengeluaran.index');
+    Route::get('/pengeluaran/data', [AdminController::class, 'tabe'])->name('admin.tabe');
+    Route::get('pengeluaran/tabe', [PengeluaranController::class, 'tabe'])->name('pengeluaran.tabe');
+    Route::get('/pengeluaran/{id_data}/detail', [PengeluaranController::class, 'showDetail'])->name('pengeluaran.showDetail');
+
+    Route::get('/download-template-kategori', [CategoryController::class, 'downloadTemplate'])->name('download-template-kategori');
+});

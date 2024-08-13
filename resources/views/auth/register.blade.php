@@ -64,8 +64,9 @@
                 <label for="level" class="block text-sm font-medium text-gray-700">Peran</label>
                 <select name="level" id="level" class="mt-1 block w-full border custom-border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-3" required>
                     <option value="" disabled selected>Pilih peran</option>
-                    <option value="admin">Admin</option>
-                    <option value="bendahara">Bendahara</option>
+                    @foreach($roles as $role)
+                        <option value="{{ $role->name }}">{{ $role->name }}</option>
+                    @endforeach
                 </select>
             </div>
             <button type="submit" class="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">Daftar</button>

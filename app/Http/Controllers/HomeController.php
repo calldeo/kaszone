@@ -9,6 +9,7 @@ use App\Models\Pemasukan;
 use App\Models\Pengeluaran;
 use App\Models\SettingWaktu;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -19,7 +20,7 @@ class HomeController extends Controller
         $totalPemasukan = Pemasukan::sum('jumlah');
         $totalPemasukan1 = Pemasukan::sum('jumlah');
         $totalPengeluaran = Pengeluaran::sum('jumlah');
-
+        // dd(auth()->user()->getAllPermissions());
         // Hitung saldo yang tersedia
         $saldo = $totalPemasukan - $totalPengeluaran;
 

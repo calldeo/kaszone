@@ -10,7 +10,8 @@
 		</div>
 		
 		<ul class="metismenu" id="menu">
-			@if (auth()->user()->level=="bendahara"|| auth()->user()->level == "admin"|| auth()->user()->level == "siswa")
+			{{-- @if (auth()->user()->level=="bendahara"|| auth()->user()->level == "admin"|| auth()->user()->level == "siswa") --}}
+			@can('home')
 			<li class="nav-label first"></li>
 			<li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
 					<i class="flaticon-144-layout"></i>
@@ -20,22 +21,9 @@
 					<li><a href="/home">Dashboard</a></li>
 					
 				</ul>
-				{{-- <ul aria-expanded="false">
-					<li><a href="/petunjuk">Petunjuk Pengunaan</a></li>
-					
-				</ul> --}}
-
 			</li>
-			{{-- @if(!$expired)
-			 <li><a  href="/vote" aria-expanded="false">
-					<i class="flaticon-077-menu-1"></i>
-					<span class="nav-text">Vote</span>
-				</a>
-			   
-			</li>
-			@endif --}}
-		@endif
-		@if ( auth()->user()->level == "admin")
+			@endcan
+			@can('admin')
 			<li class="nav-label first">Main Menu</li>
 			<li><a  href="/admin" aria-expanded="false">
 					<i class="flaticon-044-file"></i>
@@ -43,57 +31,38 @@
 				</a>
 			   
 			</li>
+			@endcan
+			@can('bendahara')
 			  <li><a  href="/bendahara" aria-expanded="false">
 					<i class="flaticon-044-file"></i>
 					<span class="nav-text">Data Bendahara</span>
 				</a>
 			   
 			</li>
+			@endcan
+			@can('kategori')
 			<li><a  href="/kategori" aria-expanded="false">
 					<i class="flaticon-044-file"></i>
 					<span class="nav-text">Kategori</span>
 				</a>
 			   
 			</li>
-			@endif
-            {{-- Only allow access to "Data Pemasukan" and "Data Pengeluaran" for admin and bendahara --}}
-            @if (auth()->user()->level == "admin" || auth()->user()->level == "bendahara")
+			@endcan
+			@can('datapemasukan')
                 <li><a href="/pemasukan" aria-expanded="false">
                         <i class="flaticon-044-file"></i>
                         <span class="nav-text">Data Pemasukan</span>
                     </a>
                 </li>
+			@endcan
+			@can('datapengeluaran')
                 <li><a href="/pengeluaran" aria-expanded="false">
                         <i class="flaticon-044-file"></i>
                         <span class="nav-text">Data Pengeluaran</span>
                     </a>
                 </li>
-            @endif
-        </ul>
-			{{-- <li><a  href="/calonosis" aria-expanded="false">
-					<i class="flaticon-044-file"></i>
-					<span class="nav-text">Data Calon OSIS</span>
-				</a>
-			   
-			</li>
-			<li><a  href="/datapoling" aria-expanded="false">
-					<i class="flaticon-053-heart"></i>
-					<span class="nav-text">Data Polling</span>
-				</a>
-			   
-			</li>
-			<li><a  href="/datavoted" aria-expanded="false">
-					<i class="flaticon-381-network"></i>
-					<span class="nav-text">Data Voted</span>
-				</a>
-			   
-			</li> --}}
-			{{-- <li><a  href="/setting" aria-expanded="false">
-					<i class="flaticon-381-settings-2"></i>
-					<span class="nav-text">Setting Tanggal</span>
-				</a>
-			   
-			</li> --}}
+			@endcan
+           
 		
 		</ul>
 		<div class="copyright">

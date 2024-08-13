@@ -85,7 +85,8 @@
                                 <img src="{{ auth()->user()->poto ? asset('storage/' . auth()->user()->poto) : asset('dash/images/mamo.jpeg') }}" width="20" alt="">
                                 <div class="header-info">
                                     <span>{{ auth()->user()->name }}</span> 
-                                    <small>{{ auth()->user()->level }}</small>
+                                    <small>{{ auth()->user()->roles->pluck('name')[0] }}</small>
+                                
                                 </div>
                             </a>
                             
