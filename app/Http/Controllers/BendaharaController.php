@@ -108,7 +108,7 @@ class BendaharaController extends Controller
 
         $guruu->update($data);
 
-        return redirect('home')->with('update_success', 'Data Berhasil Diupdate');
+        return redirect('user')->with('update_success', 'Data Berhasil Diupdate');
     }
 
   
