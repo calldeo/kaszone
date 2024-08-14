@@ -169,7 +169,7 @@ class AdminController extends Controller
 
 
 
-    public function tab(Request $request)
+    public function tab(Request $request) //bendahara
 {
     if ($request->ajax()) {
         // Ambil pengguna dengan peran 'bendahara' dan 'admin'
