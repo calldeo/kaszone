@@ -16,7 +16,6 @@ $(document).ready(function(){
             { data: 'DT_RowIndex', name: 'DT_RowIndex', width: '10px', orderable: false, searchable: false },
             { data: 'name', name: 'name' },
             { data: 'email', name: 'email' },
-            { data: 'level', name: 'level' },
             { data: 'kelamin', name: 'kelamin' },
             { data: 'alamat', name: 'alamat' },
 
@@ -45,7 +44,6 @@ $(document).ready(function(){
             { data: 'DT_RowIndex', name: 'DT_RowIndex', width: '10px', orderable: false, searchable: false },
             { data: 'name', name: 'name' },
             { data: 'email', name: 'email' },
-            { data: 'level', name: 'level' },
             { data: 'kelamin', name: 'kelamin' },
             { data: 'alamat', name: 'alamat' },
 

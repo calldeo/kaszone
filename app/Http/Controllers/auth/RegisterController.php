@@ -31,7 +31,7 @@ class RegisterController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|confirmed|min:8',
-            'level' => 'required|string|in:admin,bendahara', // Validasi level dengan opsi baru
+            // 'level' => 'required|string|in:admin,bendahara', // Validasi level dengan opsi baru
             'alamat' => ['required', 'min:3', 'max:30'],
             'kelamin' => 'required',
             'poto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',

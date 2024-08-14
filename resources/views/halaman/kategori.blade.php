@@ -69,14 +69,17 @@
                             <div class="form-group">
                                 <label for="file">Pilih File Excel</label>
                                 <input type="file" class="form-control-file" id="file" name="file" required>
+                                <div style="text-align: left;">
+                                    <a href="{{ route('download-template-kategori') }}">
+                                        </i> Download Template Excel
+                                    </a>
+                                </div>
                             </div>
                             <button type="submit" class="btn btn-primary">Import</button>
                         </form>
                     </div>
                       <!-- Tombol untuk mendownload template Excel -->
-                <a href="{{ route('download-template-kategori') }}" class="btn btn-secondary mb-3">
-                    <i class="fa fa-download"></i> Download Template Excel
-                </a>
+              
                 </div>
             </div>
         </div>

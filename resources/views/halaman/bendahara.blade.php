@@ -48,11 +48,11 @@
                                 <input id="searchInput" type="text" class="form-control" placeholder="Cari sesuatu di sini..." name="query">
                             </form>
                           </div> --}}
-                           <button type="button" class="btn btn-warning ml-2" title="Import" data-toggle="modal" data-target="#importModal">
+                           {{-- <button type="button" class="btn btn-warning ml-2" title="Import" data-toggle="modal" data-target="#importModal">
             <i class="fa fa-upload"></i> 
-        </button>
+        </button> --}}
         <!-- Modal untuk impor data guru -->
-        <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+        {{-- <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -74,7 +74,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
                     
                     <a href="/add_bendahara" class="btn btn-success" title="Add">
                         <i class="fa fa-plus"></i>
@@ -116,66 +116,14 @@
                                             </th>
                                             <th><strong>Nama</strong></th>
                                             <th><strong>Email</strong></th>
-                                            <th><strong>Level</strong></th>
+                                         
                                             <th><strong>Jenis Kelamin</strong></th>
                                             <th><strong>Alamat</strong></th>
-                                            {{-- <th><strong>Status</strong></th> --}}
+                                       
                                             <th><strong>Option</strong></th>
                                         </tr>
                                     </thead>
-                                    {{-- <tbody  id="adminTableBody">
-                                        @foreach($users as $g)
-                                        @if($g->level == 'admin')
-                                        <tr>
-                                            <td>
-                                                <div class="custom-control custom-checkbox checkbox-secondary check-lg mr-3">
-                                                    <input type="checkbox" class="custom-control-input" id="customCheckBox2" required="">
-                                                    <label class="custom-control-label" for="customCheckBox2"></label>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <h6>{{$g->id}}</h6>
-                                            </td>
-                                            <td>
-                                                <div class="media style-1">
-                                                    <span class="icon-name mr-2 bgl-info text-secondary">{{ substr($g->name, 0, 1) }}</span>
-                                                    <div class="media-body">
-                                                        <h6>{{ $g->name }}</h6>
-                                                        <span>{{ $g->email }}</a></span>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td><span class="badge badge-lg badge-secondary light">{{$g->level}}</span></td>
-                                            --}}
-{{--                                                 
-                                            <td>
-                                                @if($g->status_pemilihan == 'Belum Memilih')
-                                                <div class="d-flex align-items-center">
-                                                    <i class="fa fa-circle text-warning mr-1"></i>Belum Memilih</div>
-                                                @elseif($g->status_pemilihan == 'Sudah Memilih')
-                                                <div class="d-flex align-items-center">
-                                                    <i class="fa fa-circle text-success mr-1"></i>Sudah Memilih</div>
-                                                @endif
-                                            </td>                                             --}}
-                                            {{-- <td class="text-align: left;">
-                                                <div class="d-flex justify-content-center">
-                                                <form id="editForm_{{ $g->id }}" action="/admin/{{ $g->id }}/edit_admin" method="GET">
-                                                    <button type="submit" class="btn btn-warning shadow btn-xs sharp"><i class="fa fa-pencil"></i></button>
-                                                </form>
-
-                                                <div class="mx-1"></div> <!-- Tambahkan jarak di sini -->
-
-                                                <form id="deleteForm_{{ $g->id }}" action="{{ route('admin.destroy', $g->id) }}" method="POST" class="delete-form">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="button" class="btn btn-danger shadow btn-xs sharp delete-btn" data-id="{{ $g->id }}"><i class="fa fa-trash"></i></button>
-                                                </form>
-                                            </div>
-                                            </td>
-                                        </tr>
-                                        @endif
-                                        @endforeach
-                                    </tbody> --}}
+                                   
                                 </table>
                             </div>
                         </div>

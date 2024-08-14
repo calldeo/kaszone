@@ -11,6 +11,9 @@ use App\Models\Pengeluaran;
 use App\Models\SettingWaktu;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Hash;
+
 
 class AdminController extends Controller
 {
@@ -26,32 +29,40 @@ class AdminController extends Controller
         return view('halaman.admin');
     }
    
-    public function table(Request $request)
-    {
-        if ($request->ajax()) {
-            $admins = User::where('level', 'admin')->select(['id', 'name', 'email', 'level','kelamin','alamat'])->get();
+   public function table(Request $request)
+{
+    if ($request->ajax()) {
+        // Query users with the 'admin' role
+        $admins = User::role('admin') // Filter users by the 'admin' role
+                      ->with('roles') // Eager load roles
+                      ->select(['id', 'name', 'email',  'kelamin', 'alamat'])
+                      ->get();
 
-            return DataTables::of($admins)
-                ->addIndexColumn() // Menambahkan indeks otomatis
-                ->addColumn('opsi', function ($row) {
-                    return '
-                        <div class="d-flex align-items-center">
-                        
-                            <form action="/admin/' . $row->id . '/edit_admin" method="GET" class="mr-1">
-                                <button type="submit" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></button>
-                            </form>
-                            <form action="/admin/' . $row->id . '/destroy" method="POST">
-                                ' . csrf_field() . '
-                                ' . method_field('DELETE') . '
-                                <button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>
-                            </form>
-                        </div>
-                    ';
-                })
-                ->rawColumns(['opsi']) // Pastikan kolom ini dianggap sebagai HTML
-                ->make(true);
-        }
+        return DataTables::of($admins)
+            ->addIndexColumn() // Menambahkan indeks otomatis
+            ->addColumn('roles', function ($row) {
+                // Mengambil nama role dan menggabungkannya menjadi string
+                return $row->roles->pluck('name')->implode(', ');
+            })
+            ->addColumn('opsi', function ($row) {
+                return '
+                    <div class="d-flex align-items-center">
+                        <form action="/admin/' . $row->id . '/edit_admin" method="GET" class="mr-1">
+                            <button type="submit" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></button>
+                        </form>
+                        <form action="/admin/' . $row->id . '/destroy" method="POST">
+                            ' . csrf_field() . '
+                            ' . method_field('DELETE') . '
+                            <button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>
+                        </form>
+                    </div>
+                ';
+            })
+            ->rawColumns(['roles', 'opsi']) // Pastikan kolom ini dianggap sebagai HTML
+            ->make(true);
     }
+}
+
 
     public function destroy($id)
     {
@@ -72,43 +83,40 @@ class AdminController extends Controller
     public function add_admin()
     {
       
-
-        return view('tambah.add_admin');
+    $roles = Role::all();
+        return view('tambah.add_admin',compact('roles'));
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => ['required', 'min:3', 'max:30', function ($attribute, $value, $fail) {
-                // Memeriksa apakah nama yang dimasukkan sudah ada dalam basis data
-                if (User::where('name', $value)->exists()) {
-                    $fail($attribute . ' is registered.');
-                }
-            }],
-            'level' => 'required',
-            'email' => 'required|unique:users,email',
-            'password' => ['required', 'min:8', 'max:12'],
-            'kelamin' => 'required',
-            'alamat' => ['required', 'min:3', 'max:30'],
-        ]);
+   public function store(Request $request)
+{
+    $request->validate([
+        'name' => ['required', 'min:3', 'max:30', function ($attribute, $value, $fail) {
+            // Check if the name already exists in the database
+            if (User::where('name', $value)->exists()) {
+                $fail($attribute . ' is registered.');
+            }
+        }],
+        'email' => 'required|unique:users,email',
+        'password' => ['required', 'min:8', 'max:12'],
+        'kelamin' => 'required',
+        'alamat' => ['required', 'min:3', 'max:30'],
+    ]);
 
-        $user = User::where('name', $request->name)->orWhere('email', $request->email)->first();
-        if ($user) {
-            // Jika nama atau email sudah digunakan, tampilkan pesan kesalahan
-            return back()->withInput()->with('error', 'Nama atau email sudah digunakan.');
-        }
-
-        User::create([
+    // Create the user
+   $admin =  User::create([
             'name' => $request->name,
-            'level' => $request->level,
             'email' => $request->email,
-            'password' => bcrypt($request->password),
-             'kelamin' => $request->kelamin,
-            'alamat' => $request->alamat,
-        ]);
+            'password' => Hash::make($request->password),
+            // 'level' => $request->level,  // Menambahkan kolom level
+            'alamat'=> $request->alamat,
+            'kelamin'=> $request->kelamin,
 
-        return redirect('/admin')->with('success', 'Data Berhasil Ditambahkan');
-    }
+        ]);
+        $admin->assignRole($request->level);
+
+    return redirect('/admin')->with('success', 'Data Berhasil Ditambahkan');
+}
+
 
     public function edit($id)
     {
@@ -125,7 +133,6 @@ class AdminController extends Controller
 
         $request->validate([
             'name' => ['required', 'min:3', 'max:30'],
-            'level' => 'required',
             'email' => 'required|email|unique:users,email,' . $admin->id,
             'password' => ['nullable', 'min:8', 'max:12'], // Mengubah menjadi nullable
             'kelamin' => 'required',
@@ -135,12 +142,13 @@ class AdminController extends Controller
 
         $data = [
             'name' => $request->name,
-            'level' => $request->level,
+        
             'email' => $request->email,
             'kelamin' => $request->kelamin,
             'alamat' => $request->alamat,
 
         ];
+         $admin->assignRole($request->level);
 
         // Menambahkan password ke data hanya jika ada input password
         if ($request->filled('password')) {
@@ -152,57 +160,8 @@ class AdminController extends Controller
         return redirect('/admin')->with('update_success', 'Data Berhasil Diupdate');
     }
 
-    public function search(Request $request)
-    {
-       
-
-        // Dapatkan input pencarian
-        $searchTerm = $request->input('search');
-
-        // Lakukan pencarian hanya jika input tidak kosong
-        if (!empty($searchTerm)) {
-            // Validasi input
-            $request->validate([
-                'search' => 'string', // Sesuaikan aturan validasi sesuai kebutuhan Anda
-            ]);
-
-            // Lakukan pencarian dengan mempertimbangkan validasi input, level 'admin', dan status_pemilihan
-            $users = User::where('level', 'admin')
-                        ->where(function ($query) use ($searchTerm) {
-                            $query->where('name', 'like', "%{$searchTerm}%")
-                                ->orWhere('status_pemilihan', 'like', "%{$searchTerm}%"); // Ubah sesuai dengan tipe data status_pemilihan
-                        })
-                        ->get();
-        } else {
-            // Jika input kosong, ambil semua data user dengan level 'admin'
-            $users = User::where('level', 'admin')->get();
-        }
-
-        // Memberikan respons berdasarkan hasil pencarian
-        return response()->json($users);
-    }
-
-    public function deleteSelected(Request $request)
-    {
-        try {
-            // Ambil ID guru yang dipilih dari request
-            $selectedIds = $request->input('id');
+ 
     
-            // Hapus data guru secara permanen dari database
-            $deleted = User::whereIn('id', $selectedIds)->forceDelete();
-    
-            if ($deleted) {
-                // Kirim respons jika berhasil menghapus
-                return response()->json(['success' => true, 'message' => 'Berhasil menghapus data guru yang dipilih secara permanen.']);
-            } else {
-                // Kirim respons jika gagal menghapus
-                return response()->json(['success' => false, 'message' => 'Gagal menghapus data guru yang dipilih.']);
-            }
-        } catch (\Exception $e) {
-            // Tangani kesalahan jika terjadi
-            return response()->json(['success' => false, 'message' => 'Gagal menghapus data guru yang dipilih. Silakan coba lagi.']);
-        }
-    }
 
 
 
@@ -213,10 +172,18 @@ class AdminController extends Controller
     public function tab(Request $request) // BENDAHARA
     {
         if ($request->ajax()) {
-            $admins = User::where('level', 'bendahara')->select(['id', 'name', 'email', 'level','kelamin','alamat'])->get();
+            $bendahara = User::role('bendahara') // Filter users by the 'admin' role
+                      ->with('roles') // Eager load roles
+                      ->select(['id', 'name', 'email',  'kelamin', 'alamat'])
+                      ->get();
 
-            return DataTables::of($admins)
-                ->addIndexColumn() // Menambahkan indeks otomatis
+        return DataTables::of($bendahara)
+            ->addIndexColumn() // Menambahkan indeks otomatis
+            ->addColumn('roles', function ($row) {
+                // Mengambil nama role dan menggabungkannya menjadi string
+                return $row->roles->pluck('name')->implode(', ');
+            })
+                 // Menambahkan indeks otomatis
                 ->addColumn('opsi', function ($row) {
                     return '
                         <div class="d-flex align-items-center">
@@ -231,7 +198,7 @@ class AdminController extends Controller
                         </div>
                     ';
                 })
-                ->rawColumns(['opsi']) // Pastikan kolom ini dianggap sebagai HTML
+                ->rawColumns(['roles','opsi']) // Pastikan kolom ini dianggap sebagai HTML
                 ->make(true);
         }
     }

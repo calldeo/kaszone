@@ -5,6 +5,8 @@
 <head>
     @include('template.headerr')
     <title>E-vote | {{auth()->user()->level}} | Add</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
 
 </head>
 <body>
@@ -87,7 +89,7 @@
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Add</h4>
+                                <h4 class="card-title">Add Data Bendahara</h4>
                             </div>
                             <div class="card-body">
                                 <div class="basic-form">
@@ -135,18 +137,7 @@
                                             <span class="mt-4 text-danger">{{$message}}</span>
                                             @enderror
                                         </div>
-                                        <div class="form-group">
-                                            <label>Level *</label>
-                                            <select class="form-control default-select" id="sel1" name="level" required>
-                                                <option  value="">--PILIH LEVEL--</option>
-                                                <option  value="bendahara">Bendahara</option>
-                                                {{-- <option  value="guru">Guru</option>
-                                                <option  value="siswa">Siswa</option> --}}
-                                            </select>
-                                            @error('level')
-                                            <span class="mt-4 text-danger">{{$message}}</span>
-                                            @enderror
-                                        </div>
+                                       
                                          <div class="form-group">
                                             <label>Jenis Kelamin *</label>
                                             <select class="form-control default-select" id="sel1" name="kelamin" required>
@@ -164,14 +155,24 @@
                                             <label class="text-label">Alamat *</label>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
-                                                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                                                    <span class="input-group-text"> <i class="fa fa-map-marker-alt"></i> </span>
                                                 </div>
-                                                <input type="text" class="form-control" id="val-username1" name="alamat" placeholder="Enter a email.."  value="{{old('email')}}" required>
+                                                <input type="text" class="form-control" id="val-username1" name="alamat" placeholder="Enter a address.."  value="{{old('email')}}" required>
                                             </div>
                                             @error('email')
                                             <span class="mt-4 text-danger">{{$message}}</span>
                                             @enderror
                                         </div>
+                                         <!-- Role -->
+                                    <div class="mb-6">
+                                        <label for="level" class="block text-sm font-medium text-gray-700">Peran</label>
+                                        <select name="level" id="level" class="mt-1 block w-full border custom-border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-3" required>
+                                            <option value="" disabled selected>Pilih peran</option>
+                                            @foreach($roles as $role)
+                                                <option value="{{ $role->name }}">{{ $role->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                         <div class="form-group">
                                             <div class="form-check">
                                                 <input id="checkbox1" class="form-check-input" type="checkbox" required>
