@@ -299,5 +299,28 @@ class AdminController extends Controller
         }
     }
 
+public function tub(Request $request) // BENDAHARA
+{
+    if ($request->ajax()) {
+        $role = Role::select(['id', 'name', 'guard_name'])->get();
+
+        return DataTables::of($role)
+            ->addIndexColumn() // Menambahkan indeks otomatis
+            ->addColumn('opsi', function ($row) {
+                return '
+                    <div class="d-flex align-items-center">
+                        <form action="/role/' . $row->id . '/edit_role" method="GET" class="mr-1">
+                            <button type="submit" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></button>
+                        </form>
+                      
+                    </div>
+                ';
+            })
+            ->rawColumns(['opsi']) // Pastikan kolom ini dianggap sebagai HTML
+            ->make(true);
+    }
+
+ // Sesuaikan dengan view yang Anda miliki
+}
 
 }

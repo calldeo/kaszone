@@ -145,7 +145,33 @@ $(document).ready(function(){
     
     });
 
+         $('#roleTable').DataTable({
+        ordering: true,
+        serverSide: true,  // Menunjukkan bahwa data diambil dari server
+        processing: true,  // Menunjukkan bahwa ada proses loading data
+        ajax: {
+            url: $('#table-url').val(),  // Mengambil URL dari elemen input tersembunyi
+            type: 'GET',  // Metode pengambilan data
+            dataType: 'json',  // Jenis data yang diharapkan dari server
+            error: function(jqXHR, textStatus, errorThrown) {  // Menangani error dari permintaan AJAX
+                console.error('AJAX error:', textStatus, errorThrown);
+                alert('Terjadi kesalahan saat memuat data. Silakan coba lagi nanti.');
+            }
+        },
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', width: '10px', orderable: false, searchable: false },
+            { data: 'name', name: 'name' },
+            { data: 'guard_name', name: 'guard_name' },
+
+
+            { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
+        ],
+        columnDefs: [
+            // Contoh untuk menambahkan pengaturan kolom tambahan jika diperlukan
+        ],
         
+       
+    });
 
     
 });
