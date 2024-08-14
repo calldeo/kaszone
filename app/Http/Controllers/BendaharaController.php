@@ -1,177 +1,126 @@
 <?php
 
+
+
 namespace App\Http\Controllers;
 
 use DB;
-use Carbon\Carbon;
 use App\Models\User;
 use App\Imports\UserImport;
-use App\Models\SettingWaktu;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 
 class BendaharaController extends Controller
 {
-    
     public function bendahara(Request $request)
     {
-
-        
-
-
-        // Meneruskan data ke tampilan
-        return view('halaman.bendahara');
+        return view('halaman.user');
     }
 
-    
-
-
-public function destroy($id)
-{
-    try {
-        $user = User::find($id);
-        
-        if ($user) {
-            $user->forceDelete(); // Menghapus data secara permanen
-            return redirect('/bendahara')->with('success', 'Data berhasil dihapus secara permanen');
-        } else {
-            return redirect('/bendahara')->with('error', 'Data tidak ditemukan.');
-        }
-    } catch (\Exception $e) {
-        return redirect('/bendahara')->with('error', 'Gagal menghapus data. Silakan coba lagi.');
-    }
-}
-
-
-
-    public function add_bendahara()
+    public function destroy($id)
     {
-        // return view('tambah.add_guruu');
-       
-        // Meneruskan data ke tampilan
-         $roles = Role::all();
-        return view('tambah.add_bendahara',compact('roles'));
+        try {
+            $user = User::find($id);
+
+            if ($user) {
+                $user->forceDelete(); // Menghapus data secara permanen
+                return redirect('/user')->with('success', 'Data berhasil dihapus secara permanen');
+            } else {
+                return redirect('/user')->with('error', 'Data tidak ditemukan.');
+            }
+        } catch (\Exception $e) {
+            return redirect('/user')->with('error', 'Gagal menghapus data. Silakan coba lagi.');
+        }
+    }
+
+    public function add_user()
+    {
+        $roles = Role::all();
+        return view('tambah.add_user', compact('roles'));
     }
 
     public function store(Request $request)
 {
     $request->validate([
-        'name' => ['required', 'min:3', 'max:30'],
-        
+        'name' => ['required', 'min:3', 'max:30', function ($attribute, $value, $fail) {
+            // Check if the name already exists in the database
+            if (User::where('name', $value)->exists()) {
+                $fail($attribute . ' is registered.');
+            }
+        }],
         'email' => 'required|unique:users,email',
         'password' => ['required', 'min:8', 'max:12'],
         'kelamin' => 'required',
         'alamat' => ['required', 'min:3', 'max:30'],
     ]);
 
-
-        $user = User::where('name', $request->name)->orWhere('email', $request->email)->first();
-        if ($user) {
-            // Jika nama atau email sudah digunakan, tampilkan pesan kesalahan
-            return back()->withInput()->with('error', 'Nama atau email sudah digunakan.');
-        }
-
-      $bendahara = User::create([
+    // Create the user
+   $bendahara =  User::create([
             'name' => $request->name,
-           
             'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'kelamin' => $request->kelamin,
-            'alamat' => $request->alamat,
+            'password' => Hash::make($request->password),
+            // 'level' => $request->level,  // Menambahkan kolom level
+            'alamat'=> $request->alamat,
+            'kelamin'=> $request->kelamin,
+
         ]);
         $bendahara->assignRole($request->level);
 
-
-        // Redirect dengan pesan sukses
-        return redirect('/bendahara')->with('success', 'Data Berhasil Ditambahkan');
-   
-
-}
-
+        return redirect('/user')->with('success', 'Data Berhasil Ditambahkan');
+    }
 
     public function edit($id)
-{
-    $guruu = User::find($id);
-    // Jangan mengirimkan password ke tampilan
-    unset($guruu->password);
-     
+    {
+        $roles = Role::all();
+        $guruu = User::find($id);
 
-    return view('edit.edit_bendahara', compact('guruu'));
-}
-
-public function update(Request $request, $id)
-{
-    $guruu = User::find($id);
-
-    $request->validate([
-        'name' => ['required', 'min:3', 'max:30'],
-   
-        'email' => 'required|email|unique:users,email,' . $guruu->id,
-        'password' => ['nullable', 'min:8', 'max:12'], // Mengubah menjadi nullable
-         'kelamin' => 'required',
-         'alamat' => ['required', 'min:3', 'max:30'],
-    ]);
-
-    $data = [
-        'name' => $request->name,
-      
-        'email' => $request->email,
-        'kelamin' => $request->kelamin,
-        'alamat' => $request->alamat,
-    ];
-         $guruu->assignRole($request->level);
-
-
-    // Menambahkan password ke data hanya jika ada input password
-    if ($request->filled('password')) {
-        $data['password'] = bcrypt($request->password);
+        return view('edit.edit_user', compact('guruu', 'roles'));
     }
 
-    $guruu->update($data);
-
-    return redirect('/bendahara')->with('update_success', 'Data Berhasil Diupdate');
-}
-
-    public function search(Request $request)
+    public function update(Request $request, $id)
     {
-        // Dapatkan input pencarian
-        $searchTerm = $request->input('search');
+        $guruu = User::find($id);
 
-        // Lakukan pencarian hanya jika input tidak kosong
-        if (!empty($searchTerm)) {
-            // Validasi input
-            $request->validate([
-                'search' => 'string', // Sesuaikan aturan validasi sesuai kebutuhan Anda
-            ]);
+        $request->validate([
+            'name' => ['required', 'min:3', 'max:30'],
+            'email' => 'required|email|unique:users,email,' . $guruu->id,
+            'password' => ['nullable', 'min:8', 'max:12'],
+            'kelamin' => 'required',
+            'alamat' => ['required', 'min:3', 'max:30'],
+        ]);
 
-            // Lakukan pencarian dengan mempertimbangkan validasi input, level 'admin', dan status_pemilihan
-            $users = User::where('level', 'guru')
-                        ->where(function ($query) use ($searchTerm) {
-                            $query->where('name', 'like', "%{$searchTerm}%")
-                                ->orWhere('status_pemilihan', 'like', "%{$searchTerm}%"); // Ubah sesuai dengan tipe data status_pemilihan
-                        })
-                        ->get();
-        } else {
-            // Jika input kosong, ambil semua data user dengan level 'admin'
-            $users = User::where('level', 'guru')->get();
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'kelamin' => $request->kelamin,
+            'alamat' => $request->alamat,
+        ];
+
+        // Mengupdate role yang dimiliki user
+        $guruu->syncRoles($request->roles);
+
+        // Menambahkan password ke data hanya jika ada input password
+        if ($request->filled('password')) {
+            $data['password'] = bcrypt($request->password);
         }
 
-        // Memberikan respons berdasarkan hasil pencarian
-        return response()->json($users);
+        $guruu->update($data);
+
+        return redirect('home')->with('update_success', 'Data Berhasil Diupdate');
     }
 
+  
 
-    public function bendaharaimportexcel(Request $request) {
-
-        // DB::table('users')->where('level','guru')->delete();
-        User::query()->where('level','bendahara')->delete();
-        $file=$request->file('file');
+    public function bendaharaimportexcel(Request $request)
+    {
+        User::query()->where('level', 'bendahara')->delete();
+        $file = $request->file('file');
         $namafile = $file->getClientOriginalName();
         $file->move('DataBendahara', $namafile);
 
-        Excel::import(new UserImport, public_path('/DataBendahara/'.$namafile));
+        Excel::import(new UserImport, public_path('/DataBendahara/' . $namafile));
         return redirect('/bendahara')->with('success', 'Data Berhasil Ditambahkan');
-        
     }
 }

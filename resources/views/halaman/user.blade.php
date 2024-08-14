@@ -3,7 +3,7 @@
 
 <head>
     @include('template.headerr')
-    <title>KasZone| {{auth()->user()->level}} | Bendahara</title>
+    <title>KasZone| {{auth()->user()->level}} | User</title>
     
 </head>
 
@@ -25,13 +25,13 @@
                 <div class="col-sm-6 p-md-0">
                     <div class="welcome-text">
                         <h4>Hi, welcome back!</h4>
-                        <p class="mb-0">Data Bendahara</p>
+                        <p class="mb-0">Data User</p>
                     </div>
                 </div>
                 <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="javascript:void(0)">Table</a></li>
-                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Bendahara</a></li>
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">User</a></li>
                     </ol>
                 </div>
             </div>
@@ -41,7 +41,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title">Data Bendahara</h4>
+                            <h4 class="card-title">Data User</h4>
                             <div class="text-right">
                           {{-- <div class="input-group search-area right d-lg-inline-flex d-none">
                             <form id="searchForm">
@@ -76,7 +76,7 @@
             </div>
         </div> --}}
                     
-                    <a href="/add_bendahara" class="btn btn-success" title="Add">
+                    <a href="/add_user" class="btn btn-success" title="Add">
                         <i class="fa fa-plus"></i>
                     </a>
                 </div>
@@ -119,7 +119,7 @@
                                          
                                             <th><strong>Jenis Kelamin</strong></th>
                                             <th><strong>Alamat</strong></th>
-                                       
+                                            <th><strong>Role</strong></th>
                                             <th><strong>Option</strong></th>
                                         </tr>
                                     </thead>

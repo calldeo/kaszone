@@ -169,12 +169,13 @@ class AdminController extends Controller
 
 
 
-    public function tab(Request $request) // BENDAHARA
-    {
-        if ($request->ajax()) {
-            $bendahara = User::role('bendahara') // Filter users by the 'admin' role
+    public function tab(Request $request)
+{
+    if ($request->ajax()) {
+        // Ambil pengguna dengan peran 'bendahara' dan 'admin'
+        $bendahara = User::role(['bendahara', 'admin']) // Mengambil pengguna dengan peran 'bendahara' atau 'admin'
                       ->with('roles') // Eager load roles
-                      ->select(['id', 'name', 'email',  'kelamin', 'alamat'])
+                      ->select(['id', 'name', 'email', 'kelamin', 'alamat'])
                       ->get();
 
         return DataTables::of($bendahara)
@@ -183,25 +184,24 @@ class AdminController extends Controller
                 // Mengambil nama role dan menggabungkannya menjadi string
                 return $row->roles->pluck('name')->implode(', ');
             })
-                 // Menambahkan indeks otomatis
-                ->addColumn('opsi', function ($row) {
-                    return '
-                        <div class="d-flex align-items-center">
-                            <form action="/bendahara/' . $row->id . '/edit_bendahara" method="GET" class="mr-1">
-                                <button type="submit" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></button>
-                            </form>
-                            <form action="/bendahara/' . $row->id . '/destroy" method="POST">
-                                ' . csrf_field() . '
-                                ' . method_field('DELETE') . '
-                                <button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>
-                            </form>
-                        </div>
-                    ';
-                })
-                ->rawColumns(['roles','opsi']) // Pastikan kolom ini dianggap sebagai HTML
-                ->make(true);
-        }
+            ->addColumn('opsi', function ($row) {
+                return '
+                    <div class="d-flex align-items-center">
+                        <form action="/user/' . $row->id . '/edit_user" method="GET" class="mr-1">
+                            <button type="submit" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></button>
+                        </form>
+                        <form action="/user/' . $row->id . '/destroy" method="POST">
+                            ' . csrf_field() . '
+                            ' . method_field('DELETE') . '
+                            <button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>
+                        </form>
+                    </div>
+                ';
+            })
+            ->rawColumns(['roles', 'opsi']) // Pastikan kolom ini dianggap sebagai HTML
+            ->make(true);
     }
+}
 
 
 

@@ -1,32 +1,32 @@
 $(document).ready(function(){
-    $('#adminTable').DataTable({
-        ordering: true,
-        serverSide: true,  // Menunjukkan bahwa data diambil dari server
-        processing: true,  // Menunjukkan bahwa ada proses loading data
-        ajax: {
-            url: $('#table-url').val(),  // Mengambil URL dari elemen input tersembunyi
-            type: 'GET',  // Metode pengambilan data
-            dataType: 'json',  // Jenis data yang diharapkan dari server
-            error: function(jqXHR, textStatus, errorThrown) {  // Menangani error dari permintaan AJAX
-                console.error('AJAX error:', textStatus, errorThrown);
-                alert('Terjadi kesalahan saat memuat data. Silakan coba lagi nanti.');
-            }
-        },
-        columns: [
-            { data: 'DT_RowIndex', name: 'DT_RowIndex', width: '10px', orderable: false, searchable: false },
-            { data: 'name', name: 'name' },
-            { data: 'email', name: 'email' },
-            { data: 'kelamin', name: 'kelamin' },
-            { data: 'alamat', name: 'alamat' },
+    // $('#adminTable').DataTable({
+    //     ordering: true,
+    //     serverSide: true,  // Menunjukkan bahwa data diambil dari server
+    //     processing: true,  // Menunjukkan bahwa ada proses loading data
+    //     ajax: {
+    //         url: $('#table-url').val(),  // Mengambil URL dari elemen input tersembunyi
+    //         type: 'GET',  // Metode pengambilan data
+    //         dataType: 'json',  // Jenis data yang diharapkan dari server
+    //         error: function(jqXHR, textStatus, errorThrown) {  // Menangani error dari permintaan AJAX
+    //             console.error('AJAX error:', textStatus, errorThrown);
+    //             alert('Terjadi kesalahan saat memuat data. Silakan coba lagi nanti.');
+    //         }
+    //     },
+    //     columns: [
+    //         { data: 'DT_RowIndex', name: 'DT_RowIndex', width: '10px', orderable: false, searchable: false },
+    //         { data: 'name', name: 'name' },
+    //         { data: 'email', name: 'email' },
+    //         { data: 'kelamin', name: 'kelamin' },
+    //         { data: 'alamat', name: 'alamat' },
 
-            { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
-        ],
-        columnDefs: [
-            // Contoh untuk menambahkan pengaturan kolom tambahan jika diperlukan
-        ],
+    //         { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
+    //     ],
+    //     columnDefs: [
+    //         // Contoh untuk menambahkan pengaturan kolom tambahan jika diperlukan
+    //     ],
         
        
-    });
+    // });
         $('#bendaharaTable').DataTable({
         ordering: true,
         serverSide: true,  // Menunjukkan bahwa data diambil dari server
@@ -46,7 +46,7 @@ $(document).ready(function(){
             { data: 'email', name: 'email' },
             { data: 'kelamin', name: 'kelamin' },
             { data: 'alamat', name: 'alamat' },
-
+            { data: 'roles', name: 'roles' },
             { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
         ],
         columnDefs: [

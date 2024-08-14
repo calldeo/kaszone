@@ -73,7 +73,7 @@
                     <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="javascript:void(0)">Form</a></li>
-                            <li class="breadcrumb-item active"><a href="javascript:void(0)">Bendahara</a></li>
+                            <li class="breadcrumb-item active"><a href="javascript:void(0)">User</a></li>
                         </ol>
                     </div>
                 </div>
@@ -89,11 +89,11 @@
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Add Data Bendahara</h4>
+                                <h4 class="card-title">Add Data User</h4>
                             </div>
                             <div class="card-body">
                                 <div class="basic-form">
-                                    <form class="form-valide-with-icon" action="/bendahara/store" method="post" enctype="multipart/form-data">
+                                    <form class="form-valide-with-icon" action="/user/store" method="post" enctype="multipart/form-data">
                                         @csrf
                                         <div class="form-group">
                                             <label class="text-label">Name *</label>

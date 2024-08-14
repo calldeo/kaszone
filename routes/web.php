@@ -71,26 +71,26 @@ route::get('/tabe',[AdminController::class,'tabe'])->name('tabe');
 
 
 
-Route::group(['middleware' => ['permission:admin']], function (){
+// Route::group(['middleware' => ['permission:admin']], function (){
 
-    route::get('/admin',[AdminController::class,'admin'])->name('admin');
-    route::get('/admin/search',[AdminController::class,'search'])->name('admin.search');
-    Route::delete('/admin/{id}/destroy', [AdminController::class, 'destroy'])->name('admin.destroy');
-    route::get('/add_admin',[AdminController::class,'add_admin'])->name('add_admin');
-    Route::post('/admin/store',[AdminController::class,'store']);
-    Route::get('/admin/{id}/edit_admin  ',[AdminController::class,'edit']);
-    Route::put('/admin/{id}',[AdminController::class,'update']);
-});
+//     route::get('/admin',[AdminController::class,'admin'])->name('admin');
+//     route::get('/admin/search',[AdminController::class,'search'])->name('admin.search');
+//     Route::delete('/admin/{id}/destroy', [AdminController::class, 'destroy'])->name('admin.destroy');
+//     route::get('/add_admin',[AdminController::class,'add_admin'])->name('add_admin');
+//     Route::post('/admin/store',[AdminController::class,'store']);
+//     Route::get('/admin/{id}/edit_admin  ',[AdminController::class,'edit']);
+//     Route::put('/admin/{id}',[AdminController::class,'update']);
+// });
 
 
 Route::group(['middleware' => ['permission:bendahara']], function (){
 
     Route::post('/importbendahara', [BendaharaController::class, 'bendaharaimportexcel'])->name('import-bendahara');
-    route::get('/bendahara',[BendaharaController::class,'bendahara'])->name('bendahara');
-    Route::delete('/bendahara/{id}/destroy', [BendaharaController::class, 'destroy'])->name('bendahara.destroy');
-    route::get('/add_bendahara',[BendaharaController::class,'add_bendahara'])->name('add_bendahara');
-    Route::post('/bendahara/store',[BendaharaController::class,'store']);
-    Route::get('/bendahara/{id}/edit_bendahara  ',[BendaharaController::class,'edit']);
+    route::get('/user',[BendaharaController::class,'bendahara'])->name('bendahara');
+    Route::delete('/user/{id}/destroy', [BendaharaController::class, 'destroy'])->name('user.destroy');
+    route::get('/add_user',[BendaharaController::class,'add_user'])->name('add_user');
+    Route::post('/user/store',[BendaharaController::class,'store']);
+    Route::get('/user/{id}/edit_user  ',[BendaharaController::class,'edit']);
     Route::put('/guruu/{id}',[BendaharaController::class,'update']);
 });
 

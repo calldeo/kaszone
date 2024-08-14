@@ -23,7 +23,7 @@
 				</ul>
 			</li>
 			@endcan
-			@can('admin')
+			{{-- @can('admin')
 			<li class="nav-label first">Main Menu</li>
 			<li><a  href="/admin" aria-expanded="false">
 					<i class="flaticon-044-file"></i>
@@ -31,11 +31,11 @@
 				</a>
 			   
 			</li>
-			@endcan
+			@endcan --}}
 			@can('bendahara')
-			  <li><a  href="/bendahara" aria-expanded="false">
+			  <li><a  href="/user" aria-expanded="false">
 					<i class="flaticon-044-file"></i>
-					<span class="nav-text">Data Bendahara</span>
+					<span class="nav-text">Data User</span>
 				</a>
 			   
 			</li>
