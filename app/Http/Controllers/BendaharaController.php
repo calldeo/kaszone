@@ -56,7 +56,7 @@ class BendaharaController extends Controller
         'alamat' => ['required', 'min:3', 'max:30'],
     ]);
 
-    // Create the user
+    // Create the 
    $bendahara =  User::create([
             'name' => $request->name,
             'email' => $request->email,
