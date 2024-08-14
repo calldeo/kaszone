@@ -1,10 +1,7 @@
 <?php
 
-
-
 namespace App\Http\Controllers;
 
-use DB;
 use App\Models\User;
 use App\Imports\UserImport;
 use Illuminate\Http\Request;
@@ -42,31 +39,31 @@ class BendaharaController extends Controller
     }
 
     public function store(Request $request)
-{
-    $request->validate([
-        'name' => ['required', 'min:3', 'max:30', function ($attribute, $value, $fail) {
-            // Check if the name already exists in the database
-            if (User::where('name', $value)->exists()) {
-                $fail($attribute . ' is registered.');
-            }
-        }],
-        'email' => 'required|unique:users,email',
-        'password' => ['required', 'min:8', 'max:12'],
-        'kelamin' => 'required',
-        'alamat' => ['required', 'min:3', 'max:30'],
-    ]);
+    {
+        $request->validate([
+            'name' => ['required', 'min:3', 'max:30', function ($attribute, $value, $fail) {
+                // Check if the name already exists in the database
+                if (User::where('name', $value)->exists()) {
+                    $fail($attribute . ' is registered.');
+                }
+            }],
+            'email' => 'required|unique:users,email',
+            'password' => ['required', 'min:8', 'max:12'],
+            'kelamin' => 'required',
+            'alamat' => ['required', 'min:3', 'max:30'],
+            'roles' => 'required|array',
+            'roles.*' => 'exists:roles,name',
+        ]);
 
-    // Create the 
-   $bendahara =  User::create([
+        // Create the user
+        $bendahara = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            // 'level' => $request->level,  // Menambahkan kolom level
-            'alamat'=> $request->alamat,
-            'kelamin'=> $request->kelamin,
-
+            'alamat' => $request->alamat,
+            'kelamin' => $request->kelamin,
         ]);
-        $bendahara->assignRole($request->level);
+        $bendahara->assignRole($request->roles);
 
         return redirect('/user')->with('success', 'Data Berhasil Ditambahkan');
     }
@@ -89,6 +86,8 @@ class BendaharaController extends Controller
             'password' => ['nullable', 'min:8', 'max:12'],
             'kelamin' => 'required',
             'alamat' => ['required', 'min:3', 'max:30'],
+            'roles' => 'required|array',
+            'roles.*' => 'exists:roles,name',
         ]);
 
         $data = [
@@ -98,20 +97,22 @@ class BendaharaController extends Controller
             'alamat' => $request->alamat,
         ];
 
+        // Menambahkan password ke data hanya jika ada input password
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
+        }
+
+        // Mengupdate data user
+        $guruu->update($data);
+
         // Mengupdate role yang dimiliki user
         $guruu->syncRoles($request->roles);
 
-        // Menambahkan password ke data hanya jika ada input password
-        if ($request->filled('password')) {
-            $data['password'] = bcrypt($request->password);
-        }
+        // Mengalihkan pengguna berdasarkan peran baru mereka
+        $redirectPath = $guruu->hasRole('admin') ? '/user' : '/home';
 
-        $guruu->update($data);
-
-        return redirect('user')->with('update_success', 'Data Berhasil Diupdate');
+        return redirect($redirectPath)->with('update_success', 'Data Berhasil Diupdate');
     }
-
-  
 
     public function bendaharaimportexcel(Request $request)
     {
