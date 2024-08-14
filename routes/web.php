@@ -1,12 +1,14 @@
 <?php
 
+use App\Models\Category;
 use App\Models\Pengeluaran;
 use App\Exports\PengeluaranExport;
 use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\Route;
 // use Maatwebsite\Excel\Facades\Excel;
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SiswaController;
@@ -17,7 +19,6 @@ use App\Http\Controllers\PemasukanController;
 use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Models\Category;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,6 +68,8 @@ route::get('/tab',[AdminController::class,'tab'])->name('tab');
 route::get('/teb',[AdminController::class,'teb'])->name('teb');
 route::get('/tob',[AdminController::class,'tob'])->name('tob');
 route::get('/tabe',[AdminController::class,'tabe'])->name('tabe');
+route::get('/tub',[AdminController::class,'tub'])->name('tub');
+
 
 
 
@@ -146,4 +149,12 @@ Route::group(['middleware' => ['permission:datapengeluaran']], function (){
     Route::get('/pengeluaran/{id_data}/detail', [PengeluaranController::class, 'showDetail'])->name('pengeluaran.showDetail');
 
     Route::get('/download-template-kategori', [CategoryController::class, 'downloadTemplate'])->name('download-template-kategori');
+    
+
+});
+Route::group(['middleware' => ['permission:role']], function (){
+
+    route::get('/role',[RoleController::class,'role'])->name('role');
+    Route::get('/role/{id}/edit_role  ',[RoleController::class,'edit']);
+    Route::put('/role/{id}',[RoleController::class,'update']);
 });

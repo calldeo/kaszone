@@ -62,6 +62,13 @@
                     </a>
                 </li>
 			@endcan
+			@can('role')
+                <li><a href="/role" aria-expanded="false">
+                        <i class="flaticon-044-file"></i>
+                        <span class="nav-text">Role</span>
+                    </a>
+                </li>
+			@endcan
            
 		
 		</ul>

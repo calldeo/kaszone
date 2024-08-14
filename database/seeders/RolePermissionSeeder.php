@@ -21,6 +21,7 @@ class RolePermissionSeeder extends Seeder
         Permission::create(['name'=>'admin']);
         Permission::create(['name'=>'bendahara']);
         Permission::create(['name'=> 'kategori']);
+        Permission::create(['name'=> 'role']);
 
 
         Permission::create(['name'=>'datapemasukan']);
@@ -36,6 +37,8 @@ class RolePermissionSeeder extends Seeder
         $roleAdmin->givePermissionTo('kategori');
         $roleAdmin->givePermissionTo('datapemasukan');
         $roleAdmin->givePermissionTo('datapengeluaran');
+        $roleAdmin->givePermissionTo('role');
+
 
 
 
