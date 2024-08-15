@@ -158,4 +158,4 @@ Route::group(['middleware' => ['permission:role']], function (){
     Route::get('/role/{id}/edit_role  ',[RoleController::class,'edit']);
     Route::put('/role/{id}',[RoleController::class,'update']);
 });
-Route::post('/switch-role', [BendaharaController::class, 'switchRole'])->name('switch.role');
+Route::post('/switch-role', [BendaharaController::class, 'switchRole'])->name('switchRole');

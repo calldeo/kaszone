@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Imports\UserImport;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -34,38 +35,39 @@ class BendaharaController extends Controller
 
     public function add_user()
     {
-        $roles = Role::all();
-        return view('tambah.add_user', compact('roles'));
+      
+    $roles = Role::all();
+        return view('tambah.add_user',compact('roles'));
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => ['required', 'min:3', 'max:30', function ($attribute, $value, $fail) {
-                // Check if the name already exists in the database
-                if (User::where('name', $value)->exists()) {
-                    $fail($attribute . ' is registered.');
-                }
-            }],
-            'email' => 'required|unique:users,email',
-            'password' => ['required', 'min:8', 'max:12'],
-            'kelamin' => 'required',
-            'alamat' => ['required', 'min:3', 'max:30'],
-            'roles' => 'required|array',
-            'roles.*' => 'exists:roles,name',
-        ]);
+   public function store(Request $request)
+{
+    $request->validate([
+        'name' => ['required', 'min:3', 'max:30', function ($attribute, $value, $fail) {
+            // Check if the name already exists in the database
+            if (User::where('name', $value)->exists()) {
+                $fail($attribute . ' is registered.');
+            }
+        }],
+        'email' => 'required|unique:users,email',
+        'password' => ['required', 'min:8', 'max:12'],
+        'kelamin' => 'required',
+        'alamat' => ['required', 'min:3', 'max:30'],
+    ]);
 
-        // Create the user
-        $bendahara = User::create([
+    // Create the user
+   $bendahara =  User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'alamat' => $request->alamat,
-            'kelamin' => $request->kelamin,
-        ]);
-        $bendahara->assignRole($request->roles);
+            // 'level' => $request->level,  // Menambahkan kolom level
+            'alamat'=> $request->alamat,
+            'kelamin'=> $request->kelamin,
 
-        return redirect('/user')->with('success', 'Data Berhasil Ditambahkan');
+        ]);
+        $bendahara->assignRole($request->level);
+
+    return redirect('/user')->with('success', 'Data Berhasil Ditambahkan');
     }
 
     public function edit($id)
@@ -124,6 +126,7 @@ class BendaharaController extends Controller
         Excel::import(new UserImport, public_path('/DataBendahara/' . $namafile));
         return redirect('/bendahara')->with('success', 'Data Berhasil Ditambahkan');
     }
+
     public function switchRole(Request $request)
 {
     $user = auth()->user();
@@ -133,16 +136,29 @@ class BendaharaController extends Controller
         'role' => 'required|in:admin,bendahara',
     ]);
     
-    // Hapus semua role yang ada
-    $user->syncRoles([]);
-    
-    // Tambahkan role baru
-    $user->assignRole($request->role);
-    
-    // Redirect sesuai dengan peran baru
-    $redirectPath = $request->role === 'admin' ? '/user' : '/home';
-    
+    // Cek apakah user memiliki lebih dari satu role
+    if ($user->roles->count() > 1) {
+        // Hapus semua role yang ada
+        $user->syncRoles([]);
+        
+        // Tambahkan role baru
+        $user->assignRole($request->role);
+        
+        // Redirect sesuai dengan peran baru
+        $redirectPath = $request->role === 'admin' ? '/user' : '/home';
+        $redirectPath = $request->role === 'bendahara' ? '/home' : '/home';
+    } else {
+        // Jika user hanya memiliki satu role, tidak memungkinkan untuk mengganti role
+        $roleName = $user->roles->first()->name;
+        $redirectPath = $roleName === 'admin' ? '/home' : '/user';
+        
+        return redirect($redirectPath)->with('error', 'Anda hanya memiliki satu akses role.');
+    }
+
     return redirect($redirectPath)->with('success', 'Role berhasil diubah.');
 }
 
+
 }
+
+

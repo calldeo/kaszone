@@ -183,7 +183,7 @@
 
                                     <!-- Submit and Cancel Buttons -->
                                     <button type="submit" class="btn mr-2 btn-primary">Submit</button>
-                                    <a href="/admin" class="btn btn-light">Cancel</a>
+                                    <a href="/user" class="btn btn-light">Cancel</a>
                                 </form>
                             </div>
                         </div>

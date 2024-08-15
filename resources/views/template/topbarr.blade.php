@@ -99,19 +99,45 @@
                                     <span class="ml-2">Logout </span>
                                 </a>
                             </div>
-
-                            <!-- Switch Role Button -->
-<form action="{{ route('switch.role') }}" method="POST" style="display: inline;">
-    @csrf
-    <div class="form-group">
-        <label for="role">Switch Role</label>
-        <select name="role" id="role" class="form-control">
-            <option value="admin" {{ auth()->user()->hasRole('admin') ? 'selected' : '' }}>Admin</option>
-            <option value="bendahara" {{ auth()->user()->hasRole('bendahara') ? 'selected' : '' }}>Bendahara</option>
-        </select>
-    </div>
-    <button type="submit" class="btn btn-primary">Switch Role</button>
-</form>
+                            <form id="roleSwitchForm" action="{{ route('switchRole') }}" method="POST">
+                                <form id="roleSwitchForm" action="{{ route('switchRole') }}" method="POST">
+                                    @csrf
+                                    <div class="form-group">
+                                        <label for="role">Pilih Role:</label>
+                                        <select name="role" id="role" class="form-control">
+                                            <option value="admin" {{ session('active_role') === 'admin' ? 'selected' : '' }}>Admin</option>
+                                            <option value="bendahara" {{ session('active_role') === 'bendahara' ? 'selected' : '' }}>Bendahara</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Ganti Role</button>
+                                </form>
+                                
+                                {{-- <script>
+                                document.getElementById('role').addEventListener('change', function() {
+                                    const form = document.getElementById('roleSwitchForm');
+                                    const formData = new FormData(form);
+                                
+                                    fetch(form.action, {
+                                        method: 'POST',
+                                        body: formData,
+                                        headers: {
+                                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                        }
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.redirect) {
+                                            window.location.href = data.redirect;
+                                        }
+                                        if (data.message) {
+                                            alert(data.message);
+                                        }
+                                    })
+                                    .catch(error => console.error('Error:', error));
+                                });
+                                </script> --}}
+                                
+                            
 
                         </li>
                     </ul>
