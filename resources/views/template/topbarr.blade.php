@@ -99,6 +99,20 @@
                                     <span class="ml-2">Logout </span>
                                 </a>
                             </div>
+
+                            <!-- Switch Role Button -->
+<form action="{{ route('switch.role') }}" method="POST" style="display: inline;">
+    @csrf
+    <div class="form-group">
+        <label for="role">Switch Role</label>
+        <select name="role" id="role" class="form-control">
+            <option value="admin" {{ auth()->user()->hasRole('admin') ? 'selected' : '' }}>Admin</option>
+            <option value="bendahara" {{ auth()->user()->hasRole('bendahara') ? 'selected' : '' }}>Bendahara</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Switch Role</button>
+</form>
+
                         </li>
                     </ul>
                 </div>

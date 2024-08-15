@@ -124,4 +124,25 @@ class BendaharaController extends Controller
         Excel::import(new UserImport, public_path('/DataBendahara/' . $namafile));
         return redirect('/bendahara')->with('success', 'Data Berhasil Ditambahkan');
     }
+    public function switchRole(Request $request)
+{
+    $user = auth()->user();
+    
+    // Validasi input
+    $request->validate([
+        'role' => 'required|in:admin,bendahara',
+    ]);
+    
+    // Hapus semua role yang ada
+    $user->syncRoles([]);
+    
+    // Tambahkan role baru
+    $user->assignRole($request->role);
+    
+    // Redirect sesuai dengan peran baru
+    $redirectPath = $request->role === 'admin' ? '/user' : '/home';
+    
+    return redirect($redirectPath)->with('success', 'Role berhasil diubah.');
+}
+
 }

@@ -110,7 +110,7 @@
                                     </div>
                                     
                                     <button type="submit" class="btn btn-primary">Update</button>
-                                    <a href="/bendahara" class="btn btn-danger">Cancel</a>
+                                    <a href="/user" class="btn btn-danger">Cancel</a>
                                 </form>
                             </div>
                         </div>
