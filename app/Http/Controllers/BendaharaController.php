@@ -9,6 +9,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Session;
 
 class BendaharaController extends Controller
 {
@@ -127,38 +128,43 @@ class BendaharaController extends Controller
         return redirect('/bendahara')->with('success', 'Data Berhasil Ditambahkan');
     }
 
-    public function switchRole(Request $request)
+   
+
+public function switchRole(Request $request)
 {
     $user = auth()->user();
     
-    // Validasi input
+    // Validasi input role
     $request->validate([
         'role' => 'required|in:admin,bendahara',
     ]);
     
-    // Cek apakah user memiliki lebih dari satu role
-    if ($user->roles->count() > 1) {
-        // Hapus semua role yang ada
-        $user->syncRoles([]);
+    // Simpan role yang dipilih di session
+    Session::put('activeRole', $request->role);
+
+    // Cek apakah user memiliki role yang dipilih
+    $hasRole = $user->hasRole(Session::get('activeRole'));
+    
+    // Jika user memiliki role yang dipilih, atur permissions sesuai dengan role
+    if ($hasRole) {
+        // Pastikan role aktif di session
+        $activeRole = Session::get('activeRole');
         
-        // Tambahkan role baru
-        $user->assignRole($request->role);
+        // Dapatkan permissions yang terkait dengan role aktif
+        $permissions = $user->getPermissionsViaRoles()->pluck('name')->toArray();
+
+        // Set permissions di session atau sesuai kebutuhan Anda
+        Session::put('permissions', $permissions);
         
-        // Redirect sesuai dengan peran baru
-        $redirectPath = $request->role === 'admin' ? '/user' : '/home';
-        $redirectPath = $request->role === 'bendahara' ? '/home' : '/home';
+        // Redirect sesuai dengan role yang dipilih
+        $redirectPath = $activeRole === 'admin' ? '/user' : '/home';
+
+        return redirect($redirectPath)->with('success', 'Role dan permissions berhasil diubah.');
     } else {
-        // Jika user hanya memiliki satu role, tidak memungkinkan untuk mengganti role
-        $roleName = $user->roles->first()->name;
-        $redirectPath = $roleName === 'admin' ? '/home' : '/user';
-        
-        return redirect($redirectPath)->with('error', 'Anda hanya memiliki satu akses role.');
+        return redirect()->back()->with('error', 'Anda tidak memiliki akses ke peran ini.');
     }
 
-    return redirect($redirectPath)->with('success', 'Role berhasil diubah.');
 }
 
 
 }
-
-

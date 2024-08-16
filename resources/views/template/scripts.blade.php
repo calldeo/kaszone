@@ -57,3 +57,9 @@
         });
     });
 </script> --}}
+<script>
+function switchRole(role) {
+    document.getElementById('roleInput').value = role;
+    document.getElementById('roleSwitchForm').submit();
+}
+</script>

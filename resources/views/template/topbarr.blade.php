@@ -85,57 +85,81 @@
                                 <img src="{{ auth()->user()->poto ? asset('storage/' . auth()->user()->poto) : asset('dash/images/mamo.jpeg') }}" width="20" alt="">
                                 <div class="header-info">
                                     <span>{{ auth()->user()->name }}</span> 
-                                    <small>{{ auth()->user()->roles->pluck('name')[0] }}</small>
+                                 <small>
+                                    @if(auth()->user()->roles->count() > 1)
+                                        {{ session('activeRole') }}
+                                    @else
+                                        {{ auth()->user()->roles->first()->name }}
+                                    @endif
+                                </small>
+
+
                                 
                                 </div>
                             </a>
                             
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <a href="/profile/edit" class="dropdown-item ai-icon">
-                                    <svg id="icon-user1" xmlns="http://www.w3.org/2000/svg" class="text-primary" width="18" height="18" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                                    <span class="ml-2">Profile </span>
-                                <a href="/login" class="dropdown-item ai-icon">
-                                    <svg id="icon-logout" xmlns="http://www.w3.org/2000/svg" class="text-danger" width="18" height="18" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                                    <span class="ml-2">Logout </span>
-                                </a>
-                            </div>
-                            <form id="roleSwitchForm" action="{{ route('switchRole') }}" method="POST">
-                                <form id="roleSwitchForm" action="{{ route('switchRole') }}" method="POST">
-                                    @csrf
-                                    <div class="form-group">
-                                        <label for="role">Pilih Role:</label>
-                                        <select name="role" id="role" class="form-control">
-                                            <option value="admin" {{ session('active_role') === 'admin' ? 'selected' : '' }}>Admin</option>
-                                            <option value="bendahara" {{ session('active_role') === 'bendahara' ? 'selected' : '' }}>Bendahara</option>
-                                        </select>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Ganti Role</button>
-                                </form>
-                                
-                                {{-- <script>
-                                document.getElementById('role').addEventListener('change', function() {
-                                    const form = document.getElementById('roleSwitchForm');
-                                    const formData = new FormData(form);
-                                
-                                    fetch(form.action, {
-                                        method: 'POST',
-                                        body: formData,
-                                        headers: {
-                                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                                        }
-                                    })
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        if (data.redirect) {
-                                            window.location.href = data.redirect;
-                                        }
-                                        if (data.message) {
-                                            alert(data.message);
-                                        }
-                                    })
-                                    .catch(error => console.error('Error:', error));
-                                });
-                                </script> --}}
+                           <div class="dropdown-menu dropdown-menu-right">
+    <a href="/profile/edit" class="dropdown-item ai-icon">
+        <svg id="icon-user1" xmlns="http://www.w3.org/2000/svg" class="text-primary" width="18" height="18" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span class="ml-2">Profile</span>
+    </a>
+    
+    <a href="/login" class="dropdown-item ai-icon">
+        <svg id="icon-logout" xmlns="http://www.w3.org/2000/svg" class="text-danger" width="18" height="18" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+        <span class="ml-2">Logout</span>
+    </a>
+
+    <div class="dropdown-divider"></div>
+
+    <!-- Cek jika user memiliki lebih dari satu role -->
+@if(auth()->user()->roles->count() > 1)
+    <!-- Role Switch Form -->
+    <form id="roleSwitchForm" action="{{ route('switchRole') }}" method="POST" class="px-2 py-1">
+        @csrf
+        <input type="hidden" name="role" id="roleInput" value="{{ session('active_role') }}">
+        
+        <!-- Tombol untuk role Admin -->
+        <button type="button" id="adminButton" onclick="switchRole('admin')" class="dropdown-item btn btn-sm text-left {{ session('activeRole') === 'admin' ? 'btn-primary' : 'btn-secondary' }}">
+            Ganti ke Admin
+        </button>
+        
+        <!-- Tombol untuk role Bendahara -->
+        <button type="button" id="bendaharaButton" onclick="switchRole('bendahara')" class="dropdown-item btn btn-sm text-left {{ session('activeRole') === 'bendahara' ? 'btn-primary' : 'btn-secondary' }}">
+            Ganti ke Bendahara
+        </button>
+    </form>
+</div>
+                <script>
+        function switchRole(role) {
+            // Update value of hidden input
+            document.getElementById('roleInput').value = role;
+
+            // Update button classes based on selected role
+            if (role === 'admin') {
+                document.getElementById('adminButton').classList.remove('btn-secondary');
+                document.getElementById('adminButton').classList.add('btn-primary');
+                document.getElementById('bendaharaButton').classList.remove('btn-primary');
+                document.getElementById('bendaharaButton').classList.add('btn-secondary');
+            } else if (role === 'bendahara') {
+                document.getElementById('bendaharaButton').classList.remove('btn-secondary');
+                document.getElementById('bendaharaButton').classList.add('btn-primary');
+                document.getElementById('adminButton').classList.remove('btn-primary');
+                document.getElementById('adminButton').classList.add('btn-secondary');
+            }
+
+            // Submit the form
+            document.getElementById('roleSwitchForm').submit();
+        }
+    </script>
+@endif                 
+                               
                                 
                             
 
