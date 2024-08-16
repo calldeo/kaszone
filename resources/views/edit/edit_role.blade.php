@@ -137,7 +137,7 @@
                         </div>
 
                                         <button type="submit" class="btn mr-2 btn-primary">Submit</button>
-                                       <button type="submit" class="btn btn-light" onclick="redirectToBendahara()">Cancel</button>
+                                       <button type="submit" class="btn btn-light" onclick="redirectToRole()">Cancel</button>
                                     </form>
                                 </div>
                             </div>

@@ -27,9 +27,9 @@
     }
 	</script>
     <script>
-    function redirectToBendahara() {
+    function redirectToRole() {
         // Ganti URL dengan URL halaman admin yang diinginkan
-        window.location.href = "/bendahara";
+        window.location.href = "/role";
     }
 	</script>
     <script>

@@ -49,7 +49,7 @@
                             </form>
                           </div> --}}
                     
-                    <a href="/add_admin" class="btn btn-success" title="Add">
+                    <a href="/add_role" class="btn btn-success" title="Add">
                         <i class="fa fa-plus"></i>
                     </a>
                 </div>

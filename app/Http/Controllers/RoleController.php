@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
@@ -47,5 +48,43 @@ class RoleController extends Controller
 
     return redirect('/role')->with('update_success', 'Role dan permissions berhasil diupdate');
 }
+
+
+ public function create()
+    {
+       
+        return view('tambah.add_role');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+        'name' => ['required', 'min:3', 'max:30'],
+        'guard_name' => ['required', 'min:3', 'max:30'],
+        ]);
+
+     DB::beginTransaction();
+     try {
+        //code... 
+        $role = new Role();
+        $role->name = $request->name;
+        $role->guard_name = $request->guard_name;
+       
+
+        
+        // dd($pemasukan);
+        $role->save();
+        DB::commit();
+     } catch (\Throwable $th) {
+        DB::rollback();
+        return redirect('/role')->with('success', 'Role gagal ditambahkan!' . $th->getMessage());
+
+        //throw $th;
+     }
+        return redirect('/role')->with('success', 'Role berhasil ditambahkan!');
+       
+        // Pemasukan::create($request->all());
+
+    }
 
 }
