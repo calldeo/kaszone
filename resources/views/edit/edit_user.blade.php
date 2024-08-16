@@ -85,7 +85,7 @@
                                         <label class="text-label">Alamat *</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text"> <i class="fa fa-home"></i> </span>
+                                                <span class="input-group-text"> <i class="fa fa-map-marker-alt"></i> </span>
                                             </div>
                                             <input type="text" class="form-control" name="alamat" value="{{ $guruu->alamat }}" placeholder="Enter an address.." required>
                                         </div>

@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+
 <div class="deznav">
     <div class="deznav-scroll">
         <div class="main-profile">
@@ -29,14 +31,21 @@
 
                 @can('bendahara')
                 <li><a href="/user" aria-expanded="false">
-                        <i class="flaticon-044-file"></i>
+                        <i class="bi bi-people"></i>
                         <span class="nav-text">Data User</span>
                     </a>
                 </li>
+				  @can('kategori')
+                <li><a href="/kategori" aria-expanded="false">
+                        <i class="bi bi-grid"></i>
+                        <span class="nav-text">Kategori</span>
+                    </a>
+                </li>
+                @endcan
                 @endcan
                   @can('datapemasukan')
                 <li><a href="/pemasukan" aria-expanded="false">
-                        <i class="flaticon-044-file"></i>
+                        <i class="bi bi-file-earmark-arrow-down"></i>
                         <span class="nav-text">Data Pemasukan</span>
                     </a>
                 </li>
@@ -44,22 +53,16 @@
 
                 @can('datapengeluaran')
                 <li><a href="/pengeluaran" aria-expanded="false">
-                        <i class="flaticon-044-file"></i>
+                        <i class="bi bi-file-earmark-arrow-up"></i>
                         <span class="nav-text">Data Pengeluaran</span>
                     </a>
                 </li>
                 @endcan
                 
-				  @can('kategori')
-                <li><a href="/kategori" aria-expanded="false">
-                        <i class="flaticon-044-file"></i>
-                        <span class="nav-text">Kategori</span>
-                    </a>
-                </li>
-                @endcan
+				
 				@can('role')
                 <li><a href="/role" aria-expanded="false">
-                        <i class="flaticon-044-file"></i>
+                        <i class="bi bi-gear"></i>
                         <span class="nav-text">Role</span>
                     </a>
                 </li>

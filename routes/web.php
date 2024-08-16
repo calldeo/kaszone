@@ -99,8 +99,6 @@ Route::group(['middleware' => ['permission:bendahara']], function (){
 
 
 
-
-
 Route::group(['middleware' => ['permission:kategori']], function (){
 
     Route::get('/kategori', [CategoryController::class, 'index']);
