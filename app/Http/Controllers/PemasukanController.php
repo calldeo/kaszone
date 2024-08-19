@@ -86,38 +86,53 @@ $category = Category::all();
 }
 
   public function update(Request $request, $id_data)
-    {
-        // Validasi input
-        $request->validate([
-            'name' => ['required', 'min:3', 'max:30'],
-            'description' => ['required', 'min:3', 'max:255'],
-            'date' => ['required', 'date'],
-            'jumlah' => ['required', 'numeric'],
-             'id' => ['nullable', 'exists:categories,id'],
+{
+    // Validasi input
+    $request->validate([
+        'name' => ['required', 'min:3', 'max:30'],
+        'description' => ['required', 'min:3', 'max:255'],
+        'date' => ['required', 'date'],
+        'jumlah' => ['required', 'numeric'],
+        'id' => ['nullable', 'exists:categories,id'],
+    ]);
 
-        ]);
+    // Mulai transaksi database
+    DB::beginTransaction();
 
-        // Cari data pemasukan berdasarkan ID
-         $pemasukan = Pemasukan::find($id_data);
+    try {
+        // Temukan data pemasukan berdasarkan ID
+        $pemasukan = Pemasukan::find($id_data);
 
-        // Jika data pemasukan tidak ditemukan, arahkan kembali dengan pesan error
-        // if (!$pemasukan) {
-        //     return redirect('/datapemasukan')->with('error', 'Data pemasukan tidak ditemukan.');
-        // }
+        if (!$pemasukan) {
+            // Jika data tidak ditemukan, kembalikan error
+            return redirect('/pemasukan')->with('error', 'Data pemasukan tidak ditemukan.');
+        }
 
         // Update data pemasukan
-        $pemasukan->update([
-            'name' => $request->name,
-            'description' => $request->description,
-            'date' => $request->date,
-            'jumlah' => $request->jumlah,
-            'id' => $request->id ?? $pemasukan->id, // Gunakan nilai kategori yang ada jika tidak ada yang baru
+        $pemasukan->name = $request->name;
+        $pemasukan->description = $request->description;
+        $pemasukan->date = $request->date;
+        $pemasukan->jumlah = $request->jumlah;
+        $pemasukan->id = $request->id ?? $pemasukan->id; // Gunakan kategori yang ada jika tidak ada yang baru
 
-        ]);
-//  return view('halaman.datapemasukan', compact('id_data','pemasukan'));
-        // Arahkan kembali ke halaman pemasukan dengan pesan sukses
+        // Simpan perubahan
+        $pemasukan->save();
+
+        // Commit transaksi jika tidak ada kesalahan
+        DB::commit();
+
+        // Redirect dengan pesan sukses
         return redirect('/pemasukan')->with('update_success', 'Data pemasukan berhasil diperbarui.');
+    } catch (\Throwable $th) {
+        // Rollback transaksi jika terjadi kesalahan
+        DB::rollback();
+        
+        // Redirect dengan pesan gagal
+        return redirect('/pemasukan')->with('error', 'Pemasukan gagal diperbarui! ' . $th->getMessage());
     }
+}
+
+
 // Method untuk mendapatkan detail kategori
    public function showDetail($id_data)
     {

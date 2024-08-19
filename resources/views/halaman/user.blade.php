@@ -251,7 +251,7 @@
         });
     </script>
 
-<input type="hidden" id="table-url" value="{{ route('tab') }}">
+<input type="hidden" id="table-url" value="{{ route('users') }}">
 <script src="{{ asset('main.js') }}"></script>
 <script src="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.js"></script>
 

@@ -129,12 +129,7 @@
                                     </div>
                                 </div>
 
-                        <div class="form-group">
-                            <div class="form-check">
-                                <input id="checkbox1" class="form-check-input" type="checkbox" required>
-                                <label for="checkbox1" class="form-check-label">Check me out *</label>
-                            </div>
-                        </div>
+                  
 
                                         <button type="submit" class="btn mr-2 btn-primary">Submit</button>
                                        <button type="submit" class="btn btn-light" onclick="redirectToRole()">Cancel</button>

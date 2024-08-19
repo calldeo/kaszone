@@ -96,39 +96,53 @@ public function edit($id_data)
 }
 
 
-  public function update(Request $request, $id_data)
-    {
-        // Validasi input
-        $request->validate([
-            'name' => ['required', 'min:3', 'max:30'],
-            'description' => ['required', 'min:3', 'max:255'],
-            'date' => ['required', 'date'],
-            'jumlah' => ['required', 'numeric'],
-             'id' => ['nullable', 'exists:categories,id'],
+ public function update(Request $request, $id_data)
+{
+    // Validasi input
+    $request->validate([
+        'name' => ['required', 'min:3', 'max:30'],
+        'description' => ['required', 'min:3', 'max:255'],
+        'date' => ['required', 'date'],
+        'jumlah' => ['required', 'numeric'],
+        'id' => ['nullable', 'exists:categories,id'],
+    ]);
 
-        ]);
+    // Mulai transaksi database
+    DB::beginTransaction();
 
-        // Cari data pemasukan berdasarkan ID
-         $pengeluaran = Pengeluaran::find($id_data);
+    try {
+        // Temukan data pengeluaran berdasarkan ID
+        $pengeluaran = Pengeluaran::find($id_data);
 
-        // Jika data pengeluaran tidak ditemukan, arahkan kembali dengan pesan error
-        // if (!$pengeluaran) {
-        //     return redirect('/datapengeluaran')->with('error', 'Data pengeluaran tidak ditemukan.');
-        // }
+        if (!$pengeluaran) {
+            // Jika data tidak ditemukan, kembalikan error
+            return redirect('/pengeluaran')->with('error', 'Data pengeluaran tidak ditemukan.');
+        }
 
         // Update data pengeluaran
-        $pengeluaran->update([
-            'name' => $request->name,
-            'description' => $request->description,
-            'date' => $request->date,
-            'jumlah' => $request->jumlah,
-            'id' => $request->id ?? $pengeluaran->id, // Gunakan nilai kategori yang ada jika tidak ada yang baru
+        $pengeluaran->name = $request->name;
+        $pengeluaran->description = $request->description;
+        $pengeluaran->date = $request->date;
+        $pengeluaran->jumlah = $request->jumlah;
+        $pengeluaran->id = $request->id ?? $pengeluaran->id; // Gunakan kategori yang ada jika tidak ada yang baru
 
-        ]);
-//  return view('halaman.datapengeluaran', compact('id_data','pengeluaran'));
-        // Arahkan kembali ke halaman pengeluaran dengan pesan sukses
+        // Simpan perubahan
+        $pengeluaran->save();
+
+        // Commit transaksi jika tidak ada kesalahan
+        DB::commit();
+
+        // Redirect dengan pesan sukses
         return redirect('/pengeluaran')->with('update_success', 'Data pengeluaran berhasil diperbarui.');
+    } catch (\Throwable $th) {
+        // Rollback transaksi jika terjadi kesalahan
+        DB::rollback();
+        
+        // Redirect dengan pesan gagal
+        return redirect('/pengeluaran')->with('error', 'Pengeluaran gagal diperbarui! ' . $th->getMessage());
+    }
 }
+
 
 public function cetakpgl()
     {

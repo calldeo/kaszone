@@ -64,11 +64,11 @@ Route::group(['middleware' => ['permission:home']], function (){
 
 
 route::get('/table',[AdminController::class,'table'])->name('table');
-route::get('/tab',[AdminController::class,'tab'])->name('tab');
-route::get('/teb',[AdminController::class,'teb'])->name('teb');
-route::get('/tob',[AdminController::class,'tob'])->name('tob');
-route::get('/tabe',[AdminController::class,'tabe'])->name('tabe');
-route::get('/tub',[AdminController::class,'tub'])->name('tub');
+route::get('/users',[AdminController::class,'users'])->name('users');
+route::get('/kategoris',[AdminController::class,'kategoris'])->name('kategoris');
+route::get('/income',[AdminController::class,'income'])->name('income');
+route::get('/production',[AdminController::class,'production'])->name('production');
+route::get('/roles',[AdminController::class,'roles'])->name('roles');
 
 
 

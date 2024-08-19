@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Imports\UserImport;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -43,11 +44,12 @@ class BendaharaController extends Controller
 
    public function store(Request $request)
 {
+    // Validasi input
     $request->validate([
         'name' => ['required', 'min:3', 'max:30', function ($attribute, $value, $fail) {
-            // Check if the name already exists in the database
+            // Cek apakah nama sudah ada di database
             if (User::where('name', $value)->exists()) {
-                $fail($attribute . ' is registered.');
+                $fail($attribute . ' sudah terdaftar.');
             }
         }],
         'email' => 'required|unique:users,email',
@@ -56,20 +58,33 @@ class BendaharaController extends Controller
         'alamat' => ['required', 'min:3', 'max:30'],
     ]);
 
-    // Create the user
-   $bendahara =  User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            // 'level' => $request->level,  // Menambahkan kolom level
-            'alamat'=> $request->alamat,
-            'kelamin'=> $request->kelamin,
+    // Gunakan DB::transaction untuk menjalankan proses dalam satu transaksi
+    DB::begintransaction();
+    try {
+        // Membuat user baru
+          // Menambahkan data pengeluaran baru
+            $bendahara = new User();
+            $bendahara->name = $request->name;
+            $bendahara->email = $request->email;
+            $bendahara->password = Hash::make($request->password);
+            $bendahara->kelamin = $request->kelamin;
+            $bendahara->alamat = $request->alamat;
+            $bendahara->save();
 
-        ]);
+
+        // Menambahkan role ke user
         $bendahara->assignRole($request->level);
+             DB::commit();
 
-    return redirect('/user')->with('success', 'Data Berhasil Ditambahkan');
-    }
+            return redirect('/user')->with('success', 'User berhasil ditambahkan.');
+     } catch (\Throwable $th) {
+            // Rollback transaksi jika terjadi error
+            DB::rollback();
+
+            return redirect('/user')->with('error', 'User gagal ditambahkan! ' . $th->getMessage());
+        }
+}
+
 
     public function edit($id)
     {
@@ -79,43 +94,54 @@ class BendaharaController extends Controller
         return view('edit.edit_user', compact('guruu', 'roles'));
     }
 
-    public function update(Request $request, $id)
-    {
-        $guruu = User::find($id);
+   public function update(Request $request, $id)
+{
+    $guruu = User::find($id);
 
-        $request->validate([
-            'name' => ['required', 'min:3', 'max:30'],
-            'email' => 'required|email|unique:users,email,' . $guruu->id,
-            'password' => ['nullable', 'min:8', 'max:12'],
-            'kelamin' => 'required',
-            'alamat' => ['required', 'min:3', 'max:30'],
-            'roles' => 'required|array',
-            'roles.*' => 'exists:roles,name',
-        ]);
+    // Validasi input
+    $request->validate([
+        'name' => ['required', 'min:3', 'max:30'],
+        'email' => 'required|email|unique:users,email,' . $guruu->id,
+        'password' => ['nullable', 'min:8', 'max:12'],
+        'kelamin' => 'required',
+        'alamat' => ['required', 'min:3', 'max:30'],
+        'roles' => 'required|array',
+        'roles.*' => 'exists:roles,name',
+    ]);
 
-        $data = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'kelamin' => $request->kelamin,
-            'alamat' => $request->alamat,
-        ];
+    DB::beginTransaction();
+    try {
+        // Mengupdate data user
+        $guruu->name = $request->name;
+        $guruu->email = $request->email;
+        $guruu->kelamin = $request->kelamin;
+        $guruu->alamat = $request->alamat; // Diperbaiki dari 'alamt' ke 'alamat'
 
         // Menambahkan password ke data hanya jika ada input password
         if ($request->filled('password')) {
-            $data['password'] = Hash::make($request->password);
+            $guruu->password = Hash::make($request->password);
         }
 
-        // Mengupdate data user
-        $guruu->update($data);
+        $guruu->save();
 
         // Mengupdate role yang dimiliki user
         $guruu->syncRoles($request->roles);
 
+        // Commit transaksi jika tidak ada kesalahan
+        DB::commit();
+
         // Mengalihkan pengguna berdasarkan peran baru mereka
         $redirectPath = $guruu->hasRole('admin') ? '/user' : '/home';
 
-        return redirect($redirectPath)->with('update_success', 'Data Berhasil Diupdate');
+        return redirect($redirectPath)->with('update_success', 'Data user berhasil diperbarui.');
+    } catch (\Throwable $th) {
+        // Rollback transaksi jika terjadi kesalahan
+        DB::rollback();
+
+        // Redirect dengan pesan gagal
+        return redirect('/user')->with('error', 'User gagal diperbarui! ' . $th->getMessage());
     }
+}
 
     public function bendaharaimportexcel(Request $request)
     {

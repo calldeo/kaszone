@@ -169,7 +169,7 @@ class AdminController extends Controller
 
 
 
-    public function tab(Request $request) //bendahara
+    public function users(Request $request) //bendahara
 {
     if ($request->ajax()) {
         // Ambil pengguna dengan peran 'bendahara' dan 'admin'
@@ -205,7 +205,7 @@ class AdminController extends Controller
 
 
 
-   public function teb(Request $request) // KATEGORI
+   public function kategoris(Request $request) // KATEGORI
 {
     if ($request->ajax()) {
         $categories = Category::select(['id', 'name', 'description'])->get();
@@ -237,7 +237,7 @@ class AdminController extends Controller
 
 
 
-    public function tob(Request $request) // PEMASUKAN
+    public function income(Request $request) // PEMASUKAN
     {
         if ($request->ajax()) {
             $pemasukan = Pemasukan::with('category')->select(['id_data', 'name', 'description', 'date', 'jumlah', 'id']);
@@ -269,7 +269,7 @@ class AdminController extends Controller
 
 
 
- public function tabe(Request $request) // PENGELUARAN
+ public function production(Request $request) // PENGELUARAN
     {
         if ($request->ajax()) {
             $pengeluaran = Pengeluaran::with('category')->select(['id_data', 'name', 'description', 'date', 'jumlah', 'id']);
@@ -299,7 +299,7 @@ class AdminController extends Controller
         }
     }
 
-public function tub(Request $request) // BENDAHARA
+public function roles(Request $request) // BENDAHARA
 {
     if ($request->ajax()) {
         $role = Role::select(['id', 'name', 'guard_name'])->get();
