@@ -173,7 +173,7 @@ class AdminController extends Controller
 {
     if ($request->ajax()) {
         // Ambil pengguna dengan peran 'bendahara' dan 'admin'
-        $bendahara = User::role(['bendahara', 'admin','super admin']) // Mengambil pengguna dengan peran 'bendahara' atau 'admin'
+        $bendahara = User::role(['bendahara', 'admin']) // Mengambil pengguna dengan peran 'bendahara' atau 'admin'
                       ->with('roles') // Eager load roles
                       ->select(['id', 'name', 'email', 'kelamin', 'alamat'])
                       ->get();

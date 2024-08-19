@@ -62,7 +62,7 @@ class UsersTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
         ]);
-        $admin->assignRole('admin');
+        $admin->assignRole('admin','bendahara');
 
          $bendahara = User::create([
              'name' => 'Deo Andreas',
