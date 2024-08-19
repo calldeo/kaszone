@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
@@ -17,19 +18,21 @@ class UserProfileController extends Controller
         return view('profile.edit', compact('user'));
     }
 
-    public function update(Request $request)
-    {
-        $user = auth()->user();
+   public function update(Request $request)
+{
+    $user = auth()->user();
 
-        // Validasi input
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'alamat' => 'required|string|max:255',
-            'password' => 'nullable|string|min:8',
-            'poto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+    // Validasi input
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|max:255',
+        'alamat' => 'required|string|max:255',
+        'password' => 'nullable|string|min:8',
+        'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
 
+    DB::beginTransaction(); // Memulai transaksi
+    try {
         // Update data user
         $user->name = $request->name;
         $user->email = $request->email;
@@ -55,7 +58,18 @@ class UserProfileController extends Controller
         // Simpan perubahan
         $user->save();
 
+        // Commit transaksi jika tidak ada kesalahan
+        DB::commit();
+
         // Redirect dengan pesan sukses
         return redirect()->route('profile.edit')->with('success', 'Profile updated successfully.');
+    } catch (\Throwable $th) {
+        // Rollback transaksi jika terjadi kesalahan
+        DB::rollback();
+
+        // Redirect dengan pesan gagal
+        return redirect()->route('profile.edit')->with('error', 'Profile update failed! ' . $th->getMessage());
     }
+}
+
 }
