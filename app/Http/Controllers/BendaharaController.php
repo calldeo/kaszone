@@ -158,12 +158,13 @@ class BendaharaController extends Controller
 
 public function switchRole(Request $request)
 {
-    $user = auth()->user();
-    
-    // Validasi input role
-    $request->validate([
-        'role' => 'required|in:admin,bendahara',
-    ]);
+   $user = auth()->user();
+
+if (!session()->has('activeRole')) {
+    if ($user->roles->count() === 1) {
+        session(['activeRole' => $user->roles->first()->name]);
+    }
+}
     
     // Simpan role yang dipilih di session
     Session::put('activeRole', $request->role);
