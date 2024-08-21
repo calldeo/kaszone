@@ -16,7 +16,7 @@
             <div class="row page-titles mx-0">
                 <div class="col-sm-6 p-md-0">
                     <div class="welcome-text">
-                        <h4>Hi, welcome back!</h4>
+                        <h4>Hi, Welcome Back!</h4>
                         <p class="mb-0">Bendahara</p>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
                                                 </span>
                                             </div>
                                         </div>
-                                        <label class="text-label" style="color: red;">* Jika tidak ingin mengganti password maka tidak perlu diisi </label>
+                                        <label class="text-label text-danger mt-3">* Jika tidak ada perubahan, tidak perlu diisi</label>
                                     </div>
                                     <div class="form-group">
                                         <label>Jenis Kelamin*</label>
@@ -108,9 +108,9 @@
                                         <span class="text-red-500 text-sm">{{ $message }}</span>
                                         @enderror
                                     </div>
+                                    <a href="/user" class="btn btn-danger btn-cancel">Cancel</a>
+                                    <button type="submit" class="btn btn-primary btn-submit">Update</button>
                                     
-                                    <button type="submit" class="btn btn-primary">Update</button>
-                                    <a href="/user" class="btn btn-danger">Cancel</a>
                                 </form>
                             </div>
                         </div>

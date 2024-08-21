@@ -21,7 +21,7 @@
             <div class="row page-titles mx-0">
                 <div class="col-sm-6 p-md-0">
                     <div class="welcome-text">
-                        <h4>Hi, welcome back!</h4>
+                        <h4>Hi, Welcome Back!</h4>
                         <p class="mb-0">Validation</p>
                     </div>
                 </div>
@@ -113,9 +113,9 @@
 </div>
 
                                   
+                                    <button type="button" class="btn btn-danger btn-cancel" onclick="redirectToPengeluaran()">Cancel</button>
 
-                                    <button type="submit" class="btn mr-2 btn-primary">Submit</button>
-                                    <button type="button" class="btn btn-light" onclick="redirectToPengeluaran()">Cancel</button>
+                                    <button type="submit" class="btn mr-2 btn-primary btn-submit">Submit</button>
                                 </form>
                             </div>
                         </div>

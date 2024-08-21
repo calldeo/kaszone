@@ -62,13 +62,13 @@ class UserProfileController extends Controller
         DB::commit();
 
         // Redirect dengan pesan sukses
-        return redirect()->route('profile.edit')->with('success', 'Profile updated successfully.');
+        return redirect()->route('profile.edit')->with('success', 'Profil Berhasil di update.');
     } catch (\Throwable $th) {
         // Rollback transaksi jika terjadi kesalahan
         DB::rollback();
 
         // Redirect dengan pesan gagal
-        return redirect()->route('profile.edit')->with('error', 'Profile update failed! ' . $th->getMessage());
+        return redirect()->route('profile.edit')->with('error', 'Profil gagal di update ' . $th->getMessage());
     }
 }
 

@@ -24,7 +24,7 @@
             <div class="row page-titles mx-0">
                 <div class="col-sm-6 p-md-0">
                     <div class="welcome-text">
-                        <h4>Hi, welcome back!</h4>
+                        <h4>Hi, Welcome Back!</h4>
                         <p class="mb-0">Data Admin</p>
                     </div>
                 </div>
@@ -82,7 +82,7 @@
                                     <thead>
                                         <tr>
                                             <th style="width:50px;">
-                                                <div class="custom-control custom-checkbox checkbox-secondary check-lg mr-3">
+                                                {{-- <div class="custom-control custom-checkbox checkbox-secondary check-lg mr-3"> --}}
                                                     <input type="checkbox" class="custom-control-input" id="checkAll" required="">
                                                     <label class="custom-control-label" for="checkAll"></label>
                                                 </div>

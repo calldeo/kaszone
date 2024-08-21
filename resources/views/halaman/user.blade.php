@@ -4,6 +4,21 @@
 <head>
     @include('template.headerr')
     <title>KasZone| {{auth()->user()->level}} | User</title>
+
+      <style>
+        .dataTables_wrapper .bendaharaTable_length .bootstrap-select .dropdown-toggle {
+            font-size: 2rem; /* Ukuran font yang lebih besar */
+            padding: 1rem 2rem; /* Padding yang lebih besar di sekitar teks */
+            border-radius: 4px; /* Radius sudut untuk dropdown */
+            border: 1px solid #ccc; /* Border untuk dropdown */
+        }
+
+        /* Jika dropdown memiliki elemen select yang di-custom */
+        .dataTables_wrapper .BendaharaTable_length .bootstrap-select .dropdown-menu {
+            font-size: 1.5rem; /* Ukuran font di dalam menu dropdown */
+            padding: 1rem; /* Padding dalam menu dropdown */
+        }
+    </style>
     
 </head>
 
@@ -24,7 +39,7 @@
             <div class="row page-titles mx-0">
                 <div class="col-sm-6 p-md-0">
                     <div class="welcome-text">
-                        <h4>Hi, welcome back!</h4>
+                        <h4>Hi, Welcome Back!</h4>
                         <p class="mb-0">Data User</p>
                     </div>
                 </div>
@@ -43,39 +58,7 @@
                         <div class="card-header">
                             <h4 class="card-title">Data User</h4>
                             <div class="text-right">
-                          {{-- <div class="input-group search-area right d-lg-inline-flex d-none">
-                            <form id="searchForm">
-                                <input id="searchInput" type="text" class="form-control" placeholder="Cari sesuatu di sini..." name="query">
-                            </form>
-                          </div> --}}
-                           {{-- <button type="button" class="btn btn-warning ml-2" title="Import" data-toggle="modal" data-target="#importModal">
-            <i class="fa fa-upload"></i> 
-        </button> --}}
-        <!-- Modal untuk impor data guru -->
-        {{-- <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="importModalLabel">Import Data Guru</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <!-- Form untuk mengunggah file Excel -->
-                        <form action="{{ route('import-bendahara') }}" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            <div class="form-group">
-                                <label for="file">Pilih File Excel</label>
-                                <input type="file" class="form-control-file" id="file" name="file" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Import</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
-                    
+                        
                     <a href="/add_user" class="btn btn-success" title="Add">
                         <i class="fa fa-plus"></i>
                     </a>
@@ -103,13 +86,13 @@
                                 <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span></button>
                             </div>
                             @endif
-                            <link href="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.css" rel="stylesheet">
+                          
                             <div class="table-responsive">
                                 <table id="bendaharaTable" class="table table-responsive-md">
                                     <thead>
                                         <tr>
                                             <th style="width:50px;">
-                                                <div class="custom-control custom-checkbox checkbox-secondary check-lg mr-3">
+                                                {{-- <div class="custom-control custom-checkbox checkbox-secondary check-lg mr-3"> --}}
                                                     <input type="checkbox" class="custom-control-input" id="checkAll" required="">
                                                     <label class="custom-control-label" for="checkAll"></label>
                                                 </div>
@@ -150,74 +133,6 @@
     <!-- Scripts -->
     <!-- Required vendors -->
     @include('template.scripts')
-
-    <!-- Pencarian -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function() {
-    let searchInput = document.getElementById('searchInput');
-
-    searchInput.addEventListener('input', function() {
-        let searchValue = searchInput.value;
-
-        fetch('/admin/search?search=' + encodeURIComponent(searchValue))
-            .then(response => response.json())
-            .then(data => {
-                updateTable(data);
-            })
-            .catch(error => console.error('Error:', error));
-    });
-
-            function updateTable(data) {
-                let adminTableBody = document.getElementById('adminTableBody');
-                adminTableBody.innerHTML = '';
-
-                data.forEach(g => {
-                    let statusLabel = g.status_pemilihan == 'Belum Memilih' ? 'Belum Memilih' : 'Sudah Memilih';
-
-                    let row = `
-                        <tr>
-                            <td>
-                                <div class="custom-control custom-checkbox checkbox-secondary check-lg mr-3">
-                                    <input type="checkbox" class="custom-control-input" id="customCheckBox_${g.id}" required="">
-                                    <label class="custom-control-label" for="customCheckBox_${g.id}"></label>
-                                </div>
-                            </td>
-                            <td><h6>${g.id}</h6></td>
-                            <td>
-                                <div class="media style-1">
-                                    <span class="icon-name mr-2 bgl-info text-secondary">${g.name.substring(0, 1)}</span>
-                                    <div class="media-body">
-                                        <h6>${g.name}</h6>
-                                        <span>${g.email}</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><span class="badge badge-lg badge-secondary light">${g.level}</span></td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <i class="fa fa-circle ${g.status_pemilihan == 'Sudah Memilih' ? 'text-success' : 'text-warning'} mr-1"></i>
-                                    ${g.status_pemilihan}
-                                </div>
-                            </td>
-                            <td class="text-align: left;">
-                                <div class="d-flex justify-content-center">
-                                    <form id="editForm_${g.id}" action="/admin/${g.id}/edit_admin" method="GET">
-                                        <button type="submit" class="btn btn-warning shadow btn-xs sharp"><i class="fa fa-pencil"></i></button>
-                                    </form>
-                                    <div class="mx-1"></div>
-                                    <form id="deleteForm_${g.id}" action="/admin/${g.id}/delete" method="POST" class="delete-form">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <button type="submit" class="btn btn-danger shadow btn-xs sharp delete-btn" data-id="${g.id}"><i class="fa fa-trash"></i></button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-                    adminTableBody.insertAdjacentHTML('beforeend', row);
-                });
-            }
-        });
-    </script>
 
     <!-- Sweet Alert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>

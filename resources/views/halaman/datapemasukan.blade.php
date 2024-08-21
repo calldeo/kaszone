@@ -24,7 +24,7 @@
             <div class="row page-titles mx-0">
                 <div class="col-sm-6 p-md-0">
                     <div class="welcome-text">
-                        <h4>Hi, welcome back!</h4>
+                        <h4>Hi, Welcome Back!</h4>
                         <p class="mb-0">Data Pemasukan</p>
                     </div>
                 </div>
@@ -76,13 +76,13 @@
                                 <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span></button>
                             </div>
                             @endif
-                            <link href="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.css" rel="stylesheet">
+                          
                             <div class="table-responsive">
                                 <table id="pemasukanTable" class="table table-responsive-md">
                                     <thead>
                                         <tr>
                                             <th style="width:50px;">
-                                                <div class="custom-control custom-checkbox checkbox-secondary check-lg mr-3">
+                                                {{-- <div class="custom-control custom-checkbox checkbox-secondary check-lg mr-3"> --}}
                                                     <input type="checkbox" class="custom-control-input" id="checkAll" required="">
                                                     <label class="custom-control-label" for="checkAll"></label>
                                                 </div>
@@ -161,7 +161,7 @@
 
 <input type="hidden" id="table-url" value="{{ route('income') }}">
 <script src="{{ asset('main.js') }}"></script>
-<script src="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.js"></script>
+<script src="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.js"></script>    
  
 
     

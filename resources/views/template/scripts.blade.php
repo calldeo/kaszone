@@ -17,13 +17,15 @@
     <script src="{{asset('dash/js/search.js')}}"></script>
     <script src="{{asset('dash/js/demo.js')}}"></script>
     <script src="{{asset('dash/vendor/ckeditor/ckeditor.js')}}"></script>
+    <script src="{{asset('dash/vendor/datatables/js/jquery.dataTables.min.js')}}"></script>
+
 
     <script src="{{asset('dash/js/styleSwitcher.js')}}"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 	<script>
     function redirectToAdmin() {
         // Ganti URL dengan URL halaman admin yang diinginkan
-        window.location.href = "/admin";
+        window.location.href = "/user";
     }
 	</script>
     <script>

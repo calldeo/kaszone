@@ -4,6 +4,7 @@
 <head>
     @include('template.headerr')
     <title>Edit Profile | {{ auth()->user()->name }}</title>
+   
 </head>
 
 <body>
@@ -58,17 +59,24 @@
                                     @csrf
                                     @method('PUT')
 
-                                    <div class="form-group">
-                                        <label>Foto Profil</label>
+                                 <div class="form-group">
+                                        <label for="foto_profil">Foto Profil</label>
+                                        
+                                        <!-- Menampilkan Foto Profil -->
                                         <div class="mb-3">
-                                            <img src="{{ asset('storage/' . auth()->user()->poto) }}" alt="Foto Profil" class="rounded-circle" width="150" height="150">
+                                            <img src="{{ asset('storage/' . auth()->user()->poto) }}" alt="Foto Profil" class="square-image" width="150" height="150">
                                         </div>
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" name="foto_profil">
-                                            <label class="custom-file-label">Pilih file</label>
+                                        
+                 
+                                        <div class="file-upload-wrapper">
+                                            <label class="file-upload-label" for="foto_profil">Pilih file</label>
+                                            <input type="file" id="foto_profil" name="foto_profil" onchange="displayFileName()">
+                                            <div id="file-upload-info" class="file-upload-info">Tidak ada file yang dipilih</div>
                                         </div>
-                                        <label class="text-label" style="color: red;">* Jika tidak ada perubahan, tidak perlu diisi</label>
+                                        <!-- Keterangan -->
+                                        <label class="text-label text-danger mt-3">* Jika tidak ada perubahan, tidak perlu diisi</label>
                                     </div>
+
 
                                     <div class="form-group">
                                         <label class="text-label">Name *</label>
@@ -123,7 +131,7 @@
                                                 </span>
                                             </div>
                                         </div>
-                                        <label class="text-label" style="color: red;">* Jika tidak ada perubahan,Tidak perlu di isi</label>
+                                        <label class="text-label text-danger mt-3">* Jika tidak ada perubahan, tidak perlu diisi</label>
                                     </div>
 
                                     <div class="form-group">
@@ -136,8 +144,9 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <button type="submit" class="btn mr-2 btn-primary">Submit</button>
-                                        <button type="button" class="btn btn-light" onclick="window.location.href='{{ route('home') }}'">Cancel</button>
+                                        <button type="button" class="btn btn-danger btn-cancel" onclick="window.location.href='{{ route('home') }}'">Cancel</button>
+
+                                        <button type="submit" class="btn mr-2 btn-primary btn-submit">Submit</button>
                                     </div>
                                 </form>
                             </div>
@@ -149,6 +158,13 @@
     </div>
 
     @include('template.scripts')
+    <script>
+    function displayFileName() {
+        var input = document.getElementById('foto_profil');
+        var info = document.getElementById('file-upload-info');
+        info.textContent = input.files.length > 0 ? input.files[0].name : 'Tidak ada file yang dipilih';
+    }
+</script>
 </body>
 
 </html>

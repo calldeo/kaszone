@@ -215,12 +215,13 @@ class AdminController extends Controller
             ->addColumn('opsi', function ($row) {
                 return '
                     <div class="d-flex align-items-center">
-                    <button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/kategori/' . $row->id . '/detail">
-                    <i class="fa fa-eye"></i>
-                    </button>
+                    
                         <form action="/kategori/' . $row->id . '/edit_kategori" method="GET" class="mr-1">
                             <button type="submit" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></button>
                         </form>
+                        <button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/kategori/' . $row->id . '/detail">
+                    <i class="fa fa-eye"></i>
+                    </button>
                         <form action="/kategori/' . $row->id . '/destroy" method="POST">
                             ' . csrf_field() . '
                             ' . method_field('DELETE') . '
@@ -250,10 +251,10 @@ class AdminController extends Controller
                 ->addColumn('opsi', function ($row) {
                     return '
                     <div class="d-flex align-items-center">
-                      <button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/pemasukan/' . $row->id_data . '/detail">
+                        <a href="/pemasukan/' . $row->id_data . '/edit_pemasukan" class="btn btn-warning btn-xs mr-1"><i class="fa fa-pencil"></i></a>
+                          <button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/pemasukan/' . $row->id_data . '/detail">
                     <i class="fa fa-eye"></i>
                     </button>
-                        <a href="/pemasukan/' . $row->id_data . '/edit_pemasukan" class="btn btn-warning btn-xs mr-1"><i class="fa fa-pencil"></i></a>
                         <form action="/pemasukan/' . $row->id_data . '/destroy" method="POST" style="display:inline;">
                             ' . csrf_field() . '
                             ' . method_field('DELETE') . '
@@ -282,11 +283,12 @@ class AdminController extends Controller
                 ->addColumn('opsi', function ($row) {
                     return '
                     <div class="d-flex align-items-center">
-                      <button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/pengeluaran/' . $row->id_data . '/detail">
-                    <i class="fa fa-eye"></i>
-                    </button>
+                   
                     <a href="/pengeluaran/' . $row->id_data . '/edit_pengeluaran" class="btn btn-warning btn-xs mr-1"><i class="fas fa-pencil-alt"></i>
 </a>
+   <button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/pengeluaran/' . $row->id_data . '/detail" >
+                    <i class="fa fa-eye"></i>
+                    </button>
                         <form action="/pengeluaran/' . $row->id_data . '/destroy" method="POST" style="display:inline;">
                             ' . csrf_field() . '
                             ' . method_field('DELETE') . '

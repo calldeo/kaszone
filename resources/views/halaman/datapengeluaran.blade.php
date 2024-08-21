@@ -27,7 +27,7 @@
             <div class="row page-titles mx-0">
                 <div class="col-sm-6 p-md-0">
                     <div class="welcome-text">
-                        <h4>Hi, welcome back!</h4>
+                        <h4>Hi, Welcome Back!</h4>
                         <p class="mb-0">Data Pengeluaran</p>
                     </div>
                 </div>
@@ -51,15 +51,20 @@
                                 <input id="searchInput" type="text" class="form-control" placeholder="Cari sesuatu di sini..." name="query">
                             </form>
                           </div> --}}
-                          <a href="{{ url('/export-pengeluaran') }}" class="btn btn-primary"  class="btn btn-info ml-2" title="Export to Excel">
-                            <i class="fa fa-file-excel"></i><i class="fa fa-file-excel"></i>
-                        </a>
-                    <a href="/cetakpgl" target="blank" class="btn btn-info ml-2" title="Print Report">
-                                    <i class="fa fa-print"></i> 
-                               </a>
-                    <a href="/add_pengeluaran" class="btn btn-success" title="Add">
-                        <i class="fa fa-plus"></i>
-                    </a>
+                          <a href="/add_pengeluaran" class="btn btn-warning ml-1" title="Add">
+    <i class="fa fa-plus"></i>
+</a>
+
+
+<a href="/cetakpgl" target="_blank" class="btn btn-info ml-1" title="Print Report">
+    <i class="fa fa-print"></i>
+</a>
+                          <a href="{{ url('/export-pengeluaran') }}" class="btn btn-success ml-1" title="Export to Excel">
+    <i class="fa fa-file-excel"></i>
+</a>
+
+
+
                 </div>
 
                         </div>
@@ -97,13 +102,13 @@
                                     <thead>
                                         <tr>
                                             <th style="width:50px;">
-                                                <div class="custom-control custom-checkbox checkbox-secondary check-lg mr-3">
-                                                    <input type="checkbox" class="custom-control-input" id="checkAll" required="">
+                                                {{-- <div class="custom-control custom-checkbox checkbox-secondary check-lg mr-3"> --}}
+                                                    {{-- <input type="checkbox" class="custom-control-input" id="checkAll" required="">  --}}
                                                     <label class="custom-control-label" for="checkAll"></label>
                                                 </div>
                                             </th>
                                             <th><strong>Nama</strong></th>
-                                            <th><strong>Deksripsi</strong></th>
+                                            <th><strong>Deskripsi</strong></th>
                                             <th><strong>Kategori</strong></th>
                                             <th><strong>Tanggal</strong></th>   
                                             <th><strong>Jumlah(Rp)</strong></th>

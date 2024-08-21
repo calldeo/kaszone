@@ -126,12 +126,12 @@
         <input type="hidden" name="role" id="roleInput" value="{{ session('active_role') }}">
         
         <!-- Tombol untuk role Admin -->
-        <button type="button" id="adminButton" onclick="switchRole('admin')" class="dropdown-item btn btn-sm text-left {{ session('activeRole') === 'admin' ? 'btn-primary' : 'btn-secondary' }}">
+        <button type="button" id="adminButton" onclick="switchRole('admin')" class="dropdown-item btn btn-sm text-left {{ session('activeRole') === 'admin' ? 'btn-primary text-white' : 'btn-secondary' }}">
             Ganti ke Admin
         </button>
         
         <!-- Tombol untuk role Bendahara -->
-        <button type="button" id="bendaharaButton" onclick="switchRole('bendahara')" class="dropdown-item btn btn-sm text-left {{ session('activeRole') === 'bendahara' ? 'btn-primary' : 'btn-secondary' }}">
+        <button type="button" id="bendaharaButton" onclick="switchRole('bendahara')" class="dropdown-item btn btn-sm text-left {{ session('activeRole') === 'bendahara' ? 'btn-primary text-white' : 'btn-secondary' }}">
             Ganti ke Bendahara
         </button>
     </form>

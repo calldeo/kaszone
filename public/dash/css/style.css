@@ -2272,7 +2272,7 @@ fieldset:disabled a.btn {
   background-color: #51A6F5;
   border-color: #51A6F5; }
   .btn-info:hover {
-    color: #fff;
+    color: #ffffff;
     background-color: #2d93f3;
     border-color: #218df2; }
   .btn-info:focus, .btn-info.focus {
@@ -2293,7 +2293,7 @@ fieldset:disabled a.btn {
   background-color: #FFAB2D;
   border-color: #FFAB2D; }
   .btn-warning:hover {
-    color: #212529;
+    color: #f7f8f8;
     background-color: #ff9c07;
     border-color: #f99500; }
   .btn-warning:focus, .btn-warning.focus {
@@ -2314,7 +2314,7 @@ fieldset:disabled a.btn {
   background-color: #FF4C41;
   border-color: #FF4C41; }
   .btn-danger:hover {
-    color: #fff;
+    color: #ffffff;
     background-color: #ff281b;
     border-color: #ff1c0e; }
   .btn-danger:focus, .btn-danger.focus {
@@ -26536,6 +26536,26 @@ table.dataTable.row-border tbody th, table.dataTable.row-border tbody td, table.
 		
 	}
 } */
+
+.btn-submit,
+.btn-cancel {
+  margin-top: 10px;
+  padding: 10px 20px;
+  border-radius: 16px;
+  /* Sudut yang sedikit melengkung */
+  border: none;
+  /* Menghilangkan garis tepi */
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  /* transition: all 0.3s ease; */
+}
+
+
+
+/* . */
+
+  /*
 .plus-icon {
   height: 60px;
   width: 60px;
@@ -30960,3 +30980,56 @@ html[dir="rtl"] [direction="rtl"][data-sidebar-style="compact"]:not([data-layout
       color: #fff; }
 
 /*# sourceMappingURL=style.css.map */
+.file-upload-wrapper {
+  position: relative;
+  overflow: hidden;
+  margin: 10px;
+}
+
+.file-upload-wrapper input[type="file"] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  padding: 0;
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 10;
+}
+
+.file-upload-label {
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 16px;
+  color: #007bff;
+  background-color: #ffffff;
+  display: inline-block;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.file-upload-label:hover {
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+.file-upload-info {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #6c757d;
+}
+
+.square-image {
+  border-radius: 0;
+  /* Membuat sudut-sudut elemen menjadi tajam */
+  width: 150px;
+  /* Contoh ukuran, sesuaikan dengan kebutuhan */
+  height: 150px;
+  /* Contoh ukuran, sesuaikan dengan kebutuhan */
+  object-fit: cover;
+  /* Agar gambar tetap proporsional */
+}

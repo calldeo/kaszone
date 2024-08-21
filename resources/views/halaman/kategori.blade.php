@@ -24,7 +24,7 @@
             <div class="row page-titles mx-0">
                 <div class="col-sm-6 p-md-0">
                     <div class="welcome-text">
-                        <h4>Hi, welcome back!</h4>
+                        <h4>Hi, Welcome Back!</h4>
                         <p class="mb-0">Data Admin</p>
                     </div>
                 </div>
@@ -41,14 +41,20 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title">Data Admin</h4>
+                            <h4 class="card-title">Data Kategori</h4>
                             <div class="text-right">
                           {{-- <div class="input-group search-area right d-lg-inline-flex d-none">
                             <form id="searchForm">
                                 <input id="searchInput" type="text" class="form-control" placeholder="Cari sesuatu di sini..." name="query">
                             </form>
                           </div> --}}
-                      <button type="button" class="btn btn-warning ml-2" title="Import" data-toggle="modal" data-target="#importModal">
+                           <a href="/add_kategori" class="btn btn-warning ml-2" title="Add">
+                        <i class="fa fa-plus"></i>
+                    </a>
+                    <a href="/cetaklaporan" target="blank" class="btn btn-info ml-2" title="Print Report">
+                                    <i class="fa fa-print"></i> 
+                               </a>
+                      <button type="button" class="btn btn-success ml-2" title="Import" data-toggle="modal" data-target="#importModal">
             <i class="fa fa-upload"></i> 
         </button>
         <!-- Modal untuk impor data guru -->
@@ -83,12 +89,8 @@
                 </div>
             </div>
         </div>
-        <a href="/cetaklaporan" target="blank" class="btn btn-info ml-2" title="Print Report">
-                                    <i class="fa fa-print"></i> 
-                               </a>
-                    <a href="/add_kategori" class="btn btn-success ml-2" title="Add">
-                        <i class="fa fa-plus"></i>
-                    </a>
+        
+                   
                 </div>
 
                         </div>
@@ -119,13 +121,13 @@
                                     <thead>
                                         <tr>
                                             <th style="width:50px;">
-                                                <div class="custom-control custom-checkbox checkbox-secondary check-lg mr-3">
+                                                {{-- <div class="custom-control custom-checkbox checkbox-secondary check-lg mr-3"> --}}
                                                     <input type="checkbox" class="custom-control-input" id="checkAll" required="">
                                                     <label class="custom-control-label" for="checkAll"></label>
                                                 </div>
                                             </th>
-                                            <th><strong>Nama Category</strong></th>
-                                            <th><strong>Descripction</strong></th>
+                                            <th><strong>Nama Kategori</strong></th>
+                                            <th><strong>Deskripsi</strong></th>
                                             {{-- <th><strong>Status</strong></th> --}}
                                             <th><strong>Option</strong></th>
                                         </tr>
