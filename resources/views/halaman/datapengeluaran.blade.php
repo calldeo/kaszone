@@ -102,10 +102,7 @@
                                     <thead>
                                         <tr>
                                             <th style="width:50px;">
-                                                {{-- <div class="custom-control custom-checkbox checkbox-secondary check-lg mr-3"> --}}
-                                                    {{-- <input type="checkbox" class="custom-control-input" id="checkAll" required="">  --}}
-                                                    <label class="custom-control-label" for="checkAll"></label>
-                                                </div>
+                                                <strong>No</strong>
                                             </th>
                                             <th><strong>Nama</strong></th>
                                             <th><strong>Deskripsi</strong></th>

@@ -164,15 +164,27 @@
                                             @enderror
                                         </div>
                                          <!-- Role -->
-                                    <div class="mb-6">
-                                        <label for="level" class="block text-sm font-medium text-gray-700">Peran  </label> 
+                                    {{-- <div class="mb-6">
+                                        <label for="level" class="block text-sm font-medium text-gray-700">Peran  : </label> 
                                         <select name="level" id="level" class="mt-1 block w-full border custom-border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-3" required>
                                             <option value="" disabled selected>Pilih peran</option>
                                             @foreach($roles as $role)
                                                 <option value="{{ $role->name }}">{{ $role->name }}</option>
                                             @endforeach
                                         </select>
-                                    </div>
+                                    </div> --}}
+                                        <div class="form-group">
+                                            <label>Peran *</label>
+                                            <select class="form-control default-select" id="sel1" name="level" required>
+                                               <option value="" disabled selected>Pilih peran</option>
+                                            @foreach($roles as $role)
+                                                <option value="{{ $role->name }}">{{ $role->name }}</option>
+                                            @endforeach
+                                            </select>
+                                            @error('kelamin')
+                                            <span class="mt-4 text-danger">{{$message}}</span>
+                                            @enderror
+                                        </div>
                                     <button type="button" class="btn btn-danger btn-submit" onclick="redirectToAdmin()">Cancel</button>
                                   <button type="submit" class="btn btn-primary btn-cancel mr-2">Submit</button>
                                     </form>

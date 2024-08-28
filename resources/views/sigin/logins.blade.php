@@ -48,9 +48,10 @@
                     <form class="user" method="post" action="/postlogin">
                         {{ csrf_field() }}
                         <div class="intro-x mt-8">
-                            <input type="email" name="email" value="{{ Session::get('email') }}" class="intro-x login__input form-control py-3 px-4 block" placeholder="Email" required>
-                            <input type="password" name="password" class="intro-x login__input form-control py-3 px-4 block mt-4" placeholder="Password" required>
-                        </div>
+    <input type="email" name="email" value="{{ Session::get('email') }}" class="intro-x login__input form-control py-3 px-4 block" placeholder="Email" required style="width: 460px;">
+    <input type="password" name="password" class="intro-x login__input form-control py-3 px-4 block mt-4" placeholder="Password" required style="width: 460px;">
+</div>
+
                         <div class="intro-x flex text-slate-600 dark:text-slate-500 text-xs sm:text-sm mt-4">
                             <div class="flex items-center mr-auto">
                                 <input id="remember-me" type="checkbox" class="form-check-input border mr-2">

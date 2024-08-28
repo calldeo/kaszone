@@ -505,11 +505,18 @@ progress {
   height: auto; }
 
 [type="search"] {
-  outline-offset: -2px;
-  -webkit-appearance: none; }
+  outline-offset: 50px;
+  -webkit-appearance: none;
+  font-size: 15px !important;
+  width: 150px!important;
+    /* Lebar input lebih kecil */
+    height: 30px!important;
+  /* Tambahkan !important untuk memaksa perubahan */
+}
 
 [type="search"]::-webkit-search-decoration {
-  -webkit-appearance: none; }
+  -webkit-appearance: none;
+}
 
 ::-webkit-file-upload-button {
   font: inherit;
@@ -26541,12 +26548,12 @@ table.dataTable.row-border tbody th, table.dataTable.row-border tbody td, table.
 .btn-cancel {
   margin-top: 10px;
   padding: 10px 20px;
-  border-radius: 16px;
+  border-radius: 10px;
   /* Sudut yang sedikit melengkung */
   border: none;
   /* Menghilangkan garis tepi */
   font-size: 15px;
-  font-weight: bold;
+  font-weight: normal;
   cursor: pointer;
   /* transition: all 0.3s ease; */
 }

@@ -41,7 +41,7 @@ $(document).ready(function(){
             }
         },
         columns: [
-            { data: 'DT_RowIndex', name: 'DT_RowIndex', width: '10px', orderable: false, searchable: false },
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', width: '50px', orderable: false, searchable: false },
             { data: 'name', name: 'name' },
             { data: 'email', name: 'email' },
             { data: 'kelamin', name: 'kelamin' },

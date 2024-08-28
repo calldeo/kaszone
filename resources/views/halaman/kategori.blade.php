@@ -120,11 +120,8 @@
                                 <table id="kategoriTable" class="table table-responsive-md">
                                     <thead>
                                         <tr>
-                                            <th style="width:50px;">
-                                                {{-- <div class="custom-control custom-checkbox checkbox-secondary check-lg mr-3"> --}}
-                                                    <input type="checkbox" class="custom-control-input" id="checkAll" required="">
-                                                    <label class="custom-control-label" for="checkAll"></label>
-                                                </div>
+                                             <th style="width:50px;">
+                                                <strong>No</strong>
                                             </th>
                                             <th><strong>Nama Kategori</strong></th>
                                             <th><strong>Deskripsi</strong></th>

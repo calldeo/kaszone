@@ -11,8 +11,6 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\SiswaController;
-use App\Http\Controllers\SiswaaController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BendaharaController;
 use App\Http\Controllers\PemasukanController;
@@ -31,9 +29,7 @@ use App\Http\Controllers\Auth\RegisterController;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+
 route::get('/',[LoginController::class,'landing'])->name('landing');
 
 route::get('/login',[LoginController::class,'halamanlogin'])->name('login');
@@ -49,11 +45,6 @@ Route::put('/profile/update', [UserProfileController::class, 'update'])->name('p
 
 
 
-
-// Route::group(['middleware' => ['auth','ceklevel:admin,bendahara']], function (){
-//     route::get('/home',[HomeController::class,'index'])->name('home');
-    
-// });
 
 Route::group(['middleware' => ['permission:Home']], function (){
 
@@ -74,16 +65,6 @@ route::get('/roles',[AdminController::class,'roles'])->name('roles');
 
 
 
-// Route::group(['middleware' => ['permission:admin']], function (){
-
-//     route::get('/admin',[AdminController::class,'admin'])->name('admin');
-//     route::get('/admin/search',[AdminController::class,'search'])->name('admin.search');
-//     Route::delete('/admin/{id}/destroy', [AdminController::class, 'destroy'])->name('admin.destroy');
-//     route::get('/add_admin',[AdminController::class,'add_admin'])->name('add_admin');
-//     Route::post('/admin/store',[AdminController::class,'store']);
-//     Route::get('/admin/{id}/edit_admin  ',[AdminController::class,'edit']);
-//     Route::put('/admin/{id}',[AdminController::class,'update']);
-// });
 
 
 Route::group(['middleware' => ['permission:Bendahara']], function (){
