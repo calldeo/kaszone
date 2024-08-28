@@ -40,9 +40,9 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-        'siswa' => [
+        'bendahara' => [
             'driver' => 'session',
-            'provider' => 'siswa',
+            'provider' => 'bendahara',
         ],
     ],
 
@@ -68,10 +68,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-        'siswa' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Siswa::class,
-        ],
+        // 'siswa' => [
+        //     'driver' => 'eloquent',
+        //     'model' => App\Models\Siswa::class,
+        // ],
 
         // 'users' => [
         //     'driver' => 'database',

@@ -28,7 +28,7 @@ class PemasukanController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'date' => 'required|date',
-            'jumlah' => 'required|numeric',
+            'jumlah' => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
         ]);
 
@@ -92,7 +92,7 @@ $category = Category::all();
         'name' => ['required', 'min:3', 'max:30'],
         'description' => ['required', 'min:3', 'max:255'],
         'date' => ['required', 'date'],
-        'jumlah' => ['required', 'numeric'],
+       'jumlah' => 'required|numeric|min:0',
         'id' => ['nullable', 'exists:categories,id'],
     ]);
 

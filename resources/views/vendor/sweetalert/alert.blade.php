@@ -1,4 +1,4 @@
-@if (Session::has('alert.config') || Session::has('alert.delete'))
+{{-- @if (Session::has('alert.config') || Session::has('alert.delete'))
     @if (config('sweetalert.animation.enable'))
         <link rel="stylesheet" href="{{ config('sweetalert.animatecss') }}">
     @endif
@@ -36,4 +36,4 @@
             Swal.fire({!! Session::pull('alert.config') !!});
         @endif
     </script>
-@endif
+@endif --}}

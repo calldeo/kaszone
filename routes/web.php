@@ -34,7 +34,10 @@ route::get('/',[LoginController::class,'landing'])->name('landing');
 
 route::get('/login',[LoginController::class,'halamanlogin'])->name('login');
 route::post('/postlogin',[LoginController::class,'postlogin'])->name('postlogin');
-route::get('/logout',[LoginController::class,'logout'])->name('logout');
+
+
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
 // Menampilkan form registrasi // Memproses registrasi
 Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register');
 
@@ -46,10 +49,10 @@ Route::put('/profile/update', [UserProfileController::class, 'update'])->name('p
 
 
 
-Route::group(['middleware' => ['permission:Home']], function (){
-
-    route::get('/home',[HomeController::class,'index'])->name('home');
+Route::group(['middleware' => ['auth', 'permission:Home']], function () {
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
 });
+
 
 
 
@@ -67,7 +70,7 @@ route::get('/roles',[AdminController::class,'roles'])->name('roles');
 
 
 
-Route::group(['middleware' => ['permission:Bendahara']], function (){
+Route::group(['middleware' => ['auth','permission:Bendahara']], function (){
 
     Route::post('/importbendahara', [BendaharaController::class, 'bendaharaimportexcel'])->name('import-bendahara');
     route::get('/user',[BendaharaController::class,'bendahara'])->name('bendahara');
@@ -80,7 +83,7 @@ Route::group(['middleware' => ['permission:Bendahara']], function (){
 
 
 
-Route::group(['middleware' => ['permission:Kategori']], function (){
+Route::group(['middleware' => ['auth','permission:Kategori']], function (){
 
     Route::get('/kategori', [CategoryController::class, 'index']);
     route::get('/add_kategori',[CategoryController::class,'add_kategori'])->name('add_kategori');
@@ -94,7 +97,7 @@ Route::group(['middleware' => ['permission:Kategori']], function (){
 
 });
 
-Route::group(['middleware' => ['permission:Data Pemasukan']], function (){
+Route::group(['middleware' => ['auth','permission:Data Pemasukan']], function (){
 
     route::get('/pemasukan',[PemasukanController::class,'index'])->name('index');
     Route::get('/add_pemasukan', [PemasukanController::class, 'create']);
@@ -108,7 +111,7 @@ Route::group(['middleware' => ['permission:Data Pemasukan']], function (){
 
 });
 
-Route::group(['middleware' => ['permission:Data Pengeluaran']], function (){
+Route::group(['middleware' => ['auth','permission:Data Pengeluaran']], function (){
 
     route::get('/pengeluaran',[PengeluaranController::class,'index'])->name('index');
     Route::get('/add_pengeluaran', [PengeluaranController::class, 'create']);
@@ -131,7 +134,7 @@ Route::group(['middleware' => ['permission:Data Pengeluaran']], function (){
     
 
 });
-Route::group(['middleware' => ['permission:Role']], function (){
+Route::group(['middleware' => ['auth','permission:Role']], function (){
 
     route::get('/role',[RoleController::class,'role'])->name('role');
     Route::get('/role/{id}/edit_role  ',[RoleController::class,'edit']);

@@ -48,8 +48,8 @@
                     <form class="user" method="post" action="/postlogin">
                         {{ csrf_field() }}
                         <div class="intro-x mt-8">
-    <input type="email" name="email" value="{{ Session::get('email') }}" class="intro-x login__input form-control py-3 px-4 block" placeholder="Email" required style="width: 460px;">
-    <input type="password" name="password" class="intro-x login__input form-control py-3 px-4 block mt-4" placeholder="Password" required style="width: 460px;">
+    <input type="email" name="email" value="{{ Session::get('email') }}" class="intro-x login__input form-control py-3 px-4 block" placeholder="Email">
+    <input type="password" name="password" class="intro-x login__input form-control py-3 px-4 block mt-4" placeholder="Password" >
 </div>
 
                         <div class="intro-x flex text-slate-600 dark:text-slate-500 text-xs sm:text-sm mt-4">
@@ -73,10 +73,10 @@
 
     <!-- BEGIN: JS Assets-->
     <script src="{{ asset('dashboards/dist/js/app.js') }}"></script>
-    @include('sweetalert::alert')
+    {{-- @include('sweetalert::alert') --}}
     <!-- Optional SweetAlert script -->
     <!-- 
-    <script src="{{ asset('dist/sweetalert2.all.min.js') }}"></script>
+    {{-- <script src="{{ asset('dist/sweetalert2.all.min.js') }}"></script> --}}
     <script>
         const btn = document.getElementById('btn');
         btn.addEventListener('click', function(){

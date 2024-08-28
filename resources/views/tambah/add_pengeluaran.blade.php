@@ -95,20 +95,19 @@
                                    
                                 </div>
 
-                                <div class="form-group">
+                               <div class="form-group">
                                     <label class="text-label">Jumlah *</label>
-                                      <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="fas fa-dollar-sign"></i> <!-- Ikon dolar -->
-                                                </span>
-                                            </div>
-                                             <input type="number" step="0.01" class="form-control" name="jumlah" placeholder="Enter amount.." value="{{ old('jumlah') }}" required>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-dollar-sign"></i> <!-- Ikon dolar -->
+                                            </span>
+                                        </div>
+                                        <input type="number" step="0.01" class="form-control" name="jumlah" placeholder="Enter amount.." value="{{ old('jumlah') }}" required>
+                                    </div>
                                     @error('jumlah')
                                     <span class="mt-2 text-danger">{{ $message }}</span>
                                     @enderror
-                                        </div>
-                                  
                                 </div>
 
                                 <div class="form-group">

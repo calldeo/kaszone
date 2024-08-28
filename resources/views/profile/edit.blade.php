@@ -63,9 +63,11 @@
                                         <label for="foto_profil">Foto Profil</label>
                                         
                                         <!-- Menampilkan Foto Profil -->
+                                     <!-- Menampilkan Logo atau Default Profile -->
                                         <div class="mb-3">
-                                            <img src="{{ asset('storage/' . auth()->user()->poto) }}" alt="Foto Profil" class="square-image" width="150" height="150">
+                                            <img src="{{ auth()->user()->logo ? asset('storage/' . auth()->user()->logo) : asset('dash/images/usr.png') }}" alt="Logo Profil" class="square-image" width="150" height="150">
                                         </div>
+
                                         
                  
                                         <div class="file-upload-wrapper">
