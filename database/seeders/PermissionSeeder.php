@@ -19,9 +19,9 @@ class PermissionSeeder extends Seeder
     {
         $roleadmin = Role::updateorcreate(
             [
-                'name'=>'admin',
+                'name'=>'Admin',
             ],
-            ['name'=>'admin']
+            ['name'=>'Admin']
         );
 
        $rolebendahara = Role::updateorcreate(

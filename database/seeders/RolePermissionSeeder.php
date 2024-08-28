@@ -17,35 +17,35 @@ class RolePermissionSeeder extends Seeder
     public function run()
     {
         //
-        Permission::create(['name'=>'home']);
-        Permission::create(['name'=>'admin']);
-        Permission::create(['name'=>'bendahara']);
-        Permission::create(['name'=> 'kategori']);
-        Permission::create(['name'=> 'role']);
+        Permission::create(['name'=>'Home']);
+        Permission::create(['name'=>'Admin']);
+        Permission::create(['name'=>'Bendahara']);
+        Permission::create(['name'=> 'Kategori']);
+        Permission::create(['name'=> 'Role']);
 
 
-        Permission::create(['name'=>'datapemasukan']);
-        Permission::create(['name'=>'datapengeluaran']);
+        Permission::create(['name'=>'Data Pemasukan']);
+        Permission::create(['name'=>'Data Pengeluaran']);
 
-        Role::create(['name'=>'admin']);
-        Role::create(['name'=>'bendahara']);
+        Role::create(['name'=>'Admin']);
+        Role::create(['name'=>'Bendahara']);
 
-        $roleAdmin = Role::findByName('admin');
-        $roleAdmin->givePermissionTo('home');
-        $roleAdmin->givePermissionTo('admin');
-        $roleAdmin->givePermissionTo('bendahara');
-        $roleAdmin->givePermissionTo('kategori');
-        $roleAdmin->givePermissionTo('datapemasukan');
-        $roleAdmin->givePermissionTo('datapengeluaran');
-        $roleAdmin->givePermissionTo('role');
-
-
+        $roleAdmin = Role::findByName('Admin');
+        $roleAdmin->givePermissionTo('Home');
+        $roleAdmin->givePermissionTo('Admin');
+        $roleAdmin->givePermissionTo('Bendahara');
+        $roleAdmin->givePermissionTo('Kategori');
+        $roleAdmin->givePermissionTo('Data Pemasukan');
+        $roleAdmin->givePermissionTo('Data Pengeluaran');
+        $roleAdmin->givePermissionTo('Role');
 
 
-        $roleBendahara = Role::findByName('bendahara');
-         $roleBendahara->givePermissionTo('datapemasukan');
-        $roleBendahara->givePermissionTo('datapengeluaran');
-        $roleBendahara->givePermissionTo('home');
+
+
+        $roleBendahara = Role::findByName('Bendahara');
+         $roleBendahara->givePermissionTo('Data Pemasukan');
+        $roleBendahara->givePermissionTo('Data Pengeluaran');
+        $roleBendahara->givePermissionTo('Home');
 
     }
 }
