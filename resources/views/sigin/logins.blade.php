@@ -24,7 +24,7 @@
                     <span class="text-white text-lg ml-3">PityCash</span>
                 </a> --}}
                 <div class="my-auto">
-                    <img alt="Midone - HTML Admin Template" class="-intro-x w-1/2 -mt-16" src="{{ asset('dashboards/dist/images/tess.svg') }}" alt="Brand Title" width="150" height="50">
+                    <img alt="Midone - HTML Admin Template" class="-intro-x w-1/2 -mt-16" src="{{ asset('dashboards/dist/images/piticash.png') }}" alt="Brand Title" width="150" height="50">
                     <div class="-intro-x text-white font-medium text-1xl leading-tight mt-10">
                         Nothing is impossible. Anything can happen as long as we believe
                         <br>
