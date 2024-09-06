@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id(); // ID unik untuk setiap kategori
             $table->string('name')->unique(); // Nama kategori yang unik
+            $table->string('jenis_kategori')->nullable(); // Tambahkan kolom jenis_kategori
             $table->text('description')->nullable(); // Deskripsi kategori, bersifat opsional
             $table->timestamps(); // Kolom created_at dan updated_at
             $table->softDeletes(); // Kolom deleted_at untuk soft delete

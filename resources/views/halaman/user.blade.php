@@ -3,7 +3,7 @@
 
 <head>
     @include('template.headerr')
-    <title>KasZone| {{auth()->user()->level}} | User</title>
+    <title>PityCash| {{auth()->user()->level}} | User</title>
 
       <style>
         .dataTables_wrapper .bendaharaTable_length .bootstrap-select .dropdown-toggle {

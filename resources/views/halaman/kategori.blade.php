@@ -3,7 +3,7 @@
 
 <head>
     @include('template.headerr')
-    <title>E-vote | {{auth()->user()->level}} | Admin</title>
+    <title>PityCash | {{auth()->user()->level}} | Admin</title>
     
 </head>
 
@@ -124,6 +124,7 @@
                                                 <strong>No</strong>
                                             </th>
                                             <th><strong>Nama Kategori</strong></th>
+                                            <th><strong>Jenis Kategori</strong></th>
                                             <th><strong>Deskripsi</strong></th>
                                             {{-- <th><strong>Status</strong></th> --}}
                                             <th><strong>Option</strong></th>

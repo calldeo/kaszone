@@ -3,7 +3,7 @@
 
 <head>
     @include('template.headerr')
-    <title>E-vote | {{ auth()->user()->level }} | Add Pemasukan</title>
+    <title>PityCash | {{ auth()->user()->level }} | Add Pemasukan</title>
     <!-- Include necessary CSS libraries -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
@@ -118,7 +118,7 @@
                                                     <i class="fas fa-list"></i> <!-- Ikon daftar -->
                                                 </span>
                                             </div>
-                                          <select class="form-control default-select" name="category_id" required>
+                                          <select class="form-control default-select" name="category_id" multiple required>
                                         <option value="">--PILIH KATEGORI--</option>
                                         @foreach($categories as $category)
                                             <option value="{{ $category->id }}">{{ $category->name }}</option>

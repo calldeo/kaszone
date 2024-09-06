@@ -3,7 +3,7 @@
 
 <head>
     @include('template.headerr')
-    <title>KasZone | {{auth()->user()->level}} | Pengeluaran</title>
+    <title>PityCash | {{auth()->user()->level}} | Pengeluaran</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
 

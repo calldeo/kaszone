@@ -32,6 +32,7 @@ class CategoryController extends Controller
 {
     $request->validate([
         'name' => ['required', 'min:3', 'max:30'],
+        'jenis_kategori' => 'required',
         'description' => ['required', 'min:3', 'max:30'],
     ]);
 
@@ -40,6 +41,7 @@ class CategoryController extends Controller
         // Membuat instance Category baru
         $category = new Category();
         $category->name = $request->name;
+        $category->jenis_kategori = $request->jenis_kategori;
         $category->description = $request->description;
 
         // Menyimpan data kategori
@@ -88,6 +90,7 @@ public function update(Request $request, $id)
     // Validasi input
     $request->validate([
         'name' => ['required', 'min:3', 'max:30'],
+        'jenis_kategori' => 'required',
         'description' => ['required', 'min:3', 'max:30'],
     ]);
 
@@ -102,6 +105,7 @@ public function update(Request $request, $id)
     try {
         // Memperbarui data kategori yang ada
         $category->name = $request->name;
+        $category->jenis_kategori = $request->jenis_kategori;
         $category->description = $request->description;
 
         // Menyimpan perubahan kategori

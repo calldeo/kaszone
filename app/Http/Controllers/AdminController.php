@@ -208,7 +208,7 @@ class AdminController extends Controller
    public function kategoris(Request $request) // KATEGORI
 {
     if ($request->ajax()) {
-        $categories = Category::select(['id', 'name', 'description'])->get();
+        $categories = Category::select(['id', 'name','jenis_kategori', 'description'])->get();
 
         return DataTables::of($categories)
             ->addIndexColumn() 

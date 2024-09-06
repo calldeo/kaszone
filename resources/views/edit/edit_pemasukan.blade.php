@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     @include('template.headerr')
-    <title>E-vote | {{ auth()->user()->level }} | Edit</title>
+    <title>PityCash | {{ auth()->user()->level }} | Edit</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 </head>

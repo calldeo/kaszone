@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\PemasukanImport;
 use App\Models\Category;
 use App\Models\Pemasukan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class PemasukanController extends Controller
 {
@@ -19,6 +23,7 @@ class PemasukanController extends Controller
     public function create()
     {
         $categories = Category::all(); // Mengambil semua kategori
+        $categories = Category::where('jenis_kategori', 'pemasukan')->get();
         return view('tambah.add_pemasukan', compact('categories'));
     }
 
@@ -81,7 +86,7 @@ public function edit($id_data)
     $pemasukan = Pemasukan::find($id_data);
 $category = Category::all();
 //  $pemasukan = DB::table('datapemasukan')->get();
-
+$category = Category::where('jenis_kategori', 'pemasukan')->get();
     return view('edit.edit_pemasukan', compact('id_data','pemasukan','category'));
 }
 
@@ -151,4 +156,47 @@ $category = Category::all();
         'category_name' => $pemasukan->category->name, // Ambil nama kategori
     ]);
     }
+    public function importPemasukan(Request $request)
+{
+    // Memulai transaksi database
+    DB::beginTransaction();
+    
+    try {
+        // Hapus semua data lama dari tabel Pemasukan
+        Pemasukan::query()->delete();
+        
+        // Pindahkan file ke folder DataPemasukan
+        $file = $request->file('file');
+        $namafile = $file->getClientOriginalName();
+        $file->move('DataPemasukan', $namafile);
+
+        // Impor data dari file Excel
+        Excel::import(new PemasukanImport, public_path('/DataPemasukan/'.$namafile));
+
+        // Commit transaksi jika semua operasi berhasil
+        DB::commit();
+
+        // Hapus file setelah impor selesai
+        Storage::delete($namafile);
+
+        return redirect('/pemasukan')->with('success', 'Data Berhasil Ditambahkan');
+    } catch (\Exception $e) {
+        // Rollback transaksi jika terjadi kesalahan
+        DB::rollBack();
+
+        // Log error jika diperlukan
+        \Log::error('Import pemasukan failed: ' . $e->getMessage());
+
+        return redirect('/pemasukan')->with('error', 'Terjadi kesalahan saat mengimpor data');
+    }
+}
+public function downloadTemplate()
+{
+    // Path ke template Excel untuk pemasukan
+    $pathToFile = public_path('templates/template_pemasukan.xlsx');
+
+    return response()->download($pathToFile);
+}
+
+
 }

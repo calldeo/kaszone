@@ -21,54 +21,59 @@ class PengeluaranController extends Controller
 public function create()
     {
         $categories = Category::all(); // Mengambil semua kategori
+        $categories = Category::where('jenis_kategori', 'pengeluaran')->get();
         return view('tambah.add_pengeluaran', compact('categories'));
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'date' => 'required|date',
-            'jumlah' => 'required|numeric|min:0',
-            'category_id' => 'required|exists:categories,id',
-        ]);
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'date' => 'required|date',
+        'category' => 'required|array', // Validasi untuk array kategori
+        'category.*' => 'exists:categories,id', // Validasi setiap kategori harus ada di tabel categories
+        'jumlah' => 'required|numeric|min:0',
+    ]);
 
-        // Memulai transaksi database
-        DB::beginTransaction();
+    // Memulai transaksi database
+    DB::beginTransaction();
 
-        try {
-            // Ambil total pemasukan yang tersedia dari semua record pemasukan
-            $totalPemasukanTersedia = Pemasukan::sum('jumlah');
+    try {
+        // Ambil total pemasukan yang tersedia dari semua record pemasukan
+        $totalPemasukanTersedia = Pemasukan::sum('jumlah');
 
-            // Mengecek apakah jumlah pengeluaran melebihi pemasukan yang tersedia
-            if ($request->jumlah > $totalPemasukanTersedia) {
-                return redirect()->back()->with('error', 'Jumlah pengeluaran melebihi pemasukan yang tersedia.');
-            }
-
-            // Menambahkan data pengeluaran baru
-            $pengeluaran = new Pengeluaran();
-            $pengeluaran->name = $request->name;
-            $pengeluaran->description = $request->description;
-            $pengeluaran->date = $request->date;
-            $pengeluaran->jumlah = $request->jumlah;
-            $pengeluaran->id = $request->category_id;
-            $pengeluaran->save();
-
-            // Kurangi total pemasukan yang tersedia sesuai dengan jumlah pengeluaran
-            // $this->kurangiPemasukan($request->jumlah);
-
-            // Commit transaksi jika semua operasi berhasil
-            DB::commit();
-
-            return redirect('/pengeluaran')->with('success', 'Pengeluaran berhasil ditambahkan.');
-        } catch (\Throwable $th) {
-            // Rollback transaksi jika terjadi error
-            DB::rollback();
-
-            return redirect('/pengeluaran')->with('error', 'Pemasukan gagal ditambahkan! ' . $th->getMessage());
+        // Mengecek apakah jumlah pengeluaran melebihi pemasukan yang tersedia
+        if ($request->jumlah > $totalPemasukanTersedia) {
+            return redirect()->back()->with('error', 'Jumlah pengeluaran melebihi pemasukan yang tersedia.');
         }
+
+        // Menambahkan data pengeluaran baru
+        $pengeluaran = new Pengeluaran();
+        $pengeluaran->name = $request->name;
+        $pengeluaran->description = $request->description;
+        $pengeluaran->date = $request->date;
+        $pengeluaran->jumlah = $request->jumlah;
+        $pengeluaran->save();
+
+        // Menambahkan kategori ke pengeluaran
+        foreach ($request->category as $categoryId) {
+            $pengeluaran->categories()->attach($categoryId);
+        }
+
+        // Commit transaksi jika semua operasi berhasil
+        DB::commit();
+
+        return redirect('/pengeluaran')->with('success', 'Pengeluaran berhasil ditambahkan.');
+    } catch (\Throwable $th) {
+        // Rollback transaksi jika terjadi error
+        DB::rollback();
+
+        return redirect('/pengeluaran')->with('error', 'Pengeluaran gagal ditambahkan! ' . $th->getMessage());
     }
+}
+
+
 
 
     public function destroy($id_data)
@@ -91,6 +96,7 @@ public function edit($id_data)
 {
     $pengeluaran = Pengeluaran::find($id_data);
     $category = Category::all();
+    $category = Category::where('jenis_kategori', 'pengeluaran')->get();
 
     return view('edit.edit_pengeluaran', compact('id_data', 'pengeluaran', 'category'));
 }
@@ -191,4 +197,5 @@ public function cetakpgl()
             })
             ->make(true);
     }
+    
 }

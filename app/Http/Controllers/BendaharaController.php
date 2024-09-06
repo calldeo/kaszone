@@ -44,6 +44,7 @@ class BendaharaController extends Controller
 
    public function store(Request $request)
 {
+    // dd ($request);
     // Validasi input
     $request->validate([
         'name' => ['required', 'min:3', 'max:30', function ($attribute, $value, $fail) {
@@ -56,6 +57,7 @@ class BendaharaController extends Controller
         'password' => ['required', 'min:8', 'max:12'],
         'kelamin' => 'required',
         'alamat' => ['required', 'min:3', 'max:30'],
+        'level' => 'required|array'
     ]);
 
     // Gunakan DB::transaction untuk menjalankan proses dalam satu transaksi
@@ -72,8 +74,12 @@ class BendaharaController extends Controller
             $bendahara->save();
 
 
+
         // Menambahkan role ke user
-        $bendahara->assignRole($request->level);
+        foreach ($request->level as $role) {
+            $bendahara->assignRole($role);
+        }
+        
              DB::commit();
 
             return redirect('/user')->with('success', 'User berhasil ditambahkan.');

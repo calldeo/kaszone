@@ -4,7 +4,7 @@
 
 <head>
     @include('template.headerr')
-    <title>E-vote | {{auth()->user()->level}} | Edit</title>
+    <title>PityCash | {{auth()->user()->level}} | Edit</title>
 </head>
 <body>
 
@@ -105,7 +105,17 @@
                                         <input type="text" class="form-control" id="val-username1" name="description" value="{{ $category->description }}" placeholder="Enter a name.." required>
                                     </div>
                                 </div>
-                                   
+                                <div class="form-group">
+                                    <label>Jenis Kategori *</label>
+                                    <select class="form-control default-select" name="jenis_kategori" required>
+                                        <option value="">-- Jenis Kategori --</option>
+                                        <option value="Pemasukan" {{ old('jenis_kategori', $category->jenis_kategori) == 'Pemasukan' ? 'selected' : '' }}>Pemasukan</option>
+                                        <option value="Pengeluaran" {{ old('jenis_kategori', $category->jenis_kategori) == 'Pengeluaran' ? 'selected' : '' }}>Pengeluaran</option>
+                                    </select>
+                                    @error('jenis_kategori')
+                                    <span class="mt-4 text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
                               
                        
                                     <button type="button" class="btn btn-danger btn-cancel" onclick="redirectToKategori()">Cancel</button>

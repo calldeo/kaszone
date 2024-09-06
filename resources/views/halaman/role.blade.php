@@ -3,7 +3,7 @@
 
 <head>
     @include('template.headerr')
-    <title>E-vote | {{auth()->user()->level}} | Role</title>
+    <title>PityCash | {{auth()->user()->level}} | Role</title>
     
 </head>
 

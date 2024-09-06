@@ -3,7 +3,7 @@
 
 <head>
     @include('template.headerr')
-    <title>KasZone | {{auth()->user()->level}} | Pemasukan</title>
+    <title>PityCash | {{auth()->user()->level}} | Pemasukan</title>
     
 </head>
 
@@ -43,17 +43,45 @@
                         <div class="card-header">
                             <h4 class="card-title">Data Pemasukan</h4>
                             <div class="text-right">
-                          {{-- <div class="input-group search-area right d-lg-inline-flex d-none">
-                            <form id="searchForm">
-                                <input id="searchInput" type="text" class="form-control" placeholder="Cari sesuatu di sini..." name="query">
-                            </form>
-                          </div> --}}
-                    
-                    <a href="/add_pemasukan" class="btn btn-success" title="Add">
-                        <i class="fa fa-plus"></i>
-                    </a>
-                </div>
+                                {{-- Button untuk menambahkan data --}}
+                                <a href="/add_pemasukan" class="btn btn-success" title="Add">
+                                    <i class="fa fa-plus"></i>
+                                </a>
+                                {{-- Button untuk mengimpor data --}}
+                                <!-- Tombol untuk membuka modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#importModal">
+    <i class="fa fa-upload"></i> Import
+</button>
 
+<!-- Modal Import Data Pemasukan -->
+<div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="importModalLabel">Import Data Pemasukan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form untuk mengunggah file Excel -->
+                <form action="{{ route('import-pemasukan') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="form-group">
+                        <label for="file">Pilih File Excel</label>
+                        <input type="file" class="form-control-file" id="file" name="file" required>
+                        <div style="text-align: left;">
+                            <a href="{{ route('download-template-pemasukan') }}">Download Template Excel</a>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Import</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+                            </div>
                         </div>
                         <div class="card-body">
                             @if(session('success'))

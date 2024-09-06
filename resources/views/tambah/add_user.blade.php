@@ -4,7 +4,7 @@
 
 <head>
     @include('template.headerr')
-    <title>E-vote | {{auth()->user()->level}} | Add</title>
+    <title>PityCash | {{auth()->user()->level}} | Add</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 
@@ -173,18 +173,18 @@
                                             @endforeach
                                         </select>
                                     </div> --}}
-                                        <div class="form-group">
-                                            <label>Peran *</label>
-                                            <select class="form-control default-select" id="sel1" name="level" required>
-                                               <option value="" disabled selected>Pilih peran</option>
+                                    <div class="form-group">
+                                        <label>Peran *</label>
+                                        <select class="form-control default-select" id="sel1" name="level[]" multiple required>
+                                            <option value="" disabled>Pilih peran</option>
                                             @foreach($roles as $role)
                                                 <option value="{{ $role->name }}">{{ $role->name }}</option>
                                             @endforeach
-                                            </select>
-                                            @error('kelamin')
-                                            <span class="mt-4 text-danger">{{$message}}</span>
-                                            @enderror
-                                        </div>
+                                        </select>
+                                        @error('roles')
+                                        <span class="mt-4 text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
                                     <button type="button" class="btn btn-danger btn-submit" onclick="redirectToAdmin()">Cancel</button>
                                   <button type="submit" class="btn btn-primary btn-cancel mr-2">Submit</button>
                                     </form>

@@ -4,7 +4,7 @@
 
 <head>
     @include('template.headerr')
-    <title>KasZone | {{auth()->user()->level}} | Add</title>
+    <title>PityCash | {{auth()->user()->level}} | Add</title>
 
 </head>
 <body>
@@ -114,6 +114,23 @@
                                                 <input type="text" class="form-control" id="val-username1" name="description" placeholder="Enter a description.." value="{{old('description')}}"required>
                                             </div>
                                             @error('description')
+                                            <span class="mt-4 text-danger">{{$message}}</span>
+                                            @enderror
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="text-label">Jenis Kategori *</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"> <i class="fa fa-list"></i> </span>
+                                                </div>
+                                                <select class="form-control" name="jenis_kategori" required>
+                                                    <option value="" disabled selected>Pilih Jenis Kategori</option>
+                                                    <option value="pemasukan">Pemasukan</option>
+                                                    <option value="pengeluaran">Pengeluaran</option>
+                                                </select>
+                                            </div>
+                                            @error('jenis_kategori')
                                             <span class="mt-4 text-danger">{{$message}}</span>
                                             @enderror
                                         </div>

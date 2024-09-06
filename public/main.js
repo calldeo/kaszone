@@ -134,6 +134,7 @@ $(document).ready(function(){
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', width: '10px', orderable: false, searchable: false },
             { data: 'name', name: 'name' },
+            { data: 'jenis_kategori', name: 'jenis_kategori' },
             { data: 'description', name: 'description' },
             { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
         ],
