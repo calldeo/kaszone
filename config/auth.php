@@ -44,7 +44,13 @@ return [
             'driver' => 'session',
             'provider' => 'bendahara',
         ],
+         'api' => [
+        'driver' => 'passport',
+        'provider' => 'users',
     ],
+    ],
+
+
 
     /*
     |--------------------------------------------------------------------------
