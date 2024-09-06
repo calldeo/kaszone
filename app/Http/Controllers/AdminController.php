@@ -190,6 +190,9 @@ class AdminController extends Controller
                         <form action="/user/' . $row->id . '/edit_user" method="GET" class="mr-1">
                             <button type="submit" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></button>
                         </form>
+                         <button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/user/' . $row->id . '/detail">
+                    <i class="fa fa-eye"></i>
+                    </button>
                         <form action="/user/' . $row->id . '/destroy" method="POST">
                             ' . csrf_field() . '
                             ' . method_field('DELETE') . '

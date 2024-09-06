@@ -119,7 +119,7 @@
                                                     <i class="fas fa-dollar-sign"></i> <!-- Ikon dolar -->
                                                 </span>
                                             </div>
-                                            <input type="number" class="form-control" id="val-jumlah" name="jumlah" value="{{ old('jumlah', $pemasukan->jumlah ?? '') }}" placeholder="Masukkan jumlah.." required>
+                                            <input type="number" step="0.01"class="form-control" id="val-jumlah" name="jumlah" value="{{ old('jumlah', $pemasukan->jumlah ?? '') }}" placeholder="Masukkan jumlah.." required>
                                         </div>
                                     </div>
 

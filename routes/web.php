@@ -79,6 +79,8 @@ Route::group(['middleware' => ['auth','permission:Bendahara']], function (){
     Route::post('/user/store',[BendaharaController::class,'store']);
     Route::get('/user/{id}/edit_user  ',[BendaharaController::class,'edit']);
     Route::put('/guruu/{id}',[BendaharaController::class,'update']);
+    Route::get('/user/{id}/detail', [BendaharaController::class, 'showDetail'])->name('user.showDetail');
+
 });
 
 

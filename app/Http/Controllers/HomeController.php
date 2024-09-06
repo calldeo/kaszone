@@ -15,13 +15,13 @@ class HomeController extends Controller
 {
     public function index()
     {
-       
+        // dd(auth()->user()->getAllPermissions());
+        // Hitung saldo yang tersedia
           // Ambil total pemasukan dan total pengeluaran
         $totalPemasukan = Pemasukan::sum('jumlah');
         $totalPemasukan1 = Pemasukan::sum('jumlah');
         $totalPengeluaran = Pengeluaran::sum('jumlah');
-        // dd(auth()->user()->getAllPermissions());
-        // Hitung saldo yang tersedia
+       
         $saldo = $totalPemasukan - $totalPengeluaran;
 
         // Passing data ke view

@@ -193,5 +193,24 @@ if (!session()->has('activeRole')) {
 
 }
 
+public function showDetail($id)
+    {
+        $user = User::with('roles')->find($id);
+
+    if (!$user) {
+        return response()->json(['message' => 'Pengeluaran not found'], 404);
+    }
+
+    return response()->json([
+        // 'id' => $user->id,
+        'name' => $user->name,
+        'email' => $user->email,
+        'kelamin' => $user->kelamin,
+        'alamat' => $user->alamat,
+
+         // Ambil nama kategori
+    ]);
+    }
+
 
 }
