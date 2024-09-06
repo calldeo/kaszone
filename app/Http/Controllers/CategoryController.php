@@ -87,6 +87,7 @@ public function destroy($id)
 }
 public function update(Request $request, $id)
 {
+    // dd($request);
     // Validasi input
     $request->validate([
         'name' => ['required', 'min:3', 'max:30'],

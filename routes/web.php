@@ -111,6 +111,8 @@ Route::group(['middleware' => ['auth','permission:Data Pemasukan']], function ()
     Route::get('/pemasukan/{id_data}/detail', [PemasukanController::class, 'showDetail'])->name('pemasukan.showDetail');
     Route::post('/import-pemasukan', [PemasukanController::class, 'importPemasukan'])->name('import-pemasukan');
     Route::get('/download-template-pemasukan', [PemasukanController::class, 'downloadTemplate'])->name('download-template-pemasukan');
+// routes/web.php
+Route::get('/get-categories/{jenis_kategori}', [PemasukanController::class, 'getCategories']);
 
 
 });
@@ -136,7 +138,7 @@ Route::group(['middleware' => ['auth','permission:Data Pengeluaran']], function 
 
     Route::get('/download-template-kategori', [CategoryController::class, 'downloadTemplate'])->name('download-template-kategori');
     
-
+    Route::get('/get-categories/{jenis_kategori}', [PengeluaranController::class, 'getCategories']);
 });
 Route::group(['middleware' => ['auth','permission:Role']], function (){
 

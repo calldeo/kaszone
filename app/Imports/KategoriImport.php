@@ -15,17 +15,13 @@ class KategoriImport implements ToModel
     *
     * @return \Illuminate\Database\Eloquent\Model|null
     */
-    public function model(array $row)
+   public function model(array $row)
     {
         return new Category([
-            'id'=> $row[0],
-            'name'=> $row[1],
-            'description'=> $row[2],
-            
-            // 'updated_at'=>$row[6],
-            // 'created_at'=>$row[7],
-
-
+            'id' => $row[0],
+            'name' => $row[1],
+            'description' => $row[2],
+            'jenis_kategori' => $row[3], // Tambahkan jenis_kategori
         ]);
     }
 }

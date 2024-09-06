@@ -171,5 +171,38 @@
             window.location.href = "/pemasukan";
         }
     </script>
+    <script>
+        $(document).ready(function() {
+                // Mengambil data dari server untuk mengisi dropdown
+               getCategories()
+    
+            function getCategories (){
+                $.ajax({
+                    url: '/get-categories/1',
+                    method: 'GET',
+                    success: function(data) {
+                        // Menambahkan option ke dropdown
+                        var $dropdown = $('#category');
+                        $dropdown.empty(); // Kosongkan dropdown
+                        
+                        $dropdown.append($('<option>', {
+                            value: '',
+                            text: 'PILIH KATEGORI'
+                        }));
+                        $.each(data, function(index, item) {
+                            $dropdown.append($('<option>', {
+                                value: item.id,
+                                text: item.name
+                            }));
+                        });
+                    },
+                    error: function(xhr) {
+                        console.error('Error fetching options:', xhr);
+                    }
+                });
+            }
+            });
+    </script>
 </body>
+
 </html>

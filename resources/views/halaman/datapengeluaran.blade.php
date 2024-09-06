@@ -70,11 +70,11 @@
                         </div>
                         <div class="card-body">
                             @if(session('error'))
-    <div class="alert alert-danger alert-dismissible fade show">
-        <strong>Error!</strong> {{ session('error') }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span><i class="fa fa-times"></i></span></button>
-    </div>
-@endif
+                                <div class="alert alert-danger alert-dismissible fade show">
+                                    <strong>Error!</strong> {{ session('error') }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span><i class="fa fa-times"></i></span></button>
+                                </div>
+                            @endif
 
                             @if(session('success'))
                             <div class="alert alert-success alert-dismissible fade show">

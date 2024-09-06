@@ -214,7 +214,16 @@ class AdminController extends Controller
         $categories = Category::select(['id', 'name','jenis_kategori', 'description'])->get();
 
         return DataTables::of($categories)
-            ->addIndexColumn() 
+            ->addIndexColumn()
+             ->addColumn('jenis_kategori', function($row){
+                if ($row->jenis_kategori == 1 ){
+                    return 'pemasukan';
+                } elseif ($row->jenis_kategori == 2)  {
+                    return 'pengeluaran';
+                }
+
+
+             })
             ->addColumn('opsi', function ($row) {
                 return '
                     <div class="d-flex align-items-center">

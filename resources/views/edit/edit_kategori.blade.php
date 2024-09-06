@@ -109,8 +109,8 @@
                                     <label>Jenis Kategori *</label>
                                     <select class="form-control default-select" name="jenis_kategori" required>
                                         <option value="">-- Jenis Kategori --</option>
-                                        <option value="Pemasukan" {{ old('jenis_kategori', $category->jenis_kategori) == 'Pemasukan' ? 'selected' : '' }}>Pemasukan</option>
-                                        <option value="Pengeluaran" {{ old('jenis_kategori', $category->jenis_kategori) == 'Pengeluaran' ? 'selected' : '' }}>Pengeluaran</option>
+                                        <option value="1" {{ old('jenis_kategori', $category->jenis_kategori) == '1' ? 'selected' : '' }}>Pemasukan</option>
+                                        <option value="2" {{ old('jenis_kategori', $category->jenis_kategori) == '2' ? 'selected' : '' }}>Pengeluaran</option>
                                     </select>
                                     @error('jenis_kategori')
                                     <span class="mt-4 text-danger">{{ $message }}</span>

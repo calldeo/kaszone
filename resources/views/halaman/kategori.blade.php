@@ -20,6 +20,7 @@
     <!-- Content body start -->
     <div class="content-body">
         <div class="container-fluid">
+            
             <!-- Add Project -->
             <div class="row page-titles mx-0">
                 <div class="col-sm-6 p-md-0">
@@ -94,6 +95,7 @@
                 </div>
 
                         </div>
+
                         <div class="card-body">
                             @if(session('success'))
                             <div class="alert alert-success alert-dismissible fade show">
@@ -104,6 +106,12 @@
                                 <strong>Success!</strong> {{ session('success') }}
                                 <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span></button>
                             </div>
+                            @endif
+                            @if(session('error'))
+                                <div class="alert alert-danger alert-dismissible fade show">
+                                    <strong>Error!</strong> {{ session('error') }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span><i class="fa fa-times"></i></span></button>
+                                </div>
                             @endif
                             @if(session('update_success'))
                             <div class="alert alert-warning alert-dismissible fade show">

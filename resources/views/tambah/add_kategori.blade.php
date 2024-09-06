@@ -126,8 +126,8 @@
                                                 </div>
                                                 <select class="form-control" name="jenis_kategori" required>
                                                     <option value="" disabled selected>Pilih Jenis Kategori</option>
-                                                    <option value="pemasukan">Pemasukan</option>
-                                                    <option value="pengeluaran">Pengeluaran</option>
+                                                    <option value="1">Pemasukan</option>
+                                                    <option value="2">Pengeluaran</option>
                                                 </select>
                                             </div>
                                             @error('jenis_kategori')

@@ -22,9 +22,9 @@ class PemasukanController extends Controller
 
     public function create()
     {
-        $categories = Category::all(); // Mengambil semua kategori
-        $categories = Category::where('jenis_kategori', 'pemasukan')->get();
-        return view('tambah.add_pemasukan', compact('categories'));
+        // $categories = Category::all(); // Mengambil semua kategori
+        // $categories = Category::where('jenis_kategori', '1')->get();
+        return view('tambah.add_pemasukan');
     }
 
     public function store(Request $request)
@@ -84,9 +84,9 @@ public function destroy($id_data)
 public function edit($id_data)
 {
     $pemasukan = Pemasukan::find($id_data);
-$category = Category::all();
+// $category = Category::all();
 //  $pemasukan = DB::table('datapemasukan')->get();
-$category = Category::where('jenis_kategori', 'pemasukan')->get();
+$category = Category::where('jenis_kategori', '1')->get();
     return view('edit.edit_pemasukan', compact('id_data','pemasukan','category'));
 }
 
@@ -197,6 +197,22 @@ public function downloadTemplate()
 
     return response()->download($pathToFile);
 }
+public function getCategories($jenisKategori)
+    {
+        // dd($jenisKategori);
+        // Ambil data dari database
+        $options = Category::where('jenis_kategori', $jenisKategori)->get(); // Atau sesuaikan query sesuai kebutuhan
 
+        // Format data untuk dropdown
+        $formattedOptions = $options->map(function ($item) {
+            return [
+                'id' => $item-> id,
+                'name' => $item->name, // Ganti dengan field yang sesuai
+            ];
+        });
+
+        // Kembalikan sebagai JSON
+        return response()->json($formattedOptions);
+    }
 
 }
