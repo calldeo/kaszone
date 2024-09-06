@@ -20,8 +20,9 @@ class KategoriImport implements ToModel
         return new Category([
             'id' => $row[0],
             'name' => $row[1],
-            'description' => $row[2],
-            'jenis_kategori' => $row[3], // Tambahkan jenis_kategori
+            'jenis_kategori' => $row[2],
+            'description' => $row[3],
+             // Tambahkan jenis_kategori
         ]);
     }
 }

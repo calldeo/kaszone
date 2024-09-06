@@ -77,27 +77,31 @@
                 <tr>
                     <th>No. </th>
                     <th>Nama Kategori</th>
+                    <th>Jenis Kategori</th>
                     <th>Deksripsi</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($category as $ct)
                 <tr>
-                    <td style="text-align: center;">{{ $ct->id }}</td>
+                     <td style="text-align: center;">{{ $ct->id }}</td>
                     <td style="text-align: center;">{{ $ct->name }}</td>
-                    <td style="text-align: center;">{{ $ct->description}}</td>
+                    <td style="text-align: center;">
+                        @if($ct->jenis_kategori == 1)
+                            Pemasukan
+                        @elseif($ct->jenis_kategori == 2)
+                            Pengeluaran
+                        @else
+                            Tidak Diketahui
+                        @endif
+                    </td>
+                    <td style="text-align: center;">{{ $ct->description }}</td>
                 </tr>
                 @endforeach
             </tbody>
         </table>
         
-        {{-- <div class="tanda-tangan">
-            <p>Mengetahui,</p> --}}
-            {{-- <img src="/foto_kepala_sekolah/tanda_tangan.png" alt="Tanda Tangan Kepala Sekolah" style="width: 150px;"> --}}
-            {{-- <p style="margin-bottom: 20px;">Kepala Sekolah</p>
-            <p style="margin-top: 70px;">...................</p>
-        </div>
-    </div> --}}
+       
     <script>
         window.print();
     </script>

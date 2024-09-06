@@ -15,6 +15,10 @@ class Pengeluaran extends Model
         'name',
         'description',
         'date',
+        'jumlah_satuan',
+        'nominal',
+        'dll',
+        'image',
         'jumlah',
         'id' // Pastikan nama kolom ini sesuai dengan foreign key
     ];

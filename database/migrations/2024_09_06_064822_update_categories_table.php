@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('categories', function (Blueprint $table) {
-            $table->integer('jenis_kategori')->comment('1=pemasukan, 2=pengeluaran')->nullable(); // Deskripsi kategori, bersifat opsional
+            $table->integer('jenis_kategori')->comment('1=pemasukan, 2=pengeluaran')->after('name')->nullable(); // Deskripsi kategori, bersifat opsional
 
         });
         //

@@ -94,6 +94,48 @@
                                     @enderror
                                    
                                 </div>
+                                <div class="form-group">
+                                    <label class="text-label">Jumlah Satuan *</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-dollar-sign"></i> <!-- Ikon dolar -->
+                                            </span>
+                                        </div>
+                                        <input type="number" step="0.01" class="form-control" name="jumlah_satuan" placeholder="Enter amount.." value="{{ old('jumlah_satuan') }}" required>
+                                    </div>
+                                    @error('jumlah_satuan')
+                                    <span class="mt-2 text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
+                                    <label class="text-label">Nominal (Rp) *</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-dollar-sign"></i> <!-- Ikon dolar -->
+                                            </span>
+                                        </div>
+                                        <input type="number" step="0.01" class="form-control" name="nominal" placeholder="Enter amount.." value="{{ old('nominal') }}" required>
+                                    </div>
+                                    @error('nominal')
+                                    <span class="mt-2 text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
+                                    <label class="text-label">Dll *</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-dollar-sign"></i> <!-- Ikon dolar -->
+                                            </span>
+                                        </div>
+                                        <input type="number" step="0.01" class="form-control" name="dll" placeholder="Enter amount.." value="{{ old('dll') }}" required>
+                                    </div>
+                                    @error('dll')
+                                    <span class="mt-2 text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
 
                                <div class="form-group">
                                     <label class="text-label">Jumlah *</label>
@@ -110,7 +152,7 @@
                                     @enderror
                                 </div>
 
-                                <div class="form-group">
+                               <div class="form-group">
                                     <label class="text-label">Category *</label>
                                      <div class="input-group">
                                             <div class="input-group-prepend">
@@ -118,16 +160,18 @@
                                                     <i class="fas fa-list"></i> <!-- Ikon daftar -->
                                                 </span>
                                             </div>
-                                          <select class="form-control default-select" name="category_id" multiple required>
-                                        <option value="">--PILIH KATEGORI--</option>
-                                        @foreach($categories as $category)
+                                            {{-- <option value="">--PILIH KATEGORI--</option> --}}
+                                          <select class="form-control default-select" id="category" name="category_id" required>
+                                        
+                                        {{-- @foreach($categories as $category)
                                             <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                        @endforeach
+                                        @endforeach --}}
                                     </select>
                                     @error('category_id')
                                     <span class="mt-2 text-danger">{{ $message }}</span>
                                     @enderror
                                         </div>
+
                                     
                                 </div>
                                 <button type="button" class="btn btn-danger btn-cancel" onclick="window.location.href='/pemasukan'">Cancel</button>
@@ -153,5 +197,50 @@
     <!-- Scripts -->
     @include('template.scripts')
 </body>
+<script>
+   $(document).ready(function() {
+        // Memanggil fungsi getCategories untuk mengisi dropdown kategori
+        getCategories();
 
+        // Menghitung jumlah saat nilai jumlah_satuan, nominal, atau dll berubah
+        function calculateTotal() {
+            var jumlah_satuan = parseFloat($('input[name="jumlah_satuan"]').val()) || 0;
+            var nominal = parseFloat($('input[name="nominal"]').val()) || 0;
+            var dll = parseFloat($('input[name="dll"]').val()) || 0;
+
+            var total = (jumlah_satuan * nominal) + dll;
+            $('input[name="jumlah"]').val(total.toFixed(2)); // Memperbarui nilai input jumlah
+        }
+
+        // Memanggil fungsi calculateTotal saat input berubah
+        $('input[name="jumlah_satuan"], input[name="nominal"], input[name="dll"]').on('input', calculateTotal);
+
+
+        function getCategories (){
+            $.ajax({
+                url: '/get-categories/2',
+                method: 'GET',
+                success: function(data) {
+                    // Menambahkan option ke dropdown
+                    var $dropdown = $('#category');
+                    $dropdown.empty(); // Kosongkan dropdown
+                    
+                    $dropdown.append($('<option>', {
+                        value: '',
+                        text: 'PILIH KATEGORI'
+                    }));
+                    $.each(data, function(index, item) {
+                        $dropdown.append($('<option>', {
+                            value: item.id,
+                            text: item.name
+                        }));
+                    });
+                },
+                error: function(xhr) {
+                    console.error('Error fetching options:', xhr);
+                }
+            });
+        }
+        });
+</script>
 </html>

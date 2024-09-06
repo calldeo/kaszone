@@ -86,8 +86,8 @@ public function edit($id_data)
     $pemasukan = Pemasukan::find($id_data);
 // $category = Category::all();
 //  $pemasukan = DB::table('datapemasukan')->get();
-$category = Category::where('jenis_kategori', '1')->get();
-    return view('edit.edit_pemasukan', compact('id_data','pemasukan','category'));
+// $category = Category::where('jenis_kategori', '1')->get();
+    return view('edit.edit_pemasukan', compact('id_data','pemasukan'));
 }
 
   public function update(Request $request, $id_data)

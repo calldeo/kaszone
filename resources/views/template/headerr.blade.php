@@ -13,7 +13,7 @@
 	<meta name="format-detection" content="telephone=no">
     {{-- <title>E-vote | {{auth()->user()->level}} Dashboard </title> --}}
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="{{asset('dash/images/favicon.png')}}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{asset('dash/images/piticash.png')}}">
 	<link rel="stylesheet" href="{{asset('dash/vendor/chartist/css/chartist.min.css')}}">
     <link href="{{asset('dash/vendor/bootstrap-select/dist/css/bootstrap-select.min.css')}}" rel="stylesheet">
 	<link href="{{asset('dash/vendor/owl-carousel/owl.carousel.css')}}" rel="stylesheet">

@@ -138,7 +138,7 @@ Route::group(['middleware' => ['auth','permission:Data Pengeluaran']], function 
 
     Route::get('/download-template-kategori', [CategoryController::class, 'downloadTemplate'])->name('download-template-kategori');
     
-    Route::get('/get-categories/{jenis_kategori}', [PengeluaranController::class, 'getCategories']);
+    // Route::get('/get-categories/{jenis_kategori}', [PengeluaranController::class, 'getCategories']);
 });
 Route::group(['middleware' => ['auth','permission:Role']], function (){
 

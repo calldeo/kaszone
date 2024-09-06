@@ -19,13 +19,12 @@ class HomeController extends Controller
         // Hitung saldo yang tersedia
           // Ambil total pemasukan dan total pengeluaran
         $totalPemasukan = Pemasukan::sum('jumlah');
-        $totalPemasukan1 = Pemasukan::sum('jumlah');
         $totalPengeluaran = Pengeluaran::sum('jumlah');
        
         $saldo = $totalPemasukan - $totalPengeluaran;
 
         // Passing data ke view
-        return view('home', compact('totalPemasukan', 'totalPengeluaran', 'saldo','totalPemasukan1'));
+        return view('home', compact('totalPemasukan', 'totalPengeluaran', 'saldo'));
       
         
     }

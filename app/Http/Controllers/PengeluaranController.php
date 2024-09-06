@@ -20,20 +20,23 @@ class PengeluaranController extends Controller
     }
 public function create()
     {
-        $categories = Category::all(); // Mengambil semua kategori
-        $categories = Category::where('jenis_kategori', 'pengeluaran')->get();
-        return view('tambah.add_pengeluaran', compact('categories'));
+        // $categories = Category::all(); // Mengambil semua kategori
+        // $categories = Category::where('jenis_kategori', 'pengeluaran')->get();
+        return view('tambah.add_pengeluaran');
     }
 
     public function store(Request $request)
 {
     $request->validate([
         'name' => 'required|string|max:255',
-        'description' => 'nullable|string',
-        'date' => 'required|date',
-        'category' => 'required|array', // Validasi untuk array kategori
-        'category.*' => 'exists:categories,id', // Validasi setiap kategori harus ada di tabel categories
-        'jumlah' => 'required|numeric|min:0',
+            'description' => 'nullable|string',
+            'date' => 'required|date',
+            'jumlah_satuan'=> 'required|numeric|min:0;',
+            'nominal'=> 'required|numeric|min0;',
+            'dll'=> 'required|numeric|min0',
+            'jumlah' => 'required|numeric|min:0',
+
+            'category_id' => 'required|exists:categories,id',
     ]);
 
     // Memulai transaksi database
@@ -49,17 +52,29 @@ public function create()
         }
 
         // Menambahkan data pengeluaran baru
-        $pengeluaran = new Pengeluaran();
+       $pengeluaran = new Pengeluaran();
         $pengeluaran->name = $request->name;
         $pengeluaran->description = $request->description;
         $pengeluaran->date = $request->date;
+        $pengeluaran->jumlah_satuan = $request->jumlah_satuan;
+        $pengeluaran->nominal = $request->nominal;
+        $pengeluaran->dll = $request->dll;
+   // Jika ada file foto_profil yang diunggah
+        if ($request->hasFile('bukti_pengeluaran')) {
+            // Hapus foto profil lama jika ada
+            if ($user->poto) {
+                Storage::delete($user->poto);
+            }
+
+            // Simpan foto profil baru
+            $path = $request->file('bukti_pengeluaran')->store('bukti_pengeluaran', 'public');
+            $user->poto = $path;
+        }        
         $pengeluaran->jumlah = $request->jumlah;
+        $pengeluaran->id = $request->category_id;
         $pengeluaran->save();
 
-        // Menambahkan kategori ke pengeluaran
-        foreach ($request->category as $categoryId) {
-            $pengeluaran->categories()->attach($categoryId);
-        }
+       
 
         // Commit transaksi jika semua operasi berhasil
         DB::commit();

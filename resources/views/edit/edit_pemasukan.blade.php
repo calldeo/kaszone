@@ -131,13 +131,8 @@
                 <i class="fas fa-list"></i> <!-- Ikon daftar -->
             </span>
         </div>
-        <select class="form-control default-select" id="val-category" name="id">
-            <option value="">--Pilih Kategori--</option>
-            @foreach($category as $cat)
-                <option value="{{ $cat->id }}" {{ old('id', $pemasukan->id) == $cat->id ? 'selected' : '' }}>
-                    {{ $cat->name }}
-                </option>
-            @endforeach
+        <select class="form-control default-select" id="category" name="id">
+           
         </select>
     </div>
 </div>

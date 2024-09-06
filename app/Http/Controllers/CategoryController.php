@@ -10,7 +10,7 @@ use App\Imports\CategoriesImport;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
-
+use PDF;
 
 class CategoryController extends Controller
 {
@@ -166,7 +166,10 @@ public function kategoriimportexcel(Request $request) {
     {
         // Dapatkan calon dengan jumlah suara terbanyak
        
-       $category = Category::all();
+            $category = Category::all();
+       $pdf = PDF::loadview('halaman.cetaklaporan',compact('category'));
+       $pdf->setPaper('A4','potrait');
+       return $pdf->stream('category.pdf');
 
 
     return view('halaman.cetaklaporan',compact('category'));
