@@ -43,17 +43,25 @@
                         <div class="card-header">
                             <h4 class="card-title">Data Pemasukan</h4>
                             <div class="text-right">
-                                {{-- Button untuk menambahkan data --}}
-                                <a href="/add_pemasukan" class="btn btn-success" title="Add">
-                                    <i class="fa fa-plus"></i>
-                                </a>
-                                {{-- Button untuk mengimpor data --}}
-                                <!-- Tombol untuk membuka modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#importModal">
-    <i class="fa fa-upload"></i> Import
-</button>
+                           <div class="text-right">
+    {{-- Button untuk menambahkan data --}}
+    @hasrole('Admin|Bendahara') {{-- Hanya role admin atau bendahara yang bisa melihat tombol ini --}}
+    <a href="/add_pemasukan" class="btn btn-success" title="Add">
+        <i class="fa fa-plus"></i>
+    </a>
+    @endhasrole
+
+    {{-- Button untuk mengimpor data --}}
+    @hasrole('Admin|Bendahara') {{-- Hanya role admin atau bendahara yang bisa melihat tombol ini --}}
+    <!-- Tombol untuk membuka modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#importModal">
+        <i class="fa fa-upload"></i> Import
+    </button>
+    @endhasrole
+</div>
 
 <!-- Modal Import Data Pemasukan -->
+    @hasrole('Admin|Bendahara') {{-- Hanya role admin atau bendahara yang bisa melihat tombol ini --}}
 <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -80,6 +88,8 @@
         </div>
     </div>
 </div>
+@endhasrole
+
 
                             </div>
                         </div>
