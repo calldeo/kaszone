@@ -54,129 +54,125 @@
                         <div class="card-body">
                             <form class="form-valide-with-icon" action="/pengeluaran/store" method="post">
                                 @csrf
-                                <div class="form-group">
-                                    <label class="text-label">Nama Pengeluaran*</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"> <i class="fa fa-user"></i> </span>
-                                        </div>
-                                        <input type="text" class="form-control" name="name" placeholder="Enter name.." value="{{ old('name') }}" required>
-                                    </div>
-                                    @error('name')
-                                    <span class="mt-2 text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="text-label">Deskripsi</label>
-                                    <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="fas fa-book"></i> <!-- Ikon buku -->
-                                                </span>
+                                <!-- Container for dynamically added fields -->
+                                <div id="dynamic-fields-container">
+                                    <div class="dynamic-field">
+                                        <div class="form-group">
+                                            <label class="text-label">Nama Pengeluaran*</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                                </div>
+                                                <input type="text" class="form-control" name="name[]" placeholder="Enter name.." value="{{ old('name') }}" required>
                                             </div>
-                             <textarea class="form-control" name="description" placeholder="Enter description..">{{ old('description') }}</textarea>
-
+                                            @error('name')
+                                            <span class="mt-2 text-danger">{{ $message }}</span>
+                                            @enderror
                                         </div>
-                                </div>
 
-                                <div class="form-group">
-                                    <label class="text-label">Date *</label>
-                                     <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="fas fa-calendar"></i> <!-- Ikon kalender -->
-                                                </span>
+                                        <div class="form-group">
+                                            <label class="text-label">Deskripsi</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fas fa-book"></i></span>
+                                                </div>
+                                                <textarea class="form-control" name="description[]" placeholder="Enter description..">{{ old('description') }}</textarea>
                                             </div>
-                                             <input type="date" class="form-control" name="date" value="{{ old('date') }}" required>
-                                    @error('date')
-                                    <span class="mt-2 text-danger">{{ $message }}</span>
-                                    @enderror
-                                   
-                                </div>
-                                <div class="form-group">
-                                    <label class="text-label">Jumlah Satuan *</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">
-                                                <i class="fas fa-dollar-sign"></i> <!-- Ikon dolar -->
-                                            </span>
                                         </div>
-                                        <input type="number" step="0.01" class="form-control" name="jumlah_satuan" placeholder="Enter amount.." value="{{ old('jumlah_satuan') }}" required>
-                                    </div>
-                                    @error('jumlah_satuan')
-                                    <span class="mt-2 text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label class="text-label">Nominal (Rp) *</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">
-                                                <i class="fas fa-dollar-sign"></i> <!-- Ikon dolar -->
-                                            </span>
-                                        </div>
-                                        <input type="number" step="0.01" class="form-control" name="nominal" placeholder="Enter amount.." value="{{ old('nominal') }}" required>
-                                    </div>
-                                    @error('nominal')
-                                    <span class="mt-2 text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label class="text-label">Dll *</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">
-                                                <i class="fas fa-dollar-sign"></i> <!-- Ikon dolar -->
-                                            </span>
-                                        </div>
-                                        <input type="number" step="0.01" class="form-control" name="dll" placeholder="Enter amount.." value="{{ old('dll') }}" required>
-                                    </div>
-                                    @error('dll')
-                                    <span class="mt-2 text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
 
-                               <div class="form-group">
-                                    <label class="text-label">Jumlah *</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">
-                                                <i class="fas fa-dollar-sign"></i> <!-- Ikon dolar -->
-                                            </span>
-                                        </div>
-                                        <input type="number" step="0.01" class="form-control" name="jumlah" placeholder="Enter amount.." value="{{ old('jumlah') }}" required>
-                                    </div>
-                                    @error('jumlah')
-                                    <span class="mt-2 text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                               <div class="form-group">
-                                    <label class="text-label">Category *</label>
-                                     <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="fas fa-list"></i> <!-- Ikon daftar -->
-                                                </span>
+                                        <div class="form-group">
+                                            <label class="text-label">Date *</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                                                </div>
+                                                <input type="date" class="form-control" name="date[]" value="{{ old('date') }}" required>
+                                                @error('date')
+                                                <span class="mt-2 text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
-                                            {{-- <option value="">--PILIH KATEGORI--</option> --}}
-                                          <select class="form-control default-select" id="category" name="category_id" required>
-                                        
-                                        {{-- @foreach($categories as $category)
-                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                        @endforeach --}}
-                                    </select>
-                                    @error('category_id')
-                                    <span class="mt-2 text-danger">{{ $message }}</span>
-                                    @enderror
                                         </div>
 
-                                    
-                                </div>
-                                <button type="button" class="btn btn-danger btn-cancel" onclick="window.location.href='/pemasukan'">Cancel</button>
+                                        <div class="form-group">
+                                            <label class="text-label">Jumlah Satuan *</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                                </div>
+                                                <input type="number" step="0.01" class="form-control" name="jumlah_satuan[]" placeholder="Enter amount.." value="{{ old('jumlah_satuan') }}" required>
+                                            </div>
+                                            @error('jumlah_satuan')
+                                            <span class="mt-2 text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
 
-                                <button type="submit" class="btn btn-primary btn-submit" >Submit</button>
+                                        <div class="form-group">
+                                            <label class="text-label">Nominal (Rp) *</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                                </div>
+                                                <input type="number" step="0.01" class="form-control" name="nominal[]" placeholder="Enter amount.." value="{{ old('nominal') }}" required>
+                                            </div>
+                                            @error('nominal')
+                                            <span class="mt-2 text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="text-label">Dll *</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                                </div>
+                                                <input type="number" step="0.01" class="form-control" name="dll[]" placeholder="Enter amount.." value="{{ old('dll') }}" required>
+                                            </div>
+                                            @error('dll')
+                                            <span class="mt-2 text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="text-label">Jumlah *</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                                </div>
+                                                <input type="number" step="0.01" class="form-control" name="jumlah[]" placeholder="Enter amount.." value="{{ old('jumlah') }}" required>
+                                            </div>
+                                            @error('jumlah')
+                                            <span class="mt-2 text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="text-label">Category *</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fas fa-list"></i></span>
+                                                </div>
+                                                <select class="form-control default-select" name="category_id[]" required>
+                                                    <option value="">--PILIH KATEGORI--</option>
+                                                    {{-- @foreach($categories as $category)
+                                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                                    @endforeach --}}
+                                                </select>
+                                            </div>
+                                            @error('category_id')
+                                            <span class="mt-2 text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        <hr>
+                                    </div>
+                                </div>
+                            <div class="d-flex justify-content-end">
+                                <button type="button" class="btn btn-info" id="add-more-fields">Add Pengeluaran</button>
+                            </div>
+                                <!-- Button to add new set of fields -->
+
+                                <!-- Submit and Cancel buttons -->
+                                <button type="button" class="btn btn-danger btn-cancel" onclick="window.location.href='/pengeluaran'">Cancel</button>
+                                <button type="submit" class="btn btn-primary btn-submit">Submit</button>
                             </form>
                         </div>
                     </div>
@@ -198,49 +194,161 @@
     @include('template.scripts')
 </body>
 <script>
-   $(document).ready(function() {
-        // Memanggil fungsi getCategories untuk mengisi dropdown kategori
-        getCategories();
-
-        // Menghitung jumlah saat nilai jumlah_satuan, nominal, atau dll berubah
-        function calculateTotal() {
-            var jumlah_satuan = parseFloat($('input[name="jumlah_satuan"]').val()) || 0;
-            var nominal = parseFloat($('input[name="nominal"]').val()) || 0;
-            var dll = parseFloat($('input[name="dll"]').val()) || 0;
-
-            var total = (jumlah_satuan * nominal) + dll;
-            $('input[name="jumlah"]').val(total.toFixed(2)); // Memperbarui nilai input jumlah
-        }
-
-        // Memanggil fungsi calculateTotal saat input berubah
-        $('input[name="jumlah_satuan"], input[name="nominal"], input[name="dll"]').on('input', calculateTotal);
-
-
-        function getCategories (){
+    $(document).ready(function() {
+        // Function to get categories from the server
+        function getCategories() {
             $.ajax({
                 url: '/get-categories/2',
                 method: 'GET',
                 success: function(data) {
-                    // Menambahkan option ke dropdown
-                    var $dropdown = $('#category');
-                    $dropdown.empty(); // Kosongkan dropdown
-                    
-                    $dropdown.append($('<option>', {
-                        value: '',
-                        text: 'PILIH KATEGORI'
-                    }));
-                    $.each(data, function(index, item) {
-                        $dropdown.append($('<option>', {
-                            value: item.id,
-                            text: item.name
-                        }));
+                    // Add options to each dropdown
+                    $('#dynamic-fields-container .dynamic-field select[name="category_id[]"]').each(function() {
+                        var $dropdown = $(this);
+                        $dropdown.empty(); // Clear existing options
+                        $dropdown.append('<option value="">--PILIH KATEGORI--</option>');
+                        $.each(data.categories, function(index, category) {
+                            $dropdown.append('<option value="' + category.id + '">' + category.name + '</option>');
+                        });
                     });
                 },
-                error: function(xhr) {
-                    console.error('Error fetching options:', xhr);
+                error: function(xhr, status, error) {
+                    console.error('Error fetching categories:', error);
                 }
             });
         }
+
+        // Call the function to get categories on page load
+        getCategories();
+
+        // Add new fields
+        $('#add-more-fields').on('click', function() {
+            var newField = `
+                <div class="dynamic-field">
+                    <div class="form-group">
+                        <label class="text-label">Nama Pengeluaran*</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-user"></i></span>
+                            </div>
+                            <input type="text" class="form-control" name="name[]" placeholder="Enter name.." value="{{ old('name') }}" required>
+                        </div>
+                        @error('name')
+                        <span class="mt-2 text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label class="text-label">Deskripsi</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-book"></i></span>
+                            </div>
+                            <textarea class="form-control" name="description[]" placeholder="Enter description..">{{ old('description') }}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="text-label">Date *</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                            </div>
+                            <input type="date" class="form-control" name="date[]" value="{{ old('date') }}" required>
+                            @error('date')
+                            <span class="mt-2 text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="text-label">Jumlah Satuan *</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                            </div>
+                            <input type="number" step="0.01" class="form-control" name="jumlah_satuan[]" placeholder="Enter amount.." value="{{ old('jumlah_satuan') }}" required>
+                        </div>
+                        @error('jumlah_satuan')
+                        <span class="mt-2 text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label class="text-label">Nominal (Rp) *</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                            </div>
+                            <input type="number" step="0.01" class="form-control" name="nominal[]" placeholder="Enter amount.." value="{{ old('nominal') }}" required>
+                        </div>
+                        @error('nominal')
+                        <span class="mt-2 text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label class="text-label">Dll *</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                            </div>
+                            <input type="number" step="0.01" class="form-control" name="dll[]" placeholder="Enter amount.." value="{{ old('dll') }}" required>
+                        </div>
+                        @error('dll')
+                        <span class="mt-2 text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label class="text-label">Jumlah *</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                            </div>
+                            <input type="number" step="0.01" class="form-control" name="jumlah[]" placeholder="Enter amount.." value="{{ old('jumlah') }}" required>
+                        </div>
+                        @error('jumlah')
+                        <span class="mt-2 text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label class="text-label">Category *</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-list"></i></span>
+                            </div>
+                            <select class="form-control default-select" name="category_id[]" required>
+                                <option value="">--PILIH KATEGORI--</option>
+                                {{-- @foreach($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                @endforeach --}}
+                            </select>
+                        </div>
+                        @error('category_id')
+                        <span class="mt-2 text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <button type="button" class="btn btn-danger remove-field">Remove</button>
+                    <hr>
+                </div>
+            `;
+            $('#dynamic-fields-container').append(newField);
+            getCategories(); // Re-fetch categories for newly added fields
         });
+
+        // Delegate remove field functionality to handle dynamically added fields
+        $('#dynamic-fields-container').on('click', '.remove-field', function() {
+            $(this).closest('.dynamic-field').remove();
+        });
+
+        // Ensure "Remove" button is visible on load
+        $('#dynamic-fields-container').on('DOMNodeInserted', function(event) {
+            if ($(event.target).hasClass('dynamic-field')) {
+                $(event.target).find('.remove-field').show();
+            }
+        });
+    });
 </script>
+
 </html>

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
+use PDF;
 
 
 class PemasukanController extends Controller
@@ -156,16 +157,19 @@ public function edit($id_data)
         'category_name' => $pemasukan->category->name, // Ambil nama kategori
     ]);
     }
-    public function importPemasukan(Request $request)
-{
-    // Memulai transaksi database
+   
+public function pemasukanImportExcel(Request $request) {
+
+        // DB::table('users')->where('level','guru')->delete();
+       
+    // Mulai transaksi database
     DB::beginTransaction();
     
     try {
-        // Hapus semua data lama dari tabel Pemasukan
+        // Hapus semua data lama dari tabel Category
         Pemasukan::query()->delete();
         
-        // Pindahkan file ke folder DataPemasukan
+        // Pindahkan file ke folder DataKategori
         $file = $request->file('file');
         $namafile = $file->getClientOriginalName();
         $file->move('DataPemasukan', $namafile);
@@ -185,18 +189,36 @@ public function edit($id_data)
         DB::rollBack();
 
         // Log error jika diperlukan
-        \Log::error('Import pemasukan failed: ' . $e->getMessage());
+        \Log::error('Import Pemasukan failed: ' . $e->getMessage());
 
-        return redirect('/pemasukan')->with('error', 'Terjadi kesalahan saat mengimpor data');
+        return redirect('/pemasukan')->with('error', 'Terjadi kesalahan saat mengimpor data' . $e->getMessage());
     }
-}
+        
+    }
 public function downloadTemplate()
 {
     // Path ke template Excel untuk pemasukan
     $pathToFile = public_path('templates/template_pemasukan.xlsx');
 
     return response()->download($pathToFile);
+
+
 }
+
+public function cetakPemasukan()
+    {
+        // Dapatkan calon dengan jumlah suara terbanyak
+       
+       $pemasukan = Pemasukan::all();
+       $pdf = PDF::loadview('halaman.cetak-pemasukan',compact('pemasukan'));
+       $pdf->setPaper('A4','potrait');
+       return $pdf->stream('pemasukan.pdf');
+
+
+    // return view('halaman.cetakpgl',compact('pengeluaran'));
+    }
+
+
 public function getCategories($jenisKategori)
     {
         // dd($jenisKategori);
@@ -214,5 +236,7 @@ public function getCategories($jenisKategori)
         // Kembalikan sebagai JSON
         return response()->json($formattedOptions);
     }
+
+
 
 }

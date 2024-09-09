@@ -3,6 +3,8 @@
 use App\Models\Category;
 use App\Models\Pengeluaran;
 use App\Exports\PengeluaranExport;
+use App\Exports\PemasukanExport;
+
 use Maatwebsite\Excel\Facades\Excel;
 // use Maatwebsite\Excel\Facades\Excel;
 
@@ -109,8 +111,13 @@ Route::group(['middleware' => ['auth','permission:Data Pemasukan']], function ()
     Route::put('/pemasukan/{id_pemasukan}', [PemasukanController::class, 'update'])->name('update');
     Route::get('pemasukan/tob', [PemasukanController::class, 'tob'])->name('pemasukan.tob');
     Route::get('/pemasukan/{id_data}/detail', [PemasukanController::class, 'showDetail'])->name('pemasukan.showDetail');
-    Route::post('/import-pemasukan', [PemasukanController::class, 'importPemasukan'])->name('import-pemasukan');
+    Route::post('/importpemasukan', [PemasukanController::class, 'pemasukanImportExcel'])->name('import-pemasukan');
     Route::get('/download-template-pemasukan', [PemasukanController::class, 'downloadTemplate'])->name('download-template-pemasukan');
+        Route::get('/cetak-pemasukan',[PemasukanController::class,'cetakPemasukan'])->name('cetak-pemasukan');
+
+    
+    Route::get('/export-pemasukan', function () {
+        return Excel::download(new PemasukanExport, 'pemasukan.xlsx');});
 // routes/web.php
 Route::get('/get-categories/{jenis_kategori}', [PemasukanController::class, 'getCategories']);
 

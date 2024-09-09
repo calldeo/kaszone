@@ -25,18 +25,18 @@ public function create()
         return view('tambah.add_pengeluaran');
     }
 
-    public function store(Request $request)
+ public function store(Request $request)
 {
+    // Validasi input
     $request->validate([
-        'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'date' => 'required|date',
-            'jumlah_satuan'=> 'required|numeric|min:0;',
-            'nominal'=> 'required|numeric|min0;',
-            'dll'=> 'required|numeric|min0',
-            'jumlah' => 'required|numeric|min:0',
-
-            'category_id' => 'required|exists:categories,id',
+        'name.*' => 'required|string|max:255',
+        'description.*' => 'nullable|string',
+        'date.*' => 'required|date',
+        'jumlah_satuan.*' => 'required|numeric|min:0',
+        'nominal.*' => 'required|numeric|min:0',
+        'dll.*' => 'required|numeric|min:0',
+        'jumlah.*' => 'required|numeric|min:0',
+        'category_id.*' => 'required|exists:categories,id',
     ]);
 
     // Memulai transaksi database
@@ -46,35 +46,27 @@ public function create()
         // Ambil total pemasukan yang tersedia dari semua record pemasukan
         $totalPemasukanTersedia = Pemasukan::sum('jumlah');
 
+        // Menghitung total pengeluaran dari input form
+        $totalPengeluaran = array_sum($request->jumlah);
+
         // Mengecek apakah jumlah pengeluaran melebihi pemasukan yang tersedia
-        if ($request->jumlah > $totalPemasukanTersedia) {
+        if ($totalPengeluaran > $totalPemasukanTersedia) {
             return redirect()->back()->with('error', 'Jumlah pengeluaran melebihi pemasukan yang tersedia.');
         }
 
-        // Menambahkan data pengeluaran baru
-       $pengeluaran = new Pengeluaran();
-        $pengeluaran->name = $request->name;
-        $pengeluaran->description = $request->description;
-        $pengeluaran->date = $request->date;
-        $pengeluaran->jumlah_satuan = $request->jumlah_satuan;
-        $pengeluaran->nominal = $request->nominal;
-        $pengeluaran->dll = $request->dll;
-   // Jika ada file foto_profil yang diunggah
-        if ($request->hasFile('bukti_pengeluaran')) {
-            // Hapus foto profil lama jika ada
-            if ($user->poto) {
-                Storage::delete($user->poto);
-            }
-
-            // Simpan foto profil baru
-            $path = $request->file('bukti_pengeluaran')->store('bukti_pengeluaran', 'public');
-            $user->poto = $path;
-        }        
-        $pengeluaran->jumlah = $request->jumlah;
-        $pengeluaran->id = $request->category_id;
-        $pengeluaran->save();
-
-       
+        // Loop melalui input array dan menyimpan setiap pengeluaran
+        for ($i = 0; $i < count($request->name); $i++) {
+            $pengeluaran = new Pengeluaran();
+            $pengeluaran->name = $request->name[$i];
+            $pengeluaran->description = $request->description[$i];
+            $pengeluaran->date = $request->date[$i];
+            $pengeluaran->jumlah_satuan = $request->jumlah_satuan[$i];
+            $pengeluaran->nominal = $request->nominal[$i];
+            $pengeluaran->dll = $request->dll[$i];
+            $pengeluaran->jumlah = $request->jumlah[$i];
+            $pengeluaran->category_id = $request->category_id[$i];
+            $pengeluaran->save();
+        }
 
         // Commit transaksi jika semua operasi berhasil
         DB::commit();
@@ -87,6 +79,7 @@ public function create()
         return redirect('/pengeluaran')->with('error', 'Pengeluaran gagal ditambahkan! ' . $th->getMessage());
     }
 }
+
 
 
 

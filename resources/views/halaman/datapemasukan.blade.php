@@ -4,6 +4,7 @@
 <head>
     @include('template.headerr')
     <title>PityCash | {{auth()->user()->level}} | Pemasukan</title>
+
     
 </head>
 
@@ -46,16 +47,26 @@
                            <div class="text-right">
     {{-- Button untuk menambahkan data --}}
     @hasrole('Admin|Bendahara') {{-- Hanya role admin atau bendahara yang bisa melihat tombol ini --}}
-    <a href="/add_pemasukan" class="btn btn-success" title="Add">
+    <a href="/add_pemasukan" class="btn btn-warning" title="Add">
         <i class="fa fa-plus"></i>
     </a>
     @endhasrole
+    @hasrole('Admin|Bendahara') 
+            <a href="/cetak-pemasukan" target="_blank" class="btn btn-info ml-1" title="Print Report">
+                <i class="fa fa-print"></i>
+            </a>
+@endhasrole
+@hasrole('Admin|Bendahara') 
+                <a href="{{ url('/export-pemasukan') }}" class="btn btn-success " title="Export to Excel">
+                <i class="fa fa-file"></i>
+                </a>
+@endhasrole
 
     {{-- Button untuk mengimpor data --}}
     @hasrole('Admin|Bendahara') {{-- Hanya role admin atau bendahara yang bisa melihat tombol ini --}}
     <!-- Tombol untuk membuka modal -->
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#importModal">
-        <i class="fa fa-upload"></i> Import
+        <i class="fa fa-upload"></i> 
     </button>
     @endhasrole
 </div>
@@ -114,6 +125,12 @@
                                 <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span></button>
                             </div>
                             @endif
+                              @if(session('error'))
+                                <div class="alert alert-danger alert-dismissible fade show">
+                                    <strong>Error!</strong> {{ session('error') }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span><i class="fa fa-times"></i></span></button>
+                                </div>
+                            @endif
                           
                             <div class="table-responsive">
                                 <table id="pemasukanTable" class="table table-responsive-md">
@@ -128,6 +145,7 @@
                                             <th><strong>Tanggal</strong></th>   
                                             <th><strong>Jumlah(Rp)</strong></th>
                                             {{-- <th><strong>Status</strong></th> --}}
+                                            
                                             <th><strong>Option</strong></th>
                                         </tr>
                                     </thead>

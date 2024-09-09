@@ -14,10 +14,10 @@ class PemasukanImport implements ToModel
         $jumlah = isset($row[4]) && is_numeric($row[4]) ? (float) $row[4] : 0;
 
         return new Pemasukan([
-            'nama' => $row[0],
-            'deskripsi' => $row[1],
-            'kategori' => $row[2],
-            'tanggal' => Date::excelToDateTimeObject($row[3]), // Konversi tanggal dari Excel
+            'id_data'=> $row[0],
+            'name' => $row[1],
+            'description' => $row[2],
+            'date' => Date::excelToDateTimeObject($row[3]),// Konversi tanggal dari Excel
             'jumlah' => $jumlah, // Nilai yang sudah dipastikan valid
         ]);
     }

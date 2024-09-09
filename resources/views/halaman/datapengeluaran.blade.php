@@ -51,17 +51,22 @@
                                 <input id="searchInput" type="text" class="form-control" placeholder="Cari sesuatu di sini..." name="query">
                             </form>
                           </div> --}}
+                          @hasrole('Admin|Bendahara') 
                           <a href="/add_pengeluaran" class="btn btn-warning ml-1" title="Add">
     <i class="fa fa-plus"></i>
 </a>
+@endhasrole
 
-
+@hasrole('Admin|Bendahara') 
 <a href="/cetakpgl" target="_blank" class="btn btn-info ml-1" title="Print Report">
     <i class="fa fa-print"></i>
 </a>
+@endhasrole
+@hasrole('Admin|Bendahara') 
                           <a href="{{ url('/export-pengeluaran') }}" class="btn btn-success ml-1" title="Export to Excel">
     <i class="fa fa-file-excel"></i>
 </a>
+@endhasrole
 
 
 
