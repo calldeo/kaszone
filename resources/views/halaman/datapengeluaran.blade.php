@@ -112,8 +112,12 @@
                                             <th><strong>Nama</strong></th>
                                             <th><strong>Deskripsi</strong></th>
                                             <th><strong>Kategori</strong></th>
-                                            <th><strong>Tanggal</strong></th>   
-                                            <th><strong>Jumlah(Rp)</strong></th>
+                                            <th><strong>Tanggal</strong></th> 
+                                            <th><strong>Jumlah Satuan</strong></th>
+                                            <th><strong>Nominal(Rp)</strong></th>  
+                                            <th><strong>dll</strong></th>
+                                            <th><strong>image</strong></th> 
+                                            <th><strong>Total(Rp)</strong></th>
                                             {{-- <th><strong>Status</strong></th> --}}
                                             <th><strong>Option</strong></th>
                                         </tr>

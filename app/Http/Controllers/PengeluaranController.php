@@ -37,6 +37,7 @@ public function create()
         'dll.*' => 'required|numeric|min:0',
         'jumlah.*' => 'required|numeric|min:0',
         'category_id.*' => 'required|exists:categories,id',
+        'bukti_pengeluaran.*' => 'nullable|mimes:jpg,jpeg,png,pdf|max:2048',
     ]);
 
     // Memulai transaksi database
@@ -64,7 +65,15 @@ public function create()
             $pengeluaran->nominal = $request->nominal[$i];
             $pengeluaran->dll = $request->dll[$i];
             $pengeluaran->jumlah = $request->jumlah[$i];
-            $pengeluaran->category_id = $request->category_id[$i];
+            $pengeluaran->id = $request->category_id[$i];
+
+            // Cek apakah ada file bukti_pengeluaran untuk indeks saat ini
+            if ($request->hasFile("bukti_pengeluaran.$i")) {
+                // Simpan file bukti_pengeluaran
+                $path = $request->file("bukti_pengeluaran.$i")->store('bukti_pengeluaran', 'public');
+                $pengeluaran->image = $path;
+            }
+
             $pengeluaran->save();
         }
 
@@ -79,6 +88,7 @@ public function create()
         return redirect('/pengeluaran')->with('error', 'Pengeluaran gagal ditambahkan! ' . $th->getMessage());
     }
 }
+
 
 
 

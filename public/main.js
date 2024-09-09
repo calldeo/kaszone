@@ -86,7 +86,7 @@ $(document).ready(function(){
        
     });
 
-    $('#pengeluaranTable').DataTable({
+  $('#pengeluaranTable').DataTable({
     ordering: true,
     serverSide: true,  // Menunjukkan bahwa data diambil dari server
     processing: true,  // Menunjukkan bahwa ada proses loading data
@@ -105,6 +105,10 @@ $(document).ready(function(){
         { data: 'description', name: 'description' },
         { data: 'category', name: 'category' }, // Pastikan ini sesuai dengan addColumn di server
         { data: 'date', name: 'date' },
+        { data: 'jumlah_satuan', name: 'jumlah_satuan' },
+        { data: 'nominal', name: 'nominal' },
+        { data: 'dll', name: 'dll' },
+        { data: 'image', name: 'image' },
         { data: 'jumlah', name: 'jumlah' },
         { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
     ],

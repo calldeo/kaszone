@@ -290,35 +290,36 @@ class AdminController extends Controller
  public function production(Request $request) // PENGELUARAN
     {
         if ($request->ajax()) {
-    $pengeluaran = Pengeluaran::with('category')->select(['id_data', 'name', 'description', 'date', 'jumlah', 'id']);
-
-    return DataTables::of($pengeluaran)
-        ->addIndexColumn()
-        ->addColumn('category', function ($row) {
-            return $row->category ? $row->category->name : 'Tidak ada kategori';
-        })
-        ->addColumn('opsi', function ($row) {
-            $user = auth()->user();
-            $editButton = '';
-            $viewButton = '<button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/pengeluaran/' . $row->id_data . '/detail"><i class="fa fa-eye"></i></button>';
-            $deleteButton = '';
-
-            // Check user role and set buttons accordingly
-            if ($user->hasRole('Admin') || $user->hasRole('Bendahara')) {
-                $editButton = '<a href="/pengeluaran/' . $row->id_data . '/edit_pengeluaran" class="btn btn-warning btn-xs mr-1"><i class="fas fa-pencil-alt"></i></a>';
-                $deleteButton = '<form action="/pengeluaran/' . $row->id_data . '/destroy" method="POST" style="display:inline;">' .
-                                csrf_field() .
-                                method_field('DELETE') .
-                                '<button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>' .
-                                '</form>';
-            }
-
-            return '<div class="d-flex align-items-center">' . $editButton . $viewButton . $deleteButton . '</div>';
-        })
-        ->rawColumns(['opsi'])
-        ->make(true);
-}
-
+            $pengeluaran = Pengeluaran::with('category')->select(['id_data', 'name', 'description', 'date', 'jumlah_satuan', 'nominal', 'dll', 'image', 'jumlah', 'id']);
+    
+            return DataTables::of($pengeluaran)
+                ->addIndexColumn()
+                ->addColumn('image', function ($row) {
+                    if ($row->image) {
+                        $imageUrl = asset('storage/' . $row->image); // Sesuaikan path sesuai dengan lokasi gambar
+                        return '<img src="' . $imageUrl . '" width="100" height="100" style="object-fit:cover;">';
+                    } 
+                })
+                ->addColumn('category', function ($row) {
+                    return $row->category ? $row->category->name : 'Tidak ada kategori';
+                })
+                ->addColumn('opsi', function ($row) {
+                    return '
+                    <div class="d-flex align-items-center">
+                        <a href="/pengeluaran/' . $row->id_data . '/edit_pengeluaran" class="btn btn-warning btn-xs mr-1"><i class="fas fa-pencil-alt"></i></a>
+                        <button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/pengeluaran/' . $row->id_data . '/detail">
+                            <i class="fa fa-eye"></i>
+                        </button>
+                        <form action="/pengeluaran/' . $row->id_data . '/destroy" method="POST" style="display:inline;">
+                            ' . csrf_field() . '
+                            ' . method_field('DELETE') . '
+                            <button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>
+                        </form>
+                    </div>';
+                })
+                ->rawColumns(['image', 'opsi'])
+                ->make(true);
+        }
     }
 
 public function roles(Request $request) // BENDAHARA
