@@ -287,7 +287,7 @@ class AdminController extends Controller
 
 
 
- public function production(Request $request) // PENGELUARAN
+    public function production(Request $request) // PENGELUARAN
     {
         if ($request->ajax()) {
             $pengeluaran = Pengeluaran::with('category')->select(['id_data', 'name', 'description', 'date', 'jumlah_satuan', 'nominal', 'dll', 'image', 'jumlah', 'id']);
@@ -298,7 +298,10 @@ class AdminController extends Controller
                     if ($row->image) {
                         $imageUrl = asset('storage/' . $row->image); // Sesuaikan path sesuai dengan lokasi gambar
                         return '<img src="' . $imageUrl . '" width="100" height="100" style="object-fit:cover;">';
-                    } 
+                    } else {
+                        // Menampilkan placeholder jika gambar tidak ada
+                        return '<img src="' .  asset('dash/images/usr.png'). '" width="100" height="100" style="object-fit:cover;">';
+                    }
                 })
                 ->addColumn('category', function ($row) {
                     return $row->category ? $row->category->name : 'Tidak ada kategori';
@@ -321,6 +324,7 @@ class AdminController extends Controller
                 ->make(true);
         }
     }
+    
 
 public function roles(Request $request) // BENDAHARA
 {

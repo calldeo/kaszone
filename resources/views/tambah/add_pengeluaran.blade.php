@@ -52,7 +52,7 @@
                             <h4 class="card-title">Add Data Pengeluaran</h4>
                         </div>
                         <div class="card-body">
-                            <form class="form-valide-with-icon" action="/pengeluaran/store" method="post">
+                            <form action="{{ route('pengeluaran.store') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <!-- Container for dynamically added fields -->
                                 <div id="dynamic-fields-container">
@@ -170,9 +170,8 @@
                                         
                                     </div>
                                     <div class="form-group">
-                                        <label for="bukti_pengeluaran">Foto Bukti Pengeluaran</label>
+                                        <label for="image">Foto Bukti Pengeluaran</label>
                                         <div class="mb-3">
-                                            <!-- Gambar profil yang akan diperbarui secara dinamis -->
                                             <img id="profile-image" 
                                                  src="{{ asset('dash/images/usr.png') }}" 
                                                  alt="Gambar Bukti Pengeluaran" 
@@ -180,13 +179,13 @@
                                                  height="150">
                                         </div>
                                         <div class="file-upload-wrapper">
-                                            <label class="file-upload-label" for="bukti_pengeluaran">Pilih file</label>
-                                            <input type="file" id="bukti_pengeluaran" name="bukti_pengeluaran" onchange="updateImage()">
+                                            <label class="file-upload-label" for="image">Pilih file</label>
+                                            <input type="file" id="image" name="image[]" onchange="updateImage()">
                                             <div id="file-upload-info" class="file-upload-info">Tidak ada file yang dipilih</div>
                                         </div>
                                         <label class="text-label text-danger mt-3">* Jika tidak ada perubahan, tidak perlu diisi</label>
                                     </div>
-                                </div>
+                                    
                             <div class="d-flex justify-content-end">
                                 <button type="button" class="btn btn-info" id="add-more-fields">Add Pengeluaran</button>
                             </div>
@@ -374,31 +373,33 @@
 </script>
 <script>
     function updateImage() {
-        const fileInput = document.getElementById('bukti_pengeluaran');
-        const fileInfo = document.getElementById('file-upload-info');
-        const profileImage = document.getElementById('profile-image');
+    const fileInput = document.getElementById('image');
+    const fileInfo = document.getElementById('file-upload-info');
+    const profileImage = document.getElementById('profile-image');
     
-        if (fileInput.files.length > 0) {
-            const file = fileInput.files[0];
-            const reader = new FileReader();
-    
-            reader.onload = function(e) {
-                // Menampilkan gambar yang dipilih
-                profileImage.src = e.target.result;
-                fileInfo.textContent = file.name; // Menampilkan nama file
-            }
-    
-            reader.onerror = function() {
-                console.error('Error membaca file.');
-            }
-    
-            reader.readAsDataURL(file); // Membaca file sebagai URL data
-        } else {
-            fileInfo.textContent = 'Tidak ada file yang dipilih';
-            // Menampilkan gambar default jika tidak ada file yang dipilih
-            profileImage.src = '{{ asset('dash/images/usr.png') }}';
-        }
+    if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            // Menampilkan gambar yang dipilih
+            profileImage.src = e.target.result;
+            fileInfo.textContent = file.name; // Menampilkan nama file
+        };
+
+        reader.onerror = function() {
+            console.error('Error membaca file.');
+        };
+
+        reader.readAsDataURL(file); // Membaca file sebagai URL data
+    } else {
+        fileInfo.textContent = 'Tidak ada file yang dipilih';
+        // Menampilkan gambar default jika tidak ada file yang dipilih
+        profileImage.src = "{{ asset('dash/images/usr.png') }}"; // Menggunakan blade syntax untuk URL gambar default
     }
+}
+
+
     </script>
     <script>
     $(document).ready(function() {
