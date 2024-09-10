@@ -294,15 +294,21 @@ class AdminController extends Controller
     
             return DataTables::of($pengeluaran)
                 ->addIndexColumn()
-                ->addColumn('image', function ($row) {
-                    if ($row->image) {
-                        $imageUrl = asset('storage/' . $row->image); // Sesuaikan path sesuai dengan lokasi gambar
-                        return '<img src="' . $imageUrl . '" width="100" height="100" style="object-fit:cover;">';
-                    } else {
-                        // Menampilkan placeholder jika gambar tidak ada
-                        return '<img src="' .  asset('dash/images/usr.png'). '" width="100" height="100" style="object-fit:cover;">';
-                    }
-                })
+   ->addColumn('image', function ($row) {
+    if ($row->image) {
+        $imageUrl = asset('storage/' . $row->image); // Sesuaikan path sesuai dengan lokasi gambar
+        return '<a href="' . $imageUrl . '" target="">
+                    <img src="' . $imageUrl . '" width="100" height="100" style="object-fit:cover; cursor:pointer;" />
+                </a>';
+    } else {
+        // Menampilkan placeholder jika gambar tidak ada
+        return '<a href="' . asset('dash/images/usr.png') . '" target="_blank">
+                    <img src="' . asset('dash/images/usr.png') . '" width="100" height="100" style="object-fit:cover; cursor:pointer;" />
+                </a>';
+    }
+})
+
+
                 ->addColumn('category', function ($row) {
                     return $row->category ? $row->category->name : 'Tidak ada kategori';
                 })

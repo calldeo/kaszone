@@ -294,7 +294,23 @@
             </div>
         </div>
     </div>
-    
+    <!-- Modal HTML -->
+<div id="imageModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Image Preview</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img id="modalImage" src="" alt="Image Preview" style="width: 100%; height: auto;" />
+            </div>
+        </div>
+    </div>
+</div>
+
   
     <script>
         $(document).ready(function() {
@@ -335,6 +351,23 @@
                 });
             });
         });
+
+        $(document).ready(function() {
+    // Tampilkan modal dan gambar
+    $('#dataTable').on('click', '.preview-image', function() {
+        var imageUrl = $(this).data('image-url');
+        $('#modalImage').attr('src', imageUrl);
+        $('#imageModal').modal('show');
+    });
+
+    // Menutup modal saat klik di luar
+    $(window).on('click', function(event) {
+        if ($(event.target).is('#imageModal')) {
+            $('#imageModal').modal('hide');
+        }
+    });
+});
+
         </script>
 
 </body>
