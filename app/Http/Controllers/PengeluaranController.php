@@ -25,70 +25,60 @@ public function create()
         return view('tambah.add_pengeluaran');
     }
 
-    public function store(Request $request)
-    {
-        // Validasi input
-        $request->validate([
-            'name.*' => 'required|string|max:255',
-            'description.*' => 'nullable|string',
-            'date.*' => 'required|date',
-            'jumlah_satuan.*' => 'required|numeric|min:0',
-            'nominal.*' => 'required|numeric|min:0',
-            'dll.*' => 'required|numeric|min:0',
-            'jumlah.*' => 'required|numeric|min:0',
-            'category_id.*' => 'required|exists:categories,id',
-            'image.*' => 'nullable|mimes:jpg,jpeg,png,pdf|max:2048',
-        ]);
-    
-        // Memulai transaksi database
-        DB::beginTransaction();
-    
-        try {
-            // Ambil total pemasukan yang tersedia dari semua record pemasukan
-            $totalPemasukanTersedia = Pemasukan::sum('jumlah');
-    
-            // Menghitung total pengeluaran dari input form
-            $totalPengeluaran = array_sum($request->jumlah);
-    
-            // Mengecek apakah jumlah pengeluaran melebihi pemasukan yang tersedia
-            if ($totalPengeluaran > $totalPemasukanTersedia) {
-                return redirect()->back()->with('error', 'Jumlah pengeluaran melebihi pemasukan yang tersedia.');
-            }
-    
-            // Loop melalui input array dan menyimpan setiap pengeluaran
-            for ($i = 0; $i < count($request->name); $i++) {
-                $pengeluaran = new Pengeluaran();
-                $pengeluaran->name = $request->name[$i];
-                $pengeluaran->description = $request->description[$i];
-                $pengeluaran->date = $request->date[$i];
-                $pengeluaran->jumlah_satuan = $request->jumlah_satuan[$i];
-                $pengeluaran->nominal = $request->nominal[$i];
-                $pengeluaran->dll = $request->dll[$i];
-                $pengeluaran->jumlah = $request->jumlah[$i];
-                $pengeluaran->id = $request->category_id[$i]; // Perbaikan di sini, gunakan category_id
-    
-                // Cek apakah ada file image untuk indeks saat ini
-                if ($request->hasFile("image.$i")) {
-                    // Simpan file image
-                    $file = $request->file("image.$i");
-                    $path = $file->store('image', 'public');
-                    $pengeluaran->image = $path; // Simpan path file ke kolom image
-                }
-    
-                $pengeluaran->save();
-            }
-    
-            // Commit transaksi jika semua operasi berhasil
-            DB::commit();
-    
-            return redirect('/pengeluaran')->with('success', 'Pengeluaran berhasil ditambahkan.');
-        } catch (\Throwable $th) {
-            // Rollback transaksi jika terjadi error
-            DB::rollback();
-    
-            return redirect('/pengeluaran')->with('error', 'Pengeluaran gagal ditambahkan! ' . $th->getMessage());
+public function store(Request $request)
+{
+    // Validasi input
+    $request->validate([
+        'name.*' => 'required|string|max:255',
+        'description.*' => 'nullable|string',
+        'date.*' => 'required|date',
+        'jumlah_satuan.*' => 'required|numeric|min:0',
+        'nominal.*' => 'required|numeric|min:0',
+        'dll.*' => 'required|numeric|min:0',
+        'jumlah.*' => 'required|numeric|min:0',
+        'category_id.*' => 'required|exists:categories,id',
+        'image.*' => 'nullable|mimes:jpg,jpeg,png|max:2048', // Mengubah bukti_pengeluaran menjadi image
+    ]);
+
+    DB::beginTransaction();
+
+    try {
+        // Menghitung total pemasukan dan pengeluaran
+        $totalPemasukanTersedia = Pemasukan::sum('jumlah');
+        $totalPengeluaran = array_sum($request->input('jumlah', []));
+
+        if ($totalPengeluaran > $totalPemasukanTersedia) {
+            return redirect()->back()->with('error', 'Jumlah pengeluaran melebihi pemasukan yang tersedia.');
         }
+
+        // Proses data untuk setiap pengeluaran
+        foreach ($request->input('name') as $i => $name) {
+            $pengeluaran = new Pengeluaran();
+            $pengeluaran->name = $name;
+            $pengeluaran->description = $request->input('description')[$i] ?? null;
+            $pengeluaran->date = $request->input('date')[$i];
+            $pengeluaran->jumlah_satuan = $request->input('jumlah_satuan')[$i];
+            $pengeluaran->nominal = $request->input('nominal')[$i];
+            $pengeluaran->dll = $request->input('dll')[$i];
+            $pengeluaran->jumlah = $request->input('jumlah')[$i];
+            $pengeluaran->id = $request->input('category_id')[$i];
+
+            // Simpan gambar jika ada file yang diupload
+            if ($request->hasFile("image.$i")) {
+                $path = $request->file("image.$i")->store('image', 'public');
+                $pengeluaran->image = $path; // Mengubah bukti_pengeluaran menjadi image
+            }
+
+            $pengeluaran->save();
+        }
+
+        DB::commit();
+        return redirect('/pengeluaran')->with('success', 'Pengeluaran berhasil ditambahkan.');
+    } catch (\Throwable $th) {
+        DB::rollback();
+        return redirect('/pengeluaran')->with('error', 'Pengeluaran gagal ditambahkan! ' . $th->getMessage());
     }
+}
     
 
 
