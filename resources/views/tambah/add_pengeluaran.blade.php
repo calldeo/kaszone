@@ -259,138 +259,138 @@
             updateImagePreview(this, $(this).siblings('img').attr('id'));
         });
 
-        // Menambahkan lebih banyak bidang formulir
-        $('#add-more-fields').on('click', function() {
-            var newFieldSet = `
-                <div class="dynamic-field">
-                    <div class="form-group">
-                        <label class="text-label">Nama Pengeluaran*</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-user"></i></span>
-                            </div>
-                            <input type="text" class="form-control" name="name[]" placeholder="Enter name.." required>
+         // Menambahkan lebih banyak bidang formulir
+    $('#add-more-fields').on('click', function() {
+        var newFieldSet = `
+            <div class="dynamic-field">
+                <div class="form-group">
+                    <label class="text-label">Nama Pengeluaran*</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-user"></i></span>
                         </div>
+                        <input type="text" class="form-control" name="name[]" placeholder="Enter name.." required>
                     </div>
-
-                    <div class="form-group">
-                        <label class="text-label">Deskripsi</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-book"></i></span>
-                            </div>
-                            <textarea class="form-control" name="description[]" placeholder="Enter description.."></textarea>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="text-label">Date *</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-calendar"></i></span>
-                            </div>
-                            <input type="date" class="form-control" name="date[]" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="text-label">Jumlah Satuan *</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                            </div>
-                            <input type="number" step="0.01" class="form-control" name="jumlah_satuan[]" placeholder="Enter amount.." required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="text-label">Nominal (Rp) *</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                            </div>
-                            <input type="number" step="0.01" class="form-control" name="nominal[]" placeholder="Enter amount.." required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="text-label">Dll *</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                            </div>
-                            <input type="number" step="0.01" class="form-control" name="dll[]" placeholder="Enter amount.." required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="text-label">Jumlah *</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                            </div>
-                            <input type="number" step="0.01" class="form-control" name="jumlah[]" placeholder="Enter amount.." required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="text-label">Category *</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-list"></i></span>
-                            </div>
-                            <select class="form-control default-select" name="category_id[]" required>
-                                <!-- Options will be dynamically inserted here -->
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="image">Foto Bukti Pengeluaran</label>
-                        <div class="mb-3">
-                            <img id="profile-image-${Date.now()}" src="{{ asset('dash/images/usr.png') }}" alt="Gambar Bukti Pengeluaran" width="150" height="150">
-                        </div>
-                        <div class="file-upload-wrapper">
-                            <label class="file-upload-label" for="image">Pilih file</label>
-                            <input type="file" id="image" name="image[]" accept="image/*" onchange="updateImagePreview(this, 'profile-image')>
-                            <div class="file-upload-info">Tidak ada file yang dipilih</div>
-                        </div>
-                        <label class="text-label text-danger mt-3">* Jika tidak ada perubahan, tidak perlu diisi</label>
-                    </div>
-             <button type="button" class="btn btn-danger remove-field" >Remove</button>
-                    <hr>
                 </div>
-            `;
-            $('#dynamic-fields-container').append(newFieldSet);
 
-            // Memuat ulang kategori untuk bidang baru
-            getCategories(function(categories) {
-                $('#dynamic-fields-container .dynamic-field:last-child select[name="category_id[]"]').each(function() {
-                    var $dropdown = $(this);
-                    $dropdown.empty(); // Kosongkan opsi yang ada
-                    $dropdown.append('<option value="">--PILIH KATEGORI--</option>');
-                    $.each(categories, function(index, item) {
-                        $dropdown.append($('<option>', {
-                            value: item.id,
-                            text: item.name
-                        }));
-                    });
+                <div class="form-group">
+                    <label class="text-label">Deskripsi</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-book"></i></span>
+                        </div>
+                        <textarea class="form-control" name="description[]" placeholder="Enter description.."></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="text-label">Date *</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                        </div>
+                        <input type="date" class="form-control" name="date[]" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="text-label">Jumlah Satuan *</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                        </div>
+                        <input type="number" step="0.01" class="form-control" name="jumlah_satuan[]" placeholder="Enter amount.." required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="text-label">Nominal (Rp) *</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                        </div>
+                        <input type="number" step="0.01" class="form-control" name="nominal[]" placeholder="Enter amount.." required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="text-label">Dll *</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                        </div>
+                        <input type="number" step="0.01" class="form-control" name="dll[]" placeholder="Enter amount.." required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="text-label">Jumlah *</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                        </div>
+                        <input type="number" step="0.01" class="form-control" name="jumlah[]" placeholder="Enter amount.." required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="text-label">Category *</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-list"></i></span>
+                        </div>
+                        <select class="form-control default-select" name="category_id[]" required>
+                            <!-- Options will be dynamically inserted here -->
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="image">Foto Bukti Pengeluaran</label>
+                    <div class="mb-3">
+                        <img id="profile-image-${Date.now()}" src="{{ asset('dash/images/usr.png') }}" alt="Gambar Bukti Pengeluaran" width="150" height="150">
+                    </div>
+                    <div class="file-upload-wrapper">
+                        <label class="file-upload-label" for="image">Pilih file</label>
+                        <input type="file" id="image-${Date.now()}" name="image[]" accept="image/*" onchange="updateImagePreview(this, 'profile-image-${Date.now()}')">
+                        <div class="file-upload-info">Tidak ada file yang dipilih</div>
+                    </div>
+                    <label class="text-label text-danger mt-3">* Jika tidak ada perubahan, tidak perlu diisi</label>
+                </div>
+                <button type="button" class="btn btn-danger remove-field">Remove</button>
+                <hr>
+            </div>
+        `;
+        $('#dynamic-fields-container').append(newFieldSet);
+
+        // Memuat ulang kategori untuk bidang baru
+        getCategories(function(categories) {
+            $('#dynamic-fields-container .dynamic-field:last-child select[name="category_id[]"]').each(function() {
+                var $dropdown = $(this);
+                $dropdown.empty(); // Kosongkan opsi yang ada
+                $dropdown.append('<option value="">--PILIH KATEGORI--</option>');
+                $.each(categories, function(index, item) {
+                    $dropdown.append($('<option>', {
+                        value: item.id,
+                        text: item.name
+                    }));
                 });
             });
         });
-
-        // Menangani penghapusan bidang formulir
-        $('#dynamic-fields-container').on('click', '.remove-field', function() {
-            $(this).closest('.dynamic-field').remove();
-        });
-
-        // Memastikan tombol "Remove" terlihat pada saat memuat
-        $('#dynamic-fields-container').on('DOMNodeInserted', function(event) {
-            if ($(event.target).hasClass('dynamic-field')) {
-                $(event.target).find('.remove-field').show();
-            }
-        });
     });
+
+    // Menangani penghapusan bidang formulir
+    $('#dynamic-fields-container').on('click', '.remove-field', function() {
+        $(this).closest('.dynamic-field').remove();
+    });
+
+    // Memastikan tombol "Remove" terlihat pada saat memuat
+    $('#dynamic-fields-container').on('DOMNodeInserted', function(event) {
+        if ($(event.target).hasClass('dynamic-field')) {
+            $(event.target).find('.remove-field').show();
+        }
+    });
+});
 </script>
 </script>
     <script>
