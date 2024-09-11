@@ -365,19 +365,9 @@ public function production(Request $request) // PENGELUARAN
             ->addColumn('opsi', function ($row) {
                 return '
                 <div class="d-flex align-items-center">
-                    <a href="/pengeluaran/' . $row->id . '/edit_pengeluaran" class="btn btn-warning btn-xs mr-1">
-                        <i class="fas fa-pencil-alt"></i>
+                    <a href="/pengeluaran/' . $row->id . '/detail" class="btn btn-info btn-xs mr-1">
+                        <i class="fas fa-eye"></i>
                     </a>
-                    <button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/pengeluaran/' . $row->id . '/detail">
-                        <i class="fa fa-eye"></i>
-                    </button>
-                    <form action="/pengeluaran/' . $row->id . '/destroy" method="POST" style="display:inline;">
-                        ' . csrf_field() . '
-                        ' . method_field('DELETE') . '
-                        <button type="submit" class="btn btn-danger btn-xs">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    </form>
                 </div>';
             })
 

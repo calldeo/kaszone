@@ -180,22 +180,17 @@ public function cetakpgl()
 
     // return view('halaman.cetakpgl',compact('pengeluaran'));
     }
- public function showDetail($id_data)
+ public function showDetail($id)
     {
-        $pengeluaran = Pengeluaran::with('category')->find($id_data);
 
-    if (!$pengeluaran) {
-        return response()->json(['message' => 'Pengeluaran not found'], 404);
-    }
 
-    return response()->json([
-        'id_data' => $pengeluaran->id,
-        'name' => $pengeluaran->name,
-        'description' => $pengeluaran->description,
-        'date' => $pengeluaran->date,
-        'jumlah' => $pengeluaran->jumlah,
-        'category_name' => $pengeluaran->category->name, // Ambil nama kategori
-    ]);
+    // Mengambil data ParentPengeluaran beserta pengeluaran terkait dan kategori
+    $parentPengeluaran = ParentPengeluaran::with('pengeluaran.category')->findOrFail($id);
+
+    // Melempar data ke view
+    return view('halaman.detail', compact('parentPengeluaran'));
+
+
     }
 
     public function data()
