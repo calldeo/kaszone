@@ -79,5 +79,22 @@ class UsersTableSeeder extends Seeder
                 'updated_at' => now(),
         ]);
         $bendahara->assignRole('bendahara');
+        
+
+         $reader = User::create([
+             'name' => 'Deo Andreas',
+                // 'level' => 'admin',
+                'kelamin' => 'laki-laki',
+                'kelas' => null,
+                'email' => 'deo2@gmail.com',
+                'email_verified_at' => null,
+                'password' => bcrypt('callmedeo'),  // Menggunakan bcrypt untuk enkripsi password
+                'alamat' => 'Bondowoso',
+                'remember_token' => Str::random(10),
+                'deleted_at' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+        ]);
+        $reader->assignRole('reader');
     }
 }
