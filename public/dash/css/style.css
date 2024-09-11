@@ -31040,3 +31040,70 @@ html[dir="rtl"] [direction="rtl"][data-sidebar-style="compact"]:not([data-layout
   object-fit: cover;
   /* Agar gambar tetap proporsional */
 }
+/* Sembunyikan tampilan asli input date */
+.custom-date-picker {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  position: relative;
+  padding: 10px 20px;
+  background-color: #6a0dad;
+  /* Warna ungu */
+  color: #fff;
+  /* Warna teks putih */
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  width: auto;
+  /* Atur lebar otomatis */
+  transition: background-color 0.3s ease;
+}
+
+/* Kontainer pembungkus untuk mengatur posisi */
+.date-picker-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  /* Menempatkan elemen di sebelah kanan */
+  margin-right: 20px;
+  /* Menambahkan margin di sebelah kanan, sesuaikan sesuai kebutuhan */
+}
+
+/* Sembunyikan tampilan asli input date dan buat tombol */
+.custom-date-picker {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding: 10px 20px;
+  background-color: #6a0dad;
+  /* Warna ungu */
+  color: #fff;
+  /* Warna teks putih */
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  width: auto;
+  /* Atur lebar otomatis */
+  transition: background-color 0.3s ease;
+}
+
+/* Placeholder untuk input date */
+.custom-date-picker
+/* Ikon kalender */
+.custom-date-picker::after {
+  content: '\f073';
+  /* Unicode untuk ikon kalender */
+  font-family: "Font Awesome 5 Free";
+  /* Pastikan menggunakan Font Awesome */
+  font-weight: 900;
+  position: absolute;
+  right: 10px;
+  color: #fff;
+}
+
+/* Ubah warna saat tombol di-hover */
+.custom-date-picker:hover {
+  background-color: #5b0bac;
+  /* Warna ungu lebih gelap saat di-hover */
+}

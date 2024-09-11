@@ -56,9 +56,9 @@
                             <form class="form-valide-with-icon" action="/pengeluaran/store" method="post" enctype="multipart/form-data">
                                 
                                 @csrf
-                            <div class="date-picker-wrapper">
-                                <input type="date" id="date-picker-input" name="tanggal" class="custom-date-picker">
-                            </div>
+                                <a href="javascript:void(0);" class="btn btn-secondary mb-2" id="datepicker" name="tanggal">
+    <i class="las la-calendar scale5 mr-3"></i>Pilih Tanggal
+</a>
                                 <!-- Container for dynamically added fields -->
                                 <div id="dynamic-fields-container">
                                     <div class="dynamic-field">
@@ -93,7 +93,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
                                                 </div>
-                                                <input type="number" step="0.01" class="form-control" id="jumlah_satuan" name="jumlah_satuan[]" placeholder="Enter amount.." value="{{ old('jumlah_satuan') }}" required>
+                                                <input type="number" step="0.01" class="form-control" id="jumlah_suara" name="jumlah_satuan[]" placeholder="Enter amount.." value="{{ old('jumlah_satuan') }}" required>
                                             </div>
                                             @error('jumlah_satuan')
                                             <span class="mt-2 text-danger">{{ $message }}</span>
@@ -331,7 +331,18 @@
                     </div>
                 </div>
 
-          
+                <div class="form-group">
+                    <label for="image">Foto Bukti Pengeluaran</label>
+                    <div class="mb-3">
+                        <img id="profile-image-${Date.now()}" src="{{ asset('dash/images/usr.png') }}" alt="Gambar Bukti Pengeluaran" width="150" height="150">
+                    </div>
+                    <div class="file-upload-wrapper">
+                        <label class="file-upload-label" for="image">Pilih file</label>
+                        <input type="file" id="image-${Date.now()}" name="image[]" accept="image/*" onchange="updateImagePreview(this, 'profile-image-${Date.now()}')">
+                        <div class="file-upload-info">Tidak ada file yang dipilih</div>
+                    </div>
+                    <label class="text-label text-danger mt-3">* Jika tidak ada perubahan, tidak perlu diisi</label>
+                </div>
                 <button type="button" class="btn btn-danger remove-field">Remove</button>
                 <hr>
             </div>
@@ -457,20 +468,5 @@
         });
     });
 </script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        function calculateTotal() {
-            const jumlahSatuan = parseFloat(document.getElementById('jumlah_satuan').value) || 0;
-            const nominal = parseFloat(document.getElementById('nominal').value) || 0;
-            const dll = parseFloat(document.getElementById('dll').value) || 0;
-            
-            const total = jumlahSatuan * nominal + dll;
-            document.getElementById('jumlah').value = total.toFixed(2);
-        }
-    
-        document.getElementById('jumlah_satuan').addEventListener('input', calculateTotal);
-        document.getElementById('nominal').addEventListener('input', calculateTotal);
-        document.getElementById('dll').addEventListener('input', calculateTotal);
-    });
-    </script>
+
 </html>
