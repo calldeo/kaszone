@@ -15,7 +15,7 @@ return new class extends Migration
     {
         //
          Schema::create('pengeluaran_parent', function (Blueprint $table) {
-            $table('id'); // Kolom id_parent sebagai primary key
+            $table->bigIncrements('id'); // Primary key
             $table->date('tanggal'); // Kolom tanggal
             $table->timestamps();
 
