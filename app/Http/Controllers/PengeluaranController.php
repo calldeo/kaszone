@@ -194,7 +194,7 @@ public function cetakpgl()
         'description' => $pengeluaran->description,
         'date' => $pengeluaran->date,
         'jumlah' => $pengeluaran->jumlah,
-        'category_name' => $pengeluaran->category->name, // Ambil nama kategori
+        'category_name' => $pengeluaran->category->name, // Ambil 
     ]);
     }
 
