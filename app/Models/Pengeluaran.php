@@ -20,11 +20,16 @@ class Pengeluaran extends Model
         'dll',
         'image',
         'jumlah',
-        'id' // Pastikan nama kolom ini sesuai dengan foreign key
+        'id' ,
+        'id_parent',// Pastikan nama kolom ini sesuai dengan foreign key
     ];
 
     public function category() // Gunakan nama relasi yang benar di sini
     {
         return $this->belongsTo(Category::class, 'id'); // Hubungkan dengan model Category
+    }
+     public function parentPengeluaran() // Gunakan nama relasi yang benar di sini
+    {
+        return $this->belongsTo(ParentPengeluaran::class, 'id'); // Hubungkan dengan model Category
     }
 }

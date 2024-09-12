@@ -16,68 +16,53 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        // DB::table('users')->insert([
-        //     [
-        //         'name' => 'Deo Andreas',
-        //         'level' => 'admin',
-        //         'kelamin' => 'laki-laki',
-        //         'kelas' => null,
-        //         'email' => 'deo@gmail.com',
-        //         'email_verified_at' => null,
-        //         'password' => bcrypt('callmedeo'),  // Menggunakan bcrypt untuk enkripsi password
-        //         'alamat' => 'Bondowoso',
-        //         'remember_token' => Str::random(10),
-        //         'deleted_at' => null,
-        //         'created_at' => now(),
-        //         'updated_at' => now(),
-        //     ],
-        //     [
-        //         'name' => 'Restu',
-        //         'level' => 'bendahara',
-        //         'kelamin' => 'laki-laki',
-        //         'kelas' => null,
-        //         'email' => 'restu@gmail.com',
-        //         'email_verified_at' => now(),
-        //         'password' => bcrypt('callmedeo'),  // Menggunakan bcrypt
-        //         'alamat' => 'Bondowoso',
-        //         'remember_token' => Str::random(10),
-        //         'deleted_at' => null,
-        //         'created_at' => now(),
-        //         'updated_at' => now(),
-        //     ],
-           
-        // ]);
+      $admin = User::firstOrCreate(
+    ['email' => 'deo@gmail.com'],
+    [
+        'name' => 'Deo Andreas',
+        'kelamin' => 'laki-laki',
+        'kelas' => null,
+        'password' => bcrypt('callmedeo'),
+        'alamat' => 'Bondowoso',
+        'remember_token' => Str::random(10),
+        'deleted_at' => null,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]
+);
+$admin->assignRole('admin', 'bendahara');
 
-        $admin = User::create([
-             'name' => 'Deo Andreas',
-                // 'level' => 'admin',
-                'kelamin' => 'laki-laki',
-                'kelas' => null,
-                'email' => 'deo@gmail.com',
-                'email_verified_at' => null,
-                'password' => bcrypt('callmedeo'),  // Menggunakan bcrypt untuk enkripsi password
-                'alamat' => 'Bondowoso',
-                'remember_token' => Str::random(10),
-                'deleted_at' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
-        ]);
-        $admin->assignRole('admin','bendahara');
+$bendahara = User::firstOrCreate(
+    ['email' => 'deo1@gmail.com'],  
+    [
+        'name' => 'Deo Andreas',
+        'kelamin' => 'laki-laki',
+        'kelas' => null,
+        'password' => bcrypt('callmedeo'),
+        'alamat' => 'Bondowoso',
+        'remember_token' => Str::random(10),
+        'deleted_at' => null,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]
+);
+$bendahara->assignRole('bendahara');
 
-         $bendahara = User::create([
-             'name' => 'Deo Andreas',
-                // 'level' => 'admin',
-                'kelamin' => 'laki-laki',
-                'kelas' => null,
-                'email' => 'deo1@gmail.com',
-                'email_verified_at' => null,
-                'password' => bcrypt('callmedeo'),  // Menggunakan bcrypt untuk enkripsi password
-                'alamat' => 'Bondowoso',
-                'remember_token' => Str::random(10),
-                'deleted_at' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
-        ]);
-        $bendahara->assignRole('bendahara');
+$reader = User::firstOrCreate(
+    ['email' => 'deo2@gmail.com'],  
+    [
+        'name' => 'Deo Andreas',
+        'kelamin' => 'laki-laki',
+        'kelas' => null,
+        'password' => bcrypt('callmedeo'),
+        'alamat' => 'Bondowoso',
+        'remember_token' => Str::random(10),
+        'deleted_at' => null,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]
+);
+$reader->assignRole('reader');
+
     }
 }
