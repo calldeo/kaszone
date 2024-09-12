@@ -14,16 +14,10 @@ return new class extends Migration
     public function up()
     {
         //
-         Schema::table('datapengeluaran', function (Blueprint $table) {
-            //
-                $table->integer('jumlah_satuan')->after('jumlah');
-                $table->decimal('nominal',15,2)->after('jumlah_satuan');
-                $table->decimal('dll', 15,2)->after('nominal');
-                $table->string('image')->after('dll')->nullable();
-
-
-
-
+        Schema::table('datapengeluaran', function (Blueprint $table) {
+            $table->unsignedBigInteger('id_parent')->after('id'); 
+            $table->foreign('id_parent')->references('id')->on('pengeluaran_parent')->onDelete('cascade');
+      
         });
     }
 
@@ -35,5 +29,9 @@ return new class extends Migration
     public function down()
     {
         //
+        Schema::table('datapengeluaran', function (Blueprint $table) {
+             $table->dropColumn('id_parent');
+
+        });
     }
 };

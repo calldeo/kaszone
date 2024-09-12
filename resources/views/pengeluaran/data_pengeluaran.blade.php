@@ -134,6 +134,23 @@
             </div>
         </div>
     </div>
+        <!-- Modal HTML -->
+<div id="imageModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Image Preview</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img id="modalImage" src="" alt="Image Preview" style="width: 100%; height: auto;" />
+            </div>
+        </div>
+    </div>
+</div>
+
     <!-- Content body end -->
 
     <!-- Footer start -->
@@ -257,84 +274,26 @@
  
 
   
-    <!-- Modal HTML -->
-    <div class="modal fade" id="adminDetailModal" tabindex="-1" role="dialog" aria-labelledby="adminDetailModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="adminDetailModalLabel">Detail Pengeluaran</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <strong>No:</strong><br />
-                            <strong>Nama:</strong><br />
-                            <strong>Deskripsi:</strong><br />
-                            <strong>Tanggal:</strong><br />
-                            <strong>Jumlah:</strong><br />
-                            <strong>Kategori:</strong><br />
 
-                        </div>
-                        <div class="col-sm-8">
-                            <div id="id_data"></div>
-                            <div id="name"></div>
-                            <div id="description"></div>
-                            <div id="date"></div>
-                            <div id="jumlah"></div>
-                            <div id="category"></div> 
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
   
     <script>
+
         $(document).ready(function() {
-            $('#kategoriTable').DataTable();
-            
-            $('#adminDetailModal').on('show.bs.modal', function(event) {
-                var button = $(event.relatedTarget); // Tombol yang memicu modal
-                var url = button.data('url'); // Ambil info dari atribut data-*
-                
-                var modal = $(this);
-                
-                // Kosongkan konten modal sebelum memuat data baru
-                modal.find('#id_data').text('');
-                modal.find('#name').text('');
-                modal.find('#description').text('');
-                modal.find('#date').text('');
-                modal.find('#jumlah').text('');
-            modal.find('#category').text(''); // Kosongkan kategori
+    // Tampilkan modal dan gambar
+    $('#dataTable').on('click', '.preview-image', function() {
+        var imageUrl = $(this).data('image-url');
+        $('#modalImage').attr('src', imageUrl);
+        $('#imageModal').modal('show');
+    });
 
-                
-                $.ajax({
-                    url: url,
-                    method: 'GET',
-                    success: function(data) {
-                        // Isi modal dengan data baru
-                        modal.find('#id_data').text(data.id_data || 'N/A');
-                        modal.find('#name').text(data.name || 'N/A');
-                        modal.find('#description').text(data.description || 'N/A');
-                        modal.find('#date').text(data.date || 'N/A');
-                        modal.find('#jumlah').text(data.jumlah || 'N/A');
-                    modal.find('#category').text(data.category_name || 'N/A');
+    // Menutup modal saat klik di luar
+    $(window).on('click', function(event) {
+        if ($(event.target).is('#imageModal')) {
+            $('#imageModal').modal('hide');
+        }
+    });
+});
 
-                    },
-                    error: function(xhr, status, error) {
-                        console.log(xhr.responseText); // Tampilkan pesan kesalahan di konsol
-                        modal.find('.modal-body').html('Terjadi kesalahan saat memuat detail');
-                    }
-                });
-            });
-        });
         </script>
 
 </body>

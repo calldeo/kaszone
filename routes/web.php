@@ -131,7 +131,8 @@ Route::group(['middleware' => ['auth','permission:Data Pengeluaran']], function 
     Route::post('/pengeluaran/store', [PengeluaranController::class, 'store']);
     Route::delete('/pengeluaran/{id}/destroy', [PengeluaranController::class, 'destroy'])->name('pengeluaran.destroy');
     Route::get('/pengeluaran/{id_pengeluaran}/edit_pengeluaran',[PengeluaranController::class,'edit']);
-    Route::put('/pengeluaran/{id_pengeluaran}', [PengeluaranController::class, 'update'])->name('update');
+    // Route::put('/pengeluaran/{id_pengeluaran}', [PengeluaranController::class, 'update'])->name('update');
+    Route::put('/pengeluaran/{id}', [PengeluaranController::class, 'update'])->name('pengeluaran.update');
     Route::get('/cetakpgl',[PengeluaranController::class,'cetakpgl'])->name('cetakpgl');
 
     
@@ -144,6 +145,8 @@ Route::group(['middleware' => ['auth','permission:Data Pengeluaran']], function 
     Route::get('/pengeluaran/{id_data}/detail', [PengeluaranController::class, 'showDetail'])->name('pengeluaran.showDetail');
 
     Route::get('/download-template-kategori', [CategoryController::class, 'downloadTemplate'])->name('download-template-kategori');
+    Route::post('/pengeluaran/store', [PengeluaranController::class, 'store'])->name('pengeluaran.store');
+
     
     // Route::get('/get-categories/{jenis_kategori}', [PengeluaranController::class, 'getCategories']);
 });

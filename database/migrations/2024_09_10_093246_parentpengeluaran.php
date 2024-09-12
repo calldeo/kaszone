@@ -14,17 +14,15 @@ return new class extends Migration
     public function up()
     {
         //
-         Schema::table('datapengeluaran', function (Blueprint $table) {
-            //
-                $table->integer('jumlah_satuan')->after('jumlah');
-                $table->decimal('nominal',15,2)->after('jumlah_satuan');
-                $table->decimal('dll', 15,2)->after('nominal');
-                $table->string('image')->after('dll')->nullable();
+         Schema::create('pengeluaran_parent', function (Blueprint $table) {
+            $table->bigIncrements('id'); // Primary key
+            $table->date('tanggal'); // Kolom tanggal
+            $table->timestamps();
 
-
-
-
+            // Menambahkan foreign key ke tabel pengeluaran
+           // Menghapus detail jika pengeluaran dihapus
         });
+    
     }
 
     /**
