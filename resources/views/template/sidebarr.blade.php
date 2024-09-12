@@ -13,13 +13,11 @@
             {{-- Daftar menu berdasarkan peran pengguna --}}
             @can('Home')
             <li class="nav-label first"></li>
-            <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+            <li><a  href="/href" aria-expanded="false">
                     <i class="flaticon-144-layout"></i>
                     <span class="nav-text">Home</span>
                 </a>
-                <ul aria-expanded="false">
-                    <li><a href="/home">Dashboard</a></li>
-                </ul>
+               
             </li>
             @endcan
 

@@ -11,6 +11,7 @@ use App\Models\Pengeluaran;
 use App\Models\SettingWaktu;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use App\Models\ParentPengeluaran;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 
@@ -284,43 +285,98 @@ class AdminController extends Controller
 
     }
 
+public function production(Request $request) // PENGELUARAN
+{
+    if ($request->ajax()) {
+        $pengeluaran = ParentPengeluaran::with('pengeluaran.category')->select(['id', 'tanggal']);
+        
+        return DataTables::of($pengeluaran)
+            ->addIndexColumn()
 
+            ->addColumn('name', function($row){
+                $nama = '';
+                foreach($row->pengeluaran as $val) {
+                    $nama .= $val->name . '<br>';
+                }
+                return $nama ?: 'Tidak ada nama';
+            })
 
+            ->addColumn('image', function ($row) {
+                // Cek setiap pengeluaran untuk gambar
+                $imageHtml = '';
+                foreach ($row->pengeluaran as $val) {
+                    $imageUrl = $val->image ? asset('storage/' . $val->image) : asset('dash/images/usr.png');
+                    $imageHtml .= '<a href="' . $imageUrl . '" target="_blank">
+                                    <img src="' . $imageUrl . '" width="75" height="75" style="object-fit:cover; cursor:pointer;" />
+                                </a><br>';
+                }
+                return $imageHtml ?: '<a href="' . asset('dash/images/usr.png') . '" target="_blank">
+                                        <img src="' . asset('dash/images/usr.png') . '" width="100" height="100" style="object-fit:cover; cursor:pointer;" />
+                                    </a>';
+            })
+            
 
- public function production(Request $request) // PENGELUARAN
-    {
-        if ($request->ajax()) {
-            $pengeluaran = Pengeluaran::with('category')->select(['id_data', 'name', 'description', 'date', 'jumlah_satuan', 'nominal', 'dll', 'image', 'jumlah', 'id']);
-    
-            return DataTables::of($pengeluaran)
-                ->addIndexColumn()
-                ->addColumn('image', function ($row) {
-                    if ($row->image) {
-                        $imageUrl = asset('storage/' . $row->image); // Sesuaikan path sesuai dengan lokasi gambar
-                        return '<img src="' . $imageUrl . '" width="100" height="100" style="object-fit:cover;">';
-                    } 
-                })
-                ->addColumn('category', function ($row) {
-                    return $row->category ? $row->category->name : 'Tidak ada kategori';
-                })
-                ->addColumn('opsi', function ($row) {
-                    return '
-                    <div class="d-flex align-items-center">
-                        <a href="/pengeluaran/' . $row->id_data . '/edit_pengeluaran" class="btn btn-warning btn-xs mr-1"><i class="fas fa-pencil-alt"></i></a>
-                        <button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/pengeluaran/' . $row->id_data . '/detail">
-                            <i class="fa fa-eye"></i>
-                        </button>
-                        <form action="/pengeluaran/' . $row->id_data . '/destroy" method="POST" style="display:inline;">
-                            ' . csrf_field() . '
-                            ' . method_field('DELETE') . '
-                            <button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>
-                        </form>
-                    </div>';
-                })
-                ->rawColumns(['image', 'opsi'])
-                ->make(true);
-        }
+            ->addColumn('description', function($row){
+                $deskripsi = '';
+                foreach($row->pengeluaran as $val) {
+                    $deskripsi .= $val->description . '<br>';
+                }
+                return $deskripsi ?: 'Tidak ada deskripsi';
+            })
+
+            ->addColumn('jumlah_satuan', function($row){
+                $jumlahSatuan = '';
+                foreach($row->pengeluaran as $val) {
+                    $jumlahSatuan .= $val->jumlah_satuan . '<br>';
+                }
+                return $jumlahSatuan ?: 'Tidak ada jumlah satuan';
+            })
+
+            ->addColumn('nominal', function($row){
+                $nominal = '';
+                foreach($row->pengeluaran as $val) {
+                    $nominal .= number_format($val->nominal, 2, ',', '.') . '<br>';
+                }
+                return $nominal ?: 'Tidak ada nominal';
+            })
+
+            ->addColumn('dll', function($row){
+                $dll = '';
+                foreach($row->pengeluaran as $val) {
+                    $dll .= $val->dll . '<br>';
+                }
+                return $dll ?: 'Tidak ada data tambahan';
+            })
+
+            ->addColumn('jumlah', function($row){
+                $jumlah = '';
+                foreach($row->pengeluaran as $val) {
+                    $jumlah .= $val->jumlah . '<br>';
+                }
+                return $jumlah ?: 'Tidak ada jumlah';
+            })
+
+            ->addColumn('category', function ($row) {
+                $categories = '';
+                foreach ($row->pengeluaran as $val) {
+                    $categories .= $val->category ? $val->category->name . '<br>' : 'Tidak ada kategori<br>';
+                }
+                return $categories;
+            })
+
+            ->addColumn('opsi', function ($row) {
+                return '
+                <div class="d-flex align-items-center">
+                    <a href="/pengeluaran/' . $row->id . '/detail" class="btn btn-info btn-xs mr-1">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                </div>';
+            })
+
+            ->rawColumns(['image', 'name', 'description', 'jumlah_satuan', 'nominal', 'dll', 'jumlah', 'category', 'opsi'])
+            ->make(true);
     }
+}
 
 public function roles(Request $request) // BENDAHARA
 {
