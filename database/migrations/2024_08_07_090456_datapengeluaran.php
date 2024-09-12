@@ -17,7 +17,6 @@ return new class extends Migration
             $table->bigIncrements('id_data'); // Primary key
             $table->string('name'); // Name of the income entry
             $table->text('description')->nullable(); // Description of the income entry, optional
-            $table->date('date'); // Date of the income entry
             $table->decimal('jumlah', 15, 2); // Amount of income
             $table->timestamps(); // Created at and updated at timestamps
             $table->unsignedBigInteger('id')->nullable();

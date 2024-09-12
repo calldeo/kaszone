@@ -16,7 +16,6 @@ class Users extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->enum('level', ['admin','bendahara']);
             $table->enum('kelamin', ['laki-laki','perempuan']);
             $table->string('kelas')->nullable();
             $table->string('email')->unique();
