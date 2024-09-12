@@ -15,7 +15,7 @@ return new class extends Migration
     {
         //
         Schema::table('datapengeluaran', function (Blueprint $table) {
-            $table->bigInteger('id_parent')->after('id'); 
+            $table->unsignedBigInteger('id_parent')->after('id'); 
             $table->foreign('id_parent')->references('id')->on('pengeluaran_parent')->onDelete('cascade');
       
         });
