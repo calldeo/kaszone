@@ -5,54 +5,7 @@
     @include('template.headerr')
     <title>PityCash | {{ auth()->user()->level }} | Pengeluaran</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.css">
-    <style>
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .btn-edit, .btn-submit, .btn-cancel {
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .btn-edit {
-            background-color: #007bff;
-            color: white;
-            border: none;
-        }
-
-        .btn-edit:hover {
-            background-color: #0056b3;
-        }
-
-        .btn-submit {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            display: none; /* Hidden initially */
-        }
-
-        .btn-cancel {
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            display: none; /* Hidden initially */
-        }
-
-        .edit-button-container {
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 20px;
-        }
-
-        .img-thumbnail {
-            max-width: 100px;
-            height: auto;
-        }
-    </style>
+    {{-- <link rel="stylesheet" href="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.css"> --}}
 </head>
 
 <body>
@@ -102,81 +55,77 @@
                 </div>
             </div>
 
-            <!-- Tombol Edit di Bagian Atas -->
-            <div class="edit-button-container">
-                <button id="edit-btn" class="btn-edit">Edit Semua Data</button>
-                <button id="submit-btn" class="btn-submit">Submit</button>
-                <button id="cancel-btn" class="btn-cancel">Cancel</button>
-            </div>
-
             <!-- Detail Pengeluaran -->
             @foreach($parentPengeluaran->pengeluaran as $pengeluaran)
+            
             <div class="card mb-4">
-                <div class="card-header">Detail Pengeluaran #{{ $loop->iteration }}</div>
+                <div class="card-header">
+                    Detail Pengeluaran #{{ $loop->iteration }}
+                    <!-- Tombol Edit -->
+                    <a href="{{ route('pengeluaran.edit', $pengeluaran->id_data) }}" class="btn btn-primary float-right">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                </div>
                 <div class="card-body">
-                    <form id="form-{{ $loop->iteration }}" method="POST" action="{{ route('pengeluaran.update', $pengeluaran->id) }}">
-                        @csrf
-                        @method('PUT')
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Nama</label>
-                                    <input type="text" name="name" class="form-control editable-input" value="{{ $pengeluaran->name }}" readonly>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Deskripsi</label>
-                                    <textarea name="description" class="form-control editable-input" rows="3" readonly>{{ $pengeluaran->description }}</textarea>
-                                </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Nama</label>
+                                <input type="text" name="name" class="form-control editable-input" value="{{ $pengeluaran->name }}" readonly>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Deskripsi</label>
+                                <textarea name="description" class="form-control editable-input" rows="3" readonly>{{ $pengeluaran->description }}</textarea>
+                            </div>
+                        </div>
+                    </div>
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Jumlah Satuan</label>
-                                    <input type="text" name="jumlah_satuan" class="form-control editable-input" value="{{ $pengeluaran->jumlah_satuan }}" readonly>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Nominal</label>
-                                    <input type="text" name="nominal" class="form-control editable-input" value="{{ number_format($pengeluaran->nominal, 2, ',', '.') }}" readonly>
-                                </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Jumlah Satuan</label>
+                                <input type="text" name="jumlah_satuan" class="form-control editable-input" value="{{ $pengeluaran->jumlah_satuan }}" readonly>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Nominal</label>
+                                <input type="text" name="nominal" class="form-control editable-input" value="{{ number_format($pengeluaran->nominal, 2, ',', '.') }}" readonly>
+                            </div>
+                        </div>
+                    </div>
 
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Kategori</label>
+                                <input type="text" name="category" class="form-control editable-input" value="{{ $pengeluaran->category->name ?? 'Tidak ada kategori' }}" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Total</label>
+                                <input type="text" name="jumlah" class="form-control editable-input" value="{{ $pengeluaran->jumlah }}" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Lain-lain</label>
+                            <input type="text" name="dll" class="form-control editable-input" value="{{ $pengeluaran->dll }}" readonly>
+                        </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Kategori</label>
-                                    <input type="text" name="category" class="form-control editable-input" value="{{ $pengeluaran->category->name ?? 'Tidak ada kategori' }}" readonly>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Total</label>
-                                    <input type="text" name="jumlah" class="form-control editable-input" value="{{ $pengeluaran->jumlah }}" readonly>
+                                    <label>Gambar</label>
+                                    <img src="{{ $pengeluaran->image ? asset('storage/' . $pengeluaran->image) : asset('dash/images/cash.png') }}" alt="Gambar" class="img-thumbnail">
                                 </div>
                             </div>
                         </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Lain-lain</label>
-                                    <input type="text" name="dll" class="form-control editable-input" value="{{ $pengeluaran->dll }}" readonly>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Gambar</label>
-                                            <img src="{{ $pengeluaran->image ? asset('storage/' . $pengeluaran->image) : asset('dash/images/usr.png') }}" alt="Gambar" class="img-thumbnail">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
             @endforeach
@@ -200,43 +149,6 @@
     <input type="hidden" id="table-url" value="{{ route('production') }}">
     <script src="{{ asset('main.js') }}"></script>
     <script src="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.js"></script>
-
-    <!-- JavaScript for Editing -->
-    <script>
-        document.getElementById('edit-btn').addEventListener('click', function() {
-            // Enable all inputs for editing
-            document.querySelectorAll('.editable-input').forEach(function(input) {
-                input.removeAttribute('readonly');
-            });
-
-            // Show Submit and Cancel buttons
-            document.getElementById('submit-btn').style.display = 'inline-block';
-            document.getElementById('cancel-btn').style.display = 'inline-block';
-
-            // Hide Edit button
-            document.getElementById('edit-btn').style.display = 'none';
-        });
-
-        document.getElementById('cancel-btn').addEventListener('click', function() {
-            // Revert all inputs to readonly and reset values
-            document.querySelectorAll('.editable-input').forEach(function(input) {
-                input.setAttribute('readonly', true);
-                input.value = input.defaultValue; // Reset value to original
-            });
-
-            // Show Edit button, hide Submit and Cancel
-            document.getElementById('edit-btn').style.display = 'inline-block';
-            document.getElementById('submit-btn').style.display = 'none';
-            document.getElementById('cancel-btn').style.display = 'none';
-        });
-
-        document.getElementById('submit-btn').addEventListener('click', function() {
-            // Submit all forms
-            document.querySelectorAll('form').forEach(function(form) {
-                form.submit();
-            });
-        });
-    </script>
 
 </body>
 

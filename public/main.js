@@ -104,7 +104,7 @@ $(document).ready(function(){
         { data: 'name', name: 'name' },
         { data: 'description', name: 'description' },
         { data: 'category', name: 'category' }, // Pastikan ini sesuai dengan addColumn di server
-        { data: 'date', name: 'date' },
+        { data: 'tanggal', name: 'tanggal' },
         { data: 'jumlah_satuan', name: 'jumlah_satuan' },
         { data: 'nominal', name: 'nominal' },
         { data: 'dll', name: 'dll' },

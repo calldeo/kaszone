@@ -130,8 +130,10 @@ Route::group(['middleware' => ['auth','permission:Data Pengeluaran']], function 
     Route::get('/add_pengeluaran', [PengeluaranController::class, 'create']);
     Route::post('/pengeluaran/store', [PengeluaranController::class, 'store']);
     Route::delete('/pengeluaran/{id}/destroy', [PengeluaranController::class, 'destroy'])->name('pengeluaran.destroy');
-    Route::get('/pengeluaran/{id_pengeluaran}/edit_pengeluaran',[PengeluaranController::class,'edit']);
+    // Route::get('/pengeluaran/{id_pengeluaran}/edit_pengeluaran',[PengeluaranController::class,'edit']);
     // Route::put('/pengeluaran/{id_pengeluaran}', [PengeluaranController::class, 'update'])->name('update');
+Route::get('/pengeluaran/{id_data}/edit', [PengeluaranController::class, 'edit'])->name('pengeluaran.edit');
+Route::put('/pengeluaran/{id_data}', [PengeluaranController::class, 'update'])->name('pengeluaran.update');
     Route::put('/pengeluaran/{id}', [PengeluaranController::class, 'update'])->name('pengeluaran.update');
     Route::get('/cetakpgl',[PengeluaranController::class,'cetakpgl'])->name('cetakpgl');
 

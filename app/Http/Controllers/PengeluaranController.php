@@ -44,13 +44,13 @@ public function store(Request $request)
         DB::beginTransaction();
     
         try {
-            // Menghitung total pemasukan dan pengeluaran
-            $totalPemasukanTersedia = Pemasukan::sum('jumlah');
-            $totalPengeluaran = array_sum($request->input('jumlah', []));
+            // // Menghitung total pemasukan dan pengeluaran
+            // $totalPemasukanTersedia = Pemasukan::sum('jumlah');
+            // $totalPengeluaran = array_sum($request->input('jumlah', []));
     
-            if ($totalPengeluaran > $totalPemasukanTersedia) {
-                return redirect()->back()->with('error', 'Jumlah pengeluaran melebihi pemasukan yang tersedia.');
-            }
+            // if ($totalPengeluaran > $totalPemasukanTersedia) {
+            //     return redirect()->back()->with('error', 'Jumlah pengeluaran melebihi pemasukan yang tersedia.');
+            // }
     
             
             $parentPengeluaran = new ParentPengeluaran();
@@ -110,63 +110,68 @@ public function store(Request $request)
             return redirect('/pengeluaran')->with('error', 'Gagal menghapus data. Silakan coba lagi.');
         }
     }}
-public function edit($id_data)
-{
-    $pengeluaran = Pengeluaran::find($id_data);
-    $category = Category::all();
-    $category = Category::where('jenis_kategori', 'pengeluaran')->get();
 
-    return view('edit.edit_pengeluaran', compact('id_data', 'pengeluaran', 'category'));
-}
+    public function edit($id_data)
+    {
+        $pengeluaran = Pengeluaran::findOrFail($id_data);
+        $categories = Category::where('jenis_kategori', 'pengeluaran')->get();
 
-
- public function update(Request $request, $id_data)
-{
-    // Validasi input
-    $request->validate([
-        'name' => ['required', 'min:3', 'max:30'],
-        'description' => ['required', 'min:3', 'max:255'],
-        'date' => ['required', 'date'],
-        'jumlah' => ['required', 'numeric'],
-        'id' => ['nullable', 'exists:categories,id'],
-    ]);
-
-    // Mulai transaksi database
-    DB::beginTransaction();
-
-    try {
-        // Temukan data pengeluaran berdasarkan ID
-        $pengeluaran = Pengeluaran::find($id_data);
-
-        if (!$pengeluaran) {
-            // Jika data tidak ditemukan, kembalikan error
-            return redirect('/pengeluaran')->with('error', 'Data pengeluaran tidak ditemukan.');
-        }
-
-        // Update data pengeluaran
-        $pengeluaran->name = $request->name;
-        $pengeluaran->description = $request->description;
-        $pengeluaran->date = $request->date;
-        $pengeluaran->jumlah = $request->jumlah;
-        $pengeluaran->id = $request->id ?? $pengeluaran->id; // Gunakan kategori yang ada jika tidak ada yang baru
-
-        // Simpan perubahan
-        $pengeluaran->save();
-
-        // Commit transaksi jika tidak ada kesalahan
-        DB::commit();
-
-        // Redirect dengan pesan sukses
-        return redirect('/pengeluaran')->with('update_success', 'Data pengeluaran berhasil diperbarui.');
-    } catch (\Throwable $th) {
-        // Rollback transaksi jika terjadi kesalahan
-        DB::rollback();
-        
-        // Redirect dengan pesan gagal
-        return redirect('/pengeluaran')->with('error', 'Pengeluaran gagal diperbarui! ' . $th->getMessage());
+        return view('pengeluaran.edit', compact('id_data','pengeluaran', 'categories'));
     }
-}
 
+    // Memperbarui data pengeluaran
+    public function update(Request $request, $id_data)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'jumlah_satuan' => 'required|numeric',
+            'nominal' => 'required|numeric',
+            'category_id' => 'nullable|exists:categories,id',
+            'jumlah' => 'required|numeric',
+            'dll' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        // Mulai transaksi database
+        DB::beginTransaction();
+
+        try {
+            $pengeluaran = Pengeluaran::findOrFail($id_data);
+            $pengeluaran->name = $request->input('name');
+            $pengeluaran->description = $request->input('description');
+            $pengeluaran->jumlah_satuan = $request->input('jumlah_satuan');
+            $pengeluaran->nominal = $request->input('nominal');
+            $pengeluaran->id = $request->input('category_id');
+            $pengeluaran->jumlah = $request->input('jumlah');
+            $pengeluaran->dll = $request->input('dll');
+
+            // Handle image upload
+            if ($request->hasFile('image')) {
+                // Hapus gambar lama jika ada
+                if ($pengeluaran->image) {
+                    Storage::delete('public/' . $pengeluaran->image);
+                }
+
+                $path = $request->file('image')->store('images', 'public');
+                $pengeluaran->image = $path;
+            }
+
+            $pengeluaran->save();
+
+            // Commit transaksi
+            DB::commit();
+
+            return redirect()->route('pengeluaran.index')->with('success', 'Pengeluaran updated successfully');
+        } catch (\Exception $e) {
+            // Rollback transaksi jika ada kesalahan
+            DB::rollBack();
+
+            return redirect()->route('pengeluaran.index')->with('error', 'Failed to update pengeluaran: ' . $e->getMessage());
+        }
+    }
+    
+    
 
 public function cetakpgl()
     {

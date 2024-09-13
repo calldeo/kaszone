@@ -13,7 +13,7 @@
             {{-- Daftar menu berdasarkan peran pengguna --}}
             @can('Home')
             <li class="nav-label first"></li>
-            <li><a  href="/href" aria-expanded="false">
+            <li><a  href="/home" aria-expanded="false">
                     <i class="flaticon-144-layout"></i>
                     <span class="nav-text">Home</span>
                 </a>

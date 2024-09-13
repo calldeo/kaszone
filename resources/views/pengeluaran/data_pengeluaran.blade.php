@@ -46,31 +46,27 @@
                         <div class="card-header">
                             <h4 class="card-title">Data Pengeluaran</h4>
                             <div class="text-right">
-                          {{-- <div class="input-group search-area right d-lg-inline-flex d-none">
-                            <form id="searchForm">
-                                <input id="searchInput" type="text" class="form-control" placeholder="Cari sesuatu di sini..." name="query">
-                            </form>
-                          </div> --}}
+ 
                           @hasrole('Admin|Bendahara') 
                           <a href="/add_pengeluaran" class="btn btn-warning ml-1" title="Add">
-    <i class="fa fa-plus"></i>
-</a>
-@endhasrole
+                            <i class="fa fa-plus"></i>
+                        </a>
+                        @endhasrole
 
-@hasrole('Admin|Bendahara') 
-<a href="/cetakpgl" target="_blank" class="btn btn-info ml-1" title="Print Report">
-    <i class="fa fa-print"></i>
-</a>
-@endhasrole
-@hasrole('Admin|Bendahara') 
-                          <a href="{{ url('/export-pengeluaran') }}" class="btn btn-success ml-1" title="Export to Excel">
-    <i class="fa fa-file-excel"></i>
-</a>
-@endhasrole
+                            @hasrole('Admin|Bendahara') 
+                            <a href="/cetakpgl" target="_blank" class="btn btn-info ml-1" title="Print Report">
+                                <i class="fa fa-print"></i>
+                            </a>
+                            @endhasrole
+                            @hasrole('Admin|Bendahara') 
+                                                    <a href="{{ url('/export-pengeluaran') }}" class="btn btn-success ml-1" title="Export to Excel">
+                                <i class="fa fa-file-excel"></i>
+                            </a>
+                            @endhasrole
 
 
 
-                </div>
+            </div>
 
                         </div>
                         <div class="card-body">
@@ -101,7 +97,7 @@
                                 <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span></button>
                             </div>
                             @endif
-                            <link href="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.css" rel="stylesheet">
+                            {{-- <link href="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.css" rel="stylesheet"> --}}
                             <div class="table-responsive">
                                 <table id="pengeluaranTable" class="table table-responsive-md">
                                     <thead>
@@ -115,8 +111,8 @@
                                             <th><strong>Tanggal</strong></th> 
                                             <th><strong>Jumlah Satuan</strong></th>
                                             <th><strong>Nominal(Rp)</strong></th>  
-                                            <th><strong>dll</strong></th>
-                                            <th><strong>image</strong></th> 
+                                            <th><strong>Lain - lain</strong></th>
+                                            <th><strong>Image</strong></th> 
                                             <th><strong>Total(Rp)</strong></th>
                                             {{-- <th><strong>Status</strong></th> --}}
                                             <th><strong>Option</strong></th>
@@ -167,105 +163,6 @@
     <!-- Required vendors -->
     @include('template.scripts')
 
-    <!-- Pencarian -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function() {
-    let searchInput = document.getElementById('searchInput');
-
-    searchInput.addEventListener('input', function() {
-        let searchValue = searchInput.value;
-
-        fetch('/admin/search?search=' + encodeURIComponent(searchValue))
-            .then(response => response.json())
-            .then(data => {
-                updateTable(data);
-            })
-            .catch(error => console.error('Error:', error));
-    });
-
-            function updateTable(data) {
-                let adminTableBody = document.getElementById('adminTableBody');
-                adminTableBody.innerHTML = '';
-
-                data.forEach(g => {
-                    let statusLabel = g.status_pemilihan == 'Belum Memilih' ? 'Belum Memilih' : 'Sudah Memilih';
-
-                    let row = `
-                        <tr>
-                            <td>
-                                <div class="custom-control custom-checkbox checkbox-secondary check-lg mr-3">
-                                    <input type="checkbox" class="custom-control-input" id="customCheckBox_${g.id}" required="">
-                                    <label class="custom-control-label" for="customCheckBox_${g.id}"></label>
-                                </div>
-                            </td>
-                            <td><h6>${g.id}</h6></td>
-                            <td>
-                                <div class="media style-1">
-                                    <span class="icon-name mr-2 bgl-info text-secondary">${g.name.substring(0, 1)}</span>
-                                    <div class="media-body">
-                                        <h6>${g.name}</h6>
-                                        <span>${g.email}</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><span class="badge badge-lg badge-secondary light">${g.level}</span></td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <i class="fa fa-circle ${g.status_pemilihan == 'Sudah Memilih' ? 'text-success' : 'text-warning'} mr-1"></i>
-                                    ${g.status_pemilihan}
-                                </div>
-                            </td>
-                            <td class="text-align: left;">
-                                <div class="d-flex justify-content-center">
-                                    <form id="editForm_${g.id}" action="/admin/${g.id}/edit_admin" method="GET">
-                                        <button type="submit" class="btn btn-warning shadow btn-xs sharp"><i class="fa fa-pencil"></i></button>
-                                    </form>
-                                    <div class="mx-1"></div>
-                                    <form id="deleteForm_${g.id}" action="/admin/${g.id}/delete" method="POST" class="delete-form">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <button type="submit" class="btn btn-danger shadow btn-xs sharp delete-btn" data-id="${g.id}"><i class="fa fa-trash"></i></button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-                    adminTableBody.insertAdjacentHTML('beforeend', row);
-                });
-            }
-        });
-    </script>
-
-    <!-- Sweet Alert -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
-    <script>
-        $(document).ready(function() {
-            $('.delete-btn').click(function() {
-                var id = $(this).data('id');
-                // Tampilkan sweet alert ketika tombol hapus diklik
-                Swal.fire({
-                    title: 'Apakah anda yakin hapus data ini?',
-                    text: "Data akan dihapus secara permanen",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Iya, hapus data!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Jika pengguna mengonfirmasi penghapusan, kirim formulir hapus
-                        $('#deleteForm_' + id).submit();
-                        // Tampilkan alert ketika data berhasil dihapus
-                        Swal.fire(
-                            'Data dihapus!',
-                            'Data berhasil dihapus',
-                            'success'
-                        )
-                    }
-                });
-            });
-        });
-    </script>
 
 
 <input type="hidden" id="table-url" value="{{ route('production') }}">
