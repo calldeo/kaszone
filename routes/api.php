@@ -72,6 +72,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::put('/update/{id}', [CategoryController::class, 'update']);
         Route::delete('/destroy/{id}', [CategoryController::class, 'destroy']);
         Route::get('/detail/{id}', [CategoryController::class, 'showDetail']);
+        Route::post('/category/import', [CategoryController::class, 'importExcel']);
 
 
     });
@@ -85,6 +86,11 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::put('/update/{id}', [PemasukanController::class, 'update']);
         Route::delete('/destroy/{id}', [PemasukanController::class, 'destroy']);
         Route::get('/detail/{id}', [PemasukanController::class, 'showDetail']);
+        Route::post('/pemasukan/import', [PemasukanController::class, 'importExcel']);
+        Route::get('/pemasukan/template', [PemasukanController::class, 'downloadTemplate']);
+        Route::get('/pemasukan/cetak', [PemasukanController::class, 'cetakPemasukan']);
+        Route::get('/export-pengeluaran', [PengeluaranController::class, 'exportPengeluaran']);
+
 
 
     });

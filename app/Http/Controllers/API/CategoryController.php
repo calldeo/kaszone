@@ -209,4 +209,50 @@ class CategoryController extends Controller
             ], 404);
         }
     }
+
+     public function importExcel(Request $request)
+    {
+        // Mulai transaksi database
+        DB::beginTransaction();
+
+        try {
+            // Hapus semua data lama dari tabel Category
+            Category::query()->delete();
+
+            // Validasi file input
+            $request->validate([
+                'file' => 'required|file|mimes:xlsx,xls,csv',
+            ]);
+
+            // Pindahkan file ke folder DataKategori
+            $file = $request->file('file');
+            $namafile = $file->getClientOriginalName();
+            $file->move(public_path('DataKategori'), $namafile);
+
+            // Impor data dari file Excel
+            Excel::import(new KategoriImport, public_path('DataKategori/' . $namafile));
+
+            // Commit transaksi jika semua operasi berhasil
+            DB::commit();
+
+            // Hapus file setelah impor selesai
+            Storage::delete('DataKategori/' . $namafile);
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Data Berhasil Ditambahkan'
+            ], 200);
+        } catch (\Exception $e) {
+            // Rollback transaksi jika terjadi kesalahan
+            DB::rollBack();
+
+            // Log error jika diperlukan
+            \Log::error('Import kategori failed: ' . $e->getMessage());
+
+            return response()->json([
+                'status' => 500,
+                'message' => 'Terjadi kesalahan saat mengimpor data'
+            ], 500);
+        }
+    }
 }

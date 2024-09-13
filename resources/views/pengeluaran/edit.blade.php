@@ -105,9 +105,9 @@
                                 <img src="{{ asset('storage/' . $pengeluaran->image) }}" alt="Gambar" class="img-thumbnail mt-2" width="100">
                             @endif
                         </div>
+                        <a href="{{ route('pengeluaran.index') }}" class="btn btn-danger btn-cancel">Cancel</a>
 
                         <button type="submit" class="btn btn-primary btn-submit">Update</button>
-                        <a href="{{ route('pengeluaran.index') }}" class="btn btn-danger btn-cancel">Cancel</a>
                     </form>
                 </div>
             </div>

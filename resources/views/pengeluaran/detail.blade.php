@@ -57,62 +57,67 @@
 
             <!-- Detail Pengeluaran -->
             @foreach($parentPengeluaran->pengeluaran as $pengeluaran)
-            
-            <div class="card mb-4">
-                <div class="card-header">
-                    Detail Pengeluaran #{{ $loop->iteration }}
-                    <!-- Tombol Edit -->
-                    <a href="{{ route('pengeluaran.edit', $pengeluaran->id_data) }}" class="btn btn-primary float-right">
-                        <i class="fas fa-edit"></i> Edit
-                    </a>
-                </div>
-                <div class="card-body">
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Nama</label>
-                                <input type="text" name="name" class="form-control editable-input" value="{{ $pengeluaran->name }}" readonly>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Deskripsi</label>
-                                <textarea name="description" class="form-control editable-input" rows="3" readonly>{{ $pengeluaran->description }}</textarea>
-                            </div>
-                        </div>
-                    </div>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        Detail Pengeluaran  {{ $loop->iteration }}
+                        <div class="card-header d-flex align-items-center">
+    <div>
+        <a href="javascript:void(0)" class="btn btn-danger btn-spacing" data-toggle="modal" data-target="#deleteModal{{ $pengeluaran->id_data }}">
+            <i class="fas fa-trash"></i> Hapus
+        </a>
+        <a href="{{ route('pengeluaran.edit', $pengeluaran->id_data) }}" class="btn btn-primary">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+    </div>
+</div>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Jumlah Satuan</label>
-                                <input type="text" name="jumlah_satuan" class="form-control editable-input" value="{{ $pengeluaran->jumlah_satuan }}" readonly>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Nominal</label>
-                                <input type="text" name="nominal" class="form-control editable-input" value="{{ number_format($pengeluaran->nominal, 2, ',', '.') }}" readonly>
-                            </div>
-                        </div>
                     </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Nama</label>
+                                    <input type="text" name="name" class="form-control editable-input" value="{{ $pengeluaran->name }}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Deskripsi</label>
+                                    <textarea name="description" class="form-control editable-input" rows="3" readonly>{{ $pengeluaran->description }}</textarea>
+                                </div>
+                            </div>
+                        </div>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Kategori</label>
-                                <input type="text" name="category" class="form-control editable-input" value="{{ $pengeluaran->category->name ?? 'Tidak ada kategori' }}" readonly>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Jumlah Satuan</label>
+                                    <input type="text" name="jumlah_satuan" class="form-control editable-input" value="{{ $pengeluaran->jumlah_satuan }}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Nominal</label>
+                                    <input type="text" name="nominal" class="form-control editable-input" value="{{ number_format($pengeluaran->nominal, 2, ',', '.') }}" readonly>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Total</label>
-                                <input type="text" name="jumlah" class="form-control editable-input" value="{{ $pengeluaran->jumlah }}" readonly>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Kategori</label>
+                                    <input type="text" name="category" class="form-control editable-input" value="{{ $pengeluaran->category->name ?? 'Tidak ada kategori' }}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Total</label>
+                                    <input type="text" name="jumlah" class="form-control editable-input" value="{{ $pengeluaran->jumlah }}" readonly>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
+
                         <div class="form-group">
                             <label>Lain-lain</label>
                             <input type="text" name="dll" class="form-control editable-input" value="{{ $pengeluaran->dll }}" readonly>
@@ -126,8 +131,41 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Modal Konfirmasi Hapus -->
+                    <div class="modal fade" id="deleteModal{{ $pengeluaran->id_data }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel{{ $pengeluaran->id_data }}" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteModalLabel{{ $pengeluaran->id_data }}">Konfirmasi Hapus</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Apakah Anda ingin menghapus pengeluaran ini atau menghapus semua pengeluaran?
+                                </div>
+                                <div class="modal-footer">
+                                    <!-- Tombol Hapus Satu -->
+                                    <form action="{{ route('pengeluaran.destroy', $pengeluaran->id_data) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Hapus Pengeluaran Ini</button>
+                                    </form>
+
+                                    <!-- Tombol Hapus Semua -->
+                                    <form action="{{ route('pengeluaran.destroyAll', $parentPengeluaran->id_data) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Hapus Semua</button>
+                                    </form>
+                                    
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
             @endforeach
 
         </div>

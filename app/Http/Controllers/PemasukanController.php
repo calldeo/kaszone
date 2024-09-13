@@ -207,33 +207,31 @@ public function downloadTemplate()
 
 public function cetakPemasukan()
     {
-        // Dapatkan calon dengan jumlah suara terbanyak
-       
-       $pemasukan = Pemasukan::all();
-       $pdf = PDF::loadview('halaman.cetak-pemasukan',compact('pemasukan'));
-       $pdf->setPaper('A4','potrait');
-       return $pdf->stream('pemasukan.pdf');
+    
+    $pemasukan = Pemasukan::all();
+    $pdf = PDF::loadview('halaman.cetak-pemasukan',compact('pemasukan'));
+    $pdf->setPaper('A4','potrait');
+    return $pdf->stream('pemasukan.pdf');
 
 
-    // return view('halaman.cetakpgl',compact('pengeluaran'));
+
     }
-
 
 public function getCategories($jenisKategori)
     {
         // dd($jenisKategori);
-        // Ambil data dari database
-        $options = Category::where('jenis_kategori', $jenisKategori)->get(); // Atau sesuaikan query sesuai kebutuhan
+       
+        $options = Category::where('jenis_kategori', $jenisKategori)->get(); 
 
-        // Format data untuk dropdown
+        
         $formattedOptions = $options->map(function ($item) {
             return [
                 'id' => $item-> id,
-                'name' => $item->name, // Ganti dengan field yang sesuai
+                'name' => $item->name, 
             ];
         });
 
-        // Kembalikan sebagai JSON
+      
         return response()->json($formattedOptions);
     }
 

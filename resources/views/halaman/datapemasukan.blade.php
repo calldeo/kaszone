@@ -36,7 +36,6 @@
                     </ol>
                 </div>
             </div>
-            <!-- row -->
 
             <div class="row">
                 <div class="col-lg-12">
@@ -45,8 +44,7 @@
                             <h4 class="card-title">Data Pemasukan</h4>
                             <div class="text-right">
                            <div class="text-right">
-    {{-- Button untuk menambahkan data --}}
-    @hasrole('Admin|Bendahara') {{-- Hanya role admin atau bendahara yang bisa melihat tombol ini --}}
+    @hasrole('Admin|Bendahara') 
     <a href="/add_pemasukan" class="btn btn-warning" title="Add">
         <i class="fa fa-plus"></i>
     </a>
@@ -62,17 +60,16 @@
                 </a>
 @endhasrole
 
-    {{-- Button untuk mengimpor data --}}
-    @hasrole('Admin|Bendahara') {{-- Hanya role admin atau bendahara yang bisa melihat tombol ini --}}
-    <!-- Tombol untuk membuka modal -->
+
+    @hasrole('Admin|Bendahara') 
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#importModal">
         <i class="fa fa-upload"></i> 
     </button>
     @endhasrole
 </div>
 
-<!-- Modal Import Data Pemasukan -->
-    @hasrole('Admin|Bendahara') {{-- Hanya role admin atau bendahara yang bisa melihat tombol ini --}}
+
+    @hasrole('Admin|Bendahara') 
 <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -83,7 +80,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <!-- Form untuk mengunggah file Excel -->
+
                 <form action="{{ route('import-pemasukan') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
@@ -144,8 +141,6 @@
                                             <th><strong>Kategori</strong></th>
                                             <th><strong>Tanggal</strong></th>   
                                             <th><strong>Jumlah(Rp)</strong></th>
-                                            {{-- <th><strong>Status</strong></th> --}}
-                                            
                                             <th><strong>Option</strong></th>
                                         </tr>
                                     </thead>
@@ -154,7 +149,6 @@
                             </div>
                         </div>
                                <div class="d-flex justify-content-end">
-                    {{-- {{ $users->links() }} --}}
                 </div>
                     </div>
                 </div>

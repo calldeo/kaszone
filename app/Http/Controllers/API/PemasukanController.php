@@ -229,4 +229,99 @@ class PemasukanController extends Controller
             ], 404);
         }
     }
+     public function importExcel(Request $request)
+    {
+        // Mulai transaksi database
+        DB::beginTransaction();
+
+        try {
+            // Hapus semua data lama dari tabel Pemasukan
+            Pemasukan::query()->delete();
+
+            // Validasi file input
+            $request->validate([
+                'file' => 'required|file|mimes:xlsx,xls,csv',
+            ]);
+
+            // Pindahkan file ke folder DataPemasukan
+            $file = $request->file('file');
+            $namafile = $file->getClientOriginalName();
+            $file->move(public_path('DataPemasukan'), $namafile);
+
+            // Impor data dari file Excel
+            Excel::import(new PemasukanImport, public_path('DataPemasukan/' . $namafile));
+
+            // Commit transaksi jika semua operasi berhasil
+            DB::commit();
+
+            // Hapus file setelah impor selesai
+            Storage::delete('DataPemasukan/' . $namafile);
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Data Berhasil Ditambahkan'
+            ], 200);
+        } catch (\Exception $e) {
+            // Rollback transaksi jika terjadi kesalahan
+            DB::rollBack();
+
+            // Log error jika diperlukan
+            \Log::error('Import Pemasukan failed: ' . $e->getMessage());
+
+            return response()->json([
+                'status' => 500,
+                'message' => 'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+      public function downloadTemplate()
+    {
+        // Path ke template Excel untuk pemasukan
+        $pathToFile = public_path('templates/template_pemasukan.xlsx');
+
+        return response()->download($pathToFile);
+    }
+
+
+     public function cetakPemasukan()
+    {
+        try {
+            $pemasukan = Pemasukan::all();
+            $pdf = Pdf::loadView('halaman.cetak-pemasukan', compact('pemasukan'));
+            $pdf->setPaper('A4', 'potrait');
+
+            // Mengirim file PDF dengan status 200
+            return response()->stream(
+                function () use ($pdf) {
+                    echo $pdf->output();
+                },
+                200, // Status 200 OK
+                [
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition' => 'attachment; filename="pemasukan.pdf"',
+                ]
+            );
+        } catch (Exception $e) {
+            // Jika terjadi kesalahan
+            return response()->json([
+                'status' => 500,
+                'message' => 'Terjadi kesalahan saat membuat PDF: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+     public function exportPengeluaran()
+    {
+        try {
+            // Mengunduh file Excel dengan nama pengeluaran.xlsx
+            return Excel::download(new PengeluaranExport, 'pengeluaran.xlsx');
+        } catch (\Exception $e) {
+            // Jika terjadi kesalahan
+            return response()->json([
+                'status' => 500,
+                'message' => 'Terjadi kesalahan saat mengekspor data: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
 }
