@@ -129,7 +129,7 @@ Route::group(['middleware' => ['auth','permission:Data Pengeluaran']], function 
     route::get('/pengeluaran',[PengeluaranController::class,'index'])->name('index');
     Route::get('/add_pengeluaran', [PengeluaranController::class, 'create']);
     Route::post('/pengeluaran/store', [PengeluaranController::class, 'store']);
-    Route::delete('/pengeluaran/{id}/destroy', [PengeluaranController::class, 'destroy'])->name('pengeluaran.destroy');
+    // Route::delete('/pengeluaran/{id}/destroy', [PengeluaranController::class, 'destroy'])->name('pengeluaran.destroy');
     // Route::get('/pengeluaran/{id_pengeluaran}/edit_pengeluaran',[PengeluaranController::class,'edit']);
     // Route::put('/pengeluaran/{id_pengeluaran}', [PengeluaranController::class, 'update'])->name('update');
 Route::get('/pengeluaran/{id_data}/edit', [PengeluaranController::class, 'edit'])->name('pengeluaran.edit');
@@ -149,6 +149,8 @@ Route::put('/pengeluaran/{id_data}', [PengeluaranController::class, 'update'])->
     Route::get('/download-template-kategori', [CategoryController::class, 'downloadTemplate'])->name('download-template-kategori');
     Route::post('/pengeluaran/store', [PengeluaranController::class, 'store'])->name('pengeluaran.store');
 
+    Route::delete('/pengeluaran/{id_data}', [PengeluaranController::class, 'destroy'])->name('pengeluaran.destroy');
+    Route::delete('/pengeluaran-all/{parentId}', [PengeluaranController::class, 'destroyAll'])->name('pengeluaran.destroyAll');
     
     // Route::get('/get-categories/{jenis_kategori}', [PengeluaranController::class, 'getCategories']);
 });

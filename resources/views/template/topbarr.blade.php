@@ -5,18 +5,18 @@
         <div class="sk-child sk-bounce3"></div>
     </div>
 </div>
-<!--*******
+<!--***
     Preloader end
-********-->
+****-->
 
-<!--************
+<!--****
     Main wrapper start
-*************-->
+*****-->
 <div id="main-wrapper">
 
-    <!--************
+    <!--****
         Nav header start
-    *************-->
+    *****-->
     <a href="/home" class="brand-logo" style="display: block; width: 200px; height: 50px;">
         <svg class="logo-abbr" width="100%" height="100%" viewBox="0 0 200 50" fill="none" xmlns="http://www.w3.org/2000/svg">
             <!-- Gambar Logo -->
@@ -43,21 +43,21 @@
         </div>
     </div>
     
-    <!--************
+    <!--****
         Nav header end
-    *************-->
+    *****-->
     
-    <!--************
+    <!--****
         Chat box start
-    *************-->
+    *****-->
 
-    <!--************
+    <!--****
         Chat box End
-    *************-->
+    *****-->
     
-    <!--************
+    <!--****
         Header start
-    *************-->
+    *****-->
     <div class="header">
         <div class="header-content">
             <nav class="navbar navbar-expand">
@@ -73,6 +73,21 @@
                                 </span>
                             </div>
                         </div> --}}
+                      <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <div class="media align-items-center">
+                            <i class="fas fa-wallet mr-2"></i> <!-- Ikon dompet -->
+                            <div class="media-body">
+                                <h5 class="mb-0 
+                                    @if($saldo < 50000) 
+                                        text-danger 
+                                    @endif">
+                                    Saldo: Rp {{ number_format($saldo, 2, ',', '.') }}
+                                </h5>
+                            </div>
+                        </div>
+                    </a>
+                </li>
                     </div>
                     <ul class="navbar-nav header-right main-notification">
                         <li class="nav-item dropdown notification_dropdown">

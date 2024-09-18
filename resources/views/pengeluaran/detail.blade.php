@@ -62,6 +62,9 @@
                 <div class="card-header">
                     Detail Pengeluaran #{{ $loop->iteration }}
                     <!-- Tombol Edit -->
+                    <a href="javascript:void(0)" class="btn btn-danger btn-spacing" data-toggle="modal" data-target="#deleteModal{{ $pengeluaran->id_data }}">
+                        <i class="fas fa-trash"></i> Hapus
+                    </a>
                     <a href="{{ route('pengeluaran.edit', $pengeluaran->id_data) }}" class="btn btn-primary float-right">
                         <i class="fas fa-edit"></i> Edit
                     </a>
@@ -123,6 +126,38 @@
                                     <label>Gambar</label>
                                     <img src="{{ $pengeluaran->image ? asset('storage/' . $pengeluaran->image) : asset('dash/images/cash.png') }}" alt="Gambar" class="img-thumbnail">
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="deleteModal{{ $pengeluaran->id_data }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel{{ $pengeluaran->id_data }}" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteModalLabel{{ $pengeluaran->id_data }}">Konfirmasi Hapus</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Apakah Anda ingin menghapus pengeluaran ini atau menghapus semua pengeluaran?
+                            </div>
+                            <div class="modal-footer">
+                                <!-- Tombol Hapus Satu -->
+                                <form action="{{ route('pengeluaran.destroy', $pengeluaran->id_data) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">Hapus Pengeluaran Ini</button>
+                                </form>
+
+                                <!-- Tombol Hapus Semua -->
+                                <form action="{{ route('pengeluaran.destroyAll', $parentPengeluaran->id_data) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">Hapus Semua</button>
+                                </form>
+                                
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                             </div>
                         </div>
                     </div>

@@ -4,7 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
-
+use App\Models\Pemasukan;
+use App\Models\Pengeluaran;
+use Illuminate\Support\Facades\View;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -25,5 +27,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Paginator::useBootstrapFour();
+        $totalPemasukan = Pemasukan::sum('jumlah');
+        $totalPengeluaran = Pengeluaran::sum('jumlah');
+       
+        $saldo = $totalPemasukan - $totalPengeluaran;
+        View::share('saldo', $saldo);
     }
 }
