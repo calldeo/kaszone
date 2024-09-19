@@ -112,23 +112,60 @@ public function store(Request $request)
     }
     
 
-    public function deleteAll(Request $request)
-    {
-        // Mendapatkan id_parent dari query string atau parameter lain jika ada
-        $idParent = $request->query('id_parent');
+public function destroy($id_data)
+{
+    // Temukan pengeluaran berdasarkan ID
+    $pengeluaran = Pengeluaran::findOrFail($id_data);
 
-        if ($idParent) {
-            // Menghapus semua data yang terkait dengan id_parent
-            Pengeluaran::where('id_parent', $idParent)->delete();
-
-            // Mengarahkan pengguna dengan pesan sukses
-            return redirect()->back()->with('success', 'Semua item berhasil dihapus.');
+    // Cek jika pengeluaran memiliki parentPengeluaran
+    if ($pengeluaran->parentPengeluaran) {
+        // Dapatkan parentPengeluaran dari pengeluaran
+        $parentPengeluaran = $pengeluaran->parentPengeluaran;
+        
+        // Cek apakah pengeluaran parent memiliki lebih dari satu entri
+        if ($pengeluaran->parantPengeluaran->count() <= 1) {
+            return redirect()->back()->with('error', 'Tidak dapat menghapus data. Minimal harus ada satu pengeluaran pada parent pengeluaran.');
         }
-
-        // Mengarahkan kembali dengan pesan error jika id_parent tidak ada
-        return redirect()->back()->with('error', 'ID Parent tidak ditemukan.');
     }
 
+    // Lakukan penghapusan data
+    $pengeluaran->delete();
+    
+    return redirect()->back()->with('success', 'Data pengeluaran berhasil dihapus.');
+}
+
+public function destroyAll($parentId)
+{
+   $parentPengeluaran = ParentPengeluaran::findOrFail($parentId);
+
+    // Hapus semua pengeluaran yang terkait
+    $parentPengeluaran->pengeluaran()->delete();
+
+    // Hapus parent pengeluaran
+    $parentPengeluaran->delete();
+
+    return redirect()->back()->with('success', 'Semua data pengeluaran berhasil dihapus.');
+}
+
+
+
+
+//     public function destroy($id_data)
+// {
+//    {
+//         try {
+//             $pengeluaran = Pengeluaran::find($id_data);
+
+//             if ($pengeluaran) {
+//                 $pengeluaran->forcedelete(); // Use delete() for soft deletes or forceDelete() if you need permanent deletion
+//                 return redirect('/pengeluaran')->with('success', 'Data berhasil dihapus.');
+//             } else {
+//                 return redirect('/pengeluaran')->with('error', 'Data tidak ditemukan.');
+//             }
+//         } catch (\Exception $e) {
+//             return redirect('/pengeluaran')->with('error', 'Gagal menghapus data. Silakan coba lagi.');
+//         }
+//     }}
 
     public function edit($id_data)
     {
