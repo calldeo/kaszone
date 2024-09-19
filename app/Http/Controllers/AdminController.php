@@ -253,9 +253,14 @@ class AdminController extends Controller
 
     public function income(Request $request) // PEMASUKAN
     {
+        
         if ($request->ajax()) {
-    $pemasukan = Pemasukan::with('category')->select(['id_data', 'name', 'description', 'date', 'jumlah', 'id']);
-
+    $startDate = $request->input('start_created_at');
+    $endDate = $request->input('end_created_at');
+    $pemasukan = Pemasukan::with('category')->select(['id_data', 'name', 'description', 'date', 'jumlah', 'id','created_at']);
+    if ($startDate != null && $endDate != null){
+        $pemasukan = $pemasukan->whereBetween('created_at', [$startDate, $endDate]);
+    }
     return DataTables::of($pemasukan)
         ->addIndexColumn()
         ->addColumn('category', function ($row) {
@@ -285,6 +290,9 @@ class AdminController extends Controller
 
     }
 
+
+    
+
 public function production(Request $request) // PENGELUARAN
 {
     if ($request->ajax()) {
@@ -305,7 +313,7 @@ public function production(Request $request) // PENGELUARAN
                 // Cek setiap pengeluaran untuk gambar
                 $imageHtml = '';
                 foreach ($row->pengeluaran as $val) {
-                    $imageUrl = $val->image ? asset('storage/' . $val->image) : asset('dash/images/usr.png');
+                    $imageUrl = $val->image ? asset('storage/' . $val->image) : asset('dash/images/cash.png');
                     $imageHtml .= '<a href="' . $imageUrl . '" target="_blank">
                                     <img src="' . $imageUrl . '" width="75" height="75" style="object-fit:cover; cursor:pointer;" />
                                 </a><br>';

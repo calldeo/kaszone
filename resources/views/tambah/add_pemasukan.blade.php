@@ -5,7 +5,8 @@
     @include('template.headerr')
     <title>PityCash | {{auth()->user()->level}} | Add Pemasukan</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
+    {{-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" /> --}}
+    
 </head>
 
 <body>
@@ -107,7 +108,7 @@
                                 </div>
 
                             <div class="form-group">
-    <label class="text-label">Jumlah *</label>
+    <label class="text-label">Jumlah (Rp)*</label>
     <div class="input-group">
         <div class="input-group-prepend">
             <span class="input-group-text">
@@ -179,34 +180,50 @@
 </body>
 <script>
     $(document).ready(function() {
-            // Mengambil data dari server untuk mengisi dropdown
-           getCategories()
+        
+        getCategories();
 
-        function getCategories (){
+        function getCategories() {
             $.ajax({
                 url: '/get-categories/1',
                 method: 'GET',
                 success: function(data) {
-                    // Menambahkan option ke dropdown
                     var $dropdown = $('#category');
-                    $dropdown.empty(); // Kosongkan dropdown
-                    
+                    $dropdown.empty(); 
+
                     $dropdown.append($('<option>', {
                         value: '',
                         text: 'PILIH KATEGORI'
                     }));
+
+                    
                     $.each(data, function(index, item) {
                         $dropdown.append($('<option>', {
                             value: item.id,
                             text: item.name
                         }));
                     });
+
+                 
+                    // $dropdown.select2({
+                    //     placeholder: 'PILIH KATEGORI',
+                    //     allowClear: true,
+                    //     width: '100%', 
+                    //     minimumResultsForSearch: 0 
+                    // });
                 },
                 error: function(xhr) {
                     console.error('Error fetching options:', xhr);
                 }
             });
         }
-        });
+    });
 </script>
+
+
+
+
+{{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
 </html>

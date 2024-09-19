@@ -14,11 +14,11 @@ class Pemasukan extends Model
         'description',
         'date',
         'jumlah',
-        'id' // Pastikan nama kolom ini sesuai dengan foreign key
+        'id' 
     ];
 
-    public function category() // Gunakan nama relasi yang benar di sini
+    public function category() 
     {
-        return $this->belongsTo(Category::class, 'id'); // Hubungkan dengan model Category
+        return $this->belongsTo(Category::class, 'id'); 
     }
 }

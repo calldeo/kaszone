@@ -73,21 +73,25 @@
                                 </span>
                             </div>
                         </div> --}}
-                      <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <div class="media align-items-center">
-                            <i class="fas fa-wallet mr-2"></i> <!-- Ikon dompet -->
-                            <div class="media-body">
-                                <h5 class="mb-0 
-                                    @if($saldo < 50000) 
-                                        text-danger 
-                                    @endif">
-                                    Saldo: Rp {{ number_format($saldo, 2, ',', '.') }}
-                                </h5>
-                            </div>
-                        </div>
-                    </a>
-                </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <div class="media align-items-center">
+                                    <i class="fas fa-wallet mr-2"></i> <!-- Ikon dompet -->
+                                    <div class="media-body">
+                                        <h5 class="mb-0
+                                            @if($saldo < 50000)
+                                                text-danger
+                                            @endif">
+                                            Saldo: Rp {{ number_format($saldo, 2, ',', '.') }}
+                                        </h5>
+                                        @if($saldo <= 50000)
+                                            <p class="text-warning mb-0">Warning: Saldo Anda tinggal Rp {{ number_format($saldo, 2, ',', '.') }}</p>
+                                        @endif
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        
                     </div>
                     <ul class="navbar-nav header-right main-notification">
                         <li class="nav-item dropdown notification_dropdown">

@@ -1,7 +1,9 @@
 <script src="{{asset('dash/vendor/global/global.min.js')}}"></script>
 	<script src="{{asset('dash/vendor/bootstrap-select/dist/js/bootstrap-select.min.js')}}"></script>
 	<script src="{{asset('dash/vendor/chart.js/Chart.bundle.min.js')}}"></script>
-	
+    <script src="{{asset('dash/vendor/moment/moment.min.js')}}"></script>
+    <script src="{{asset('dash/vendor/bootstrap-daterangepicker/daterangepicker.js')}}"></script>
+    <script src="{{asset('dash/js/plugins-init/bs-daterange-picker-init.js')}}"></script>
 	<!-- Chart piety plugin files -->
     <script src="{{asset('dash/vendor/peity/jquery.peity.min.js')}}"></script>
 	

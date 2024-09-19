@@ -177,7 +177,7 @@
                             <div class="form-group">
                                 <label for="image">Foto Bukti Pengeluaran</label>
                                 <div class="mb-3">
-                                    <img id="profile-image" src="{{ asset('dash/images/usr.png') }}" alt="Gambar Bukti Pengeluaran" width="150" height="150">
+                                    <img id="profile-image" src="{{ asset('dash/images/cash.png') }}" alt="Gambar Bukti Pengeluaran" width="150" height="150">
                                 </div>
                                 <div class="file-upload-wrapper">
                                     <label class="file-upload-label" for="image">Pilih file</label>

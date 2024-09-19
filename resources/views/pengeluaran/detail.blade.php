@@ -40,8 +40,35 @@
 
             <!-- Informasi Umum -->
             <div class="card">
-                <div class="card-header">Informasi Umum</div>
+                <div class="card-header">Informasi </div>
                 <div class="card-body">
+                    @if(session('error'))
+                                <div class="alert alert-danger alert-dismissible fade show">
+                                    <strong>Error!</strong> {{ session('error') }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span><i class="fa fa-times"></i></span></button>
+                                </div>
+                            @endif
+
+                            @if(session('success'))
+                            <div class="alert alert-success alert-dismissible fade show">
+                                <svg viewbox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                                    <polyline points="9 11 12 14 22 4"></polyline>
+                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                                </svg>
+                                <strong>Success!</strong> {{ session('success') }}
+                                <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span></button>
+                            </div>
+                            @endif
+                            @if(session('update_success'))
+                            <div class="alert alert-warning alert-dismissible fade show">
+                                <svg viewbox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                                    <polyline points="9 11 12 14 22 4"></polyline>
+                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                                </svg>
+                                <strong>Success!</strong> {{ session('update_success') }}
+                                <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span></button>
+                            </div>
+                            @endif
                     <form>
                         <div class="row">
                             <div class="col-md-6">
@@ -60,15 +87,31 @@
             
             <div class="card mb-4">
                 <div class="card-header">
-                    Detail Pengeluaran #{{ $loop->iteration }}
-                    <!-- Tombol Edit -->
-                    <a href="javascript:void(0)" class="btn btn-danger btn-spacing" data-toggle="modal" data-target="#deleteModal{{ $pengeluaran->id_data }}">
-                        <i class="fas fa-trash"></i> Hapus
-                    </a>
-                    <a href="{{ route('pengeluaran.edit', $pengeluaran->id_data) }}" class="btn btn-primary float-right">
-                        <i class="fas fa-edit"></i> Edit
-                    </a>
+                    Detail Pengeluaran {{ $loop->iteration }}
+                    <!-- Tombol Edit dan Hapus Bersebelahan dengan Space -->
+                    <div class="float-right">
+                        @if($parentPengeluaran->pengeluaran->count() > 1)
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-trash-alt"></i> Hapus
+                            </button>
+                            <div class="dropdown-menu">
+                                <a href="{{ route('pengeluaran.delete', $pengeluaran->id_data) }}" class="dropdown-item" onclick="return confirm('Apakah Anda yakin ingin menghapus item ini?')">
+                                    <i class="fas fa-trash"></i> Hapus Satu
+                                </a>
+                                <a href="{{ route('pengeluaran.deleteAll', ['id_parent' => $idParent]) }}" class="dropdown-item" onclick="return confirm('Apakah Anda yakin ingin menghapus semua item?')">
+                                    <i class="fas fa-trash-alt"></i> Hapus Semua
+                                </a>
+                                
+                            </div>
+                        </div>
+                        @endif
+                        <a href="{{ route('pengeluaran.edit', $pengeluaran->id_data) }}" class="btn btn-primary mr-2">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                    </div>
                 </div>
+                
                 <div class="card-body">
                     
                     <div class="row">
@@ -130,39 +173,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal fade" id="deleteModal{{ $pengeluaran->id_data }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel{{ $pengeluaran->id_data }}" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="deleteModalLabel{{ $pengeluaran->id_data }}">Konfirmasi Hapus</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                Apakah Anda ingin menghapus pengeluaran ini atau menghapus semua pengeluaran?
-                            </div>
-                            <div class="modal-footer">
-                                <!-- Tombol Hapus Satu -->
-                                <form action="{{ route('pengeluaran.destroy', $pengeluaran->id_data) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger">Hapus Pengeluaran Ini</button>
-                                </form>
-
-                                <!-- Tombol Hapus Semua -->
-                                <form action="{{ route('pengeluaran.destroyAll', $parentPengeluaran->id_data) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger">Hapus Semua</button>
-                                </form>
-                                
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
-            </div>
             @endforeach
 
         </div>

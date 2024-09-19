@@ -55,36 +55,84 @@ $(document).ready(function(){
         
        
     });
-     $('#pemasukanTable').DataTable({
-    ordering: true,
-    serverSide: true,  // Menunjukkan bahwa data diambil dari server
-    processing: true,  // Menunjukkan bahwa ada proses loading data
-    ajax: {
-        url: $('#table-url').val(),  // Mengambil URL dari elemen input tersembunyi
-        type: 'GET',  // Metode pengambilan data
-        dataType: 'json',  // Jenis data yang diharapkan dari server
-        error: function(jqXHR, textStatus, errorThrown) {  // Menangani error dari permintaan AJAX
-            console.error('AJAX error:', textStatus, errorThrown);
-            alert('Terjadi kesalahan saat memuat data. Silakan coba lagi nanti.');
+
+
+    var filterData={
+        start_created_at : null,
+        end_created_at : null
+    }
+    pemasukanTable(filterData)
+    $('.input-daterange-datepicker').val('');
+    $('.input-daterange-datepicker').daterangepicker({
+        autoUpdateInput : false,
+        locale: {
+            format: 'MM/DD/YYYY'
         }
-    },
-    columns: [
-        { data: 'DT_RowIndex', name: 'DT_RowIndex', width: '10px', orderable: false, searchable: false },
-        { data: 'name', name: 'name' },
-        { data: 'description', name: 'description' },
-        { data: 'category', name: 'category' }, // Pastikan ini sesuai dengan addColumn di server
-        { data: 'date', name: 'date' },
-        { data: 'jumlah', name: 'jumlah' },
-        { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
-    ],
-   columnDefs: [
-                    {
-                    "targets": "_all",
-                    "defaultContent": '<div className="align-middle text-center">-</div>'
-                    },
-]
-       
+    },function (start,end,label) {
+            filterData.start_created_at =start.format('YYYY-MM-DD 00:00:00');
+            filterData.end_created_at =end.format('YYYY-MM-DD 23:59:59');
+            pemasukanTable(filterData)
+        });
+
+ 
+    $('.input-daterange-datepicker').on('apply.daterangepicker', function(ev, picker) {
+        var startDate = picker.startDate.format('YYYY-MM-DD');
+        var endDate = picker.endDate.format('YYYY-MM-DD');
+
+        console.log('Selected date range: ' + startDate + ' to ' + endDate);
+
+        
     });
+    $('.input-daterange-datepicker').on('cancel.daterangepicker', function(ev, picker) {
+        $(this).val('');
+        filterData.start_created_at =null;
+        filterData.end_created_at =null;
+        pemasukanTable(filterData)
+
+        
+      
+    });
+
+
+    function pemasukanTable(filterData){
+        tablePemasukan = $('#pemasukanTable').DataTable({
+            ordering: true,
+            destroy: true,
+            serverSide: true,  // Menunjukkan bahwa data diambil dari server
+            processing: true,  // Menunjukkan bahwa ada proses loading data
+            ajax: {
+                url: $('#table-url').val(),  // Mengambil URL dari elemen input tersembunyi
+                type: 'GET',  // Metode pengambilan data
+                dataType: 'json',  // Jenis data yang diharapkan dari server
+                error: function(jqXHR, textStatus, errorThrown) {  // Menangani error dari permintaan AJAX
+                    console.error('AJAX error:', textStatus, errorThrown);
+                    alert('Terjadi kesalahan saat memuat data. Silakan coba lagi nanti.');
+                },
+                data: filterData
+                
+            },
+            columns: [
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', width: '10px', orderable: false, searchable: false },
+                { data: 'name', name: 'name' },
+                { data: 'description', name: 'description' },
+                { data: 'category', name: 'category' }, // Pastikan ini sesuai dengan addColumn di server
+                { data: 'date', name: 'date' },
+                { data: 'created_at', name: 'created_at' },
+                { data: 'jumlah', name: 'jumlah' },
+                { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
+            ],
+           columnDefs: [
+                            {
+                            "targets": "_all",
+                            "defaultContent": '<div className="align-middle text-center">-</div>'
+                            },
+        ]
+               
+            });
+    }
+     
+
+
 
   $('#pengeluaranTable').DataTable({
     ordering: true,

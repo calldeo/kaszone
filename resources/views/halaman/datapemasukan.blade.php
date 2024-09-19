@@ -45,6 +45,11 @@
                             <h4 class="card-title">Data Pemasukan</h4>
                             <div class="text-right">
                            <div class="text-right">
+                            <div class="example">
+                                <p class="mb-1">Filter Tanggal</p>
+                                <input class="form-control input-daterange-datepicker" type="text" name="daterange" placeholder="Masukkan Tanggal" >
+                            </div>
+                            
     {{-- Button untuk menambahkan data --}}
     @hasrole('Admin|Bendahara') {{-- Hanya role admin atau bendahara yang bisa melihat tombol ini --}}
     <a href="/add_pemasukan" class="btn btn-warning" title="Add">
@@ -102,6 +107,8 @@
 @endhasrole
 
 
+
+
                             </div>
                         </div>
                         <div class="card-body">
@@ -142,7 +149,8 @@
                                             <th><strong>Nama</strong></th>
                                             <th><strong>Deksripsi</strong></th>
                                             <th><strong>Kategori</strong></th>
-                                            <th><strong>Tanggal</strong></th>   
+                                            <th><strong>Tanggal</strong></th>
+                                            <th><strong>Tanggal dibuat</strong></th>   
                                             <th><strong>Jumlah(Rp)</strong></th>
                                             {{-- <th><strong>Status</strong></th> --}}
                                             
@@ -177,45 +185,16 @@
     <!-- Required vendors -->
     @include('template.scripts')
 
-    <!-- Pencarian -->
+  
  
 
     <!-- Sweet Alert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
-    <script>
-        $(document).ready(function() {
-            $('.delete-btn').click(function() {
-                var id = $(this).data('id');
-                // Tampilkan sweet alert ketika tombol hapus diklik
-                Swal.fire({
-                    title: 'Apakah anda yakin hapus data ini?',
-                    text: "Data akan dihapus secara permanen",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Iya, hapus data!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Jika pengguna mengonfirmasi penghapusan, kirim formulir hapus
-                        $('#deleteForm_' + id).submit();
-                        // Tampilkan alert ketika data berhasil dihapus
-                        Swal.fire(
-                            'Data dihapus!',
-                            'Data berhasil dihapus',
-                            'success'
-                        )
-                    }
-                });
-            });
-        });
-    </script>
-
-<input type="hidden" id="table-url" value="{{ route('income') }}">
-<script src="{{ asset('main.js') }}"></script>
-<script src="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.js"></script>    
- 
+    <input type="hidden" id="table-url" value="{{ route('income') }}">
+    <script src="{{ asset('main.js') }}"></script>
+    <script src="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.js"></script>    
+    
+    
 
     
     <!-- Modal HTML -->
@@ -255,6 +234,8 @@
             </div>
         </div>
     </div>
+    
+    
     
   
     <script>

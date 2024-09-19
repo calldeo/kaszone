@@ -9,6 +9,8 @@ use App\Models\Pengeluaran;
 use Illuminate\Http\Request;
 use App\Models\ParentPengeluaran;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Foundation\Auth\User;
+use Illuminate\Support\Facades\Storage;
 
 class PengeluaranController extends Controller
 {
@@ -16,6 +18,7 @@ class PengeluaranController extends Controller
     public function index()
     {
        $pengeluaran = Pengeluaran::with('category')->get();
+       
          // Menggunakan pagination
         return view('pengeluaran.data_pengeluaran', compact('pengeluaran'));
     }
@@ -86,65 +89,46 @@ public function store(Request $request)
         }
     }
     
-
-    public function destroy($id_data)
-{
-    // Temukan pengeluaran berdasarkan ID
-    $pengeluaran = Pengeluaran::findOrFail($id_data);
-
-    // Cek jika pengeluaran memiliki parentPengeluaran
-    if ($pengeluaran->parentPengeluaran) {
-        // Dapatkan parentPengeluaran dari pengeluaran
-        $parentPengeluaran = $pengeluaran->parentPengeluaran;
+    public function delete($id_data)
+    {
+ 
+        $pengeluaran = Pengeluaran::find($id_data);
         
-        // Cek apakah pengeluaran parent memiliki lebih dari satu entri
-        if ($pengeluaran->parantPengeluaran->count() <= 1) {
-            return redirect()->back()->with('error', 'Tidak dapat menghapus data. Minimal harus ada satu pengeluaran pada parent pengeluaran.');
+        if ($pengeluaran) {
+   
+            $sameParentCount = Pengeluaran::where('id_parent', $pengeluaran->id_parent)->count();
+    
+            if ($sameParentCount > 1) {
+   
+                $pengeluaran->delete();
+                return redirect()->back()->with('success', 'Item berhasil dihapus.');
+            } else {
+
+                return redirect()->back()->with('error', 'Tidak dapat menghapus item. karena hanya ada 1 data.');
+            }
         }
+        
+        return redirect()->back()->with('error', 'Item tidak ditemukan.');
+    }
+    
+
+    public function deleteAll(Request $request)
+    {
+        // Mendapatkan id_parent dari query string atau parameter lain jika ada
+        $idParent = $request->query('id_parent');
+
+        if ($idParent) {
+            // Menghapus semua data yang terkait dengan id_parent
+            Pengeluaran::where('id_parent', $idParent)->delete();
+
+            // Mengarahkan pengguna dengan pesan sukses
+            return redirect()->back()->with('success', 'Semua item berhasil dihapus.');
+        }
+
+        // Mengarahkan kembali dengan pesan error jika id_parent tidak ada
+        return redirect()->back()->with('error', 'ID Parent tidak ditemukan.');
     }
 
-    // Lakukan penghapusan data
-    $pengeluaran->delete();
-    
-    return redirect()->back()->with('success', 'Data pengeluaran berhasil dihapus.');
-}
-
-public function destroyAll($parentId)
-{
-   $parentPengeluaran = ParentPengeluaran::findOrFail($parentId);
-
-    // Hapus semua pengeluaran yang terkait
-    $parentPengeluaran->pengeluaran()->delete();
-
-    // Hapus parent pengeluaran
-    $parentPengeluaran->delete();
-
-    return redirect()->back()->with('success', 'Semua data pengeluaran berhasil dihapus.');
-}
-
-
-    
-
-
-
-
-
-//     public function destroy($id_data)
-// {
-//    {
-//         try {
-//             $pengeluaran = Pengeluaran::find($id_data);
-
-//             if ($pengeluaran) {
-//                 $pengeluaran->forcedelete(); // Use delete() for soft deletes or forceDelete() if you need permanent deletion
-//                 return redirect('/pengeluaran')->with('success', 'Data berhasil dihapus.');
-//             } else {
-//                 return redirect('/pengeluaran')->with('error', 'Data tidak ditemukan.');
-//             }
-//         } catch (\Exception $e) {
-//             return redirect('/pengeluaran')->with('error', 'Gagal menghapus data. Silakan coba lagi.');
-//         }
-//     }}
 
     public function edit($id_data)
     {
@@ -188,7 +172,7 @@ public function destroyAll($parentId)
                     Storage::delete('public/' . $pengeluaran->image);
                 }
 
-                $path = $request->file('image')->store('images', 'public');
+                $path = $request->file('image')->store('image', 'public');
                 $pengeluaran->image = $path;
             }
 
@@ -226,7 +210,7 @@ public function cetakpgl()
 
     // Mengambil data ParentPengeluaran beserta pengeluaran terkait dan kategori
     $parentPengeluaran = ParentPengeluaran::with('pengeluaran.category')->findOrFail($id);
-
+        
     // Melempar data ke view
     return view('pengeluaran.detail', compact('parentPengeluaran'));
 

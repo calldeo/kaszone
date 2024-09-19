@@ -132,27 +132,21 @@ Route::group(['middleware' => ['auth','permission:Data Pengeluaran']], function 
     // Route::delete('/pengeluaran/{id}/destroy', [PengeluaranController::class, 'destroy'])->name('pengeluaran.destroy');
     // Route::get('/pengeluaran/{id_pengeluaran}/edit_pengeluaran',[PengeluaranController::class,'edit']);
     // Route::put('/pengeluaran/{id_pengeluaran}', [PengeluaranController::class, 'update'])->name('update');
-Route::get('/pengeluaran/{id_data}/edit', [PengeluaranController::class, 'edit'])->name('pengeluaran.edit');
-Route::put('/pengeluaran/{id_data}', [PengeluaranController::class, 'update'])->name('pengeluaran.update');
+    Route::get('/pengeluaran/{id_data}/edit', [PengeluaranController::class, 'edit'])->name('pengeluaran.edit');
+    Route::put('/pengeluaran/{id_data}', [PengeluaranController::class, 'update'])->name('pengeluaran.update');
     Route::put('/pengeluaran/{id}', [PengeluaranController::class, 'update'])->name('pengeluaran.update');
     Route::get('/cetakpgl',[PengeluaranController::class,'cetakpgl'])->name('cetakpgl');
-
-    
-    Route::get('/export-pengeluaran', function () {
-        return Excel::download(new PengeluaranExport, 'pengeluaran.xlsx');});
-
+    Route::get('/export-pengeluaran', function () {return Excel::download(new PengeluaranExport, 'pengeluaran.xlsx');});
     Route::get('/pengeluaran', [PengeluaranController::class, 'index'])->name('pengeluaran.index');
     Route::get('/pengeluaran/data', [AdminController::class, 'tabe'])->name('admin.tabe');
     Route::get('pengeluaran/tabe', [PengeluaranController::class, 'tabe'])->name('pengeluaran.tabe');
     Route::get('/pengeluaran/{id_data}/detail', [PengeluaranController::class, 'showDetail'])->name('pengeluaran.showDetail');
-
     Route::get('/download-template-kategori', [CategoryController::class, 'downloadTemplate'])->name('download-template-kategori');
     Route::post('/pengeluaran/store', [PengeluaranController::class, 'store'])->name('pengeluaran.store');
+    Route::get('/pengeluaran/delete/{id_data}', [PengeluaranController::class, 'delete'])->name('pengeluaran.delete');
+Route::get('/pengeluaran/deleteAll', [PengeluaranController::class, 'deleteAll'])->name('pengeluaran.deleteAll');
 
-    Route::delete('/pengeluaran/{id_data}', [PengeluaranController::class, 'destroy'])->name('pengeluaran.destroy');
-    Route::delete('/pengeluaran-all/{parentId}', [PengeluaranController::class, 'destroyAll'])->name('pengeluaran.destroyAll');
     
-    // Route::get('/get-categories/{jenis_kategori}', [PengeluaranController::class, 'getCategories']);
 });
 Route::group(['middleware' => ['auth','permission:Role']], function (){
 

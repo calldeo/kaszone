@@ -237,6 +237,4 @@ public function getCategories($jenisKategori)
         return response()->json($formattedOptions);
     }
 
-
-
 }
