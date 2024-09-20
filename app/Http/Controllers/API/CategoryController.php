@@ -19,7 +19,7 @@ class CategoryController extends Controller
     public function getAllCategory()
     {
         try {
-            $categories = Category::all();
+            $categories = Category::paginate(10);
             return response()->json([
                 'status' => 200,
                 'message' => 'Sukses mengambil data kategori',
