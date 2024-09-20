@@ -126,6 +126,8 @@ class CategoryController extends Controller
         // Validasi data yang diterima
         $validator = Validator::make($request->all(), [
            'name' => ['required', 'min:3', 'max:30'],
+           'jenis_kategori' => 'required',
+
             'description' => ['required', 'min:3', 'max:30'],
             // Tambahkan aturan validasi lain sesuai kebutuhan
         ]);
@@ -144,6 +146,8 @@ class CategoryController extends Controller
             // Perbarui data pengguna
                    $category->name = $request->name;
                   $category->description = $request->description; // Diperbaiki dari 'alamt' ke 'alamat'
+             $category->jenis_kategori = $request->jenis_kategori;
+
 
 
 
