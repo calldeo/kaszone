@@ -65,92 +65,73 @@
                         <div class="card-body">
                             <div class="basic-form">
                                 <form class="form-valide-with-icon" action="/pemasukan/store" method="post">
-                                   @csrf
-                                <div class="form-group">
-                                    <label class="text-label">Nama Pemasukan*</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                                    @csrf
+                                    <div class="form-group">
+                                        <label class="text-label">Nama Pemasukan*</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control" name="name" placeholder="Enter name.." value="{{ old('name') }}" required>
                                         </div>
-                                        <input type="text" class="form-control" name="name" placeholder="Enter name.." value="{{ old('name') }}" required>
+                                        @error('name')
+                                        <span class="mt-2 text-danger">{{ $message }}</span>
+                                        @enderror
                                     </div>
-                                    @error('name')
-                                    <span class="mt-2 text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="text-label">Deskripsi</label>
-                                    <div class="input-group">
+                        
+                                    <div class="form-group">
+                                        <label class="text-label">Deskripsi</label>
+                                        <div class="input-group">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="fas fa-book"></i> <!-- Ikon buku -->
-                                                </span>
+                                                <span class="input-group-text"><i class="fas fa-book"></i></span>
                                             </div>
-                             <textarea class="form-control" name="description" placeholder="Enter description..">{{ old('description') }}</textarea>
-
+                                            <textarea class="form-control" name="description" placeholder="Enter description..">{{ old('description') }}</textarea>
                                         </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="text-label">Date *</label>
-                                     <div class="input-group">
+                                    </div>
+                        
+                                    <div class="form-group">
+                                        <label class="text-label">Date *</label>
+                                        <div class="input-group">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="fas fa-calendar"></i> <!-- Ikon kalender -->
-                                                </span>
+                                                <span class="input-group-text"><i class="fas fa-calendar"></i></span>
                                             </div>
-                                             <input type="date" class="form-control" name="date" value="{{ old('date') }}" required>
-                                    @error('date')
-                                    <span class="mt-2 text-danger">{{ $message }}</span>
-                                    @enderror
-                                   
-                                </div>
-
-                            <div class="form-group">
-    <label class="text-label">Jumlah (Rp)*</label>
-    <div class="input-group">
-        <div class="input-group-prepend">
-            <span class="input-group-text">
-                <i class="fas fa-dollar-sign"></i> <!-- Ikon dolar -->
-            </span>
-        </div>
-        <input type="number" step="0.01" min="0" class="form-control" name="jumlah" placeholder="Enter amount.." value="{{ old('jumlah') }}" required>
-    </div>
-    @error('jumlah')
-    <span class="mt-2 text-danger">{{ $message }}</span>
-    @enderror
-</div>
-
-
-                                <div class="form-group">
-                                    <label class="text-label">Category *</label>
-                                     <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="fas fa-list"></i> <!-- Ikon daftar -->
-                                                </span>
-                                            </div>
-                                            {{-- <option value="">--PILIH KATEGORI--</option> --}}
-                                          <select class="form-control default-select" id="category" name="category_id" required>
-                                        
-                                        {{-- @foreach($categories as $category)
-                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                        @endforeach --}}
-                                    </select>
-                                    @error('category_id')
-                                    <span class="mt-2 text-danger">{{ $message }}</span>
-                                    @enderror
+                                            <input type="date" class="form-control" name="date" value="{{ old('date') }}" required>
                                         </div>
+                                        @error('date')
+                                        <span class="mt-2 text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                        
+                                    <div class="form-group">
+                                        <label class="text-label">Jumlah (Rp)*</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                            </div>
+                                            <input type="number" step="0.01" min="0" class="form-control" name="jumlah" placeholder="Enter amount.." value="{{ old('jumlah') }}" required>
+                                        </div>
+                                        @error('jumlah')
+                                        <span class="mt-2 text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                        
+                                    <div class="form-group">
+                                        <label class="text-label">Category *</label>
+                                        <select class="select2-with-label-single js-states form-control" id="category" name="category_id" required>
+                                            <option value="">PILIH KATEGORI</option>
                                     
-                                </div>
-
+                                        </select>
+                                        @error('category_id')
+                                        <span class="mt-2 text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                        
                                     <button type="button" class="btn btn-danger btn-cancel" onclick="window.location.href='/pemasukan'">Cancel</button>
-
                                     <button type="submit" class="btn mr-2 btn-primary btn-submit">Submit</button>
                                 </form>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
             </div>
@@ -179,51 +160,53 @@
     @include('template.scripts')
 </body>
 <script>
-    $(document).ready(function() {
-        
-        getCategories();
+  $(document).ready(function() {
+    getCategories(); // Memanggil fungsi untuk mengambil kategori
 
-        function getCategories() {
-            $.ajax({
-                url: '/get-categories/1',
-                method: 'GET',
-                success: function(data) {
-                    var $dropdown = $('#category');
-                    $dropdown.empty(); 
+    function getCategories() {
+        $.ajax({
+            url: '/get-categories/1', // Sesuaikan URL sesuai kebutuhan
+            method: 'GET',
+            success: function(data) {
+                var $dropdown = $('#category'); // Mengambil elemen dropdown dengan ID 'category'
+                $dropdown.empty(); // Menghapus opsi yang ada sebelumnya
 
+                // Menambahkan opsi default
+                $dropdown.append($('<option>', {
+                    value: '',
+                    text: 'Select Category'
+                }));
+
+                // Menambahkan kategori ke dropdown
+                $.each(data, function(index, item) {
                     $dropdown.append($('<option>', {
-                        value: '',
-                        text: 'PILIH KATEGORI'
+                        value: item.id, // Memastikan ini sesuai dengan respons API
+                        text: item.name // Menggunakan 'nama_kategori' sesuai dengan respons API
                     }));
+                });
 
-                    
-                    $.each(data, function(index, item) {
-                        $dropdown.append($('<option>', {
-                            value: item.id,
-                            text: item.name
-                        }));
-                    });
+                $dropdown.select2(); // Inisialisasi Select2
+            },
+            error: function(xhr) {
+                console.error('Error fetching categories:', xhr); // Mencetak kesalahan di konsol
+                // Menampilkan pesan kesalahan di UI
+                $('#category').append($('<option>', {
+                    value: '',
+                    text: 'Error loading categories'
+                }));
+            }
+        });
+    }
+});
 
-                 
-                    // $dropdown.select2({
-                    //     placeholder: 'PILIH KATEGORI',
-                    //     allowClear: true,
-                    //     width: '100%', 
-                    //     minimumResultsForSearch: 0 
-                    // });
-                },
-                error: function(xhr) {
-                    console.error('Error fetching options:', xhr);
-                }
-            });
-        }
-    });
 </script>
 
 
 
 
-{{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
+
+{{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
+    {{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script> --}}
+    
 </html>

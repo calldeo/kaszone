@@ -124,6 +124,7 @@ Route::get('/get-categories/{jenis_kategori}', [PemasukanController::class, 'get
 
 });
 
+
 Route::group(['middleware' => ['auth','permission:Data Pengeluaran']], function (){
 
     route::get('/pengeluaran',[PengeluaranController::class,'index'])->name('index');

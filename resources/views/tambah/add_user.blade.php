@@ -4,7 +4,7 @@
 
 <head>
     @include('template.headerr')
-    <title>PityCash | {{auth()->user()->level}} | Add</title>
+    <title>PityCash | {{auth()->user()->level}} | Add Data User</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 
@@ -139,9 +139,9 @@
                                         </div>
                                        
                                          <div class="form-group">
-                                            <label>Jenis Kelamin *</label>
+                                            <label>Gender *</label>
                                             <select class="form-control default-select" id="sel1" name="kelamin" required>
-                                                <option  value="">--Jenis Kelamin--</option>
+                                                {{-- <option  value="">--Select Gender--</option> --}}
                                                 <option  value="laki-laki">Laki-Laki</option>
                                                 <option  value="perempuan">Perempuan</option>
                                                 {{-- <option  value="guru">Guru</option>
@@ -152,7 +152,7 @@
                                             @enderror
                                         </div>
                                          <div class="form-group">
-                                            <label class="text-label">Alamat *</label>
+                                            <label class="text-label">Address *</label>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"> <i class="fa fa-map-marker-alt"></i> </span>
@@ -174,9 +174,9 @@
                                         </select>
                                     </div> --}}
                                     <div class="form-group">
-                                        <label>Peran *</label>
+                                        <label>Role *</label>
                                         <select class="form-control default-select" id="sel1" name="level[]" multiple required>
-                                            <option value="" disabled>Pilih peran</option>
+                                            <option value="" disabled>Select Role</option>
                                             @foreach($roles as $role)
                                                 <option value="{{ $role->name }}">{{ $role->name }}</option>
                                             @endforeach

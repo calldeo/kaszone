@@ -155,22 +155,15 @@
                                 @enderror
                             </div>
 
-                            <!-- Category Field -->
                             <div class="form-group">
                                 <label class="text-label">Category *</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-list"></i></span>
-                                    </div>
-                                    <select class="form-control default-select" id="category" name="category_id[]" required>
-                                        {{-- @foreach($categories as $category) --}}
-                                        {{-- <option value="{{ $category->id }}">{{ $category->name }}</option> --}}
-                                        {{-- @endforeach --}}
-                                    </select>
-                                    @error('category_id')
-                                    <span class="mt-2 text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
+                                <select class="select2-with-label-single js-states form-control" id="category" name="category_id" required>
+                                    <option value="">PILIH KATEGORI</option>
+                            
+                                </select>
+                                @error('category_id')
+                                <span class="mt-2 text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
 
                             <!-- Foto Bukti Pengeluaran Field -->
@@ -249,6 +242,7 @@
                 });
             });
         });
+        
 
         // Fungsi untuk memperbarui pratinjau gambar
         function updateImagePreview(input, imageId) {
@@ -337,17 +331,16 @@ $('#add-more-fields').on('click', function() {
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="text-label">Category *</label>
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-list"></i></span>
-                    </div>
-                    <select class="form-control default-select" name="category_id[]" required>
-                        <!-- Options will be dynamically inserted here -->
-                    </select>
-                </div>
-            </div>
+           <div class="form-group">
+                                        <label class="text-label">Category *</label>
+                                        <select class="select2-with-label-single js-states form-control" id="category" name="category_id[]" required>
+                                            <option value="">PILIH KATEGORI</option>
+                                    
+                                        </select>
+                                        @error('category_id')
+                                        <span class="mt-2 text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
 
             <!-- Field untuk Foto Bukti Pengeluaran -->
             <div class="form-group">
@@ -400,6 +393,7 @@ $('#add-more-fields').on('click', function() {
                     }));
                 });
             });
+            
         });
     });
 });
@@ -419,37 +413,47 @@ $('#add-more-fields').on('click', function() {
 });
 </script>
 </script>
-    <script>
-    $(document).ready(function() {
-            // Mengambil data dari server untuk mengisi dropdown
-           getCategories()
+  <script>
+  $(document).ready(function() {
+    getCategories(); // Memanggil fungsi untuk mengambil kategori
 
-        function getCategories (){
-            $.ajax({
-                url: '/get-categories/2',
-                method: 'GET',
-                success: function(data) {
-                    // Menambahkan option ke dropdown
-                    var $dropdown = $('#category');
-                    $dropdown.empty(); // Kosongkan dropdown
-                    
+    function getCategories() {
+        $.ajax({
+            url: '/get-categories/2 ', // Sesuaikan URL sesuai kebutuhan
+            method: 'GET',
+            success: function(data) {
+                var $dropdown = $('#category'); // Mengambil elemen dropdown dengan ID 'category'
+                $dropdown.empty(); // Menghapus opsi yang ada sebelumnya
+
+                // Menambahkan opsi default
+                $dropdown.append($('<option>', {
+                    value: '',
+                    text: 'Select Category'
+                }));
+
+                // Menambahkan kategori ke dropdown
+                $.each(data, function(index, item) {
                     $dropdown.append($('<option>', {
-                        value: '',
-                        text: 'PILIH KATEGORI'
+                        value: item.id, // Memastikan ini sesuai dengan respons API
+                        text: item.name // Menggunakan 'nama_kategori' sesuai dengan respons API
                     }));
-                    $.each(data, function(index, item) {
-                        $dropdown.append($('<option>', {
-                            value: item.id,
-                            text: item.name
-                        }));
-                    });
-                },
-                error: function(xhr) {
-                    console.error('Error fetching options:', xhr);
-                }
-            });
-        }
+                });
+
+                $dropdown.select2(); // Inisialisasi Select2
+            },
+            error: function(xhr) {
+                console.error('Error fetching categories:', xhr); // Mencetak kesalahan di konsol
+                // Menampilkan pesan kesalahan di UI
+                $('#category').append($('<option>', {
+                    value: '',
+                    text: 'Error loading categories'
+                }));
+            }
         });
+    }
+});
+
+
         </script>
        <script>
         

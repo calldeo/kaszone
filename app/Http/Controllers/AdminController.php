@@ -296,8 +296,12 @@ class AdminController extends Controller
 public function production(Request $request) // PENGELUARAN
 {
     if ($request->ajax()) {
-        $pengeluaran = ParentPengeluaran::with('pengeluaran.category')->select(['id', 'tanggal']);
-        
+        $startDate = $request->input('start_created_at');
+        $endDate = $request->input('end_created_at');
+        $pengeluaran = ParentPengeluaran::with('pengeluaran.category')->select(['id', 'tanggal','created_at']);
+        if ($startDate != null && $endDate != null){
+            $pengeluaran = $pengeluaran->whereBetween('created_at', [$startDate, $endDate]);
+        }
         return DataTables::of($pengeluaran)
             ->addIndexColumn()
 

@@ -12,7 +12,9 @@
 	
 	<!-- Dashboard 1 -->
 	<script src="{{asset('dash/js/dashboard/dashboard-1.js')}}"></script>
-	
+	<script src="{{asset('dash/vendor/select2/js/select2.full.min.js')}}"></script>
+    <script src="{{asset('dash/js/plugins-init/select2-init.js')}}"></script>
+
 	<script src="{{asset('dash/vendor/owl-carousel/owl.carousel.js')}}"></script>
     <script src="{{asset('dash/js/custom.min.js')}}"></script>
 	<script src="{{asset('dash/js/deznav-init.js')}}"></script>

@@ -3,11 +3,8 @@
 
 <head>
     @include('template.headerr')
-    <title>PityCash | {{auth()->user()->level}} | Pengeluaran</title>
+    <title>PityCash | {{ auth()->user()->level }} | Pengeluaran</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    
-
-    
 </head>
 
 <body>
@@ -46,29 +43,29 @@
                         <div class="card-header">
                             <h4 class="card-title">Data Pengeluaran</h4>
                             <div class="text-right">
- 
-                          @hasrole('Admin|Bendahara') 
-                          <a href="/add_pengeluaran" class="btn btn-warning ml-1" title="Add">
-                            <i class="fa fa-plus"></i>
-                        </a>
-                        @endhasrole
+                                <div class="example">
+                                    <p class="mb-1">Filter Tanggal</p>
+                                    <input class="form-control input-daterange-datepicker" type="text" name="daterange" placeholder="Masukkan Tanggal">
+                                </div>
+                                @hasrole('Admin|Bendahara') 
+                                <a href="/add_pengeluaran" class="btn btn-warning ml-1" title="Add">
+                                    <i class="fa fa-plus"></i>
+                                </a>
+                                @endhasrole
 
-                            @hasrole('Admin|Bendahara') 
-                            <a href="/cetakpgl" target="_blank" class="btn btn-info ml-1" title="Print Report">
-                                <i class="fa fa-print"></i>
-                            </a>
-                            @endhasrole
-                            @hasrole('Admin|Bendahara') 
-                                                    <a href="{{ url('/export-pengeluaran') }}" class="btn btn-success ml-1" title="Export to Excel">
-                                <i class="fa fa-file-excel"></i>
-                            </a>
-                            @endhasrole
-
-
-
-            </div>
-
+                                @hasrole('Admin|Bendahara') 
+                                <a href="/cetakpgl" target="_blank" class="btn btn-info ml-1" title="Print Report">
+                                    <i class="fa fa-print"></i>
+                                </a>
+                                @endhasrole
+                                @hasrole('Admin|Bendahara') 
+                                <a href="{{ url('/export-pengeluaran') }}" class="btn btn-success ml-1" title="Export to Excel">
+                                    <i class="fa fa-file-excel"></i>
+                                </a>
+                                @endhasrole
+                            </div>
                         </div>
+
                         <div class="card-body">
                             @if(session('error'))
                                 <div class="alert alert-danger alert-dismissible fade show">
@@ -79,75 +76,61 @@
 
                             @if(session('success'))
                             <div class="alert alert-success alert-dismissible fade show">
-                                <svg viewbox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
-                                    <polyline points="9 11 12 14 22 4"></polyline>
-                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-                                </svg>
                                 <strong>Success!</strong> {{ session('success') }}
                                 <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span></button>
                             </div>
                             @endif
                             @if(session('update_success'))
                             <div class="alert alert-warning alert-dismissible fade show">
-                                <svg viewbox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
-                                    <polyline points="9 11 12 14 22 4"></polyline>
-                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-                                </svg>
                                 <strong>Success!</strong> {{ session('update_success') }}
                                 <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span></button>
                             </div>
                             @endif
-                            {{-- <link href="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.css" rel="stylesheet"> --}}
+
                             <div class="table-responsive">
                                 <table id="pengeluaranTable" class="table table-responsive-md">
                                     <thead>
                                         <tr>
-                                            <th style="width:50px;">
-                                                <strong>No</strong>
-                                            </th>
+                                            <th style="width:50px;"><strong>No</strong></th>
                                             <th><strong>Nama</strong></th>
                                             <th><strong>Deskripsi</strong></th>
                                             <th><strong>Kategori</strong></th>
-                                            <th><strong>Tanggal</strong></th> 
+                                            <th><strong>Tanggal</strong></th>
                                             <th><strong>Jumlah Satuan</strong></th>
                                             <th><strong>Nominal(Rp)</strong></th>  
                                             <th><strong>Lain - lain</strong></th>
                                             <th><strong>Image</strong></th> 
                                             <th><strong>Total(Rp)</strong></th>
-                                            {{-- <th><strong>Status</strong></th> --}}
                                             <th><strong>Option</strong></th>
                                         </tr>
                                     </thead>
-                                 
                                 </table>
                             </div>
                         </div>
-                               <div class="d-flex justify-content-end">
-                    {{-- {{ $users->links() }} --}}
-                </div>
+                        <div class="d-flex justify-content-end">
+                            {{-- {{ $users->links() }} --}}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-        <!-- Modal HTML -->
-<div id="imageModal" class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Image Preview</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <img id="modalImage" src="" alt="Image Preview" style="width: 100%; height: auto;" />
+    <!-- Modal HTML -->
+    <div id="imageModal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Image Preview</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img id="modalImage" src="" alt="Image Preview" style="width: 100%; height: auto;" />
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-    <!-- Content body end -->
 
     <!-- Footer start -->
     <div class="footer">
@@ -157,42 +140,90 @@
     </div>
     <!-- Footer end -->
 
-    <!-- Main wrapper end -->
-
     <!-- Scripts -->
-    <!-- Required vendors -->
     @include('template.scripts')
 
+    <input type="hidden" id="table-url" value="{{ route('production') }}">
+    <script src="{{ asset('main.js') }}"></script>
+    <script src="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.js"></script>
 
-
-<input type="hidden" id="table-url" value="{{ route('production') }}">
-<script src="{{ asset('main.js') }}"></script>
-<script src="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.js"></script>
- 
-
-  
-
-  
     <script>
+        var filterDataPengeluaran = {
+            start_created_at: null,
+            end_created_at: null
+        };
 
         $(document).ready(function() {
-    // Tampilkan modal dan gambar
-    $('#dataTable').on('click', '.preview-image', function() {
-        var imageUrl = $(this).data('image-url');
-        $('#modalImage').attr('src', imageUrl);
-        $('#imageModal').modal('show');
-    });
+            // Inisialisasi tabel
+            pengeluaranTable(filterDataPengeluaran);
+            $('.input-daterange-datepicker').val('');
 
-    // Menutup modal saat klik di luar
-    $(window).on('click', function(event) {
-        if ($(event.target).is('#imageModal')) {
-            $('#imageModal').modal('hide');
+            // Inisialisasi daterangepicker
+            $('.input-daterange-datepicker').daterangepicker({
+                autoUpdateInput: false,
+                locale: {
+                    format: 'MM/DD/YYYY'
+                }
+            }, function(start, end, label) {
+                filterDataPengeluaran.start_created_at = start.format('YYYY-MM-DD 00:00:00');
+                filterDataPengeluaran.end_created_at = end.format('YYYY-MM-DD 23:59:59');
+                pengeluaranTable(filterDataPengeluaran);
+            });
+
+            $('.input-daterange-datepicker').on('apply.daterangepicker', function(ev, picker) {
+                var startDate = picker.startDate.format('YYYY-MM-DD');
+                var endDate = picker.endDate.format('YYYY-MM-DD');
+
+                console.log('Selected date range for pengeluaran: ' + startDate + ' to ' + endDate);
+            });
+
+            $('.input-daterange-datepicker').on('cancel.daterangepicker', function(ev, picker) {
+                $(this).val('');
+                filterDataPengeluaran.start_created_at = null;
+                filterDataPengeluaran.end_created_at = null;
+                pengeluaranTable(filterDataPengeluaran);
+            });
+        });
+
+        function pengeluaranTable(filterDataPengeluaran) {
+            tablePengeluaran = $('#pengeluaranTable').DataTable({
+                ordering: true,
+                destroy: true,
+                serverSide: true,
+                processing: true,
+                ajax: {
+                    url: $('#table-url').val(),
+                    type: 'GET',
+                    dataType: 'json',
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error('AJAX error:', textStatus, errorThrown);
+                        alert('Terjadi kesalahan saat memuat data. Silakan coba lagi nanti.');
+                    },
+                    data: filterDataPengeluaran // Mengirim filterDataPengeluaran
+                },
+                columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', width: '10px', orderable: false, searchable: false },
+                    { data: 'name', name: 'name' },
+                    { data: 'description', name: 'description' },
+                    { data: 'category', name: 'category' },
+                    { data: 'tanggal', name: 'tanggal' },
+                    { data: 'jumlah_satuan', name: 'jumlah_satuan' },
+                    { data: 'nominal', name: 'nominal' },
+                    { data: 'dll', name: 'dll' },
+                    { data: 'image', name: 'image' },
+                    { data: 'jumlah', name: 'jumlah' },
+                    { data: 'created_at', name: 'created_at' },
+                    { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
+                ],
+                columnDefs: [
+                    {
+                        "targets": "_all",
+                        "defaultContent": '<div class="align-middle text-center">-</div>'
+                    },
+                ]
+            });
         }
-    });
-});
-
-        </script>
-
+    </script>
 </body>
 
 </html>

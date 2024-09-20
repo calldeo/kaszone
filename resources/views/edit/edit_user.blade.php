@@ -74,15 +74,15 @@
                                         <label class="text-label text-danger mt-3">* Jika tidak ada perubahan, tidak perlu diisi</label>
                                     </div>
                                     <div class="form-group">
-                                        <label>Jenis Kelamin*</label>
+                                        <label>Gender *</label>
                                         <select class="form-control default-select" name="kelamin" required>
-                                            <option value="">-- JENIS KELAMIN --</option>
+                                            <option value="">-- Select Gender --</option>
                                             <option value="laki-laki" {{ old('kelamin', $guruu->kelamin) == 'laki-laki' ? 'selected' : '' }}>Laki-Laki</option>
                                             <option value="perempuan" {{ old('kelamin', $guruu->kelamin) == 'perempuan' ? 'selected' : '' }}>Perempuan</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label class="text-label">Alamat *</label>
+                                        <label class="text-label">Address *</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"> <i class="fa fa-map-marker-alt"></i> </span>
@@ -91,7 +91,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="text-label">Pilih Peran *</label>
+                                        <label class="text-label">Select Role *</label>
                                         @foreach($roles as $role)
                                         <div class="mb-2">
                                             <input 

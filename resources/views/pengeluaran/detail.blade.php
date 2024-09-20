@@ -99,9 +99,9 @@
                                 <a href="{{ route('pengeluaran.delete', $pengeluaran->id_data) }}" class="dropdown-item" onclick="return confirm('Apakah Anda yakin ingin menghapus item ini?')">
                                     <i class="fas fa-trash"></i> Hapus Satu
                                 </a>
-                                <a href="{{ route('pengeluaran.deleteAll', ['id_parent' => $idParent]) }}" class="dropdown-item" onclick="return confirm('Apakah Anda yakin ingin menghapus semua item?')">
+                                {{-- <a href="{{ route('pengeluaran.deleteAll', ['id_parent' => $idParent]) }}" class="dropdown-item" onclick="return confirm('Apakah Anda yakin ingin menghapus semua item?')">
                                     <i class="fas fa-trash-alt"></i> Hapus Semua
-                                </a>
+                                </a> --}}
                                 
                             </div>
                         </div>
@@ -129,53 +129,36 @@
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Jumlah Satuan</label>
+                                <input type="text" name="jumlah_satuan" class="form-control editable-input" value="{{ $pengeluaran->jumlah_satuan }}" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Nominal</label>
+                                <input type="text" name="nominal" class="form-control editable-input" value="{{ number_format($pengeluaran->nominal, 2, ',', '.') }}" readonly>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Nama</label>
-                                    <input type="text" name="name" class="form-control editable-input" value="{{ $pengeluaran->name }}" readonly>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Deskripsi</label>
-                                    <textarea name="description" class="form-control editable-input" rows="3" readonly>{{ $pengeluaran->description }}</textarea>
-                                </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Kategori</label>
+                                <input type="text" name="category" class="form-control editable-input" value="{{ $pengeluaran->category->name ?? 'Tidak ada kategori' }}" readonly>
                             </div>
                         </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Jumlah Satuan</label>
-                                    <input type="text" name="jumlah_satuan" class="form-control editable-input" value="{{ $pengeluaran->jumlah_satuan }}" readonly>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Nominal</label>
-                                    <input type="text" name="nominal" class="form-control editable-input" value="{{ number_format($pengeluaran->nominal, 2, ',', '.') }}" readonly>
-                                </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Total</label>
+                                <input type="text" name="jumlah" class="form-control editable-input" value="{{ $pengeluaran->jumlah }}" readonly>
                             </div>
                         </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Kategori</label>
-                                    <input type="text" name="category" class="form-control editable-input" value="{{ $pengeluaran->category->name ?? 'Tidak ada kategori' }}" readonly>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Total</label>
-                                    <input type="text" name="jumlah" class="form-control editable-input" value="{{ $pengeluaran->jumlah }}" readonly>
-                                </div>
-                            </div>
-                        </div>
-
+                    </div>
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label>Lain-lain</label>
                             <input type="text" name="dll" class="form-control editable-input" value="{{ $pengeluaran->dll }}" readonly>
@@ -185,40 +168,6 @@
                                 <div class="form-group">
                                     <label>Gambar</label>
                                     <img src="{{ $pengeluaran->image ? asset('storage/' . $pengeluaran->image) : asset('dash/images/cash.png') }}" alt="Gambar" class="img-thumbnail">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Modal Konfirmasi Hapus -->
-                    <div class="modal fade" id="deleteModal{{ $pengeluaran->id_data }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel{{ $pengeluaran->id_data }}" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="deleteModalLabel{{ $pengeluaran->id_data }}">Konfirmasi Hapus</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    Apakah Anda ingin menghapus pengeluaran ini atau menghapus semua pengeluaran?
-                                </div>
-                                <div class="modal-footer">
-                                    <!-- Tombol Hapus Satu -->
-                                    <form action="{{ route('pengeluaran.destroy', $pengeluaran->id_data) }}" method="POST">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger">Hapus Pengeluaran Ini</button>
-                                    </form>
-
-                                    <!-- Tombol Hapus Semua -->
-                                    <form action="{{ route('pengeluaran.destroyAll', $parentPengeluaran->id_data) }}" method="POST">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger">Hapus Semua</button>
-                                    </form>
-                                    
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                                 </div>
                             </div>
                         </div>
