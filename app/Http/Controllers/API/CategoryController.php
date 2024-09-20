@@ -49,6 +49,7 @@ class CategoryController extends Controller
         
         $validate= Validator::make($request->all(),[
             'name' => ['required', 'min:3', 'max:30'],
+            'jenis_kategori' => 'required',
             'description' => ['required', 'min:3', 'max:30'],
 
        
@@ -74,6 +75,7 @@ class CategoryController extends Controller
            
             $category = new Category();
              $category->name = $request->name;
+             $category->jenis_kategori = $request->jenis_kategori;
              $category->description = $request->description;
             $category->save();
 
