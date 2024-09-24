@@ -19,7 +19,7 @@ class PengeluaranController extends Controller
     public function getAllOutcome()
     {
         try {
-            $pengeluaran = Pengeluaran::with('category')->get();
+            $pengeluaran = Pengeluaran::with('category')->paginate(5);
             return response()->json([
                 'status' => 200,
                 'message' => 'Sukses mengambil data pengeluaran',

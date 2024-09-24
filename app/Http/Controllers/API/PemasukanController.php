@@ -19,7 +19,7 @@ class PemasukanController extends Controller
     public function getAllIncome()
     {
         try {
-            $pemasukan = Pemasukan::with('category')->get();
+            $pemasukan = Pemasukan::with('category')->paginate(5);
             return response()->json([
                 'status' => 200,
                 'message' => 'Sukses mengambil data pemasukan',
