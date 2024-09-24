@@ -83,7 +83,6 @@
                                             <th><strong>Deskripsi</strong></th>
                                             <th><strong>Kategori</strong></th>
                                             <th><strong>Tanggal</strong></th>
-                                            <th><strong>Tanggal dibuat</strong></th>   
                                             <th><strong>Jumlah(Rp)</strong></th>
                                         </tr>
                                     </thead>
@@ -128,7 +127,6 @@
                                             <th><strong>Lain - lain</strong></th>
                                             <th><strong>Image</strong></th> 
                                             <th><strong>Total(Rp)</strong></th>
-                                            <th><strong>Tanggal dibuat</strong></th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -188,13 +186,29 @@
                     var today = moment();
                     filterData.start_created_at = moment().year(selectedYear).startOf('year').format('YYYY-MM-DD');
                     filterData.end_created_at = moment().year(selectedYear).endOf('year').format('YYYY-MM-DD');
+                    
+                    $('.input-daterange-datepicker').on('apply.daterangepicker', function(ev, picker) {
+                if (filterData.year === null) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Perhatian!',
+                        text: 'Harap pilih tahun terlebih dahulu.'
+                    });
+                    return;
+                }
     
-                                
-                            // Memuat data tabel pemasukan
-                pemasukanTables(filterData);
+                filterData.start_created_at = picker.startDate.format('YYYY-MM-DD');
+                filterData.end_created_at = picker.endDate.format('YYYY-MM-DD');
+    
                 
-                // Memuat data tabel pengeluaran
+                 pemasukanTables(filterData);
+                  pengeluaranTables(filterData);
+
+            });
+                                
+                pemasukanTables(filterData);
                 pengeluaranTables(filterData);
+
                 } else {
                     $('.input-daterange-datepicker').prop('disabled', true);
                     filterData.year = null;
@@ -219,15 +233,11 @@
     
                 
                  pemasukanTables(filterData);
-    
-                 // Memuat data tabel pengeluaran
                   pengeluaranTables(filterData);
+
             });
-    
-            // Memuat data tabel pemasukan
+
             pemasukanTables(filterData);
-    
-            // Memuat data tabel pengeluaran
             pengeluaranTables(filterData);
         });
     
@@ -257,7 +267,6 @@
                     { data: 'description', name: 'description' },
                     { data: 'category', name: 'category' },
                     { data: 'date', name: 'date' },
-                    { data: 'created_at', name: 'created_at' },
                     { data: 'jumlah', name: 'jumlah' }
                 ],
                 "lengthMenu": [5, 10, 25, 50, 100],
@@ -295,7 +304,6 @@
                     { data: 'dll', name: 'dll' },
                     { data: 'image', name: 'image' },
                     { data: 'jumlah', name: 'jumlah' },
-                    { data: 'created_at', name: 'created_at' },
                 ],
                 "lengthMenu": [5, 10, 25, 50, 100],
             });

@@ -101,7 +101,6 @@
                                             <th><strong>Lain - lain</strong></th>
                                             <th><strong>Image</strong></th> 
                                             <th><strong>Total(Rp)</strong></th>
-                                            <th><strong>Tanggal dibuat</strong></th>
                                             <th><strong>Option</strong></th>
                                         </tr>
                                     </thead>
@@ -220,7 +219,6 @@
                     { data: 'dll', name: 'dll' },
                     { data: 'image', name: 'image' },
                     { data: 'jumlah', name: 'jumlah' },
-                    { data: 'created_at', name: 'created_at' },
                     { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
                 ],
                 columnDefs: [

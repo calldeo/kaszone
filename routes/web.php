@@ -150,6 +150,8 @@ Route::group(['middleware' => ['auth','permission:Data Pengeluaran']], function 
     Route::get('/pengeluaran/delete/{id_data}', [PengeluaranController::class, 'delete'])->name('pengeluaran.delete');
 Route::get('/pengeluaran/deleteAll', [PengeluaranController::class, 'deleteAll'])->name('pengeluaran.deleteAll');
 Route::get('/laporan', [LaporanController::class, 'index'])->name('index');
+Route::post('/total', [LaporanController::class, 'getTotal'])->name('get.total');
+
 
 
     

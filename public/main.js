@@ -101,7 +101,6 @@ $(document).ready(function(){
                 { data: 'description', name: 'description' },
                 { data: 'category', name: 'category' }, // Pastikan ini sesuai dengan addColumn di server
                 { data: 'date', name: 'date' },
-                { data: 'created_at', name: 'created_at' },
                 { data: 'jumlah', name: 'jumlah' },
                 { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
             ],

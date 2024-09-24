@@ -258,15 +258,15 @@ public function income(Request $request) // PEMASUKAN
         $endDate = $request->input('end_created_at');
         $year = $request->input('year'); 
 
-        $pemasukan = Pemasukan::with('category')->select(['id_data', 'name', 'description', 'date', 'jumlah', 'id', 'created_at']);
+        $pemasukan = Pemasukan::with('category')->select(['id_data', 'name', 'description', 'date', 'jumlah', 'id']);
 
      
         if ($year) {
-            $pemasukan = $pemasukan->whereYear('created_at', $year);
+            $pemasukan = $pemasukan->whereYear('date', $year);
         }
         // dd($startDate, $endDate);
         if ($startDate != null && $endDate != null) {
-            $pemasukan = $pemasukan->whereBetween('created_at', [$startDate, $endDate]);
+            $pemasukan = $pemasukan->whereBetween('date', [$startDate, $endDate]);
         }
 
         return DataTables::of($pemasukan)
@@ -306,15 +306,15 @@ public function production(Request $request) // PENGELUARAN
         $endDate = $request->input('end_created_at');
         $year = $request->input('year'); 
 
-        $pengeluaran = ParentPengeluaran::with('pengeluaran.category')->select(['id', 'tanggal', 'created_at']);
+        $pengeluaran = ParentPengeluaran::with('pengeluaran.category')->select(['id', 'tanggal']);
 
         
         if ($year) {
-            $pengeluaran = $pengeluaran->whereYear('created_at', $year);
+            $pengeluaran = $pengeluaran->whereYear('tanggal', $year);
         }
 
         if ($startDate != null && $endDate != null) {
-            $pengeluaran = $pengeluaran->whereBetween('created_at', [$startDate, $endDate]);
+            $pengeluaran = $pengeluaran->whereBetween('tanggal', [$startDate, $endDate]);
         }
 
         return DataTables::of($pengeluaran)
