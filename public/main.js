@@ -3,6 +3,12 @@ $(document).ready(function(){
         ordering: true,
         serverSide: true,  // Menunjukkan bahwa data diambil dari server
         processing: true,  // Menunjukkan bahwa ada proses loading data
+        language: {
+            paginate: {
+            next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+            previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
+            }
+        },
         ajax: {
             url: $('#table-url').val(),  // Mengambil URL dari elemen input tersembunyi
             type: 'GET',  // Metode pengambilan data
@@ -72,6 +78,12 @@ $(document).ready(function(){
             destroy: true,
             serverSide: true,  // Menunjukkan bahwa data diambil dari server
             processing: true,  // Menunjukkan bahwa ada proses loading data
+            language: {
+                paginate: {
+                next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+                previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
+                }
+            },
             ajax: {
                 url: $('#table-url').val(),  // Mengambil URL dari elemen input tersembunyi
                 type: 'GET',  // Metode pengambilan data
@@ -110,6 +122,12 @@ $(document).ready(function(){
         ordering: true,
         serverSide: true,  // Indicates that data is fetched from the server
         processing: true,  // Indicates that there is loading data processing
+        language: {
+            paginate: {
+            next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+            previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
+            }
+        },
         ajax: {
             url: $('#table-url').val(),  // Fetch URL from hidden input element
             type: 'GET',  // Method to fetch data
@@ -138,6 +156,12 @@ $(document).ready(function(){
         ordering: true,
         serverSide: true,  // Menunjukkan bahwa data diambil dari server
         processing: true,  // Menunjukkan bahwa ada proses loading data
+        language: {
+            paginate: {
+            next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+            previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
+            }
+        },
         ajax: {
             url: $('#table-url').val(),  // Mengambil URL dari elemen input tersembunyi
             type: 'GET',  // Metode pengambilan data
