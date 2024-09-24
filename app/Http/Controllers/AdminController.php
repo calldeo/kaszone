@@ -334,8 +334,8 @@ public function production(Request $request) // PENGELUARAN
                                     <img src="' . $imageUrl . '" width="75" height="75" style="object-fit:cover; cursor:pointer;" />
                                 </a><br>';
                 }
-                return $imageHtml ?: '<a href="' . asset('dash/images/usr.png') . '" target="_blank">
-                                        <img src="' . asset('dash/images/usr.png') . '" width="100" height="100" style="object-fit:cover; cursor:pointer;" />
+                return $imageHtml ?: '<a href="' . asset('dash/images/cash.png') . '" target="_blank">
+                                        <img src="' . asset('dash/images/cash.png') . '" width="100" height="100" style="object-fit:cover; cursor:pointer;" />
                                     </a>';
             })
             ->addColumn('description', function ($row) {

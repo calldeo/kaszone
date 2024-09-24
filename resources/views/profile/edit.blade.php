@@ -65,7 +65,8 @@
                                         <!-- Menampilkan Foto Profil -->
                                      <!-- Menampilkan Logo atau Default Profile -->
                                         <div class="mb-3">
-                                            <img src="{{ auth()->user()->logo ? asset('storage/' . auth()->user()->logo) : asset('dash/images/usr.png') }}" alt="Logo Profil" class="square-image" width="150" height="150">
+                                           <img src="{{ auth()->user()->logo ? asset('storage/' . auth()->user()->logo) : asset('dash/images/usr.png') }}" alt="Logo Profil" class="square-image" width="150" height="150">
+
                                         </div>
 
                                         
@@ -101,7 +102,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label>Kelamin *</label>
+                                        <label>Jenis Kelamin *</label>
                                         <select class="form-control default-select" name="kelamin" disabled>
                                             <option value="laki-laki" {{ auth()->user()->kelamin == 'laki-laki' ? 'selected' : '' }}>Laki - Laki</option>
                                             <option value="perempuan" {{ auth()->user()->kelamin == 'perempuan' ? 'selected' : '' }}>Perempuan</option>

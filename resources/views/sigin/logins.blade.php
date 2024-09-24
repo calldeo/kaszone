@@ -11,7 +11,7 @@
     <title>Login - PityCash</title>
     <!-- BEGIN: CSS Assets-->
     <link rel="stylesheet" href="{{ asset('dashboards/dist/css/app.css') }}" />
-    <!-- END: CSS Assets-->
+    <!-- END: CSS Assets -->
     <!-- END: Head -->
 </head>
 <body class="login">
@@ -19,19 +19,14 @@
         <div class="block xl:grid grid-cols-2 gap-4">
             <!-- BEGIN: Login Info -->
             <div class="hidden xl:flex flex-col min-h-screen">
-                {{-- <a href="/" class="-intro-x flex items-center pt-5">
-                    <img alt="Midone - HTML Admin Template" class="w-6" src="{{ asset('dashboards/dist/images/logo.svg') }}">
-                    <span class="text-white text-lg ml-3">PityCash</span>
-                </a> --}}
                 <div class="my-auto">
-                    <img alt="Midone - HTML Admin Template" class="-intro-x w-1/2 -mt-16" src="{{ asset('dashboards/dist/images/piticash.png') }}" alt="Brand Title" width="150" height="50">
+                    <img alt="Brand Title" class="-intro-x w-1/2 -mt-16" src="{{ asset('dashboards/dist/images/piticash.png') }}" width="150" height="50">
                     <div class="-intro-x text-white font-medium text-1xl leading-tight mt-10">
-                        Nothing is impossible. Anything can happen as long as we believe
+                        Nothing is impossible. Anything can happen as long as we believe.
                         <br>
                         Sign in to your account.
                     </div>
                 </div>
-                
             </div>
             <!-- END: Login Info -->
             
@@ -44,22 +39,14 @@
                     <div class="intro-x mt-2 text-slate-400 xl:hidden text-center">
                         A few more clicks to sign in to your account. Manage all your e-commerce accounts in one place.
                     </div>
+
                     <form class="user" method="post" action="/postlogin">
                         {{ csrf_field() }}
                         <div class="intro-x mt-8">
-    <input type="email" name="email" value="{{ Session::get('email') }}" class="intro-x login__input form-control py-3 px-4 block" placeholder="Email">
-    <input type="password" name="password" class="intro-x login__input form-control py-3 px-4 block mt-4" placeholder="Password" >
-</div>
-
-                        <div class="intro-x flex text-slate-600 dark:text-slate-500 text-xs sm:text-sm mt-4">
-                            {{-- <div class="flex items-center mr-auto">
-                                <input id="remember-me" type="checkbox" class="form-check-input border mr-2">
-                                <label class="cursor-pointer select-none" for="remember-me">Remember me</label>
-                            </div> --}}
-                            {{-- <div class="new-account mr-2">
-                                <p>Don't have an account? <a class="text-primary" href="/register">Sign up</a></p>
-                            </div> --}}
+                            <input type="email" name="email" value="{{ Session::get('email') }}" class="intro-x login__input form-control py-3 px-4 block" placeholder="Email" required>
+                            <input type="password" name="password" class="intro-x login__input form-control py-3 px-4 block mt-4" placeholder="Password" required>
                         </div>
+
                         <div class="intro-x mt-5 xl:mt-8 text-center xl:text-left">
                             <button class="btn btn-primary py-3 px-4 w-full xl:w-32 xl:mr-3 align-top" id="btn" style="background-color: #EB8153; border: none; color: white;">Login</button>
                         </div>
@@ -72,21 +59,38 @@
 
     <!-- BEGIN: JS Assets-->
     <script src="{{ asset('dashboards/dist/js/app.js') }}"></script>
-    {{-- @include('sweetalert::alert') --}}
-    <!-- Optional SweetAlert script -->
-    <!-- 
-    {{-- <script src="{{ asset('dist/sweetalert2.all.min.js') }}"></script> --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Include SweetAlert -->
     <script>
-        const btn = document.getElementById('btn');
-        btn.addEventListener('click', function(){
+        // Check for login error message in session
+        @if (session('login_error'))
             Swal.fire({
-                title: 'Selamat Datang',
-                text: 'Anda Berhasil Login',
-                icon: 'success'
-            })
-        })
+                title: 'Error!',
+                text: '{{ session('login_error') }}',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                    confirm: 'swal2-confirm custom-confirm' // Add custom class for the confirm button
+                },
+                buttonsStyling: false // Disable default button styling
+            });
+
+            // Style the confirm button after alert is shown
+            setTimeout(() => {
+                const confirmButton = document.querySelector('.swal2-confirm');
+                if (confirmButton) {
+                    confirmButton.style.backgroundColor = '#EB8153'; // Set button background color
+                    confirmButton.style.color = 'white'; // Set button text color
+                    confirmButton.style.border = 'none'; // Remove border
+                    confirmButton.style.borderRadius = '5px'; // Add rounded corners
+                    confirmButton.style.padding = '10px 20px'; // Add padding for better appearance
+                    confirmButton.style.fontWeight = 'bold'; // Make text bold
+                    confirmButton.style.fontSize = '16px'; // Adjust font size
+                    confirmButton.style.cursor = 'pointer'; // Change cursor on hover
+                    confirmButton.style.boxShadow = 'none'; // Remove any shadow if present
+                }
+            }, 1); // Small timeout to ensure the button is available in the DOM
+        @endif
     </script>
-    -->
     <!-- END: JS Assets-->
 </body>
 </html>

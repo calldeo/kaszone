@@ -52,9 +52,11 @@ public function postlogin(Request $request)
     if (Auth::attempt($infologin)) {
         return redirect('home');
     } else {
-        return redirect('/login')->withErrors('Username dan Password yang dimasukkan tidak valid');
+        // Set a session variable for the login error
+        return redirect('/login')->with('login_error', 'Email dan Password yang dimasukkan tidak valid');
     }
 }
+
 
 public function logout(Request $request)
 {

@@ -99,19 +99,7 @@
                                 </div>
                             </div>
 
-                            <!-- Jumlah Satuan Field -->
-                            <div class="form-group">
-                                <label class="text-label">Jumlah Satuan *</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                                    </div>
-                                    <input type="number" step="0.01" class="form-control" id="jumlah_satuan" name="jumlah_satuan[]" placeholder="Enter amount.." value="{{ old('jumlah_satuan') }}" required>
-                                </div>
-                                @error('jumlah_satuan')
-                                <span class="mt-2 text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
+                            
 
                             <!-- Nominal Field -->
                             <div class="form-group">
@@ -123,6 +111,20 @@
                                     <input type="number" step="0.01" class="form-control" id="nominal" name="nominal[]" placeholder="Enter amount.." value="{{ old('nominal') }}" required>
                                 </div>
                                 @error('nominal')
+                                <span class="mt-2 text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <!-- Jumlah Satuan Field -->
+                            <div class="form-group">
+                                <label class="text-label">Jumlah Satuan *</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                    </div>
+                                    <input type="number" step="0.01" class="form-control" id="jumlah_satuan" name="jumlah_satuan[]" placeholder="Enter amount.." value="{{ old('jumlah_satuan') }}" required>
+                                </div>
+                                @error('jumlah_satuan')
                                 <span class="mt-2 text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -157,7 +159,7 @@
 
                             <div class="form-group">
                                 <label class="text-label">Category *</label>
-                                <select class="select2-with-label-single js-states form-control" id="category" name="category_id" required>
+                                <select class="select2-with-label-single js-states form-control" id="category" name="category_id[]" required>
                                     <option value="">PILIH KATEGORI</option>
                             
                                 </select>
@@ -256,7 +258,7 @@
                 };
                 reader.readAsDataURL(file);
             } else {
-                $image.attr('src', '{{ asset('dash/images/usr.png') }}');
+                $image.attr('src', '{{ asset('dash/images/cash.png') }}');
                 $(input).siblings('.file-upload-info').text('Tidak ada file yang dipilih');
             }
         }
@@ -292,6 +294,16 @@ $('#add-more-fields').on('click', function() {
             </div>
 
             <div class="form-group">
+                <label class="text-label">Nominal (Rp) *</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                    </div>
+                    <input type="number" step="0.01" class="form-control nominal" name="nominal[]" placeholder="Enter amount.." required>
+                </div>
+            </div>
+
+            <div class="form-group">
                 <label class="text-label">Jumlah Satuan *</label>
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -301,15 +313,6 @@ $('#add-more-fields').on('click', function() {
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="text-label">Nominal (Rp) *</label>
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                    </div>
-                    <input type="number" step="0.01" class="form-control nominal" name="nominal[]" placeholder="Enter amount.." required>
-                </div>
-            </div>
 
             <div class="form-group">
                 <label class="text-label">Dll *</label>
@@ -346,7 +349,7 @@ $('#add-more-fields').on('click', function() {
             <div class="form-group">
                 <label for="image">Foto Bukti Pengeluaran</label>
                 <div class="mb-3">
-                    <img id="profile-image" src="{{ asset('dash/images/usr.png') }}" alt="Gambar Bukti Pengeluaran" width="150" height="150">
+                    <img id="profile-image" src="{{ asset('dash/images/cash.png') }}" alt="Gambar Bukti Pengeluaran" width="150" height="150">
                 </div>
                 <div class="file-upload-wrapper">
                     <label class="file-upload-label" for="image">Pilih file</label>
@@ -480,7 +483,7 @@ $('#add-more-fields').on('click', function() {
     } else {
         fileInfo.textContent = 'Tidak ada file yang dipilih';
         // Menampilkan gambar default jika tidak ada file yang dipilih
-        profileImage.src = "{{ asset('dash/images/usr.png') }}"; // Menggunakan blade syntax untuk URL gambar default
+        profileImage.src = "{{ asset('dash/images/cash.png') }}"; // Menggunakan blade syntax untuk URL gambar default
     }
 }
 
