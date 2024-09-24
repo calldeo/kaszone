@@ -101,6 +101,7 @@
                                             <th><strong>Lain - lain</strong></th>
                                             <th><strong>Image</strong></th> 
                                             <th><strong>Total(Rp)</strong></th>
+                                            <th><strong>Tanggal dibuat</strong></th>
                                             <th><strong>Option</strong></th>
                                         </tr>
                                     </thead>
@@ -145,7 +146,8 @@
 
     <input type="hidden" id="table-url" value="{{ route('production') }}">
     <script src="{{ asset('main.js') }}"></script>
-    <script src="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.js"></script>
+    {{-- <script src="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.js"></script> --}}
+    {{-- <script src="{{asset('dash/vendor/datatables/js/jquery.dataTables.min.js')}}"></script> --}}
 
     <script>
         var filterDataPengeluaran = {
@@ -191,6 +193,12 @@
                 destroy: true,
                 serverSide: true,
                 processing: true,
+                language: {
+                    paginate: {
+                    next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+                    previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
+                    }
+                },
                 ajax: {
                     url: $('#table-url').val(),
                     type: 'GET',

@@ -31040,3 +31040,7 @@ html[dir="rtl"] [direction="rtl"][data-sidebar-style="compact"]:not([data-layout
   object-fit: cover;
   /* Agar gambar tetap proporsional */
 }
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+  padding: 0;
+}

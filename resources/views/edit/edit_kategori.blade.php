@@ -106,7 +106,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label>Jenis Kategori *</label>
+                                    <label>Category Type *</label>
                                     <select class="form-control default-select" name="jenis_kategori" required>
                                         <option value="">-- Jenis Kategori --</option>
                                         <option value="1" {{ old('jenis_kategori', $category->jenis_kategori) == '1' ? 'selected' : '' }}>Pemasukan</option>

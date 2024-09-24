@@ -17,18 +17,33 @@
 	<link rel="stylesheet" href="{{asset('dash/vendor/chartist/css/chartist.min.css')}}">
     <link href="{{asset('dash/vendor/bootstrap-select/dist/css/bootstrap-select.min.css')}}" rel="stylesheet">
 	<link href="{{asset('dash/vendor/owl-carousel/owl.carousel.css')}}" rel="stylesheet">
-    <link href="{{asset('dash/css/style.css')}}" rel="stylesheet">
-    <link href="{{asset('dash/vendor/datatables/js/jquery.dataTables.min.js')}}" rel="stylesheet">
+	<link href="{{asset('dash/vendor/datatables/css/jquery.dataTables.min.css')}}" rel="stylesheet">
+    {{-- <link href="{{asset('dash/vendor/datatables/js/jquery.dataTables.min.js')}}" rel="stylesheet"> --}}
 	<link href="{{asset('dash/vendor/bootstrap-daterangepicker/daterangepicker.css')}}" rel="stylesheet">
 	<link rel="stylesheet" href="{{asset('dash/vendor/select2/css/select2.min.css')}}">
+    <link href="{{asset('dash/css/style.css')}}" rel="stylesheet">
 
-  	{{-- <link href="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.css" rel="stylesheet"> --}}
+	{{-- <link href="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.css" rel="stylesheet"> --}}
 
-{{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"> --}}
+	{{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"> --}}
+	
 
 
 
 
-  
- 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

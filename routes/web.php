@@ -10,6 +10,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LoginController;
@@ -62,6 +63,8 @@ Route::group(['middleware' => ['auth', 'permission:Home']], function () {
 route::get('/table',[AdminController::class,'table'])->name('table');
 route::get('/users',[AdminController::class,'users'])->name('users');
 route::get('/kategoris',[AdminController::class,'kategoris'])->name('kategoris');
+route::get('/report-income',[AdminController::class,'reportIncome'])->name('income');
+route::get('/report-production',[AdminController::class,'reportProduction'])->name('production');
 route::get('/income',[AdminController::class,'income'])->name('income');
 route::get('/production',[AdminController::class,'production'])->name('production');
 route::get('/roles',[AdminController::class,'roles'])->name('roles');
@@ -146,6 +149,8 @@ Route::group(['middleware' => ['auth','permission:Data Pengeluaran']], function 
     Route::post('/pengeluaran/store', [PengeluaranController::class, 'store'])->name('pengeluaran.store');
     Route::get('/pengeluaran/delete/{id_data}', [PengeluaranController::class, 'delete'])->name('pengeluaran.delete');
 Route::get('/pengeluaran/deleteAll', [PengeluaranController::class, 'deleteAll'])->name('pengeluaran.deleteAll');
+Route::get('/laporan', [LaporanController::class, 'index'])->name('index');
+
 
     
 });

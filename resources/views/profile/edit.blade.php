@@ -70,8 +70,8 @@
 
                                         
                  
-                                        <div class="file-upload-wrapper">
-                                            <label class="file-upload-label" for="foto_profil">Pilih file</label>
+                                        <div class="file-upload-wrapper ml-0">
+                                            <label class="file-upload-label mr-0" for="foto_profil">Pilih file</label>
                                             <input type="file" id="foto_profil" name="foto_profil" onchange="displayFileName()">
                                             <div id="file-upload-info" class="file-upload-info">Tidak ada file yang dipilih</div>
                                         </div>

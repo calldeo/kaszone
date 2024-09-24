@@ -22,6 +22,8 @@
     <script src="{{asset('dash/js/demo.js')}}"></script>
     <script src="{{asset('dash/vendor/ckeditor/ckeditor.js')}}"></script>
     <script src="{{asset('dash/vendor/datatables/js/jquery.dataTables.min.js')}}"></script>
+    {{-- <script src="{{asset('dash/js/plugins-init/datatables.init.js')}}"></script> --}}
+
 
 
     <script src="{{asset('dash/js/styleSwitcher.js')}}"></script>

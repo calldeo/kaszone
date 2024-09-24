@@ -71,7 +71,7 @@
                     <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="javascript:void(0)">Form</a></li>
-                            <li class="breadcrumb-item active"><a href="javascript:void(0)">Bendahara</a></li>
+                            <li class="breadcrumb-item active"><a href="javascript:void(0)">Category</a></li>
                         </ol>
                     </div>
                         @if(session('error'))
@@ -119,13 +119,13 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label class="text-label">Jenis Kategori *</label>
+                                            <label class="text-label">Category Type *</label>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"> <i class="fa fa-list"></i> </span>
                                                 </div>
                                                 <select class="form-control" name="jenis_kategori" required>
-                                                    <option value="" disabled selected>Pilih Jenis Kategori</option>
+                                                    <option value="" disabled selected>Select Category type</option>
                                                     <option value="1">Pemasukan</option>
                                                     <option value="2">Pengeluaran</option>
                                                 </select>

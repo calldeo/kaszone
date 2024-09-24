@@ -251,70 +251,82 @@ class AdminController extends Controller
 
 
 
-    public function income(Request $request) // PEMASUKAN
-    {
-        
-        if ($request->ajax()) {
-    $startDate = $request->input('start_created_at');
-    $endDate = $request->input('end_created_at');
-    $pemasukan = Pemasukan::with('category')->select(['id_data', 'name', 'description', 'date', 'jumlah', 'id','created_at']);
-    if ($startDate != null && $endDate != null){
-        $pemasukan = $pemasukan->whereBetween('created_at', [$startDate, $endDate]);
+public function income(Request $request) // PEMASUKAN
+{
+    if ($request->ajax()) {
+        $startDate = $request->input('start_created_at');
+        $endDate = $request->input('end_created_at');
+        $year = $request->input('year'); 
+
+        $pemasukan = Pemasukan::with('category')->select(['id_data', 'name', 'description', 'date', 'jumlah', 'id', 'created_at']);
+
+     
+        if ($year) {
+            $pemasukan = $pemasukan->whereYear('created_at', $year);
+        }
+        // dd($startDate, $endDate);
+        if ($startDate != null && $endDate != null) {
+            $pemasukan = $pemasukan->whereBetween('created_at', [$startDate, $endDate]);
+        }
+
+        return DataTables::of($pemasukan)
+            ->addIndexColumn()
+            ->addColumn('category', function ($row) {
+                return $row->category ? $row->category->name : 'Tidak ada kategori';
+            })
+            ->addColumn('opsi', function ($row) {
+                $user = auth()->user();
+                $editButton = '';
+                $viewButton = '<button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/pemasukan/' . $row->id_data . '/detail"><i class="fa fa-eye"></i></button>';
+                $deleteButton = '';
+
+                // Check user role and set buttons accordingly
+                if ($user->hasRole('Admin') || $user->hasRole('Bendahara')) {
+                    $editButton = '<a href="/pemasukan/' . $row->id_data . '/edit_pemasukan" class="btn btn-warning btn-xs mr-1"><i class="fa fa-pencil"></i></a>';
+                    $deleteButton = '<form action="/pemasukan/' . $row->id_data . '/destroy" method="POST" style="display:inline;">' .
+                                    csrf_field() .
+                                    method_field('DELETE') .
+                                    '<button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>' .
+                                    '</form>';
+                }
+
+                return '<div class="d-flex align-items-center">' . $editButton . $viewButton . $deleteButton . '</div>';
+            })
+            ->rawColumns(['opsi'])
+            ->make(true);
     }
-    return DataTables::of($pemasukan)
-        ->addIndexColumn()
-        ->addColumn('category', function ($row) {
-            return $row->category ? $row->category->name : 'Tidak ada kategori';
-        })
-        ->addColumn('opsi', function ($row) {
-            $user = auth()->user();
-            $editButton = '';
-            $viewButton = '<button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/pemasukan/' . $row->id_data . '/detail"><i class="fa fa-eye"></i></button>';
-            $deleteButton = '';
-
-            // Check user role and set buttons accordingly
-            if ($user->hasRole('Admin') || $user->hasRole('Bendahara')) {
-                $editButton = '<a href="/pemasukan/' . $row->id_data . '/edit_pemasukan" class="btn btn-warning btn-xs mr-1"><i class="fa fa-pencil"></i></a>';
-                $deleteButton = '<form action="/pemasukan/' . $row->id_data . '/destroy" method="POST" style="display:inline;">' .
-                                csrf_field() .
-                                method_field('DELETE') .
-                                '<button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>' .
-                                '</form>';
-            }
-
-            return '<div class="d-flex align-items-center">' . $editButton . $viewButton . $deleteButton . '</div>';
-        })
-        ->rawColumns(['opsi'])
-        ->make(true);
 }
-
-    }
 
 
     
-
 public function production(Request $request) // PENGELUARAN
 {
     if ($request->ajax()) {
         $startDate = $request->input('start_created_at');
         $endDate = $request->input('end_created_at');
-        $pengeluaran = ParentPengeluaran::with('pengeluaran.category')->select(['id', 'tanggal','created_at']);
-        if ($startDate != null && $endDate != null){
+        $year = $request->input('year'); 
+
+        $pengeluaran = ParentPengeluaran::with('pengeluaran.category')->select(['id', 'tanggal', 'created_at']);
+
+        
+        if ($year) {
+            $pengeluaran = $pengeluaran->whereYear('created_at', $year);
+        }
+
+        if ($startDate != null && $endDate != null) {
             $pengeluaran = $pengeluaran->whereBetween('created_at', [$startDate, $endDate]);
         }
+
         return DataTables::of($pengeluaran)
             ->addIndexColumn()
-
-            ->addColumn('name', function($row){
+            ->addColumn('name', function ($row) {
                 $nama = '';
-                foreach($row->pengeluaran as $val) {
+                foreach ($row->pengeluaran as $val) {
                     $nama .= $val->name . '<br>';
                 }
                 return $nama ?: 'Tidak ada nama';
             })
-
             ->addColumn('image', function ($row) {
-                // Cek setiap pengeluaran untuk gambar
                 $imageHtml = '';
                 foreach ($row->pengeluaran as $val) {
                     $imageUrl = $val->image ? asset('storage/' . $val->image) : asset('dash/images/cash.png');
@@ -326,48 +338,41 @@ public function production(Request $request) // PENGELUARAN
                                         <img src="' . asset('dash/images/usr.png') . '" width="100" height="100" style="object-fit:cover; cursor:pointer;" />
                                     </a>';
             })
-            
-
-            ->addColumn('description', function($row){
+            ->addColumn('description', function ($row) {
                 $deskripsi = '';
-                foreach($row->pengeluaran as $val) {
+                foreach ($row->pengeluaran as $val) {
                     $deskripsi .= $val->description . '<br>';
                 }
                 return $deskripsi ?: 'Tidak ada deskripsi';
             })
-
-            ->addColumn('jumlah_satuan', function($row){
+            ->addColumn('jumlah_satuan', function ($row) {
                 $jumlahSatuan = '';
-                foreach($row->pengeluaran as $val) {
+                foreach ($row->pengeluaran as $val) {
                     $jumlahSatuan .= $val->jumlah_satuan . '<br>';
                 }
                 return $jumlahSatuan ?: 'Tidak ada jumlah satuan';
             })
-
-            ->addColumn('nominal', function($row){
+            ->addColumn('nominal', function ($row) {
                 $nominal = '';
-                foreach($row->pengeluaran as $val) {
+                foreach ($row->pengeluaran as $val) {
                     $nominal .= number_format($val->nominal, 2, ',', '.') . '<br>';
                 }
                 return $nominal ?: 'Tidak ada nominal';
             })
-
-            ->addColumn('dll', function($row){
+            ->addColumn('dll', function ($row) {
                 $dll = '';
-                foreach($row->pengeluaran as $val) {
+                foreach ($row->pengeluaran as $val) {
                     $dll .= $val->dll . '<br>';
                 }
                 return $dll ?: 'Tidak ada data tambahan';
             })
-
-            ->addColumn('jumlah', function($row){
+            ->addColumn('jumlah', function ($row) {
                 $jumlah = '';
-                foreach($row->pengeluaran as $val) {
+                foreach ($row->pengeluaran as $val) {
                     $jumlah .= $val->jumlah . '<br>';
                 }
                 return $jumlah ?: 'Tidak ada jumlah';
             })
-
             ->addColumn('category', function ($row) {
                 $categories = '';
                 foreach ($row->pengeluaran as $val) {
@@ -375,7 +380,6 @@ public function production(Request $request) // PENGELUARAN
                 }
                 return $categories;
             })
-
             ->addColumn('opsi', function ($row) {
                 return '
                 <div class="d-flex align-items-center">
@@ -384,11 +388,11 @@ public function production(Request $request) // PENGELUARAN
                     </a>
                 </div>';
             })
-
             ->rawColumns(['image', 'name', 'description', 'jumlah_satuan', 'nominal', 'dll', 'jumlah', 'category', 'opsi'])
             ->make(true);
     }
 }
+
 
 public function roles(Request $request) // BENDAHARA
 {
@@ -413,5 +417,30 @@ public function roles(Request $request) // BENDAHARA
 
  // Sesuaikan dengan view yang Anda miliki
 }
+
+public function reportIncome(Request $request) // PEMASUKAN
+    {
+        
+        if ($request->ajax()) {
+    $startDate = $request->input('start_created_at');
+    $endDate = $request->input('end_created_at');
+    $pemasukan = Pemasukan::with('category')->select(['id_data', 'name', 'description', 'date', 'jumlah', 'id','created_at']);
+    if ($startDate != null && $endDate != null){
+        $pemasukan = $pemasukan->whereBetween('created_at', [$startDate, $endDate]);
+    }
+    return DataTables::of($pemasukan)
+        ->addIndexColumn()
+        ->addColumn('category', function ($row) {
+            return $row->category ? $row->category->name : 'Tidak ada kategori';
+        })
+      
+        
+        ->make(true);
+}
+
+    }
+
+
+
 
 }

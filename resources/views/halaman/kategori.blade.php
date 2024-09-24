@@ -26,13 +26,13 @@
                 <div class="col-sm-6 p-md-0">
                     <div class="welcome-text">
                         <h4>Hi, Welcome Back!</h4>
-                        <p class="mb-0">Data Admin</p>
+                        <p class="mb-0">Data Category</p>
                     </div>
                 </div>
                 <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="javascript:void(0)">Table</a></li>
-                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Admin</a></li>
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Category</a></li>
                     </ol>
                 </div>
             </div>
@@ -42,7 +42,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title">Data Kategori</h4>
+                            <h4 class="card-title">Data Category</h4>
                             <div class="text-right">
                           {{-- <div class="input-group search-area right d-lg-inline-flex d-none">
                             <form id="searchForm">
@@ -63,7 +63,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="importModalLabel">Import Data Kategori</h5>
+                        <h5 class="modal-title" id="importModalLabel">Import Data Category</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -131,9 +131,9 @@
                                              <th style="width:50px;">
                                                 <strong>No</strong>
                                             </th>
-                                            <th><strong>Nama Kategori</strong></th>
-                                            <th><strong>Jenis Kategori</strong></th>
-                                            <th><strong>Deskripsi</strong></th>
+                                            <th><strong>Name Category</strong></th>
+                                            <th><strong>Category Type</strong></th>
+                                            <th><strong>Description</strong></th>
                                             {{-- <th><strong>Status</strong></th> --}}
                                             <th><strong>Option</strong></th>
                                         </tr>
