@@ -49,7 +49,7 @@
                                 <input id="searchInput" type="text" class="form-control" placeholder="Cari sesuatu di sini..." name="query">
                             </form>
                           </div> --}}
-                           <a href="/add_kategori" class="btn btn-warning ml-2" title="Add">
+                           <a href="/add_kategori" class="btn btn-warning ml-0" title="Add">
                         <i class="fa fa-plus"></i>
                     </a>
                     <a href="/cetaklaporan" target="blank" class="btn btn-info ml-2" title="Print Report">
@@ -123,7 +123,7 @@
                                 <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span></button>
                             </div>
                             @endif
-                            <link href="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.css" rel="stylesheet">
+                            
                             <div class="table-responsive">
                                 <table id="kategoriTable" class="table table-responsive-md">
                                     <thead>
@@ -321,7 +321,6 @@
 
 <input type="hidden" id="table-url" value="{{ route('kategoris') }}">
 <script src="{{ asset('main.js') }}"></script>
-<script src="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.js"></script>
 
 <script>
 

@@ -219,7 +219,6 @@
 
 <input type="hidden" id="table-url" value="{{ route('roles') }}">
 <script src="{{ asset('main.js') }}"></script>
-<script src="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.js"></script>
 
 
 </body>

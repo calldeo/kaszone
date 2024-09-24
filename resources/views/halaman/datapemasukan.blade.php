@@ -189,7 +189,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <input type="hidden" id="table-url" value="{{ route('income') }}">
     <script src="{{ asset('main.js') }}"></script>
-    <script src="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.js"></script>    
     
     
 

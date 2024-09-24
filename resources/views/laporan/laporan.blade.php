@@ -157,7 +157,6 @@
     <input type="hidden" id="table-url-pengeluaran" value="{{ route('production') }}">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="{{ asset('main.js') }}"></script>
-    <script src="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.js"></script>
 
     <script>
         var filterData = {
@@ -238,6 +237,12 @@
                 processing: true,
                 serverSide: true,
                 destroy:true,
+                language: {
+            paginate: {
+            next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+            previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
+            }
+        },
                 ajax: {
                     url: $('#table-url-pemasukan').val(),
                     data: function(d) {
@@ -265,6 +270,12 @@
                 processing: true,
                 serverSide: true,
                 destroy:true,
+                language: {
+            paginate: {
+            next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+            previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
+            }
+        },
                 ajax: {
                     url: $('#table-url-pengeluaran').val(),
                     data: function(d) {
