@@ -44,7 +44,7 @@
                             <h4 class="card-title">Data Pemasukan</h4>
                             <div class="text-right">
                            <div class="text-right">
-                            <div class="example">
+                            <div class="example mr-2">
                                 <p class="mb-1">Filter Tanggal</p>
                                 <input class="form-control input-daterange-datepicker" type="text" name="daterange" placeholder="Masukkan Tanggal" >
                             </div>
@@ -150,7 +150,6 @@
                                             <th><strong>Deksripsi</strong></th>
                                             <th><strong>Kategori</strong></th>
                                             <th><strong>Tanggal</strong></th>
-                                            <th><strong>Tanggal dibuat</strong></th>   
                                             <th><strong>Jumlah(Rp)</strong></th>
                                             <th><strong>Option</strong></th>
                                         </tr>
@@ -165,82 +164,8 @@
                 </div>
             </div>
 
-            div class="row">
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="card-title">Data Pengeluaran</h4>
-                            <div class="text-right">
-                                <div class="example">
-                                    <p class="mb-1">Filter Tanggal</p>
-                                    <input class="form-control input-daterange-datepicker" type="text" name="daterange" placeholder="Masukkan Tanggal">
-                                </div>
-                                @hasrole('Admin|Bendahara') 
-                                <a href="/add_pengeluaran" class="btn btn-warning ml-1" title="Add">
-                                    <i class="fa fa-plus"></i>
-                                </a>
-                                @endhasrole
-
-                                @hasrole('Admin|Bendahara') 
-                                <a href="/cetakpgl" target="_blank" class="btn btn-info ml-1" title="Print Report">
-                                    <i class="fa fa-print"></i>
-                                </a>
-                                @endhasrole
-                                @hasrole('Admin|Bendahara') 
-                                <a href="{{ url('/export-pengeluaran') }}" class="btn btn-success ml-1" title="Export to Excel">
-                                    <i class="fa fa-file-excel"></i>
-                                </a>
-                                @endhasrole
-                            </div>
-                        </div>
-
-                        <div class="card-body">
-                            @if(session('error'))
-                                <div class="alert alert-danger alert-dismissible fade show">
-                                    <strong>Error!</strong> {{ session('error') }}
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span><i class="fa fa-times"></i></span></button>
-                                </div>
-                            @endif
-
-                            @if(session('success'))
-                            <div class="alert alert-success alert-dismissible fade show">
-                                <strong>Success!</strong> {{ session('success') }}
-                                <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span></button>
-                            </div>
-                            @endif
-                            @if(session('update_success'))
-                            <div class="alert alert-warning alert-dismissible fade show">
-                                <strong>Success!</strong> {{ session('update_success') }}
-                                <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span></button>
-                            </div>
-                            @endif
-
-                            <div class="table-responsive">
-                                <table id="pengeluaranTable" class="table table-responsive-md">
-                                    <thead>
-                                        <tr>
-                                            <th style="width:50px;"><strong>No</strong></th>
-                                            <th><strong>Nama</strong></th>
-                                            <th><strong>Deskripsi</strong></th>
-                                            <th><strong>Kategori</strong></th>
-                                            <th><strong>Tanggal</strong></th>
-                                            <th><strong>Jumlah Satuan</strong></th>
-                                            <th><strong>Nominal(Rp)</strong></th>  
-                                            <th><strong>Lain - lain</strong></th>
-                                            <th><strong>Image</strong></th> 
-                                            <th><strong>Total(Rp)</strong></th>
-                                            <th><strong>Option</strong></th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-end">
-                            {{-- {{ $users->links() }} --}}
-                        </div>
-                    </div>
-                </div>
-            </div>
+          
+            
         </div>
     </div>
     <!-- Content body end -->

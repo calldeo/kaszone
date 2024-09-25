@@ -148,9 +148,9 @@ Route::group(['middleware' => ['auth','permission:Data Pengeluaran']], function 
     Route::get('/download-template-kategori', [CategoryController::class, 'downloadTemplate'])->name('download-template-kategori');
     Route::post('/pengeluaran/store', [PengeluaranController::class, 'store'])->name('pengeluaran.store');
     Route::get('/pengeluaran/delete/{id_data}', [PengeluaranController::class, 'delete'])->name('pengeluaran.delete');
-Route::get('/pengeluaran/deleteAll', [PengeluaranController::class, 'deleteAll'])->name('pengeluaran.deleteAll');
-Route::get('/laporan', [LaporanController::class, 'index'])->name('index');
-Route::post('/total', [LaporanController::class, 'getTotal'])->name('get.total');
+    Route::get('/pengeluaran/deleteAll', [PengeluaranController::class, 'deleteAll'])->name('pengeluaran.deleteAll');
+    Route::get('/laporan', [LaporanController::class, 'index'])->name('index');
+    Route::get('/export-laporan', [LaporanController::class, 'exportLaporanPDF'])->name('export.laporan');
 
 
 

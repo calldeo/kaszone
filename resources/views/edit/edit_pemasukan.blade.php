@@ -4,7 +4,6 @@
     @include('template.headerr')
     <title>PityCash | {{ auth()->user()->level }} | Edit</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
 </head>
 <body>
     <!-- Preloader start -->
@@ -88,7 +87,7 @@
                                             <input type="text" class="form-control" id="val-username1" name="name" value="{{ old('name', $pemasukan->name ?? '') }}" placeholder="Masukkan nama.." required>
                                         </div>
                                     </div>
-                                   <div class="form-group">
+                                    <div class="form-group">
                                         <label class="text-label">Deskripsi *</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
@@ -99,7 +98,7 @@
                                             <textarea class="form-control" id="val-description" name="description" placeholder="Masukkan deskripsi.." required>{{ old('description', $pemasukan->description ?? '') }}</textarea>
                                         </div>
                                     </div>
-                                 <div class="form-group">
+                                    <div class="form-group">
                                         <label class="text-label">Tanggal *</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
@@ -119,26 +118,22 @@
                                                     <i class="fas fa-dollar-sign"></i> <!-- Ikon dolar -->
                                                 </span>
                                             </div>
-                                            <input type="number" step="0.01"class="form-control" id="val-jumlah" name="jumlah" value="{{ old('jumlah', $pemasukan->jumlah ?? '') }}" placeholder="Masukkan jumlah.." required>
+                                            <input type="number" step="0.01" class="form-control" id="val-jumlah" name="jumlah" value="{{ old('jumlah', $pemasukan->jumlah ?? '') }}" placeholder="Masukkan jumlah.." required>
                                         </div>
                                     </div>
 
                                     <div class="form-group">
-    <label class="text-label">Kategori *</label>
-    <div class="input-group">
-        <div class="input-group-prepend">
-            <span class="input-group-text">
-                <i class="fas fa-list"></i> <!-- Ikon daftar -->
-            </span>
-        </div>
-        <select class="form-control default-select" id="category" name="id">
-           
-        </select>
-    </div>
-</div>
+                                        <label class="text-label">Category *</label>
+                                        <select class="select2-with-label-single js-states form-control" id="category" name="category_id" required>
+                                            <option value="">Select Category</option>
+                                            <!-- Populate categories dynamically -->
+                                        </select>
+                                        @error('category_id')
+                                        <span class="mt-2 text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
 
                                     <button type="button" class="btn btn-danger btn-cancel" onclick="redirectToKategori()">Cancel</button>
-                                   
                                     <button type="submit" class="btn mr-2 btn-primary btn-submit">Submit</button>
                                 </form>
                             </div>
@@ -168,36 +163,46 @@
     </script>
     <script>
         $(document).ready(function() {
-                // Mengambil data dari server untuk mengisi dropdown
-               getCategories()
-    
-            function getCategories (){
+            getCategories(); // Memanggil fungsi untuk mengambil kategori
+
+            function getCategories() {
                 $.ajax({
-                    url: '/get-categories/1',
+                    url: '/get-categories/1', // Sesuaikan URL sesuai kebutuhan
                     method: 'GET',
                     success: function(data) {
-                        // Menambahkan option ke dropdown
-                        var $dropdown = $('#category');
-                        $dropdown.empty(); // Kosongkan dropdown
-                        
+                        var $dropdown = $('#category'); // Mengambil elemen dropdown dengan ID 'category'
+                        $dropdown.empty(); // Menghapus opsi yang ada sebelumnya
+
+                        // Menambahkan opsi default
                         $dropdown.append($('<option>', {
                             value: '',
-                            text: 'PILIH KATEGORI'
+                            text: 'Select Category'
                         }));
+
+                        // Menambahkan kategori ke dropdown
                         $.each(data, function(index, item) {
                             $dropdown.append($('<option>', {
-                                value: item.id,
-                                text: item.name
+                                value: item.id, // Memastikan ini sesuai dengan respons API
+                                text: item.name // Menggunakan 'nama_kategori' sesuai dengan respons API
                             }));
                         });
+
+                        // Set selected value for editing
+                        $dropdown.val("{{ old('category_id', $pemasukan->category_id ?? '') }}"); // Set the selected category for editing
+
+                        $dropdown.select2(); // Inisialisasi Select2
                     },
                     error: function(xhr) {
-                        console.error('Error fetching options:', xhr);
+                        console.error('Error fetching categories:', xhr); // Mencetak kesalahan di konsol
+                        // Menampilkan pesan kesalahan di UI
+                        $('#category').append($('<option>', {
+                            value: '',
+                            text: 'Error loading categories'
+                        }));
                     }
                 });
             }
-            });
+        });
     </script>
 </body>
-
 </html>

@@ -34,43 +34,42 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="card-header">
-                        <h4 class="card-title">Filter Data</h4>
-                        <div class="text-right">
-                            <div class="example">
-                                <p class="mb-1">Filter Tahun</p>
-                                <select class="form-control" id="filter-year">
-                                    <option value="">Pilih Tahun</option>
-                                    @for($year = date('Y'); $year >= 2000; $year--)
-                                        <option value="{{ $year }}">{{ $year }}</option>
-                                    @endfor
-                                </select>
-                            </div>
-                            <div class="example">
-                                <p class="mb-1">Filter Tanggal</p>
-                                <input class="form-control input-daterange-datepicker" type="text" name="daterange" placeholder="Masukkan Tanggal" disabled>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          
 
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
                             <h4 class="card-title">Data Pemasukan</h4>
-                            <div class="text-right">
-                                @hasrole('Admin|Bendahara') 
-                                <a href="/cetak-pemasukan" target="_blank" class="btn btn-info ml-1" title="Print Report">
-                                    <i class="fa fa-print"></i>
-                                </a>
-                                <a href="{{ url('/export-pemasukan') }}" class="btn btn-success" title="Export to Excel">
-                                    <i class="fa fa-file"></i>
-                                </a>
-                                @endhasrole
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <div class="example mr-3">
+                                        <p class="mb-1">Filter Tahun</p>
+                                        <select class="form-control" id="filter-year">
+                                            <option value="">Pilih Tahun</option>
+                                            @for($year = date('Y'); $year >= 2020; $year--)
+                                                <option value="{{ $year }}">{{ $year }}</option>
+                                            @endfor
+                                        </select>
+                                    </div>
+                                    <div class="example mr-2">
+                                        <p class="mb-1">Filter Tanggal</p>
+                                        <input class="form-control input-daterange-datepicker" type="text" name="daterange" placeholder="Masukkan Tanggal" disabled>
+                                    </div>
+                                </div>
+                                 <div class="text-right mt-4">
+                                    @hasrole('Admin|Bendahara') 
+                                    <form method="GET" action="{{ route('export.laporan') }}" id="export-pdf-form">
+                                        <input type="hidden" name="year" id="export-year" value="{{ old('year') }}" required />
+                                        <button type="submit" class="btn btn-info ml-"><i class="fa fa-print"></i>
+                                         </button>
+                                    </form>
+                                    
+                                    <a href="{{ url('/export-pemasukan') }}" class="btn btn-success" title="Export to Excel">
+                                        <i class="fa fa-file"></i>
+                                    </a>
+                                    @endhasrole
+                                </div>
                             </div>
                         </div>
                         <div class="card-body">
@@ -175,48 +174,33 @@
                 }
             });
     
-            
-            $('#filter-year').on('change', function() {
-                var selectedYear = $(this).val();
-                if (selectedYear !== "") {
-                    $('.input-daterange-datepicker').prop('disabled', false);
-                    filterData.year = selectedYear;
-    
-                  
-                    var today = moment();
-                    filterData.start_created_at = moment().year(selectedYear).startOf('year').format('YYYY-MM-DD');
-                    filterData.end_created_at = moment().year(selectedYear).endOf('year').format('YYYY-MM-DD');
                     
-                    $('.input-daterange-datepicker').on('apply.daterangepicker', function(ev, picker) {
-                if (filterData.year === null) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Perhatian!',
-                        text: 'Harap pilih tahun terlebih dahulu.'
-                    });
-                    return;
-                }
-    
-                filterData.start_created_at = picker.startDate.format('YYYY-MM-DD');
-                filterData.end_created_at = picker.endDate.format('YYYY-MM-DD');
-    
+                $('#filter-year').on('change', function() {
+                var selectedYear = $(this).val();
+                $('#export-year').val(selectedYear);
+                if (selectedYear !== "") {
+                $('.input-daterange-datepicker').prop('disabled', false);
+                filterData.year = selectedYear;
+
+                filterData.start_created_at = selectedYear + '-01-01';
+                filterData.end_created_at = selectedYear + '-12-31';
+
+                $('.input-daterange-datepicker').data('daterangepicker').setStartDate(filterData.start_created_at);
+                $('.input-daterange-datepicker').data('daterangepicker').setEndDate(filterData.end_created_at);
                 
-                 pemasukanTables(filterData);
-                  pengeluaranTables(filterData);
+                $('.input-daterange-datepicker').trigger('apply.daterangepicker', {
+                    startDate: moment(filterData.start_created_at),
+                    endDate: moment(filterData.end_created_at)
+                });
+            } else {
+                $('.input-daterange-datepicker').prop('disabled', true);
+                filterData.year = null;
+                filterData.start_created_at = null;
+                filterData.end_created_at = null;
+            }
+        });
 
-            });
-                                
-                pemasukanTables(filterData);
-                pengeluaranTables(filterData);
-
-                } else {
-                    $('.input-daterange-datepicker').prop('disabled', true);
-                    filterData.year = null;
-                    filterData.start_created_at = null;
-                    filterData.end_created_at = null;
-                }
-            });
-    
+            
             
             $('.input-daterange-datepicker').on('apply.daterangepicker', function(ev, picker) {
                 if (filterData.year === null) {
