@@ -99,7 +99,7 @@ Route::group(['middleware' => 'auth:api'], function () {
        Route::prefix('outcome')->group(function () {
         Route::get('/all', [PengeluaranController::class, 'getAllOutcome']);
         Route::get('/create', [PengeluaranController::class, 'create']);
-        Route::post('/store', [PengeluaranController::class, 'store']);
+Route::post('/pengeluaran', [PengeluaranController::class, 'store']);
         Route::get('/show/{id}', [PengeluaranController::class, 'show']);
         Route::put('/update/{id}', [PengeluaranController::class, 'update']);
         Route::delete('/destroy/{id}', [PengeluaranController::class, 'destroy']);

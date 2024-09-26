@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage; // Impor Hash
-
+use App\Models\ParentPengeluaran;
 
 class PengeluaranController extends Controller
 {
@@ -41,73 +41,66 @@ class PengeluaranController extends Controller
         
     }
 
-
-  // Menambahkan pengguna baru
-    public function store(Request $request)
+ public function store(Request $request)
     {
         // Validasi input
-        
-        $validate= Validator::make($request->all(),[
-           'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'date' => 'required|date',
-            'jumlah' => 'required|numeric|min:0',
-            'category_id' => 'required|exists:categories,id',
-
-       
+        $request->validate([
+          'name.*' => 'required|string|max:255',
+    'description.*' => 'nullable|string',
+    'jumlah_satuan.*' => 'required|numeric|min:0',
+    'nominal.*' => 'required|numeric|min:0',
+    'dll.*' => 'required|numeric|min:0',
+    'jumlah.*' => 'required|numeric|min:0',
+    'id.*' => 'required|exists:categories,id',
+    'image.*' => 'nullable|mimes:jpg,jpeg,png|max:2048',
+    // Validasi format tanggal tanpa memeriksa di database
+    'tanggal.*' => 'required|date_format:Y-m-d'
         ]);
 
-        // dd($validate);
-        $errors = $validate->errors();
-
-        if($validate->fails()) {
-            return response()->json([
-                'status'=> 409,
-                'message' => [
-                    'name'=>$errors->first('name')?: 'kosong',
-                    'description'=>$errors->first('description')?: 'kosong',
-                    'date'=>$errors->first('date')?: 'kosong',
-                    'jumlah'=>$errors->first('jumlah')?: 'kosong',
-                    'category_id'=>$errors->first('category_id')?: 'kosong',
-
-
-
-                    
-                ]
-                ]);
-        }
-        // Gunakan DB::transaction untuk menjalankan proses dalam satu transaksi
         DB::beginTransaction();
+
         try {
-           
-            $pengeluaran = new Pengeluaran();
-        $pengeluaran->name = $request->name;
-        $pengeluaran->description = $request->description;
-        $pengeluaran->date = $request->date;
-        $pengeluaran->jumlah = $request->jumlah;
-        $pengeluaran->id = $request->category_id;
-         $pengeluaran->save();
+            // Buat parent pengeluaran
+            $parentPengeluaran = new ParentPengeluaran();
+            $parentPengeluaran->tanggal = $request->input('tanggal')[0];
+            $parentPengeluaran->save();
+
+            // Proses data untuk setiap pengeluaran
+            foreach ($request->input('name') as $i => $name) {
+                $pengeluaran = new Pengeluaran();
+                $pengeluaran->name = $name;
+                $pengeluaran->description = $request->input('description')[$i] ?? null;
+                $pengeluaran->jumlah_satuan = $request->input('jumlah_satuan')[$i];
+                $pengeluaran->nominal = $request->input('nominal')[$i];
+                $pengeluaran->dll = $request->input('dll')[$i];
+                $pengeluaran->jumlah = $request->input('jumlah')[$i];
+                $pengeluaran->id = $request->input('id')[$i];
+
+                $pengeluaran->id_parent = $parentPengeluaran->id;
+
+                // Simpan gambar jika ada file yang diupload
+                if ($request->hasFile("image.$i")) {
+                    $path = $request->file("image.$i")->store('image', 'public');
+                    $pengeluaran->image = $path;
+                }
+
+                $pengeluaran->save(); 
+            }
 
             DB::commit();
-
             return response()->json([
                 'status' => 201,
                 'message' => 'Pengeluaran berhasil ditambahkan.',
-                'data' =>  $pengeluaran
+                'data' => $parentPengeluaran,
             ], 201);
-        
-
         } catch (\Throwable $th) {
-            // Rollback transaksi jika terjadi error
             DB::rollback();
-
             return response()->json([
                 'status' => 'error',
-                'message' => 'Pengeluaran gagal ditambahkan! ' . $th->getMessage()
+                'message' => 'Pengeluaran gagal ditambahkan! ' . $th->getMessage(),
             ], 500);
         }
     }
-
 
 
 
