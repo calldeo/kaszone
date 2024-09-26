@@ -138,7 +138,7 @@ class PemasukanController extends Controller
             'description' => 'nullable|string',
             'date' => ['required', 'date'],
             'jumlah' => 'required|numeric|min:0',
-            'category_id' => 'nullable|exists:categories,id',
+            'id' => 'nullable|exists:categories,id',
         ]);
 
         // Mulai transaksi database
@@ -150,7 +150,7 @@ class PemasukanController extends Controller
             $pemasukan->description = $request->input('description');
             $pemasukan->date = $request->input('date');
             $pemasukan->jumlah = $request->input('jumlah');
-            $pemasukan->category_id = $request->input('category_id'); // Ganti id dengan category_id
+            $pemasukan->id = $request->input('id'); // Ganti id dengan category_id
 
             $pemasukan->save();
 

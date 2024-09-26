@@ -83,7 +83,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/create', [PemasukanController::class, 'create']);
         Route::post('/store', [PemasukanController::class, 'store']);
         Route::get('/show/{id}', [PemasukanController::class, 'show']);
-        Route::put('/pemasukan/{id}', [PemasukanController::class, 'update']);
+        Route::put('/update/{id}', [PemasukanController::class, 'update']);
         Route::delete('/destroy/{id}', [PemasukanController::class, 'destroy']);
         Route::get('/detail/{id}', [PemasukanController::class, 'showDetail']);
         Route::post('/pemasukan/import', [PemasukanController::class, 'importExcel']);
@@ -99,7 +99,7 @@ Route::group(['middleware' => 'auth:api'], function () {
        Route::prefix('outcome')->group(function () {
         Route::get('/all', [PengeluaranController::class, 'getAllOutcome']);
         Route::get('/create', [PengeluaranController::class, 'create']);
-Route::post('/pengeluaran', [PengeluaranController::class, 'store']);
+        Route::post('/store', [PengeluaranController::class, 'store']);
         Route::get('/show/{id}', [PengeluaranController::class, 'show']);
         Route::put('/update/{id}', [PengeluaranController::class, 'update']);
         Route::delete('/destroy/{id}', [PengeluaranController::class, 'destroy']);
