@@ -131,58 +131,47 @@ class PemasukanController extends Controller
             ],
         ], 200);
     }
-
-    // Metode untuk memperbarui detail pengguna
-    public function update(Request $request, $id_data)
+  public function update(Request $request, $id_data)
     {
-        // Validasi data yang diterima
-        $validator = Validator::make($request->all(), [
-            'name' => ['required', 'min:3', 'max:30'],
-            'description' => ['required', 'min:3', 'max:255'],
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
             'date' => ['required', 'date'],
             'jumlah' => 'required|numeric|min:0',
-            'id' => ['nullable', 'exists:categories,id'],
-            // Tambahkan aturan validasi lain sesuai kebutuhan
+            'category_id' => 'nullable|exists:categories,id',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 422,
-                'message' => $validator->errors(),
-            ], 422);
-        }
-
+        // Mulai transaksi database
         DB::beginTransaction();
+
         try {
-        $pemasukan = Pemasukan::find($id_data);
+            $pemasukan = Pemasukan::findOrFail($id_data);
+            $pemasukan->name = $request->input('name');
+            $pemasukan->description = $request->input('description');
+            $pemasukan->date = $request->input('date');
+            $pemasukan->jumlah = $request->input('jumlah');
+            $pemasukan->category_id = $request->input('category_id'); // Ganti id dengan category_id
 
-            // Perbarui data pengguna
-        $pemasukan->name = $request->name;
-        $pemasukan->description = $request->description;
-        $pemasukan->date = $request->date;
-        $pemasukan->jumlah = $request->jumlah;
-        $pemasukan->id = $request->id ?? $pemasukan->id; 
+            $pemasukan->save();
 
-
-
-              $pemasukan->save();
+            // Commit transaksi
             DB::commit();
 
             return response()->json([
-                'status' => 200,
-                'message' => 'Berhasil mengupdate data pemasukan ' ,
+                'status' => '200',
+                'message' => 'Pemasukan updated successfully',
                 'data' => $pemasukan,
             ], 200);
         } catch (\Exception $e) {
-            DB::rollback();
+            // Rollback transaksi jika ada kesalahan
+            DB::rollBack();
+
             return response()->json([
-                'status' => 500,
-                'message' => 'Gagal mengupdate data pemasukan',
-                'error' => $e->getMessage(),
+                'status' => '500',
+                'message' => 'Terjadi kesalahan saat mengupdate data: ' . $e->getMessage(),
             ], 500);
         }
     }
-
 
      public function destroy($id)
     {

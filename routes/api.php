@@ -83,7 +83,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/create', [PemasukanController::class, 'create']);
         Route::post('/store', [PemasukanController::class, 'store']);
         Route::get('/show/{id}', [PemasukanController::class, 'show']);
-        Route::put('/update/{id}', [PemasukanController::class, 'update']);
+        Route::put('/pemasukan/{id}', [PemasukanController::class, 'update']);
         Route::delete('/destroy/{id}', [PemasukanController::class, 'destroy']);
         Route::get('/detail/{id}', [PemasukanController::class, 'showDetail']);
         Route::post('/pemasukan/import', [PemasukanController::class, 'importExcel']);
