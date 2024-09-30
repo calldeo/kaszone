@@ -24,44 +24,37 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
-                        <div class="card-header">
+                   <div class="card-header">
                             <h4 class="card-title">Data Pemasukan</h4>
-                            <div class="d-flex">
-                                <div class="example mr-3">
-                                    <p class="mb-1">Filter Tahun</p>
-                                    <select class="form-control" id="filter-year">
-                                        <option value="">Pilih Tahun</option>
-                                        @for($year = date('Y'); $year >= 2020; $year--)
-                                            <option value="{{ $year }}">{{ $year }}</option>
-                                        @endfor
-                                    </select>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center"> <!-- Membungkus filter dalam d-flex -->
+                                    <div class="example mr-3">
+                                        <p class="mb-1">Filter Tahun</p>
+                                        <select class="form-control" id="filter-year">
+                                            <option value="">Pilih Tahun</option>
+                                            @for($year = date('Y'); $year >= 2020; $year--)
+                                                <option value="{{ $year }}">{{ $year }}</option>
+                                            @endfor
+                                        </select>
+                                    </div>
+                                    <div class="example mr-2">
+                                        <p class="mb-1">Filter Tanggal</p>
+                                        <input class="form-control input-daterange-datepicker" type="text" name="daterange" placeholder="Masukkan Tanggal" disabled>
+                                    </div>
                                 </div>
-                                <div class="example">
-                                    <p class="mb-1">Filter Tanggal</p>
-                                    <input class="form-control input-daterange-datepicker" type="text" name="daterange" disabled>
-                                </div>
-                                  <div class="text-right mt-4">
+                                <div class="d-flex align-items-center mt-3"> <!-- Membungkus tombol dalam d-flex -->
                                     @hasrole('Admin|Bendahara') 
-                                    <form method="GET" action="{{ route('export.laporan') }}" id="export-pdf-form">
+                                    <form method="GET" action="{{ route('export.laporan') }}" id="export-pdf-form" class="mr-1">
                                         <input type="hidden" name="year" id="export-year" value="{{ old('year') }}" required />
-                                        <button type="submit" class="btn btn-info ml-"><i class="fa fa-print"></i>
-                                         </button>
+                                        <button type="submit" class="btn btn-info">
+                                            <i class="fa fa-print"></i>
+                                        </button>
                                     </form>
-                                    
-                                <form method="POST" action="{{ route('export.laporan.excel') }}" id="export-excel-form">
-                                    @csrf <!-- CSRF token for form submission -->
-                                    <input type="hidden" name="year" id="export-year-excel" value="{{ old('year') }}" required />
-                                    <button type="submit" class="btn btn-success ml-0 mr-1"><i class="fa fa-file-excel"></i>
-                                    </button>
-                                </form>
-
-
-
-
+                                    <a href="{{ url('/export-pemasukan') }}" class="btn btn-success" title="Export to Excel">
+                                        <i class="fa fa-file"></i>
+                                    </a>
                                     @endhasrole
                                 </div>
-                         
-
                             </div>
                         </div>
                         <div class="card-body">
@@ -77,12 +70,12 @@
                                             <th><strong>Jumlah(Rp)</strong></th>
                                         </tr>
                                     </thead>
-                                   <tfoot>
-    <tr>
-        <th colspan="5"style="text-align: left; font-size: 1.25em; font-weight: bold;"><strong>Total Jumlah:</strong></th>
-        <th id="total-pemasukan" style="text-align: left; font-size: 1.25em; font-weight: bold;">0</th>
-    </tr>
-</tfoot>
+                                    <tfoot>
+            <tr>
+                <th colspan="5"style="text-align: left; font-size: 1.25em; font-weight: bold;"><strong>Total Jumlah:</strong></th>
+                <th id="total-pemasukan" style="text-align: left; font-size: 1.25em; font-weight: bold;">0</th>
+            </tr>
+        </tfoot>
 
                                 </table>
                             </div>
