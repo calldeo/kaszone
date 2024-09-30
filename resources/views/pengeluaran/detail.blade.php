@@ -142,7 +142,7 @@
                 <input type="text" name="nominal" class="form-control editable-input" value="{{ number_format($pengeluaran->nominal, 2, ',', '.') }}" readonly>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-2">
             <div class="form-group">
                 <label>Total</label>
                 <input type="text" name="jumlah" class="form-control editable-input" value="{{ $pengeluaran->jumlah }}" readonly>
@@ -151,13 +151,13 @@
     </div>
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="form-group">
                 <label>Kategori</label>
                 <input type="text" name="category" class="form-control editable-input" value="{{ $pengeluaran->category->name ?? 'Tidak ada kategori' }}" readonly>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="form-group">
                 <label>Lain-lain</label>
                 <input type="text" name="dll" class="form-control editable-input" value="{{ $pengeluaran->dll }}" readonly>
@@ -175,37 +175,10 @@
     </div>
 </div>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Kategori</label>
-                                <input type="text" name="category" class="form-control editable-input" value="{{ $pengeluaran->category->name ?? 'Tidak ada kategori' }}" readonly>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Total</label>
-                                <input type="text" name="jumlah" class="form-control editable-input" value="{{ $pengeluaran->jumlah }}" readonly>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Lain-lain</label>
-                            <input type="text" name="dll" class="form-control editable-input" value="{{ $pengeluaran->dll }}" readonly>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Gambar</label>
-                                    <img src="{{ $pengeluaran->image ? asset('storage/' . $pengeluaran->image) : asset('dash/images/cash.png') }}" alt="Gambar" class="img-thumbnail">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="float-right">
-                    <button type="button" class="btn btn-danger btn-cancel" onclick="window.location.href='/pengeluaran'">Cancel</button>
-                    </div>
+<div class="card-footer md-1">
+    <button type="button" class="btn btn-danger btn-cancel" onclick="window.location.href='/pengeluaran'">Cancel</button>
+</div>
+
                 </div>
                 </div>
             @endforeach

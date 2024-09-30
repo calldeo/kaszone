@@ -87,6 +87,8 @@
                                             <th><strong>Jumlah Satuan</strong></th>
                                             <th><strong>Nominal(Rp)</strong></th>
                                             <th><strong>Total(Rp)</strong></th>
+                                            <th><strong>Opsi<strong></th>
+
                                         </tr>
                                     </thead>
                                   <tfoot>
@@ -201,7 +203,9 @@
                     { data: 'tanggal' },
                     { data: 'jumlah_satuan' },
                     { data: 'nominal' },
-                    { data: 'jumlah' }
+                    { data: 'jumlah' },
+                    { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
+
                 ],
                 drawCallback: function(settings) {
                     var total = this.api().column(7).data().reduce(function(a, b) {
