@@ -19,4 +19,6 @@ class ParentPengeluaran extends Model
     {
         return $this->hasMany(Pengeluaran::class, 'id_parent');
     }
+
+    
 }

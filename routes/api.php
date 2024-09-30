@@ -81,6 +81,7 @@ Route::group(['middleware' => 'auth:api'], function () {
      Route::prefix('income')->group(function () {
         Route::get('/all', [PemasukanController::class, 'getAllIncome']);
         Route::get('/create', [PemasukanController::class, 'create']);
+        Route::get('/saldo', [PemasukanController::class, 'saldo']);
         Route::post('/store', [PemasukanController::class, 'store']);
         Route::get('/show/{id}', [PemasukanController::class, 'show']);
         Route::put('/update/{id}', [PemasukanController::class, 'update']);

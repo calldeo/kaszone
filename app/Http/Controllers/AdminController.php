@@ -228,10 +228,13 @@ class AdminController extends Controller
             ->addColumn('opsi', function ($row) {
                 return '
                     <div class="d-flex align-items-center">
-                    
-                        <form action="/kategori/' . $row->id . '/edit_kategori" method="GET" class="mr-1">
-                            <button type="submit" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></button>
+                                            
+                                        <form action="/kategori/{{ $row->id }}/edit_kategori" method="GET" class="mr-1">
+                            <button type="submit" class="btn btn-warning btn-xs">
+                                <i class="fa fa-pencil"></i> <!-- Ikon pencil dari Font Awesome -->
+                            </button>
                         </form>
+
                         <button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/kategori/' . $row->id . '/detail">
                     <i class="fa fa-eye"></i>
                     </button>
@@ -268,11 +271,17 @@ public function income(Request $request) // PEMASUKAN
         if ($startDate != null && $endDate != null) {
             $pemasukan = $pemasukan->whereBetween('date', [$startDate, $endDate]);
         }
+            $totalJumlah = $pemasukan->sum('jumlah');
+
 
         return DataTables::of($pemasukan)
             ->addIndexColumn()
+            
             ->addColumn('category', function ($row) {
                 return $row->category ? $row->category->name : 'Tidak ada kategori';
+            })
+            ->editColumn('date', function ($row) {
+                return Carbon::parse($row->date)->format('d-m-Y'); // Format: hari-bulan-tahun
             })
             ->addColumn('opsi', function ($row) {
                 $user = auth()->user();
@@ -282,7 +291,7 @@ public function income(Request $request) // PEMASUKAN
 
                 // Check user role and set buttons accordingly
                 if ($user->hasRole('Admin') || $user->hasRole('Bendahara')) {
-                    $editButton = '<a href="/pemasukan/' . $row->id_data . '/edit_pemasukan" class="btn btn-warning btn-xs mr-1"><i class="fa fa-pencil"></i></a>';
+                    $editButton = '<a href="/pemasukan/' . $row->id_data . '/edit" class="btn btn-warning btn-xs mr-1"><i class="fa fa-pencil"></i></a>';
                     $deleteButton = '<form action="/pemasukan/' . $row->id_data . '/destroy" method="POST" style="display:inline;">' .
                                     csrf_field() .
                                     method_field('DELETE') .
@@ -293,12 +302,11 @@ public function income(Request $request) // PEMASUKAN
                 return '<div class="d-flex align-items-center">' . $editButton . $viewButton . $deleteButton . '</div>';
             })
             ->rawColumns(['opsi'])
+                 ->with(['total_jumlah' => $totalJumlah])
             ->make(true);
     }
 }
 
-
-    
 public function production(Request $request) // PENGELUARAN
 {
     if ($request->ajax()) {
@@ -308,10 +316,10 @@ public function production(Request $request) // PENGELUARAN
 
         $pengeluaran = ParentPengeluaran::with('pengeluaran.category')->select(['id', 'tanggal']);
 
-        
         if ($year) {
             $pengeluaran = $pengeluaran->whereYear('tanggal', $year);
         }
+            // $totalJumlah = $pemasukan->sum('jumlah');
 
         if ($startDate != null && $endDate != null) {
             $pengeluaran = $pengeluaran->whereBetween('tanggal', [$startDate, $endDate]);
@@ -319,6 +327,9 @@ public function production(Request $request) // PENGELUARAN
 
         return DataTables::of($pengeluaran)
             ->addIndexColumn()
+            ->addColumn('tanggal', function ($row) {
+                return Carbon::parse($row->tanggal)->format('d-m-Y');
+            })
             ->addColumn('name', function ($row) {
                 $nama = '';
                 foreach ($row->pengeluaran as $val) {
@@ -389,9 +400,11 @@ public function production(Request $request) // PENGELUARAN
                 </div>';
             })
             ->rawColumns(['image', 'name', 'description', 'jumlah_satuan', 'nominal', 'dll', 'jumlah', 'category', 'opsi'])
+            // ->with(['total_jumlah' => $totalJumlah])
             ->make(true);
     }
 }
+
 
 
 public function roles(Request $request) // BENDAHARA

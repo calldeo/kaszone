@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Pemasukan;
+use App\Models\Pengeluaran;
 use Illuminate\Http\Request;
 use App\Imports\KategoriImport;
 use App\Exports\CategoriesExport;
@@ -312,5 +313,35 @@ class PemasukanController extends Controller
                 'message' => 'Terjadi kesalahan saat mengekspor data: ' . $e->getMessage(),
             ], 500);
         }
+    }
+
+
+    
+    public function saldo()
+    {
+        // dd(auth()->user()->getAllPermissions());
+        // Hitung saldo yang tersedia
+          // Ambil total pemasukan dan total pengeluaran
+          try{
+        $totalPemasukan = Pemasukan::sum('jumlah');
+        $totalPengeluaran = Pengeluaran::sum('jumlah');
+       
+        $saldo = $totalPemasukan - $totalPengeluaran;
+
+            // Mengirim file PDF dengan status 200
+               return response()->json([
+                'status' => 200,
+                'message' => 'Sukses mengambil data saldo',
+                'data' => $totalPemasukan,$totalPengeluaran,$saldo,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'Gagal mengambil data pemasukan',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+      
+        
     }
 }

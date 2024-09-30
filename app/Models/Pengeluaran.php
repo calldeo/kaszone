@@ -14,7 +14,6 @@ class Pengeluaran extends Model
     protected $fillable = [
         'name',
         'description',
-        'date',
         'jumlah_satuan',
         'nominal',
         'dll',
@@ -30,6 +29,6 @@ class Pengeluaran extends Model
     }
      public function parentPengeluaran() // Gunakan nama relasi yang benar di sini
     {
-        return $this->belongsTo(ParentPengeluaran::class, 'id'); // Hubungkan dengan model Category
+        return $this->hasOne(ParentPengeluaran::class, 'id','id_parent'); // Hubungkan dengan model Category
     }
 }

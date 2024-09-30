@@ -43,28 +43,79 @@
                         <div class="card-header">
                             <h4 class="card-title">Data Pengeluaran</h4>
                             <div class="text-right">
-                                <div class="example">
-                                    <p class="mb-1">Filter Tanggal</p>
-                                    <input class="form-control input-daterange-datepicker" type="text" name="daterange" placeholder="Masukkan Tanggal">
-                                </div>
-                                @hasrole('Admin|Bendahara') 
-                                <a href="/add_pengeluaran" class="btn btn-warning ml-1" title="Add">
-                                    <i class="fa fa-plus"></i>
-                                </a>
-                                @endhasrole
+                            <div class="d-flex align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center">
+        <!-- Filter Tanggal -->
+        <div class="example mr-3">
+            <p class="mb-1">Filter Tanggal</p>
+            <input class="form-control input-daterange-datepicker" type="text" name="daterange" placeholder="Masukkan Tanggal" disabled>
+        </div>
+    </div>
 
-                                @hasrole('Admin|Bendahara') 
-                                <a href="/cetakpgl" target="_blank" class="btn btn-info ml-1" title="Print Report">
-                                    <i class="fa fa-print"></i>
-                                </a>
-                                @endhasrole
-                                @hasrole('Admin|Bendahara') 
-                                <a href="{{ url('/export-pengeluaran') }}" class="btn btn-success ml-1" title="Export to Excel">
-                                    <i class="fa fa-file-excel"></i>
-                                </a>
-                                @endhasrole
+    <div class="d-flex align-items-center">
+        @hasrole('Admin|Bendahara') 
+        <!-- Button to Add Pengeluaran -->
+        <a href="/add_pengeluaran" class="btn btn-warning mr-2" title="Add">
+            <i class="fa fa-plus"></i>
+        </a>
+        @endhasrole
+
+        @hasrole('Admin|Bendahara') 
+        <!-- Print Report Button -->
+        <a href="/cetakpgl" target="_blank" class="btn btn-info mr-2" title="Print Report">
+            <i class="fa fa-print"></i>
+        </a>
+        @endhasrole
+
+        @hasrole('Admin|Bendahara') 
+        <!-- Export to Excel Button -->
+        <a href="{{ url('/export-pengeluaran') }}" class="btn btn-success mr-2" title="Export to Excel">
+            <i class="fa fa-file-excel"></i>
+        </a>
+        @endhasrole
+
+        @hasrole('Admin|Bendahara')
+        <!-- Import Data Button -->
+        <button class="btn btn-primary" data-toggle="modal" data-target="#importModal" title="Import Data">
+            <i class="fa fa-file-import"></i> 
+        </button>
+        @endhasrole
+    </div>
+</div>
                             </div>
                         </div>
+                                                <!-- Modal untuk Import Data -->
+                        <div id="importModal" class="modal fade" tabindex="-1" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Import Data Pengeluaran</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <a href="{{ route('download-template') }}" class="btn btn-success">Download Template</a>
+
+                                    <div class="modal-body">
+                                        <form action="{{ route('import-pengeluaran') }}" method="POST" enctype="multipart/form-data">
+                                            @csrf
+                                            <div class="form-group">
+                                                <label for="file">Pilih File Excel</label>
+                                                <input type="file" class="form-control" name="file[]" multiple required>
+                                                <small class="form-text text-muted">File yang diizinkan: .xls, .xlsx</small>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="description">Deskripsi (optional)</label>
+                                                <textarea class="form-control" name="description" rows="3"></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Import</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
 
                         <div class="card-body">
                             @if(session('error'))

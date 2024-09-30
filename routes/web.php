@@ -110,19 +110,16 @@ Route::group(['middleware' => ['auth','permission:Data Pemasukan']], function ()
     Route::get('/add_pemasukan', [PemasukanController::class, 'create']);
     Route::post('/pemasukan/store', [PemasukanController::class, 'store']);
     Route::delete('/pemasukan/{id}/destroy', [PemasukanController::class, 'destroy'])->name('pemasukan.destroy');
-    Route::get('/pemasukan/{id_pemasukan}/edit_pemasukan',[PemasukanController::class,'edit']);
-    Route::put('/pemasukan/{id_pemasukan}', [PemasukanController::class, 'update'])->name('update');
+    Route::get('/pemasukan/{id_data}/edit', [PemasukanController::class, 'edit'])->name('pemasukan.edit');
+    Route::put('/pemasukan/{id_data}', [PemasukanController::class, 'update'])->name('pemasukan.update');
     Route::get('pemasukan/tob', [PemasukanController::class, 'tob'])->name('pemasukan.tob');
     Route::get('/pemasukan/{id_data}/detail', [PemasukanController::class, 'showDetail'])->name('pemasukan.showDetail');
     Route::post('/importpemasukan', [PemasukanController::class, 'pemasukanImportExcel'])->name('import-pemasukan');
     Route::get('/download-template-pemasukan', [PemasukanController::class, 'downloadTemplate'])->name('download-template-pemasukan');
-        Route::get('/cetak-pemasukan',[PemasukanController::class,'cetakPemasukan'])->name('cetak-pemasukan');
+    Route::get('/get-categories/{jenis_kategori}', [PemasukanController::class, 'getCategories']);
+    Route::get('/export-pemasukan', [PemasukanController::class, 'exportPemasukanPDF'])->name('export.pemasukan');
+    Route::post('/export-pemasukan-excel', [PemasukanController::class, 'exportPemasukanExcel'])->name('export.pemasukan.excel');
 
-    
-    Route::get('/export-pemasukan', function () {
-        return Excel::download(new PemasukanExport, 'pemasukan.xlsx');});
-// routes/web.php
-Route::get('/get-categories/{jenis_kategori}', [PemasukanController::class, 'getCategories']);
 
 
 });
@@ -149,8 +146,17 @@ Route::group(['middleware' => ['auth','permission:Data Pengeluaran']], function 
     Route::post('/pengeluaran/store', [PengeluaranController::class, 'store'])->name('pengeluaran.store');
     Route::get('/pengeluaran/delete/{id_data}', [PengeluaranController::class, 'delete'])->name('pengeluaran.delete');
     Route::get('/pengeluaran/deleteAll', [PengeluaranController::class, 'deleteAll'])->name('pengeluaran.deleteAll');
+    Route::post('/import-pengeluaran', [PengeluaranController::class, 'importPengeluaran'])->name('import-pengeluaran');
+    Route::get('/url-to-get-totals', 'PengeluaranController@getTotals');
+    Route::get('/download-template', [PengeluaranController::class, 'downloadTemplate'])->name('download-template');
+
+
+
     Route::get('/laporan', [LaporanController::class, 'index'])->name('index');
+    Route::get('/laporan-kas', [LaporanController::class, 'laporanKas'])->name('laporanKas');
     Route::get('/export-laporan', [LaporanController::class, 'exportLaporanPDF'])->name('export.laporan');
+    Route::post('/export-laporan-excel', [LaporanController::class, 'exportLaporanExcel'])->name('export.laporan.excel');
+
 
 
 

@@ -8,9 +8,13 @@
             <h5 class="name"><span class="font-w400">Hello,</span>{{auth()->user()->name}}</h5>
             <p class="email"><a href="javascript:void(0);" class="cf_email">{{auth()->user()->email}}</a></p>
         </div>
-        
+        @php
+    // Mengambil activeRole dari session
+    $activeRole = Session::get('activeRole');
+@endphp
         <ul class="metismenu" id="menu">
             {{-- Daftar menu berdasarkan peran pengguna --}}
+                @if($activeRole === 'admin')
             @can('Home')
             <li class="nav-label first"></li>
             <li><a  href="/home" aria-expanded="false">
@@ -38,6 +42,7 @@
                 </a>
             </li>
             @endcan
+    @elseif($activeRole === 'bendahara')
 
             @can('Data Pemasukan')
             <li class="{{ request()->is('pemasukan*') || request()->is('add_pemasukan') ? 'mm-active active-no-child' : '' }}">
@@ -57,6 +62,12 @@
             </li>
             @endcan
             @can('Data Pengeluaran')
+               <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+							<i class="flaticon-381-network"></i>
+							<span class="nav-text">Laporan Keuangan</span>
+						</a>
+                        <ul aria-expanded="false">
+                            @can('Data Pengeluaran')
             <li class="{{ request()->is('laporan*') || request()->is('laporan') ? 'mm-active active-no-child' : '' }}">
                 <a href="/laporan" aria-expanded="{{ request()->is('laporan*') || request()->is('laporan') ? 'true' : 'false' }}" class="{{ request()->is('pengeluaran*') || request()->is('laporan') ? 'mm-active' : '' }}">
                     <i class="bi bi-wallet2"></i>
@@ -64,6 +75,18 @@
                 </a>
             </li>
             @endcan
+            @can('Data Pengeluaran')
+            <li class="{{ request()->is('keuangan*') || request()->is('keuangan') ? 'mm-active active-no-child' : '' }}">
+                <a href="/laporan-kas" aria-expanded="{{ request()->is('keuangan*') || request()->is('keuangan') ? 'true' : 'false' }}" class="{{ request()->is('pengeluaran*') || request()->is('keuangan') ? 'mm-active' : '' }}">
+                    <i class="bi bi-cash-coin"></i>
+                    <span class="nav-text">Laporan saldo kas</span>
+                </a>
+            </li>
+            @endcan
+                        </ul>
+                    </li>
+                    <li>
+           @endcan
 
             @can('Role')
             <li class="{{ request()->is('role*') || request()->is('add_role') ? 'mm-active active-no-child' : '' }}">
@@ -73,6 +96,8 @@
                 </a>
             </li>
             @endcan
+                @endif
+
         </ul>
     </div>
 </div>

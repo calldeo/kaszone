@@ -1,208 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     @include('template.headerr')
-    <title>PityCash | {{ auth()->user()->level }} | Edit</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Edit Pemasukan</title>
 </head>
+
 <body>
-    <!-- Preloader start -->
     @include('template.topbarr')
-    <!-- Header end -->
-
-    <!-- Sidebar start -->
     @include('template.sidebarr')
-    <!-- Sidebar end -->
 
-    <!-- Content body start -->
     <div class="content-body">
         <div class="container-fluid">
-            <!-- Modal for Add Project -->
-            <div class="modal fade" id="addProjectSidebar">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Create Project</h5>
-                            <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-                        </div>
-                        <div class="modal-body">
-                            <form>
-                                <div class="form-group">
-                                    <label class="text-black font-w500">Project Name</label>
-                                    <input type="text" class="form-control" name="project_name">
-                                </div>
-                                <div class="form-group">
-                                    <label class="text-black font-w500">Deadline</label>
-                                    <input type="date" class="form-control" name="deadline">
-                                </div>
-                                <div class="form-group">
-                                    <label class="text-black font-w500">Client Name</label>
-                                    <input type="text" class="form-control" name="client_name">
-                                </div>
-                                <div class="form-group">
-                                    <button type="button" class="btn btn-primary">CREATE</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Page Title and Breadcrumb -->
             <div class="row page-titles mx-0">
                 <div class="col-sm-6 p-md-0">
                     <div class="welcome-text">
-                        <h4>Hi, Welcome Back!</h4>
-                        <p class="mb-0">Validation</p>
+                        <h4>Edit Pemasukan</h4>
                     </div>
                 </div>
                 <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">Form</a></li>
-                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Validation</a></li>
+                        <li class="breadcrumb-item"><a href="">Pemasukan</a></li>
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Edit</a></li>
                     </ol>
                 </div>
             </div>
 
             <!-- Edit Form -->
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="card-title">Edit Data Pemasukan</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="basic-form">
-                                <form action="/pemasukan/{{ $id_data }}" method="POST" enctype="multipart/form-data">
-                                    @method('PUT')
-                                    @csrf
-                                    <div class="form-group">
-                                        <label class="text-label">Nama Pemasukan *</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="fas fa-money-bill-wave"></i> <!-- Ikon uang -->
-                                                </span>
-                                            </div>
-                                            <input type="text" class="form-control" id="val-username1" name="name" value="{{ old('name', $pemasukan->name ?? '') }}" placeholder="Masukkan nama.." required>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="text-label">Deskripsi *</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="fas fa-book"></i> <!-- Ikon buku -->
-                                                </span>
-                                            </div>
-                                            <textarea class="form-control" id="val-description" name="description" placeholder="Masukkan deskripsi.." required>{{ old('description', $pemasukan->description ?? '') }}</textarea>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="text-label">Tanggal *</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="fas fa-calendar"></i> <!-- Ikon kalender -->
-                                                </span>
-                                            </div>
-                                            <input type="date" class="form-control" id="val-date" name="date" value="{{ old('date', $pemasukan->date ?? '') }}" required>
-                                        </div>
-                                    </div>
+            <div class="card">
+                <div class="card-header">Edit Pemasukan</div>
+                <div class="card-body">
+                    <form action="{{ route('pemasukan.update', $pemasukan->id_data) }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
 
-                                    <div class="form-group">
-                                        <label class="text-label">Jumlah *</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="fas fa-dollar-sign"></i> <!-- Ikon dolar -->
-                                                </span>
-                                            </div>
-                                            <input type="number" step="0.01" class="form-control" id="val-jumlah" name="jumlah" value="{{ old('jumlah', $pemasukan->jumlah ?? '') }}" placeholder="Masukkan jumlah.." required>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="text-label">Category *</label>
-                                        <select class="select2-with-label-single js-states form-control" id="category" name="category_id" required>
-                                            <option value="">Select Category</option>
-                                            <!-- Populate categories dynamically -->
-                                        </select>
-                                        @error('category_id')
-                                        <span class="mt-2 text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-
-                                    <button type="button" class="btn btn-danger btn-cancel" onclick="redirectToKategori()">Cancel</button>
-                                    <button type="submit" class="btn mr-2 btn-primary btn-submit">Submit</button>
-                                </form>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="name">Nama</label>
+                                    <input type="text" id="name" name="name" class="form-control" value="{{ $pemasukan->name }}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="description">Deskripsi</label>
+                                    <textarea id="description" name="description" class="form-control" rows="3">{{ $pemasukan->description }}</textarea>
+                                </div>
                             </div>
                         </div>
-                    </div>
+
+                        <div class="form-group">
+                            <label class="text-label">Tanggal *</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-calendar"></i> <!-- Ikon kalender -->
+                                    </span>
+                                </div>
+                                <input type="date" class="form-control" id="val-date" name="date" value="{{ old('date', $pemasukan->date ?? '') }}" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="text-label">Jumlah *</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-dollar-sign"></i> <!-- Ikon dolar -->
+                                    </span>
+                                </div>
+                                <input type="number" step="0.01" class="form-control" id="val-jumlah" name="jumlah" value="{{ old('jumlah', $pemasukan->jumlah ?? '') }}" placeholder="Masukkan jumlah.." required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="category">Kategori</label>
+                                    <select id="category" name="category_id" class="form-control select2">
+                                        <option value="">Pilih Kategori</option>
+                                        @foreach($categories as $category)
+                                            <option value="{{ $category->id }}" {{ old('category_id', $pemasukan->category_id) == $category->id ? 'selected' : '' }}>
+                                                {{ $category->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <a href="" class="btn btn-danger btn-cancel">Cancel</a>
+                            <button type="submit" class="btn btn-primary btn-submit">Update</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Content body end -->
 
-    <!-- Footer start -->
-    <div class="footer">
-        <div class="copyright">
-            <p>Copyright © Designed &amp; Developed by <a href="/home" target="_blank">SYNC</a> 2024</p>
-        </div>
-    </div>
-    <!-- Footer end -->
-
-    <!-- Scripts -->
     @include('template.scripts')
-
-    <script>
-        function redirectToKategori() {
-            window.location.href = "/pemasukan";
-        }
-    </script>
     <script>
         $(document).ready(function() {
-            getCategories(); // Memanggil fungsi untuk mengambil kategori
+            // Inisialisasi Select2
+            $('.select2').select2();
+
+            // Fungsi untuk mendapatkan kategori dari server
+            getCategories();
 
             function getCategories() {
                 $.ajax({
-                    url: '/get-categories/1', // Sesuaikan URL sesuai kebutuhan
+                    url: '/get-categories/1',
                     method: 'GET',
                     success: function(data) {
-                        var $dropdown = $('#category'); // Mengambil elemen dropdown dengan ID 'category'
-                        $dropdown.empty(); // Menghapus opsi yang ada sebelumnya
+                        var $dropdown = $('#category');
+                        $dropdown.empty(); // Kosongkan dropdown
 
-                        // Menambahkan opsi default
                         $dropdown.append($('<option>', {
                             value: '',
-                            text: 'Select Category'
+                            text: 'Pilih Kategori'
                         }));
-
-                        // Menambahkan kategori ke dropdown
                         $.each(data, function(index, item) {
                             $dropdown.append($('<option>', {
-                                value: item.id, // Memastikan ini sesuai dengan respons API
-                                text: item.name // Menggunakan 'nama_kategori' sesuai dengan respons API
+                                value: item.id,
+                                text: item.name
                             }));
                         });
-
-                        // Set selected value for editing
-                        $dropdown.val("{{ old('category_id', $pemasukan->category_id ?? '') }}"); // Set the selected category for editing
-
-                        $dropdown.select2(); // Inisialisasi Select2
                     },
                     error: function(xhr) {
-                        console.error('Error fetching categories:', xhr); // Mencetak kesalahan di konsol
-                        // Menampilkan pesan kesalahan di UI
-                        $('#category').append($('<option>', {
-                            value: '',
-                            text: 'Error loading categories'
-                        }));
+                        console.error('Error fetching options:', xhr);
                     }
                 });
             }
         });
     </script>
 </body>
+
 </html>

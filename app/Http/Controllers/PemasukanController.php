@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Exports\PemasukanExport;
 use App\Imports\PemasukanImport;
 use App\Models\Category;
 use App\Models\Pemasukan;
@@ -14,11 +14,23 @@ use PDF;
 
 class PemasukanController extends Controller
 {
-      public function index()
+      public function index(Request $request)
     {
-       $pemasukan = Pemasukan::with('category')->get();
-         // Menggunakan pagination
-        return view('halaman.datapemasukan', compact('pemasukan'));
+        
+      $year = $request->input('year');
+    
+  if ($year) {
+        $pemasukan = Pemasukan::whereYear('date', $year)->get();
+            $totalPemasukan = $pemasukan->sum('jumlah');
+
+  
+    } else {
+        $pemasukan = Pemasukan::all();
+    }
+    
+
+
+    return view('halaman.datapemasukan', compact('pemasukan', 'year'));
     }
 
     public function create()
@@ -82,61 +94,100 @@ public function destroy($id_data)
         }
     }}
 
-public function edit($id_data)
-{
-    $pemasukan = Pemasukan::find($id_data);
-// $category = Category::all();
-//  $pemasukan = DB::table('datapemasukan')->get();
-// $category = Category::where('jenis_kategori', '1')->get();
-    return view('edit.edit_pemasukan', compact('id_data','pemasukan'));
-}
 
-  public function update(Request $request, $id_data)
-{
-    // Validasi input
-    $request->validate([
-        'name' => ['required', 'min:3', 'max:30'],
-        'description' => ['required', 'min:3', 'max:255'],
-        'date' => ['required', 'date'],
-       'jumlah' => 'required|numeric|min:0',
-        'id' => ['nullable', 'exists:categories,id'],
-    ]);
+// public function edit($id_data)
+// {
+//     $pemasukan = Pemasukan::findOrFail($id_data);
+//     $categories = Category::where('jenis_kategori', '1')->get();
 
-    // Mulai transaksi database
-    DB::beginTransaction();
+//     return view('edit.edit_pemasukan', compact('pemasukan', 'categories'));
+// }
 
-    try {
-        // Temukan data pemasukan berdasarkan ID
-        $pemasukan = Pemasukan::find($id_data);
+// public function update(Request $request, $id_data)
+// {
+//     // Validate input
+//     $request->validate([
+//         'name' => ['required', 'min:3', 'max:30'],
+//         'description' => ['required', 'min:3', 'max:255'],
+//         'date' => ['required', 'date'],
+//         'jumlah' => 'required|numeric|min:0',
+//         'category_id' => ['nullable', 'exists:categories,id'],
+//     ]);
 
-        if (!$pemasukan) {
-            // Jika data tidak ditemukan, kembalikan error
-            return redirect('/pemasukan')->with('error', 'Data pemasukan tidak ditemukan.');
-        }
+//     // Start database transaction
+//     DB::beginTransaction();
 
-        // Update data pemasukan
-        $pemasukan->name = $request->name;
-        $pemasukan->description = $request->description;
-        $pemasukan->date = $request->date;
-        $pemasukan->jumlah = $request->jumlah;
-        $pemasukan->id = $request->id ?? $pemasukan->id; // Gunakan kategori yang ada jika tidak ada yang baru
+//     try {
+//         // Find the pemasukan data by ID
+//         $pemasukan = Pemasukan::findOrFail($id_data);
 
-        // Simpan perubahan
-        $pemasukan->save();
+//         // Update pemasukan data
+//         $pemasukan->name = $request->name;
+//         $pemasukan->description = $request->description;
+//         $pemasukan->date = $request->date;
+//         $pemasukan->jumlah = $request->jumlah;
+//         $pemasukan->category_id = $request->category_id ?? $pemasukan->category_id; // Use existing category if not provided
 
-        // Commit transaksi jika tidak ada kesalahan
-        DB::commit();
+//         // Save changes
+//         $pemasukan->save();
 
-        // Redirect dengan pesan sukses
-        return redirect('/pemasukan')->with('update_success', 'Data pemasukan berhasil diperbarui.');
-    } catch (\Throwable $th) {
-        // Rollback transaksi jika terjadi kesalahan
-        DB::rollback();
+//         // Commit transaction
+//         DB::commit();
+
+//         // Redirect with success message
+//         return redirect('/pemasukan')->with('update_success', 'Data pemasukan berhasil diperbarui.');
+//     } catch (\Throwable $th) {
+//         // Rollback transaction on error
+//         DB::rollback();
         
-        // Redirect dengan pesan gagal
-        return redirect('/pemasukan')->with('error', 'Pemasukan gagal diperbarui! ' . $th->getMessage());
+//         // Redirect with error message
+//         return redirect('/pemasukan')->with('error', 'Pemasukan gagal diperbarui! ' . $th->getMessage());
+//     }
+// }
+
+    public function edit($id_data)
+    {
+        $pemasukan = Pemasukan::findOrFail($id_data);
+        $categories = Category::where('jenis_kategori', 'pemasukan')->get();
+
+        return view('edit.edit_pemasukan', compact('id_data','pemasukan', 'categories'));
     }
-}
+
+    public function update(Request $request, $id_data)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'date' => ['required', 'date'],
+            'jumlah' => 'required|numeric|min:0',
+            'category_id' => 'nullable|exists:categories,id',
+        ]);
+
+        // Mulai transaksi database
+        DB::beginTransaction();
+
+        try {
+            $pemasukan = Pemasukan::findOrFail($id_data);
+            $pemasukan->name = $request->input('name');
+            $pemasukan->description = $request->input('description');
+            $pemasukan->date = $request->input('date');
+            $pemasukan->jumlah = $request->input('jumlah');
+            $pemasukan->id = $request->input('category_id');
+
+            $pemasukan->save();
+
+            // Commit transaksi
+            DB::commit();
+
+            return redirect('/pemasukan')->with('success', 'Pemasukan updated successfully');
+        } catch (\Exception $e) {
+            // Rollback transaksi jika ada kesalahan
+            DB::rollBack();
+
+        return redirect('/pemasukan')->with('error', 'Terjadi kesalahan saat mengimpor data' . $e->getMessage());
+        }
+    }
+
 
 
 // Method untuk mendapatkan detail kategori
@@ -204,18 +255,37 @@ public function downloadTemplate()
 
 
 }
-
-public function cetakPemasukan()
-    {
+public function exportPemasukanPDF(Request $request)
+{
+    $year = $request->input('year');
     
-    $pemasukan = Pemasukan::all();
-    $pdf = PDF::loadview('halaman.cetak-pemasukan',compact('pemasukan'));
-    $pdf->setPaper('A4','potrait');
-    return $pdf->stream('pemasukan.pdf');
-
-
-
+    if ($year) {
+        $pemasukan = Pemasukan::whereYear('date', $year)->get();     
+    } else {
+        $pemasukan = Pemasukan::all();
+       
     }
+    
+    $pdf = PDF::loadView('pemasukan.pdf', compact('pemasukan', 'year'));
+    
+    $pdf->setPaper('A4', 'portrait');
+    
+    return $pdf->stream($year ? "pemasukan_$year.pdf" : "pemasukan_seluruh.pdf");
+}
+
+public function exportPemasukanExcel(Request $request)
+{
+    $year = $request->input('year');
+    
+    if ($year) {
+        $pemasukan = Pemasukan::whereYear('date', $year)->get();
+        
+    } else {
+        $pemasukan = Pemasukan::all();
+        }
+
+    return Excel::download(new PemasukanExport($pemasukan,  $year), $year ? "pemasukan_$year.xlsx" : "pemasukan_seluruh.xlsx");
+}
 
 public function getCategories($jenisKategori)
     {

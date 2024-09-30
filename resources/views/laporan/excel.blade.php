@@ -1,36 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan PDF</title>
+    <meta charset="utf-8">
+    <title>Laporan Excel</title>
     <style>
         table {
             width: 100%;
             border-collapse: collapse;
         }
-        table, th, td {
-            border: 1px solid black;
-        }
         th, td {
+            border: 1px solid black;
             padding: 8px;
             text-align: left;
-        }
-        /* CSS untuk memulai halaman baru */
-        .page-break {
-            page-break-before: always;
-            margin: 20px 0; /* optional: memberi jarak */
         }
     </style>
 </head>
 <body>
-    <h2>Laporan Keuangan Tahun {{ $year }}</h2>
+    <h1>Laporan Pemasukan dan Pengeluaran {{ $year ? $year : 'Seluruh' }}</h1>
 
-    <h3>Pemasukan</h3>
+    <h2>Pemasukan</h2>
     <table>
         <thead>
             <tr>
-                <th>No</th>
+               <th>No</th>
                 <th>Nama</th>
                 <th>Deskripsi</th>
                 <th>Kategori</th>
@@ -39,7 +31,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($pemasukan as $key => $item)
+           @foreach($pemasukan as $key => $item)
             <tr>
                 <td>{{ $key + 1 }}</td>
                 <td>{{ $item->name }}</td>
@@ -52,14 +44,11 @@
         </tbody>
     </table>
 
-    <!-- Menambahkan halaman baru sebelum pengeluaran -->
-    <div class="page-break"></div>
-
-    <h3>Pengeluaran</h3>
+    <h2>Pengeluaran</h2>
     <table>
         <thead>
             <tr>
-                <th>No</th>
+              <th>No</th>
                 <th>Nama</th>
                 <th>Deskripsi</th>
                 <th>Kategori</th>
@@ -72,7 +61,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($pengeluaran as $key => $pgl)
+               @foreach($pengeluaran as $key => $pgl)
             <tr>
                 <td>{{ $key + 1 }}</td>
                 <td>{{ $pgl->name }}</td>
@@ -93,9 +82,5 @@
             @endforeach
         </tbody>
     </table>
-
-    <h4>Total Pemasukan: Rp{{ number_format($totalPemasukan, 0, ',', '.') }}</h4>
-    <h4>Total Pengeluaran: Rp{{ number_format($totalPengeluaran, 0, ',', '.') }}</h4>
-    <h4>Selisih: Rp{{ number_format($selisih, 0, ',', '.') }}</h4>
 </body>
 </html>
