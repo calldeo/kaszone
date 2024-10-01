@@ -19,6 +19,7 @@ class PemasukanImport implements ToModel
             'description' => $row[2],
             'date' => Date::excelToDateTimeObject($row[3]),// Konversi tanggal dari Excel
             'jumlah' => $jumlah, // Nilai yang sudah dipastikan valid
+            'id'=> $row[5],
         ]);
     }
 }

@@ -6,6 +6,7 @@
     <title>PityCash | {{auth()->user()->level}} | Admin</title>
     
 </head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.min.css">
 
 <body>
 
@@ -75,7 +76,7 @@
                             @csrf
                             <div class="form-group">
                                 <label for="file">Pilih File Excel</label>
-                                <input type="file" class="form-control-file" id="file" name="file" required>
+                                <input type="file" class="dropify" id="file" name="file" required accept=".xls,.xlsx">
                                 <div style="text-align: left;">
                                     <a href="{{ route('download-template-kategori') }}">
                                         </i> Download Template Excel
@@ -381,6 +382,15 @@ $(document).ready(function() {
         </div>
     </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js"></script>
+
+ <script>
+    $(document).ready(function(){
+        // Inisialisasi Dropify
+        $('.dropify').dropify();
+    });
+</script>
 
 
 </body>

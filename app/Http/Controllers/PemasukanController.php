@@ -209,43 +209,42 @@ public function destroy($id_data)
     ]);
     }
    
-public function pemasukanImportExcel(Request $request) {
-
-        // DB::table('users')->where('level','guru')->delete();
-       
-    // Mulai transaksi database
-    DB::beginTransaction();
+    public function pemasukanImportExcel(Request $request) {
+        // Mulai transaksi database
+        DB::beginTransaction();
+        
+        try {
+            // Validasi file
+            $request->validate([
+                'file' => 'required|file|mimes:xlsx,xls,csv|max:2048', // Sesuaikan dengan format yang diizinkan
+            ]);
     
-    try {
-        // Hapus semua data lama dari tabel Category
-        Pemasukan::query()->delete();
-        
-        // Pindahkan file ke folder DataKategori
-        $file = $request->file('file');
-        $namafile = $file->getClientOriginalName();
-        $file->move('DataPemasukan', $namafile);
-
-        // Impor data dari file Excel
-        Excel::import(new PemasukanImport, public_path('/DataPemasukan/'.$namafile));
-
-        // Commit transaksi jika semua operasi berhasil
-        DB::commit();
-
-        // Hapus file setelah impor selesai
-        Storage::delete($namafile);
-
-        return redirect('/pemasukan')->with('success', 'Data Berhasil Ditambahkan');
-    } catch (\Exception $e) {
-        // Rollback transaksi jika terjadi kesalahan
-        DB::rollBack();
-
-        // Log error jika diperlukan
-        \Log::error('Import Pemasukan failed: ' . $e->getMessage());
-
-        return redirect('/pemasukan')->with('error', 'Terjadi kesalahan saat mengimpor data' . $e->getMessage());
+            // Pindahkan file ke folder DataPemasukan
+            $file = $request->file('file');
+            $namafile = $file->getClientOriginalName();
+            $file->move(public_path('DataPemasukan'), $namafile);
+    
+            // Impor data dari file Excel
+            Excel::import(new PemasukanImport, public_path('DataPemasukan/' . $namafile));
+    
+            // Commit transaksi jika semua operasi berhasil
+            DB::commit();
+    
+            // Hapus file setelah impor selesai
+            @unlink(public_path('DataPemasukan/' . $namafile)); // Menghapus file dari server
+    
+            return redirect('/pemasukan')->with('success', 'Data Berhasil Ditambahkan');
+        } catch (\Exception $e) {
+            // Rollback transaksi jika terjadi kesalahan
+            DB::rollBack();
+    
+            // Log error jika diperlukan
+            \Log::error('Import Pemasukan failed: ' . $e->getMessage());
+    
+            return redirect('/pemasukan')->with('error', 'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage());
+        }
     }
-        
-    }
+    
 public function downloadTemplate()
 {
     // Path ke template Excel untuk pemasukan
