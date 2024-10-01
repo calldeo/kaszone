@@ -184,65 +184,72 @@ public function destroyAll($parentId)
 //         }
 //     }}
 
-    public function edit($id_data)
-    {
-        $pengeluaran = Pengeluaran::findOrFail($id_data);
-        $categories = Category::where('jenis_kategori', 'pengeluaran')->get();
 
-        return view('pengeluaran.edit', compact('id_data','pengeluaran', 'categories'));
-    }
+   public function edit($id)
+{
+    $parentPengeluaran = ParentPengeluaran::with('pengeluaran')->findOrFail($id);
+    $pengeluaranItem = $parentPengeluaran->pengeluaran->first(); 
+    $categories = Category::all();
 
-    // Memperbarui data pengeluaran
-    public function update(Request $request, $id_data)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'jumlah_satuan' => 'required|numeric',
-            'nominal' => 'required|numeric',
-            'category_id' => 'nullable|exists:categories,id',
-            'jumlah' => 'required|numeric',
-            'dll' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        ]);
+    return view('pengeluaran.edit', compact('pengeluaranItem', 'categories'));
+}
 
-        // Mulai transaksi database
-        DB::beginTransaction();
 
-        try {
-            $pengeluaran = Pengeluaran::findOrFail($id_data);
-            $pengeluaran->name = $request->input('name');
-            $pengeluaran->description = $request->input('description');
-            $pengeluaran->jumlah_satuan = $request->input('jumlah_satuan');
-            $pengeluaran->nominal = $request->input('nominal');
-            $pengeluaran->id = $request->input('category_id');
-            $pengeluaran->jumlah = $request->input('jumlah');
-            $pengeluaran->dll = $request->input('dll');
 
-            // Handle image upload
-            if ($request->hasFile('image')) {
-                // Hapus gambar lama jika ada
-                if ($pengeluaran->image) {
-                    Storage::delete('public/' . $pengeluaran->image);
-                }
+public function update(Request $request, $id)
+{
+    // Validasi data
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'jumlah_satuan' => 'required|numeric',
+        'nominal' => 'required|numeric',
+        'category_id' => 'nullable|exists:categories,id',
+        'jumlah' => 'required|numeric',
+        'dll' => 'nullable|string',
+        'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+    ]);
 
-                $path = $request->file('image')->store('image', 'public');
-                $pengeluaran->image = $path;
+    // Mengambil data pengeluaran yang akan diperbarui
+    $pengeluaran = ParentPengeluaran::findOrFail($id);
+
+    // Mulai transaksi database
+    DB::beginTransaction();
+
+    try {
+        $pengeluaran->name = $request->input('name');
+        $pengeluaran->description = $request->input('description');
+        $pengeluaran->jumlah_satuan = $request->input('jumlah_satuan');
+        $pengeluaran->nominal = $request->input('nominal');
+        $pengeluaran->category_id = $request->input('category_id'); // Pastikan ini sesuai
+        $pengeluaran->jumlah = $request->input('jumlah');
+        $pengeluaran->dll = $request->input('dll');
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            // Hapus gambar lama jika ada
+            if ($pengeluaran->image) {
+                Storage::delete('public/' . $pengeluaran->image);
             }
 
-            $pengeluaran->save();
-
-            // Commit transaksi
-            DB::commit();
-
-            return redirect()->route('pengeluaran.index')->with('success', 'Pengeluaran updated successfully');
-        } catch (\Exception $e) {
-            // Rollback transaksi jika ada kesalahan
-            DB::rollBack();
-
-            return redirect()->route('pengeluaran.index')->with('error', 'Failed to update pengeluaran: ' . $e->getMessage());
+            $path = $request->file('image')->store('image', 'public');
+            $pengeluaran->image = $path;
         }
+
+        $pengeluaran->save();
+
+        // Commit transaksi
+        DB::commit();
+
+        return redirect()->route('pengeluaran.index')->with('success', 'Pengeluaran updated successfully');
+    } catch (\Exception $e) {
+        // Rollback transaksi jika ada kesalahan
+        DB::rollBack();
+
+        return redirect()->route('pengeluaran.index')->with('error', 'Failed to update pengeluaran: ' . $e->getMessage());
     }
+}
+
     
     
 

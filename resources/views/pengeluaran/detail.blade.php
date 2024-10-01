@@ -89,10 +89,10 @@
                             <div class="card-header">
                                 Detail Pengeluaran {{ $loop->iteration }}
                                 <div class="float-right">
-                                    <a href="{{ route('pengeluaran.edit', $pengeluaran->id_data) }}" class="btn btn-primary mr-2">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </a>
-            
+                                        <a href="{{ route('pengeluaran.edit', $pengeluaran->id_data) }}" class="btn btn-warning btn-xs mr-1">
+                                <i class="fas fa-edit"></i>
+                            </a>
+
                                     @if($parentPengeluaran->pengeluaran->count() > 1)
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

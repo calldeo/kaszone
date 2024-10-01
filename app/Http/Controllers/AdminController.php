@@ -285,7 +285,7 @@ public function income(Request $request) // PEMASUKAN
 
                 // Check user role and set buttons accordingly
                 if ($user->hasRole('Admin') || $user->hasRole('Bendahara')) {
-                    $editButton = '<a href="/pemasukan/' . $row->id_data . '/edit" class="btn btn-warning btn-xs mr-1"><i class="fa fa-pencil"></i></a>';
+                    $editButton = '<a href="/pemasukan/' . $row->id_data . '/edit" class="btn btn-warning btn-xs mr-1"><i class="fas fa-edit"></i></i></a>';
                     $deleteButton = '<form action="/pemasukan/' . $row->id_data . '/destroy" method="POST" style="display:inline;">' .
                                     csrf_field() .
                                     method_field('DELETE') .
