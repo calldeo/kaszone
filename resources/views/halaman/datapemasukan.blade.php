@@ -5,7 +5,7 @@
     @include('template.headerr')
     <title>PityCash | {{ auth()->user()->level }} | Pemasukan</title>
 </head>
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.min.css">
 <body>
     <!-- Preloader start -->
     @include('template.topbarr')
@@ -73,7 +73,7 @@
                                     <form method="POST" action="{{ route('export.pemasukan.excel') }}" id="export-excel-form" class="mr-2">
                                         @csrf
                                         <input type="hidden" name="year" id="export-year-excel" value="{{ old('year') }}" />
-                                        <button type="submit" title="Export Excel" class="btn btn-success"><i class="fa fa-file-excel"></i></button>
+                                        <button type="submit" title="Export Excel" class="btn btn-success"><i class="fa fa-file"></i></button>
                                     </form>
                                     @endhasrole
 
@@ -99,7 +99,7 @@
                                                     @csrf
                                                     <div class="form-group">
                                                         <label for="file">Pilih File Excel</label>
-                                                        <input type="file" class="form-control-file" id="file" name="file" required>
+                                                        <input type="file" class="dropify" id="file" name="file" required accept=".xls,.xlsx">
                                                         <div style="text-align: left;">
                                                             <a href="{{ route('download-template-pemasukan') }}">Download Template Excel</a>
                                                         </div>
@@ -110,6 +110,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                
                                 @endhasrole
                             </div>
                         </div>
@@ -326,6 +327,16 @@
             });
         });
         </script>
+
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js"></script>
+
+ <script>
+    $(document).ready(function(){
+        // Inisialisasi Dropify
+        $('.dropify').dropify();
+    });
+</script>
+
 </body>
 
 </html>
