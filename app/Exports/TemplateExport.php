@@ -11,15 +11,6 @@ use Maatwebsite\Excel\Concerns\WithTitle;
 
 class TemplateExport implements WithMultipleSheets
 {
-    protected $yesterday;
-    protected $today;
-
-    public function __construct()
-    {
-        $this->yesterday = Carbon::yesterday()->format('d-m-Y');
-        $this->today = Carbon::today()->format('d-m-Y');
-    }
-
     public function sheets(): array
     {
         return [
@@ -40,14 +31,14 @@ class DataPengeluaranSheetExport implements FromArray, WithHeadings, WithTitle
     public function array(): array
     {
         return [
-            ['', 'Deskripsi', 'Jumlah Satuan', 'Nominal(Rp)', 'dll(Rp)', 'Total', 'Tanggal', 'Kategori'],
-            ['', '', '', '', ''],
+            ['', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', ''],
         ];
     }
 
     public function headings(): array
     {
-        return ['Nama Pengeluaran', 'Deskripsi', 'Jumlah Satuan', 'Nominal(Rp)', 'dll(Rp)', 'Total', 'Tanggal', 'Kategori'];
+        return ['Nama Pengeluaran', 'Deskripsi', 'Jumlah Satuan', 'Nominal(Rp)', 'dll(Rp)', 'Total', 'Kategori'];
     }
 }
 
@@ -61,14 +52,14 @@ class DataPengeluaranSheetExport1 implements FromArray, WithHeadings, WithTitle
     public function array(): array
     {
         return [
-            ['', 'Deskripsi', 'Jumlah Satuan', 'Nominal(Rp)', 'dll(Rp)', 'Total', 'Tanggal', 'Kategori'],
-            ['', '', '', '', ''],
+            ['', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', ''],
         ];
     }
 
     public function headings(): array
     {
-        return ['Nama Pengeluaran', 'Deskripsi', 'Jumlah Satuan', 'Nominal(Rp)', 'dll(Rp)', 'Total', 'Tanggal', 'Kategori'];
+        return ['Nama Pengeluaran', 'Deskripsi', 'Jumlah Satuan', 'Nominal(Rp)', 'dll(Rp)', 'Total', 'Kategori'];
     }
 }
 
@@ -81,12 +72,12 @@ class CategorySheetExport implements FromArray, WithHeadings, WithTitle
 
     public function array(): array
     {
-        $categories = Category::select('id', 'name')->get()->toArray();
+        $categories = Category::select('id', 'jenis_kategori', 'name')->get()->toArray();
         return $categories;
     }
 
     public function headings(): array
     {
-        return ['Kode', 'Name'];
+        return ['Kode', 'Jenis Kategori', 'Name'];
     }
 }

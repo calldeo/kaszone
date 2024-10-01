@@ -55,9 +55,12 @@
                                     @endhasrole
                                 
                                     @hasrole('Admin|Bendahara') 
-                                    <a href="{{ url('/export-pengeluaran') }}" class="btn btn-success ml-1" title="Export to Excel">
-                                        <i class="fa fa-file-excel"></i>
-                                    </a>
+                                     
+                                    <form method="POST" action="{{ route('export.pengeluaran.excel') }}" id="export-excel-form" class="mr-2">
+                                        @csrf
+                                        <input type="hidden" name="year" id="export-year-excel" value="{{ old('year') }}" />
+                                        <button type="submit" title="Export Excel" class="btn btn-success"><i class="fa fa-file-excel"></i></button>
+                                    </form>
                                     @endhasrole
                                     @hasrole('Admin|Bendahara')
                                 <!-- Import Data Button -->
@@ -68,13 +71,64 @@
                             </div>
                             </div>
                         </div>
+                                                <!-- Modal untuk Import Data -->
+                        <div id="importModal" class="modal fade" tabindex="-1" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Import Data Pengeluaran</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <a href="{{ route('download-template') }}" class="btn btn-success">Download Template</a>
 
+                                   <div class="modal-body">
+    <form action="{{ route('import-pengeluaran') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        <div class="form-group">
+            <label for="file">Pilih File Excel</label>
+            <input type="file" class="form-control" name="file[]" multiple required>
+            <small class="form-text text-muted">File yang diizinkan: .xls, .xlsx</small>
+        </div>
+        <div class="form-group">
+            <label for="description">Deskripsi (optional)</label>
+            <textarea class="form-control" name="description" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Import</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    </form>
+</div>
+
+                                </div>
+                            </div>
+                        </div>
             <!-- Pengeluaran Section -->
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
                    
                         <div class="card-body">
+                               @if(session('success'))
+                            <div class="alert alert-success alert-dismissible fade show">
+                                <svg viewbox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                                    <polyline points="9 11 12 14 22 4"></polyline>
+                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                                </svg>
+                                <strong>Success!</strong> {{ session('success') }}
+                                <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span></button>
+                            </div>
+                            @endif
+                            @if(session('update_success'))
+                            <div class="alert alert-warning alert-dismissible fade show">
+                                <svg viewbox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                                    <polyline points="9 11 12 14 22 4"></polyline>
+                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                                </svg>
+                                <strong>Success!</strong> {{ session('update_success') }}
+                                <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span></button>
+                            </div>
+                            @endif
                             <div class="table-responsive">
                                 <table id="pengeluaranTables" class="table table-responsive-md">
                                     <thead>
@@ -87,6 +141,7 @@
                                             <th><strong>Jumlah Satuan</strong></th>
                                             <th><strong>Nominal(Rp)</strong></th>
                                             <th><strong>Total(Rp)</strong></th>
+                                            <th><strong>Foto</strong></th>
                                             <th><strong>Opsi<strong></th>
 
                                         </tr>
@@ -193,17 +248,20 @@
                         d.year = filter.year;
                         d.start_created_at = filter.start_created_at;
                         d.end_created_at = filter.end_created_at;
+                        
                     }
                 },
                 columns: [
-                    { data: 'DT_RowIndex', orderable: false, searchable: false },
-                    { data: 'name' },
-                    { data: 'description' },
-                    { data: 'category' },
-                    { data: 'tanggal' },
-                    { data: 'jumlah_satuan' },
-                    { data: 'nominal' },
-                    { data: 'jumlah' },
+                    { data: 'DT_RowIndex',name: 'DT_RowIndex', orderable: false, searchable: false },
+                    { data: 'name', name: 'name' },
+                    { data: 'description', name: 'description' },
+                    { data: 'category', name: 'category'},
+                    { data: 'tanggal', name: 'tanggal' },
+                    { data: 'jumlah_satuan', name: 'jumlah_satuan' },
+                    { data: 'nominal',name: 'nominal' },
+                    { data: 'jumlah',name: 'jumlah' },
+                    { data: 'image',name:'image' },
+
                     { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
 
                 ],

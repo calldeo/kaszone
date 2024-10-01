@@ -73,7 +73,7 @@
                                     <form method="POST" action="{{ route('export.pemasukan.excel') }}" id="export-excel-form" class="mr-2">
                                         @csrf
                                         <input type="hidden" name="year" id="export-year-excel" value="{{ old('year') }}" />
-                                        <button type="submit" title="Export Excel" class="btn btn-success"><i class="fa fa-file"></i></button>
+                                        <button type="submit" title="Export Excel" class="btn btn-success"><i class="fa fa-file-excel"></i></button>
                                     </form>
                                     @endhasrole
 

@@ -10,12 +10,10 @@ use App\Models\Pengeluaran;
 use Illuminate\Http\Request;
 use App\Exports\TemplateExport;
 use App\Models\ParentPengeluaran;
-use App\Imports\PengeluaranImport;
+use App\Exports\PengeluaranExport;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Foundation\Auth\User;
 use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\Storage;
+use App\Imports\DataPengeluaranImportMultiple;
 
 class PengeluaranController extends Controller
 {
@@ -33,11 +31,10 @@ public function create()
         // $categories = Category::where('jenis_kategori', 'pengeluaran')->get();
         return view('pengeluaran.add_pengeluaran');
     }
-
 public function store(Request $request)
-    {
-        // Validasi input
-         $request->validate([
+{
+    // Validasi input
+    $request->validate([
         'file.*' => 'required|mimes:xls,xlsx|max:2048',
         'name.*' => 'required|string|max:255',
         'description.*' => 'nullable|string',
@@ -54,7 +51,8 @@ public function store(Request $request)
 
     try {
         // Process each uploaded Excel file
-        foreach ($request->file('file') as $file) {
+        $files = $request->file('file', []);
+        foreach ($files as $file) {
             Excel::import(new PengeluaranImport, $file); // Import Excel logic
         }
 
@@ -64,34 +62,50 @@ public function store(Request $request)
         $parentPengeluaran->save();
 
         // Process form inputs for each pengeluaran (expenditure)
-        foreach ($request->input('name') as $i => $name) {
-            $pengeluaran = new Pengeluaran();
-            $pengeluaran->name = $name;
-            $pengeluaran->description = $request->input('description')[$i] ?? null;
-            $pengeluaran->jumlah_satuan = $request->input('jumlah_satuan')[$i];
-            $pengeluaran->nominal = $request->input('nominal')[$i];
-            $pengeluaran->dll = $request->input('dll')[$i];
-            $pengeluaran->jumlah = $request->input('jumlah')[$i];
-            $pengeluaran->id = $request->input('id')[$i];
-            $pengeluaran->id_parent = $parentPengeluaran->id; // Associate with parent ID
+        $names = $request->input('name', []);
+        foreach ($names as $i => $name) {
+            // Cek apakah pengeluaran dengan nama yang sama sudah ada
+            $existingPengeluaran = Pengeluaran::where('name', $name)
+                ->where('id_parent', $parentPengeluaran->id)
+                ->first();
 
-            // Handle image upload if exists
-            if ($request->hasFile("image.$i")) {
-                $path = $request->file("image.$i")->store('image', 'public');
-                $pengeluaran->image = $path;
+            if ($existingPengeluaran) {
+                // Jika sudah ada, tambahkan jumlah ke pengeluaran yang ada
+                $existingPengeluaran->jumlah += $request->input('jumlah')[$i] ?? 0;
+                $existingPengeluaran->nominal += $request->input('nominal')[$i] ?? 0; // Jika ingin juga menjumlahkan nominal
+                $existingPengeluaran->save();
+            } else {
+                // Jika pengeluaran belum ada, buat pengeluaran baru
+                $pengeluaran = new Pengeluaran();
+                $pengeluaran->name = $name;
+                $pengeluaran->description = $request->input('description')[$i] ?? null;
+                $pengeluaran->jumlah_satuan = $request->input('jumlah_satuan')[$i] ?? 0;
+                $pengeluaran->nominal = $request->input('nominal')[$i] ?? 0;
+                $pengeluaran->dll = $request->input('dll')[$i] ?? 0;
+                $pengeluaran->jumlah = $request->input('jumlah')[$i] ?? 0;
+                $pengeluaran->id = $request->input('id')[$i] ?? null;
+                $pengeluaran->id_parent = $parentPengeluaran->id; // Associate with parent ID
+
+                // Handle image upload if exists
+                if ($request->hasFile("image.$i")) {
+                    $path = $request->file("image.$i")->store('image', 'public');
+                    $pengeluaran->image = $path;
+                }
+
+                $pengeluaran->save(); // Save new expenditure
             }
-
-            $pengeluaran->save(); // Save each expenditure
         }
 
         DB::commit();
-        return redirect()->back()->with('success', 'Data berhasil diimpor dan diproses.');
+        // Redirect to 'pengeluaran.index' route after success
+        return redirect()->route('pengeluaran.index')->with('success', 'Data berhasil diimpor dan diproses.');
     } catch (\Exception $e) {
         DB::rollBack();
         return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
     }
-    }
-    
+}
+
+
     public function delete($id_data)
     {
  
@@ -232,15 +246,29 @@ public function destroyAll($parentId)
     
     
 
-public function cetakpgl()
+public function cetakpgl(Request $request)
     {
         // Dapatkan calon dengan jumlah suara terbanyak
        
-       $pengeluaran = Pengeluaran::all();
-       $pdf = PDF::loadview('halaman.cetakpgl',compact('pengeluaran'));
-       $pdf->setPaper('A4','potrait');
-       return $pdf->stream('pengeluaran.pdf');
+     $year = $request->input('year');
+    
+    if ($year) {
+        
+         $pengeluaran = Pengeluaran::whereHas('parentPengeluaran', function($query) use ($year) {
+            $query->whereYear('tanggal',$year);    
+        })->with('category', 'parentPengeluaran')->get();
+    } else {
+        
+        $pengeluaran = Pengeluaran::with('category', 'ParentPengeluaran')->get();
+    }
+    
+    $totalPengeluaran = $pengeluaran->sum('jumlah');
 
+    $pdf = PDF::loadView('pengeluaran.pdf', compact( 'pengeluaran', 'totalPengeluaran', 'year'));
+    
+    $pdf->setPaper('A4', 'portrait');
+    
+    return $pdf->stream($year ? "laporan_$year.pdf" : "laporan_seluruh.pdf");
 
     // return view('halaman.cetakpgl',compact('pengeluaran'));
     }
@@ -256,6 +284,23 @@ public function cetakpgl()
 
 
     }
+
+    public function exportPengeluaranExcel(Request $request)
+{
+    $year = $request->input('year');
+    
+    if ($year) {
+        
+        $pengeluaran = Pengeluaran::whereHas('parentPengeluaran', function($query) use ($year) {
+            $query->whereYear('tanggal', $year);    
+        })->with('category', 'parentPengeluaran')->get();
+    } else {
+        $pengeluaran = Pengeluaran::with('category', 'parentPengeluaran')->get();
+    }
+
+    return Excel::download(new PengeluaranExport( $pengeluaran, $year), $year ? "laporan_$year.xlsx" : "laporan_seluruh.xlsx");
+}
+
 
     public function data()
     {
@@ -274,29 +319,38 @@ public function cetakpgl()
             })
             ->make(true);
     }
+    
+public function importPengeluaran(Request $request)
+{
+    $request->validate([
+        'file' => 'required', // File harus diupload
+        'file.*' => 'mimes:xls,xlsx|max:2048', // Validasi untuk setiap file
+    ]);
 
-    public function importPengeluaran(Request $request)
-    {
-        // Validasi file yang diunggah
-        $request->validate([
-            'file.*' => 'required|mimes:xls,xlsx'
-        ]);
+    DB::beginTransaction(); // Mulai transaksi
 
-        // Loop melalui setiap file yang diunggah
-        foreach ($request->file('file') as $file) {
-            try {
-                // Menggunakan package Excel untuk mengimpor setiap file
-                Excel::import(new PengeluaranImport, $file);
-                Log::info("Impor berhasil untuk file: " . $file->getClientOriginalName());
-            } catch (\Exception $e) {
-                Log::error("Gagal impor untuk file: " . $file->getClientOriginalName() . ". Error: " . $e->getMessage());
-                return back()->withErrors(['msg' => 'Gagal impor file: ' . $file->getClientOriginalName()]);
+    try {
+        if ($request->hasFile('file')) {
+            foreach ($request->file('file') as $file) {
+                // Ambil tanggal dari judul sheet atau dari request input
+                $tanggal = Carbon::now()->format('Y-m-d'); // Sesuaikan jika perlu mengambil tanggal dari sheet atau input
+                
+                // Import multiple file menggunakan class yang sama
+                Excel::import(new DataPengeluaranImportMultiple($tanggal), $file); // Proses impor
             }
         }
 
-        // Redirect dengan pesan sukses
-        return back()->with('success', 'Semua file berhasil diimpor.');
+        DB::commit(); // Commit transaksi jika tidak ada kesalahan
+        return redirect()->back()->with('success', 'Data pengeluaran berhasil diimpor!');
+    } catch (\Exception $e) {
+        DB::rollBack(); // Rollback jika ada kesalahan
+        \Log::error('Import failed: ' . $e->getMessage()); // Log kesalahan
+        return redirect()->back()->with('error', 'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage());
     }
+}
+
+
+
 
     public function downloadTemplate()
     {

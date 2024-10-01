@@ -137,7 +137,7 @@ Route::group(['middleware' => ['auth','permission:Data Pengeluaran']], function 
     Route::put('/pengeluaran/{id_data}', [PengeluaranController::class, 'update'])->name('pengeluaran.update');
     Route::put('/pengeluaran/{id}', [PengeluaranController::class, 'update'])->name('pengeluaran.update');
     Route::get('/cetakpgl',[PengeluaranController::class,'cetakpgl'])->name('cetakpgl');
-    Route::get('/export-pengeluaran', function () {return Excel::download(new PengeluaranExport, 'pengeluaran.xlsx');});
+    Route::post('/export-pengeluaran-excel', [PengeluaranController::class, 'exportPengeluaranExcel'])->name('export.pengeluaran.excel');
     Route::get('/pengeluaran', [PengeluaranController::class, 'index'])->name('pengeluaran.index');
     Route::get('/pengeluaran/data', [AdminController::class, 'tabe'])->name('admin.tabe');
     Route::get('pengeluaran/tabe', [PengeluaranController::class, 'tabe'])->name('pengeluaran.tabe');
@@ -145,17 +145,18 @@ Route::group(['middleware' => ['auth','permission:Data Pengeluaran']], function 
     Route::get('/download-template-kategori', [CategoryController::class, 'downloadTemplate'])->name('download-template-kategori');
     Route::post('/pengeluaran/store', [PengeluaranController::class, 'store'])->name('pengeluaran.store');
     Route::get('/pengeluaran/delete/{id_data}', [PengeluaranController::class, 'delete'])->name('pengeluaran.delete');
-    Route::get('/pengeluaran/deleteAll', [PengeluaranController::class, 'deleteAll'])->name('pengeluaran.deleteAll');
+    Route::get('/pengeluaran/deleteAll', [PengeluaranController::class, 'deleteAll'])->name('pengeluaran.deleteAll');   
     Route::post('/import-pengeluaran', [PengeluaranController::class, 'importPengeluaran'])->name('import-pengeluaran');
     Route::get('/url-to-get-totals', 'PengeluaranController@getTotals');
     Route::get('/download-template', [PengeluaranController::class, 'downloadTemplate'])->name('download-template');
+    Route::post('/export-pengeluaran-excel', [PengeluaranController::class, 'exportPengeluaranExcel'])->name('export.pengeluaran.excel');
 
 
 
     Route::get('/laporan', [LaporanController::class, 'index'])->name('index');
     Route::get('/laporan-kas', [LaporanController::class, 'laporanKas'])->name('laporanKas');
     Route::get('/export-laporan', [LaporanController::class, 'exportLaporanPDF'])->name('export.laporan');
-    Route::post('/export-laporan-excel', [LaporanController::class, 'exportLaporanExcel'])->name('export.laporan.excel');
+    Route::get('/export-laporan-excel', [LaporanController::class, 'exportLaporanExcel'])->name('export.laporan.excel');
 
 
 

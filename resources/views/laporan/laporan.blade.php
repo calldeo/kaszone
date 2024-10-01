@@ -50,8 +50,8 @@
                                             <i class="fa fa-print"></i>
                                         </button>
                                     </form>
-                                    <a href="{{ url('/export-pemasukan') }}" class="btn btn-success" title="Export to Excel">
-                                        <i class="fa fa-file"></i>
+                                    <a href="{{ url('/export-laporan-excel') }}"  class="btn btn-success" title="Export to Excel">
+                                        <i class="fa fa-file-excel"></i>
                                     </a>
                                     @endhasrole
                                 </div>
