@@ -384,10 +384,13 @@ $(document).ready(function() {
 </div>
 
 
- <script>
+<script>
     $(document).ready(function(){
         // Inisialisasi Dropify
         $('.dropify').dropify();
+
+        // Mengubah ukuran font di area Dropify setelah inisialisasi
+        $('.dropify-wrapper .dropify-message p').css('font-size', '20px'); // Ganti '12px' dengan ukuran yang diinginkan
     });
 </script>
 
