@@ -74,55 +74,57 @@ public function destroy($id)
         return redirect('/kategori')->with('error', 'Gagal menghapus data. Silakan coba lagi.');
     }
 }
+  public function edit($id)
+    {
+        $category = Category::find($id);
 
- public function edit($id)
-{
-    $category= Category::find($id);
-    // Jangan mengirimkan password ke tampilan
-    
+        // Cek jika kategori tidak ditemukan
+        if (!$category) {
+            return redirect('/kategori')->with('error', 'Kategori tidak ditemukan.');
+        }
 
-         
-
-    return view('edit.edit_kategori', compact('category'));
-}
-public function update(Request $request, $id)
-{
-    // dd($request);
-    // Validasi input
-    $request->validate([
-        'name' => ['required', 'min:3', 'max:30'],
-        'jenis_kategori' => 'required',
-        'description' => ['required', 'min:3', 'max:30'],
-    ]);
-
-    // Temukan category berdasarkan ID
-    $category = Category::find($id);
-
-    if (!$category) {
-        return redirect('/kategori')->with('error', 'Kategori tidak ditemukan.');
+        return view('edit.edit_kategori', compact('category'));
     }
 
-    DB::beginTransaction(); // Memulai transaksi
-    try {
-        // Memperbarui data kategori yang ada
-        $category->name = $request->name;
-        $category->jenis_kategori = $request->jenis_kategori;
-        $category->description = $request->description;
+    public function update(Request $request, $id)
+    {
+        // Validasi input
+        $request->validate([
+            'name' => ['required', 'min:3', 'max:30'],
+            'jenis_kategori' => 'required',
+            'description' => ['nullable', 'min:3', 'max:100'],
+        ]);
 
-        // Menyimpan perubahan kategori
-        $category->save();
+        // Temukan kategori berdasarkan ID
+        $category = Category::find($id);
 
-        // Commit transaksi jika tidak ada kesalahan
-        DB::commit();
+        // Cek jika kategori tidak ditemukan
+        if (!$category) {
+            return redirect('/kategori')->with('error', 'Kategori tidak ditemukan.');
+        }
 
-        return redirect('/kategori')->with('success', 'Kategori berhasil diperbarui.');
-    } catch (\Throwable $th) {
-        // Rollback transaksi jika terjadi kesalahan
-        DB::rollback();
+        DB::beginTransaction(); // Memulai transaksi
+        try {
+            // Memperbarui data kategori yang ada
+            $category->name = $request->name;
+            $category->jenis_kategori = $request->jenis_kategori;
+            $category->description = $request->description;
 
-        return redirect('/kategori')->with('error', 'Kategori gagal diperbarui! ' . $th->getMessage());
+            // Menyimpan perubahan kategori
+            $category->save();
+
+            // Commit transaksi jika tidak ada kesalahan
+            DB::commit();
+
+            return redirect('/kategori')->with('success', 'Kategori berhasil diperbarui.');
+        } catch (\Throwable $th) {
+            // Rollback transaksi jika terjadi kesalahan
+            DB::rollback();
+
+            return redirect('/kategori')->with('error', 'Kategori gagal diperbarui! ' . $th->getMessage());
+        }
     }
-}
+
 
 
 public function kategoriimportexcel(Request $request) {

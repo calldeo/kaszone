@@ -42,7 +42,7 @@ public function store(Request $request)
         'nominal.*' => 'required|numeric|min:0',
         'dll.*' => 'required|numeric|min:0',
         'jumlah.*' => 'required|numeric|min:0',
-        'id.*' => 'required|exists:categories,id',
+        'category_id.*' => 'required|exists:categories,id',
         'image.*' => 'nullable|mimes:jpg,jpeg,png|max:2048',
         'tanggal.*' => 'required|date_format:Y-m-d|exists:pengeluaran_parent,tanggal'
     ]);
@@ -50,32 +50,30 @@ public function store(Request $request)
     DB::beginTransaction();
 
     try {
-        // Process each uploaded Excel file
+      
         $files = $request->file('file', []);
         foreach ($files as $file) {
-            Excel::import(new PengeluaranImport, $file); // Import Excel logic
+            Excel::import(new PengeluaranImport, $file); 
         }
 
-        // Creating a parent record for multiple expenditures
         $parentPengeluaran = new ParentPengeluaran();
         $parentPengeluaran->tanggal = $request->input('tanggal');
         $parentPengeluaran->save();
 
-        // Process form inputs for each pengeluaran (expenditure)
         $names = $request->input('name', []);
         foreach ($names as $i => $name) {
-            // Cek apakah pengeluaran dengan nama yang sama sudah ada
+          
             $existingPengeluaran = Pengeluaran::where('name', $name)
                 ->where('id_parent', $parentPengeluaran->id)
                 ->first();
 
             if ($existingPengeluaran) {
-                // Jika sudah ada, tambahkan jumlah ke pengeluaran yang ada
+               
                 $existingPengeluaran->jumlah += $request->input('jumlah')[$i] ?? 0;
-                $existingPengeluaran->nominal += $request->input('nominal')[$i] ?? 0; // Jika ingin juga menjumlahkan nominal
+                $existingPengeluaran->nominal += $request->input('nominal')[$i] ?? 0; 
                 $existingPengeluaran->save();
             } else {
-                // Jika pengeluaran belum ada, buat pengeluaran baru
+       
                 $pengeluaran = new Pengeluaran();
                 $pengeluaran->name = $name;
                 $pengeluaran->description = $request->input('description')[$i] ?? null;
@@ -83,21 +81,23 @@ public function store(Request $request)
                 $pengeluaran->nominal = $request->input('nominal')[$i] ?? 0;
                 $pengeluaran->dll = $request->input('dll')[$i] ?? 0;
                 $pengeluaran->jumlah = $request->input('jumlah')[$i] ?? 0;
-                $pengeluaran->id = $request->input('id')[$i] ?? null;
-                $pengeluaran->id_parent = $parentPengeluaran->id; // Associate with parent ID
 
-                // Handle image upload if exists
+          
+                $pengeluaran->id = $request->input('category_id')[$i];
+                $pengeluaran->id_parent = $parentPengeluaran->id; 
+
+               
                 if ($request->hasFile("image.$i")) {
                     $path = $request->file("image.$i")->store('image', 'public');
                     $pengeluaran->image = $path;
                 }
 
-                $pengeluaran->save(); // Save new expenditure
+                $pengeluaran->save(); 
             }
         }
 
         DB::commit();
-        // Redirect to 'pengeluaran.index' route after success
+       
         return redirect()->route('pengeluaran.index')->with('success', 'Data berhasil diimpor dan diproses.');
     } catch (\Exception $e) {
         DB::rollBack();

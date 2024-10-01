@@ -96,8 +96,8 @@ Route::group(['middleware' => ['auth','permission:Kategori']], function (){
     route::get('/add_kategori',[CategoryController::class,'add_kategori'])->name('add_kategori');
     Route::post('/kategori/store',[CategoryController::class,'store']);
     Route::delete('/kategori/{id}/destroy', [CategoryController::class,'destroy'])->name('kategori.destroy');
-    Route::get('/kategori/{id}/edit_kategori  ',[CategoryController::class,'edit']);
-    Route::put('/kategori/{id}',[CategoryController::class,'update']);
+    Route::get('/kategori/{id}/edit_kategori', [CategoryController::class, 'edit'])->name('kategori.edit');
+    Route::put('/kategori/{id}', [CategoryController::class, 'update'])->name('kategori.update');
     Route::post('/importkategori', [CategoryController::class, 'kategoriimportexcel'])->name('import-kategori');
     Route::get('/cetaklaporan',[CategoryController::class,'cetaklaporan'])->name('cetaklaporan');
     Route::get('/kategori/{id}/detail', [CategoryController::class, 'showDetail'])->name('kategori.showDetail');

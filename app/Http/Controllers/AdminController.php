@@ -208,42 +208,36 @@ class AdminController extends Controller
 }
 
 
-
-   public function kategoris(Request $request) // KATEGORI
+public function kategoris(Request $request) // KATEGORI
 {
     if ($request->ajax()) {
-        $categories = Category::select(['id', 'name','jenis_kategori', 'description'])->get();
+        $categories = Category::select(['id', 'name', 'jenis_kategori', 'description'])->get();
 
         return DataTables::of($categories)
             ->addIndexColumn()
-             ->addColumn('jenis_kategori', function($row){
-                if ($row->jenis_kategori == 1 ){
-                    return 'pemasukan';
-                } elseif ($row->jenis_kategori == 2)  {
-                    return 'pengeluaran';
-                }
-
-
-             })
+            ->addColumn('jenis_kategori', function($row){
+                return $row->jenis_kategori == 1 ? 'pemasukan' : 'pengeluaran';
+            })
             ->addColumn('opsi', function ($row) {
                 return '
                     <div class="d-flex align-items-center">
-                                            
-                                        <form action="/kategori/{{ $row->id }}/edit_kategori" method="GET" class="mr-1">
+                        <form action="' . route('kategori.edit', $row->id) . '" method="GET" class="mr-1">
                             <button type="submit" class="btn btn-warning btn-xs">
-                                <i class="fa fa-pencil"></i> <!-- Ikon pencil dari Font Awesome -->
+                                <i class="fa fa-pencil"></i> 
                             </button>
                         </form>
-
+                        
                         <button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/kategori/' . $row->id . '/detail">
-                    <i class="fa fa-eye"></i>
-                    </button>
+                            <i class="fa fa-eye"></i>
+                        </button>
+                        
                         <form action="/kategori/' . $row->id . '/destroy" method="POST">
                             ' . csrf_field() . '
                             ' . method_field('DELETE') . '
-                            <button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>
+                            <button type="submit" class="btn btn-danger btn-xs">
+                                <i class="fa fa-trash"></i>
+                            </button>
                         </form>
-                        
                     </div>
                 ';
             })
