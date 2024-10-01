@@ -134,7 +134,7 @@ Route::group(['middleware' => ['auth','permission:Data Pengeluaran']], function 
     // Route::get('/pengeluaran/{id_pengeluaran}/edit_pengeluaran',[PengeluaranController::class,'edit']);
     // Route::put('/pengeluaran/{id_pengeluaran}', [PengeluaranController::class, 'update'])->name('update');
     Route::get('/pengeluaran/{id_data}/edit', [PengeluaranController::class, 'edit'])->name('pengeluaran.edit');
-    Route::put('/pengeluaran/{id_data}', [PengeluaranController::class, 'update'])->name('pengeluaran.update');
+Route::put('/pengeluaran/{id}', [PengeluaranController::class, 'update'])->name('pengeluaran.update');
     Route::put('/pengeluaran/{id}', [PengeluaranController::class, 'update'])->name('pengeluaran.update');
     Route::get('/cetakpgl',[PengeluaranController::class,'cetakpgl'])->name('cetakpgl');
     Route::post('/export-pengeluaran-excel', [PengeluaranController::class, 'exportPengeluaranExcel'])->name('export.pengeluaran.excel');
