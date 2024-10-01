@@ -22,6 +22,8 @@
 	<link href="{{asset('dash/vendor/bootstrap-daterangepicker/daterangepicker.css')}}" rel="stylesheet">
 	<link rel="stylesheet" href="{{asset('dash/vendor/select2/css/select2.min.css')}}">
     <link href="{{asset('dash/css/style.css')}}" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.min.css">
+
 
 	{{-- <link href="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.css" rel="stylesheet"> --}}
 
