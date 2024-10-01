@@ -6,7 +6,6 @@
     <title>PityCash | {{auth()->user()->level}} | Admin</title>
     
 </head>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.min.css">
 
 <body>
 
@@ -70,27 +69,28 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        
                         <!-- Form untuk mengunggah file Excel -->
                         <form action="{{ route('import-kategori') }}" method="POST" enctype="multipart/form-data">
                             @csrf
-                            <div class="form-group">
+                            <div class="form-group" style="text-align: left;">
                                 <label for="file">Pilih File Excel</label>
                                 <input type="file" class="dropify" id="file" name="file" required accept=".xls,.xlsx">
-                                <div style="text-align: left;">
-                                    <a href="{{ route('download-template-kategori') }}">
-                                        </i> Download Template Excel
-                                    </a>
-                                </div>
                             </div>
-                            <button type="submit" class="btn btn-primary">Import</button>
+                            <div style="text-align: left; margin-top: 10px;">
+                                <a href="{{ route('download-template-kategori') }}">
+                                    Download Template Excel
+                                </a>
+                            </div>
+                            <div style="text-align: left; margin-top: 10px;">
+                                <button type="submit" class="btn btn-primary">Import</button>
+                            </div>
                         </form>
                     </div>
-                      <!-- Tombol untuk mendownload template Excel -->
-              
                 </div>
             </div>
         </div>
+        
+        
         
                    
                 </div>
@@ -383,7 +383,6 @@ $(document).ready(function() {
     </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js"></script>
 
  <script>
     $(document).ready(function(){
