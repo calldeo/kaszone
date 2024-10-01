@@ -356,10 +356,13 @@
 
  <script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js"></script>
 
- <script>
+<script>
     $(document).ready(function(){
         // Inisialisasi Dropify
         $('.dropify').dropify();
+
+        // Mengubah ukuran font di area Dropify setelah inisialisasi
+        $('.dropify-wrapper .dropify-message p').css('font-size', '20px'); // Ganti '12px' dengan ukuran yang diinginkan
     });
 </script>
 
