@@ -24,53 +24,54 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
-                  <div class="card-header d-flex justify-content-between align-items-center">
+                        <div class="card-header d-flex justify-content-between align-items-center">
                             <h4 class="card-title mb-0">Data Pengeluaran</h4>
-                            <div class="d-flex align-items-center">
-                                 <div class="example mr-3">
-                                        <p class="mb-1">Filter Tahun</p>
-                                        <select class="form-control" id="filter-year">
-                                            <option value="">Pilih Tahun</option>
-                                            @for($year = date('Y'); $year >= 2020; $year--)
-                                                <option value="{{ $year }}">{{ $year }}</option>
-                                            @endfor
-                                        </select>
-                                    </div>
+                            <div class="d-flex align-items-center"> <!-- Menggunakan align-items-center -->
+                                <div class="example mr-3">
+                                    <p class="mb-1">Filter Tahun</p>
+                                    <select class="form-control" id="filter-year">
+                                        <option value="">Pilih Tahun</option>
+                                        @for($year = date('Y'); $year >= 2020; $year--)
+                                            <option value="{{ $year }}">{{ $year }}</option>
+                                        @endfor
+                                    </select>
+                                </div>
                                 <div class="example mr-2">
                                     <p class="mb-0">Filter Tanggal</p>
                                     <input class="form-control input-daterange-datepicker" type="text" name="daterange" placeholder="Masukkan Tanggal">
                                 </div>
                                 
-                                <div class="text-right mt-3"> <!-- Menambahkan margin-top untuk menurunkan posisi -->
+                                <div class="d-flex align-items-center mt-4"> <!-- Menghapus margin-top -->
                                     @hasrole('Admin|Bendahara') 
-                                    <a href="/add_pengeluaran" class="btn btn-warning ml-1" title="Add">
+                                    <a href="/add_pengeluaran" class="btn btn-warning mr-2" title="Add">
                                         <i class="fa fa-plus"></i>
                                     </a>
                                     @endhasrole
-                                
+                                    
                                     @hasrole('Admin|Bendahara') 
-                                    <a href="/cetakpgl" target="_blank" class="btn btn-info ml-1" title="Print Report">
+                                    <a href="/cetakpgl" target="_blank" class="btn btn-info mr-2" title="Print Report">
                                         <i class="fa fa-print"></i>
                                     </a>
                                     @endhasrole
-                                
+                                    
                                     @hasrole('Admin|Bendahara') 
-                                     
-                                    <form method="POST" action="{{ route('export.pengeluaran.excel') }}" id="export-excel-form" class="mr-2">
+                                    <form method="POST" action="{{ route('export.pengeluaran.excel') }}" id="export-excel-form" class="mr-2 d-inline"> <!-- Menambahkan d-inline agar tidak ada blok baru -->
                                         @csrf
                                         <input type="hidden" name="year" id="export-year-excel" value="{{ old('year') }}" />
                                         <button type="submit" title="Export Excel" class="btn btn-success"><i class="fa fa-file-excel"></i></button>
                                     </form>
                                     @endhasrole
+                                    
                                     @hasrole('Admin|Bendahara')
-                                <!-- Import Data Button -->
-                                <button class="btn btn-primary" data-toggle="modal" data-target="#importModal" title="Import Data">
-                                    <i class="fa fa-file-import"></i> 
-                                </button>
-                                @endhasrole
-                            </div>
+                                    <!-- Import Data Button -->
+                                    <button class="btn btn-primary" data-toggle="modal" data-target="#importModal" title="Import Data">
+                                        <i class="fa fa-file-import"></i> 
+                                    </button>
+                                    @endhasrole
+                                </div>
                             </div>
                         </div>
+                        
                                                 <!-- Modal untuk Import Data -->
                         <div id="importModal" class="modal fade" tabindex="-1" role="dialog">
                             <div class="modal-dialog" role="document">
