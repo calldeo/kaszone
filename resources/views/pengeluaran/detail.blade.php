@@ -86,12 +86,12 @@
                 @foreach($parentPengeluaran->pengeluaran as $pengeluaran)
                     <div class="col-md-12 mb-4"> <!-- Use col-md-4 to have three cards per row -->
                         <div class="card h-100"> <!-- h-100 will ensure all cards have the same height -->
-                            <div class="card-header">
+                      <div class="card-header bg-primary text-white">
                                 Detail Pengeluaran {{ $loop->iteration }}
                                 <div class="float-right">
-                                        <a href="{{ route('pengeluaran.edit', $pengeluaran->id_data) }}" class="btn btn-warning btn-xs mr-1">
-                                <i class="fas fa-edit"></i>
-                            </a>
+                               <a href="{{ route('pengeluaran.edit', $pengeluaran->id_parent) }}" class="btn btn-warning btn-xs mr-1">
+                                    <i class="fas fa-edit"></i>
+                                </a>
 
                                     @if($parentPengeluaran->pengeluaran->count() > 1)
                                     <div class="btn-group">
