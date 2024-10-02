@@ -129,12 +129,14 @@ Route::group(['middleware' => ['auth','permission:Data Pengeluaran']], function 
 
     route::get('/pengeluaran',[PengeluaranController::class,'index'])->name('index');
     Route::get('/add_pengeluaran', [PengeluaranController::class, 'create']);
-    Route::post('/pengeluaran/store', [PengeluaranController::class, 'store']);
+    // Route::post('/pengeluaran/store', [PengeluaranController::class, 'store']);
     // Route::delete('/pengeluaran/{id}/destroy', [PengeluaranController::class, 'destroy'])->name('pengeluaran.destroy');
     // Route::get('/pengeluaran/{id_pengeluaran}/edit_pengeluaran',[PengeluaranController::class,'edit']);
     // Route::put('/pengeluaran/{id_pengeluaran}', [PengeluaranController::class, 'update'])->name('update');
-    Route::get('/pengeluaran/{id_data}/edit', [PengeluaranController::class, 'edit'])->name('pengeluaran.edit');
+ Route::get('/pengeluaran/edit/{id}', [PengeluaranController::class, 'edit'])->name('pengeluaran.edit');
 Route::put('/pengeluaran/{id}', [PengeluaranController::class, 'update'])->name('pengeluaran.update');
+Route::resource('pengeluaran', PengeluaranController::class);
+
     Route::put('/pengeluaran/{id}', [PengeluaranController::class, 'update'])->name('pengeluaran.update');
     Route::get('/cetakpgl',[PengeluaranController::class,'cetakpgl'])->name('cetakpgl');
     Route::post('/export-pengeluaran-excel', [PengeluaranController::class, 'exportPengeluaranExcel'])->name('export.pengeluaran.excel');
