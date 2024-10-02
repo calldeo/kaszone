@@ -90,19 +90,24 @@
                                 Detail Pengeluaran {{ $loop->iteration }}
                                 <div class="float-right">
                                <a href="{{ route('pengeluaran.edit', $pengeluaran->id_parent) }}" class="btn btn-warning btn-xs mr-1">
-                                    <i class="fas fa-edit"></i>
+                                    <i class="fas fa-edit"></i> Edit
                                 </a>
 
                                     @if($parentPengeluaran->pengeluaran->count() > 1)
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <button type="button" class="btn btn-danger btn-xs  dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="fas fa-trash-alt"></i> Hapus
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a href="{{ route('pengeluaran.delete', $pengeluaran->id_data) }}" class="dropdown-item" onclick="return confirm('Apakah Anda yakin ingin menghapus item ini?')">
+                                            <a href="{{ route('pengeluaran.delete', $pengeluaran->id_data) }}" class=" dropdown-item" onclick="return confirm('Apakah Anda yakin ingin menghapus item ini?')">
                                                 <i class="fas fa-trash"></i> Hapus Satu
                                             </a>
+                                        <a href="{{ route('pengeluaran.deleteAll', $parentPengeluaran->id) }}" class="dropdown-item" onclick="return confirm('Apakah Anda yakin ingin menghapus semua item ini?')">
+                                            <i class="fas fa-dumpster"></i> Hapus Semua
+                                        </a>
+
                                         </div>
+                                        
                                     </div>
                                     @endif
                                 </div>

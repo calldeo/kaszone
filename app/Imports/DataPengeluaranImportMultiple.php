@@ -7,6 +7,7 @@ use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
 class DataPengeluaranImportMultiple implements WithMultipleSheets
 {
+    
     protected $tanggal;
 
     public function __construct($tanggal)

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     @include('template.headerr')
-    <title>PityCash | {{ auth()->user()->level }} | Laporan</title>
+    <title>PityCash | {{ auth()->user()->level }} | Pengeluaran</title>
 </head>
 <body>
 

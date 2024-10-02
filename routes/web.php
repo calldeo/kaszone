@@ -129,15 +129,10 @@ Route::group(['middleware' => ['auth','permission:Data Pengeluaran']], function 
 
     route::get('/pengeluaran',[PengeluaranController::class,'index'])->name('index');
     Route::get('/add_pengeluaran', [PengeluaranController::class, 'create']);
-    // Route::post('/pengeluaran/store', [PengeluaranController::class, 'store']);
-    // Route::delete('/pengeluaran/{id}/destroy', [PengeluaranController::class, 'destroy'])->name('pengeluaran.destroy');
-    // Route::get('/pengeluaran/{id_pengeluaran}/edit_pengeluaran',[PengeluaranController::class,'edit']);
-    // Route::put('/pengeluaran/{id_pengeluaran}', [PengeluaranController::class, 'update'])->name('update');
- Route::get('/pengeluaran/edit/{id}', [PengeluaranController::class, 'edit'])->name('pengeluaran.edit');
-Route::put('/pengeluaran/{id}', [PengeluaranController::class, 'update'])->name('pengeluaran.update');
-Route::resource('pengeluaran', PengeluaranController::class);
-
+    Route::post('/pengeluaran/store', [PengeluaranController::class, 'store'])->name('pengeluaran.store');
+    Route::get('/pengeluaran/edit/{id}', [PengeluaranController::class, 'edit'])->name('pengeluaran.edit');
     Route::put('/pengeluaran/{id}', [PengeluaranController::class, 'update'])->name('pengeluaran.update');
+    Route::resource('pengeluaran', PengeluaranController::class);
     Route::get('/cetakpgl',[PengeluaranController::class,'cetakpgl'])->name('cetakpgl');
     Route::post('/export-pengeluaran-excel', [PengeluaranController::class, 'exportPengeluaranExcel'])->name('export.pengeluaran.excel');
     Route::get('/pengeluaran', [PengeluaranController::class, 'index'])->name('pengeluaran.index');
@@ -145,9 +140,8 @@ Route::resource('pengeluaran', PengeluaranController::class);
     Route::get('pengeluaran/tabe', [PengeluaranController::class, 'tabe'])->name('pengeluaran.tabe');
     Route::get('/pengeluaran/{id_data}/detail', [PengeluaranController::class, 'showDetail'])->name('pengeluaran.showDetail');
     Route::get('/download-template-kategori', [CategoryController::class, 'downloadTemplate'])->name('download-template-kategori');
-    Route::post('/pengeluaran/store', [PengeluaranController::class, 'store'])->name('pengeluaran.store');
     Route::get('/pengeluaran/delete/{id_data}', [PengeluaranController::class, 'delete'])->name('pengeluaran.delete');
-    Route::get('/pengeluaran/deleteAll', [PengeluaranController::class, 'deleteAll'])->name('pengeluaran.deleteAll');   
+    Route::get('/pengeluaran/deleteAll/{id}', [PengeluaranController::class, 'deleteAll'])->name('pengeluaran.deleteAll');
     Route::post('/import-pengeluaran', [PengeluaranController::class, 'importPengeluaran'])->name('import-pengeluaran');
     Route::get('/url-to-get-totals', 'PengeluaranController@getTotals');
     Route::get('/download-template', [PengeluaranController::class, 'downloadTemplate'])->name('download-template');
