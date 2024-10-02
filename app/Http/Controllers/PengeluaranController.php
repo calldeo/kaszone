@@ -13,6 +13,7 @@ use App\Models\ParentPengeluaran;
 use App\Exports\PengeluaranExport;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Validator;
 use App\Imports\DataPengeluaranImportMultiple;
 
 class PengeluaranController extends Controller
@@ -184,71 +185,87 @@ public function destroyAll($parentId)
 //         }
 //     }}
 
-
-   public function edit($id)
+public function edit($id)
 {
-    $parentPengeluaran = ParentPengeluaran::with('pengeluaran')->findOrFail($id);
-    $pengeluaranItem = $parentPengeluaran->pengeluaran->first(); 
-    $categories = Category::all();
+    // Ambil ParentPengeluaran berdasarkan ID
+    $parentPengeluaran = ParentPengeluaran::with('pengeluaran')->find($id);
+       $categories = Category::where('jenis_kategori', 'pengeluaran')->get();
 
-    return view('pengeluaran.edit', compact('pengeluaranItem', 'categories'));
+    if (!$parentPengeluaran) {
+        return redirect()->route('pengeluaran.index')->with('error', 'Data tidak ditemukan.');
+    }
+
+    return view('pengeluaran.edit', compact('parentPengeluaran','categories'));
 }
-
-
 
 public function update(Request $request, $id)
 {
-    // Validasi data
+    // Validasi input
     $request->validate([
-        'name' => 'required|string|max:255',
-        'description' => 'nullable|string',
-        'jumlah_satuan' => 'required|numeric',
-        'nominal' => 'required|numeric',
-        'category_id' => 'nullable|exists:categories,id',
-        'jumlah' => 'required|numeric',
-        'dll' => 'nullable|string',
-        'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'tanggal' => 'required|date',
+        'name.*' => 'required|string|max:255',
+        'description.*' => 'nullable|string|max:255',
+        'jumlah_satuan.*' => 'required|numeric|min:0',
+        'nominal.*' => 'required|numeric|min:0',
+        'jumlah.*' => 'required|numeric|min:0',
+        'dll.*' => 'nullable|string|max:255',
+        'category_id.*' => 'required|exists:categories,id', // Memastikan kategori ada
+        'image.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
     ]);
 
-    // Mengambil data pengeluaran yang akan diperbarui
-    $pengeluaran = ParentPengeluaran::findOrFail($id);
+    // Temukan ParentPengeluaran
+    $parentPengeluaran = ParentPengeluaran::find($id);
+    if (!$parentPengeluaran) {
+        return redirect()->route('pengeluaran.index')->with('error', 'Data tidak ditemukan.');
+    }
 
-    // Mulai transaksi database
+    // Mulai transaksi
     DB::beginTransaction();
-
     try {
-        $pengeluaran->name = $request->input('name');
-        $pengeluaran->description = $request->input('description');
-        $pengeluaran->jumlah_satuan = $request->input('jumlah_satuan');
-        $pengeluaran->nominal = $request->input('nominal');
-        $pengeluaran->category_id = $request->input('category_id'); // Pastikan ini sesuai
-        $pengeluaran->jumlah = $request->input('jumlah');
-        $pengeluaran->dll = $request->input('dll');
+        // Update tanggal
+        $parentPengeluaran->tanggal = $request->tanggal;
+        $parentPengeluaran->save(); // Simpan tanggal
 
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            // Hapus gambar lama jika ada
-            if ($pengeluaran->image) {
-                Storage::delete('public/' . $pengeluaran->image);
+        // Loop melalui data pengeluaran dan perbarui masing-masing
+        foreach ($request->name as $key => $name) {
+            // Ambil data pengeluaran dari relasi
+            $pengeluaran = $parentPengeluaran->pengeluaran[$key]; 
+
+            // Update data pengeluaran
+            $pengeluaran->name = $name;
+            $pengeluaran->description = $request->description[$key];
+            $pengeluaran->jumlah_satuan = $request->jumlah_satuan[$key];
+            $pengeluaran->nominal = $request->nominal[$key];
+            $pengeluaran->jumlah = $request->jumlah[$key];
+            $pengeluaran->dll = $request->dll[$key];
+            $pengeluaran->id = $request->id[$key]; // Perbarui ID kategori
+
+            // Menangani gambar
+            if ($request->hasFile('image.' . $key)) {
+                // Hapus gambar lama jika ada
+                if ($pengeluaran->image) {
+                    \Storage::disk('public')->delete($pengeluaran->image);
+                }
+                // Simpan gambar baru
+                $pengeluaran->image = $request->file('image.' . $key)->store('pengeluaran_images', 'public');
             }
 
-            $path = $request->file('image')->store('image', 'public');
-            $pengeluaran->image = $path;
+            // Simpan pengeluaran
+            $pengeluaran->save();
         }
-
-        $pengeluaran->save();
 
         // Commit transaksi
         DB::commit();
 
-        return redirect()->route('pengeluaran.index')->with('success', 'Pengeluaran updated successfully');
+        return redirect()->route('pengeluaran.index')->with('success', 'Data berhasil diperbarui.');
     } catch (\Exception $e) {
-        // Rollback transaksi jika ada kesalahan
-        DB::rollBack();
-
-        return redirect()->route('pengeluaran.index')->with('error', 'Failed to update pengeluaran: ' . $e->getMessage());
+        // Rollback jika terjadi kesalahan
+        DB::rollback();
+        return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage());
     }
 }
+
+
 
     
     

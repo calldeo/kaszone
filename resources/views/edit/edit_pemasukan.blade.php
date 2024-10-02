@@ -91,7 +91,7 @@
                         </div>
 
                         <div class="form-group">
-                            <a href="" class="btn btn-danger btn-cancel">Cancel</a>
+                            <a href="/pemasukan" class="btn btn-danger btn-cancel">Cancel</a>
                             <button type="submit" class="btn btn-primary btn-submit">Update</button>
                         </div>
                     </form>
