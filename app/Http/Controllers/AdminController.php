@@ -257,25 +257,26 @@ public function income(Request $request) // PEMASUKAN
 
         $pemasukan = Pemasukan::with('category')->select(['id_data', 'name', 'description', 'date', 'jumlah', 'id']);
 
-     
         if ($year) {
             $pemasukan = $pemasukan->whereYear('date', $year);
         }
-        // dd($startDate, $endDate);
+
         if ($startDate != null && $endDate != null) {
             $pemasukan = $pemasukan->whereBetween('date', [$startDate, $endDate]);
         }
-            $totalJumlah = $pemasukan->sum('jumlah');
 
+        $totalJumlah = $pemasukan->sum('jumlah');
 
         return DataTables::of($pemasukan)
             ->addIndexColumn()
-            
             ->addColumn('category', function ($row) {
                 return $row->category ? $row->category->name : 'Tidak ada kategori';
             })
             ->editColumn('date', function ($row) {
                 return Carbon::parse($row->date)->format('d-m-Y'); // Format: hari-bulan-tahun
+            })
+            ->editColumn('jumlah', function ($row) {
+                return 'Rp ' . number_format($row->jumlah, 2, ',', '.'); // Menambahkan Rp dan format angka
             })
             ->addColumn('opsi', function ($row) {
                 $user = auth()->user();
@@ -296,10 +297,11 @@ public function income(Request $request) // PEMASUKAN
                 return '<div class="d-flex align-items-center">' . $editButton . $viewButton . $deleteButton . '</div>';
             })
             ->rawColumns(['opsi'])
-                 ->with(['total_jumlah' => $totalJumlah])
+            ->with(['total_jumlah' => 'Rp ' . number_format($totalJumlah, 2, ',', '.')]) // Tambahkan Rp pada total jumlah
             ->make(true);
     }
 }
+
 
 public function production(Request $request) // PENGELUARAN
 {
@@ -360,7 +362,7 @@ public function production(Request $request) // PENGELUARAN
             ->addColumn('nominal', function ($row) {
                 $nominal = '';
                 foreach ($row->pengeluaran as $val) {
-                    $nominal .= number_format($val->nominal, 2, ',', '.') . '<br>';
+                    $nominal .= 'Rp ' . number_format($val->nominal, 2, ',', '.') . '<br>';
                 }
                 return $nominal ?: 'Tidak ada nominal';
             })
@@ -374,10 +376,11 @@ public function production(Request $request) // PENGELUARAN
             ->addColumn('jumlah', function ($row) {
                 $jumlah = '';
                 foreach ($row->pengeluaran as $val) {
-                    $jumlah .= $val->jumlah . '<br>';
+                    $jumlah .= 'Rp' . $val->jumlah . '<br>'; // Format tampilan
                 }
                 return $jumlah ?: 'Tidak ada jumlah';
             })
+            
             ->addColumn('category', function ($row) {
                 $categories = '';
                 foreach ($row->pengeluaran as $val) {

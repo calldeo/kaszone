@@ -170,12 +170,15 @@
                     { data: 'date' },
                     { data: 'jumlah' }
                 ],
-                drawCallback: function(settings) {
-                    var total = this.api().column(5).data().reduce(function(a, b) {
-                        return a + parseFloat(b);
-                    }, 0);
-                    $('#total-pemasukan').html(total.toLocaleString());
-                }
+                footerCallback: function(row, data, start, end, display) {
+            var totalJumlah = 0;
+            data.forEach(function(item) {
+                // Hapus 'Rp' dan ganti '.' dengan kosong agar bisa diparsing
+                var jumlah = item.jumlah.replace(/Rp/g, '').replace(/\./g, '').trim();
+                totalJumlah += parseFloat(jumlah) || 0;
+            });
+            $('#total-pemasukan').html('Rp ' + totalJumlah.toLocaleString());
+        }
             });
         }
 </script>

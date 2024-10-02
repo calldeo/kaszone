@@ -267,11 +267,13 @@
 
                 ],
                 drawCallback: function(settings) {
-                    var total = this.api().column(7).data().reduce(function(a, b) {
-                        return a + parseFloat(b);
-                    }, 0);
-                    $('#total-pengeluaran').html(total.toLocaleString());
-                }
+    var total = this.api().column(7).data().reduce(function(a, b) {
+        // Hapus "Rp" dan parse ke float
+        return a + parseFloat(b.replace(/Rp/g, '').replace(/,/g, '').trim()) || 0; 
+    }, 0);
+    $('#total-pengeluaran').html('Rp ' + total.toLocaleString());
+}
+
             });
         }
     </script>

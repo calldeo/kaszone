@@ -296,12 +296,15 @@
                     { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
                 ],
                 footerCallback: function(row, data, start, end, display) {
-                    var totalJumlah = 0;
-                    data.forEach(function(item) {
-                        totalJumlah += parseFloat(item.jumlah) || 0;
-                    });
-                    $('#total-jumlah-value').text(totalJumlah.toLocaleString());
-                }
+    var totalJumlah = 0;
+    data.forEach(function(item) {
+        // Hapus 'Rp ' dan ganti '.' dengan kosong agar bisa diparsing
+        var jumlah = item.jumlah.replace(/Rp/g, '').replace(/\./g, '').trim();
+        totalJumlah += parseFloat(jumlah) || 0;
+    });
+    $('#total-jumlah-value').text('Rp ' + totalJumlah.toLocaleString());
+}
+
             });
         });
 

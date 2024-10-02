@@ -217,51 +217,94 @@
                     { data: 'jumlah' }
                 ],
                 drawCallback: function(settings) {
-                    var total = this.api().column(5).data().reduce(function(a, b) {
-                        return a + parseFloat(b);
-                    }, 0);
-                    $('#total-pemasukan').html(total.toLocaleString());
-                }
+    var total = this.api().column(5).data().reduce(function(a, b) {
+        // Pastikan untuk menghapus "Rp" dan memformat angka ke float
+        return a + (parseFloat(b.replace(/Rp/g, '').replace(/,/g, '').trim()) || 0);
+    }, 0);
+    $('#total-pemasukan').html('Rp ' + total.toLocaleString());
+}
+
             });
         }
 
-        function pengeluaranTables(filter) {
-            $('#pengeluaranTables').DataTable({
-                processing: true,
-                serverSide: true,
-                destroy: true,
-                         language: {
+        function pemasukanTables(filter) {
+    $('#pemasukanTables').DataTable({
+        processing: true,
+        serverSide: true,
+        destroy: true,
+        language: {
             paginate: {
-            next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
-            previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
+                next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+                previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
             }
         },
-                ajax: {
-                    url: $('#table-url-pengeluaran').val(),
-                    data: function(d) {
-                        d.year = filter.year;
-                        d.start_created_at = filter.start_created_at;
-                        d.end_created_at = filter.end_created_at;
-                    }
-                },
-                columns: [
-                    { data: 'DT_RowIndex', orderable: false, searchable: false },
-                    { data: 'name' },
-                    { data: 'description' },
-                    { data: 'category' },
-                    { data: 'tanggal' },
-                    { data: 'jumlah_satuan' },
-                    { data: 'nominal' },
-                    { data: 'jumlah' }
-                ],
-                drawCallback: function(settings) {
-                    var total = this.api().column(7).data().reduce(function(a, b) {
-                        return a + parseFloat(b);
-                    }, 0);
-                    $('#total-pengeluaran').html(total.toLocaleString());
-                }
+        ajax: {
+            url: $('#table-url-pemasukan').val(),
+            data: function(d) {
+                d.year = filter.year;
+                d.start_created_at = filter.start_created_at;
+                d.end_created_at = filter.end_created_at;
+            }
+        },
+        columns: [
+            { data: 'DT_RowIndex', orderable: false, searchable: false },
+            { data: 'name' },
+            { data: 'description' },
+            { data: 'category' },
+            { data: 'date' },
+            { data: 'jumlah' }
+        ],
+        footerCallback: function(row, data, start, end, display) {
+            var totalJumlah = 0;
+            data.forEach(function(item) {
+                // Hapus 'Rp' dan ganti '.' dengan kosong agar bisa diparsing
+                var jumlah = item.jumlah.replace(/Rp/g, '').replace(/\./g, '').trim();
+                totalJumlah += parseFloat(jumlah) || 0;
             });
+            $('#total-pemasukan').html('Rp ' + totalJumlah.toLocaleString());
         }
+    });
+}
+
+function pengeluaranTables(filter) {
+    $('#pengeluaranTables').DataTable({
+        processing: true,
+        serverSide: true,
+        destroy: true,
+        language: {
+            paginate: {
+                next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+                previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
+            }
+        },
+        ajax: {
+            url: $('#table-url-pengeluaran').val(),
+            data: function(d) {
+                d.year = filter.year;
+                d.start_created_at = filter.start_created_at;
+                d.end_created_at = filter.end_created_at;
+            }
+        },
+        columns: [
+            { data: 'DT_RowIndex', orderable: false, searchable: false },
+            { data: 'name' },
+            { data: 'description' },
+            { data: 'category' },
+            { data: 'tanggal' },
+            { data: 'jumlah_satuan' },
+            { data: 'nominal' },
+            { data: 'jumlah' }
+        ],
+        drawCallback: function(settings) {
+    var total = this.api().column(7).data().reduce(function(a, b) {
+        // Hapus "Rp" dan parse ke float
+        return a + parseFloat(b.replace(/Rp/g, '').replace(/,/g, '').trim()) || 0; 
+    }, 0);
+    $('#total-pengeluaran').html('Rp ' + total.toLocaleString());
+}
+    });
+}
+
     </script>
 
 </body>

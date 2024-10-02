@@ -118,27 +118,35 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Deskripsi</label>
-                                            <textarea name="description" class="form-control editable-input" rows="1" style="resize: none; overflow: hidden;" readonly>{{ $pengeluaran->description }}</textarea>
+                                            <textarea name="description" class="form-control editable-input" rows="3" style="resize: none; overflow: hidden; font-size: 16px; height: 100px;" readonly>{{ $pengeluaran->description }}</textarea>
                                         </div>
                                     </div>
                                 </div>
+                                
+                                
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Nominal</label>
+                                            <input type="text" name="nominal" class="form-control editable-input" value="Rp{{ number_format($pengeluaran->nominal, 2, ',', '.') }}" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1">
                                         <div class="form-group">
                                             <label>Jumlah Satuan</label>
                                             <input type="text" name="jumlah_satuan" class="form-control editable-input" value="{{ $pengeluaran->jumlah_satuan }}" readonly>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="form-group">
-                                            <label>Nominal</label>
-                                            <input type="text" name="nominal" class="form-control editable-input" value="{{ number_format($pengeluaran->nominal, 2, ',', '.') }}" readonly>
+                                            <label>Lain-lain</label>
+                                            <input type="text" name="dll" class="form-control editable-input" value="Rp{{ $pengeluaran->dll }}" readonly>
                                         </div>
                                     </div>
-                                    <div class="col-md-2">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Total</label>
-                                            <input type="text" name="jumlah" class="form-control editable-input" value="{{ $pengeluaran->jumlah }}" readonly>
+                                            <input type="text" name="jumlah" class="form-control editable-input" value="Rp{{ $pengeluaran->jumlah }}" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -149,12 +157,7 @@
                                             <input type="text" name="category" class="form-control editable-input" value="{{ $pengeluaran->category->name ?? 'Tidak ada kategori' }}" readonly>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Lain-lain</label>
-                                            <input type="text" name="dll" class="form-control editable-input" value="{{ $pengeluaran->dll }}" readonly>
-                                        </div>
-                                    </div>
+                                    
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
