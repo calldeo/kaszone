@@ -15,110 +15,112 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
 use App\Imports\DataPengeluaranImportMultiple;
+use Illuminate\Support\Facades\Log;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class PengeluaranController extends Controller
 {
     //
     public function index()
     {
-       $pengeluaran = Pengeluaran::with('category')->get();
-       
-         // Menggunakan pagination
+        $pengeluaran = Pengeluaran::with('category')->get();
+
+        // Menggunakan pagination
         return view('pengeluaran.data_pengeluaran', compact('pengeluaran'));
     }
-public function create()
+    public function create()
     {
         // $categories = Category::all(); // Mengambil semua kategori
         // $categories = Category::where('jenis_kategori', 'pengeluaran')->get();
         return view('pengeluaran.add_pengeluaran');
     }
-    
-public function store(Request $request)
-{
-    // Validasi input
-    $request->validate([
-        'file.*' => 'required|mimes:xls,xlsx|max:2048',
-        'name.*' => 'required|string|max:255',
-        'description.*' => 'nullable|string',
-        'jumlah_satuan.*' => 'required|numeric|min:0',
-        'nominal.*' => 'required|numeric|min:0',
-        'dll.*' => 'required|numeric|min:0',
-        'jumlah.*' => 'required|numeric|min:0',
-        'category_id.*' => 'required|exists:categories,id',
-        'image.*' => 'nullable|mimes:jpg,jpeg,png|max:2048',
-        'tanggal.*' => 'required|date_format:Y-m-d|exists:pengeluaran_parent,tanggal'
-    ]);
 
-    DB::beginTransaction();
+    public function store(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'file.*' => 'required|mimes:xls,xlsx|max:2048',
+            'name.*' => 'required|string|max:255',
+            'description.*' => 'nullable|string',
+            'jumlah_satuan.*' => 'required|numeric|min:0',
+            'nominal.*' => 'required|numeric|min:0',
+            'dll.*' => 'required|numeric|min:0',
+            'jumlah.*' => 'required|numeric|min:0',
+            'category_id.*' => 'required|exists:categories,id',
+            'image.*' => 'nullable|mimes:jpg,jpeg,png|max:2048',
+            'tanggal.*' => 'required|date_format:Y-m-d|exists:pengeluaran_parent,tanggal'
+        ]);
 
-    try {
-      
-        $files = $request->file('file', []);
-        foreach ($files as $file) {
-            Excel::import(new PengeluaranImport, $file); 
-        }
+        DB::beginTransaction();
 
-        $parentPengeluaran = new ParentPengeluaran();
-        $parentPengeluaran->tanggal = $request->input('tanggal');
-        $parentPengeluaran->save();
+        try {
 
-        $names = $request->input('name', []);
-        foreach ($names as $i => $name) {
-          
-            $existingPengeluaran = Pengeluaran::where('name', $name)
-                ->where('id_parent', $parentPengeluaran->id)
-                ->first();
-
-            if ($existingPengeluaran) {
-               
-                $existingPengeluaran->jumlah += $request->input('jumlah')[$i] ?? 0;
-                $existingPengeluaran->nominal += $request->input('nominal')[$i] ?? 0; 
-                $existingPengeluaran->save();
-            } else {
-       
-                $pengeluaran = new Pengeluaran();
-                $pengeluaran->name = $name;
-                $pengeluaran->description = $request->input('description')[$i] ?? null;
-                $pengeluaran->jumlah_satuan = $request->input('jumlah_satuan')[$i] ?? 0;
-                $pengeluaran->nominal = $request->input('nominal')[$i] ?? 0;
-                $pengeluaran->dll = $request->input('dll')[$i] ?? 0;
-                $pengeluaran->jumlah = $request->input('jumlah')[$i] ?? 0;
-
-          
-                $pengeluaran->id = $request->input('category_id')[$i];
-                $pengeluaran->id_parent = $parentPengeluaran->id; 
-
-               
-                if ($request->hasFile("image.$i")) {
-                    $path = $request->file("image.$i")->store('image', 'public');
-                    $pengeluaran->image = $path;
-                }
-
-                $pengeluaran->save(); 
+            $files = $request->file('file', []);
+            foreach ($files as $file) {
+                Excel::import(new PengeluaranImport, $file);
             }
-        }
 
-        DB::commit();
-       
-        return redirect()->route('pengeluaran.index')->with('success', 'Data berhasil diimpor dan diproses.');
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            $parentPengeluaran = new ParentPengeluaran();
+            $parentPengeluaran->tanggal = $request->input('tanggal');
+            $parentPengeluaran->save();
+
+            $names = $request->input('name', []);
+            foreach ($names as $i => $name) {
+
+                $existingPengeluaran = Pengeluaran::where('name', $name)
+                    ->where('id_parent', $parentPengeluaran->id)
+                    ->first();
+
+                if ($existingPengeluaran) {
+
+                    $existingPengeluaran->jumlah += $request->input('jumlah')[$i] ?? 0;
+                    $existingPengeluaran->nominal += $request->input('nominal')[$i] ?? 0;
+                    $existingPengeluaran->save();
+                } else {
+
+                    $pengeluaran = new Pengeluaran();
+                    $pengeluaran->name = $name;
+                    $pengeluaran->description = $request->input('description')[$i] ?? null;
+                    $pengeluaran->jumlah_satuan = $request->input('jumlah_satuan')[$i] ?? 0;
+                    $pengeluaran->nominal = $request->input('nominal')[$i] ?? 0;
+                    $pengeluaran->dll = $request->input('dll')[$i] ?? 0;
+                    $pengeluaran->jumlah = $request->input('jumlah')[$i] ?? 0;
+
+
+                    $pengeluaran->id = $request->input('category_id')[$i];
+                    $pengeluaran->id_parent = $parentPengeluaran->id;
+
+
+                    if ($request->hasFile("image.$i")) {
+                        $path = $request->file("image.$i")->store('image', 'public');
+                        $pengeluaran->image = $path;
+                    }
+
+                    $pengeluaran->save();
+                }
+            }
+
+            DB::commit();
+
+            return redirect()->route('pengeluaran.index')->with('success', 'Data berhasil diimpor dan diproses.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
-}
 
 
     public function delete($id_data)
     {
- 
+
         $pengeluaran = Pengeluaran::find($id_data);
-        
+
         if ($pengeluaran) {
-   
+
             $sameParentCount = Pengeluaran::where('id_parent', $pengeluaran->id_parent)->count();
-    
+
             if ($sameParentCount > 1) {
-   
+
                 $pengeluaran->delete();
                 return redirect()->back()->with('success', 'Item berhasil dihapus.');
             } else {
@@ -126,176 +128,174 @@ public function store(Request $request)
                 return redirect()->back()->with('error', 'Tidak dapat menghapus item. karena hanya ada 1 data.');
             }
         }
-        
+
         return redirect()->back()->with('error', 'Item tidak ditemukan.');
     }
-    
-
-public function deleteAll($id)
-{
-    // Temukan ParentPengeluaran berdasarkan ID
-    $parentPengeluaran = ParentPengeluaran::find($id);
-    
-    if ($parentPengeluaran) {
-        // Hapus semua pengeluaran terkait
-        $parentPengeluaran->pengeluaran()->delete();
-
-        // Hapus ParentPengeluaran itu sendiri
-        $parentPengeluaran->delete();
-
-        // Redirect ke halaman pengeluaran
-        return redirect()->route('pengeluaran.index')->with('success', 'Semua pengeluaran  berhasil dihapus.');
-    } else {
-        return redirect()->back()->with('error', 'Data tidak ditemukan.');
-    }
-}
 
 
+    public function deleteAll($id)
+    {
+        // Temukan ParentPengeluaran berdasarkan ID
+        $parentPengeluaran = ParentPengeluaran::find($id);
 
+        if ($parentPengeluaran) {
+            // Hapus semua pengeluaran terkait
+            $parentPengeluaran->pengeluaran()->delete();
 
+            // Hapus ParentPengeluaran itu sendiri
+            $parentPengeluaran->delete();
 
-
-
-
-public function edit($id)
-{
-    // Ambil ParentPengeluaran berdasarkan ID
-    $parentPengeluaran = ParentPengeluaran::with('pengeluaran')->find($id);
-       $categories = Category::where('jenis_kategori', 'pengeluaran')->get();
-
-    if (!$parentPengeluaran) {
-        return redirect()->route('pengeluaran.index')->with('error', 'Data tidak ditemukan.');
+            // Redirect ke halaman pengeluaran
+            return redirect()->route('pengeluaran.index')->with('success', 'Semua pengeluaran  berhasil dihapus.');
+        } else {
+            return redirect()->back()->with('error', 'Data tidak ditemukan.');
+        }
     }
 
-    return view('pengeluaran.edit', compact('parentPengeluaran','categories'));
-}
 
-public function update(Request $request, $id)
-{
-    // Validasi input
-    $request->validate([
-        'tanggal' => 'required|date',
-        'name.*' => 'required|string|max:255',
-        'description.*' => 'nullable|string|max:255',
-        'jumlah_satuan.*' => 'required|numeric|min:0',
-        'nominal.*' => 'required|numeric|min:0',
-        'jumlah.*' => 'required|numeric|min:0',
-        'dll.*' => 'nullable|string|max:255',
-        'category_id.*' => 'required|exists:categories,id', // Memastikan kategori ada
-        'image.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-    ]);
 
-    // Temukan ParentPengeluaran
-    $parentPengeluaran = ParentPengeluaran::find($id);
-    if (!$parentPengeluaran) {
-        return redirect()->route('pengeluaran.index')->with('error', 'Data tidak ditemukan.');
-    }
 
-    // Mulai transaksi
-    DB::beginTransaction();
-    try {
-        // Update tanggal
-        $parentPengeluaran->tanggal = $request->tanggal;
-        $parentPengeluaran->save(); // Simpan tanggal
 
-        // Loop melalui data pengeluaran dan perbarui masing-masing
-        foreach ($request->name as $key => $name) {
-            // Ambil data pengeluaran dari relasi
-            $pengeluaran = $parentPengeluaran->pengeluaran[$key]; 
 
-            // Update data pengeluaran
-            $pengeluaran->name = $name;
-            $pengeluaran->description = $request->description[$key];
-            $pengeluaran->jumlah_satuan = $request->jumlah_satuan[$key];
-            $pengeluaran->nominal = $request->nominal[$key];
-            $pengeluaran->jumlah = $request->jumlah[$key];
-            $pengeluaran->dll = $request->dll[$key];
-            $pengeluaran->id = $request->id[$key]; // Perbarui ID kategori
 
-            // Menangani gambar
-            if ($request->hasFile('image.' . $key)) {
-                // Hapus gambar lama jika ada
-                if ($pengeluaran->image) {
-                    \Storage::disk('public')->delete($pengeluaran->image);
-                }
-                // Simpan gambar baru
-                $pengeluaran->image = $request->file('image.' . $key)->store('pengeluaran_images', 'public');
-            }
 
-            // Simpan pengeluaran
-            $pengeluaran->save();
+    public function edit($id)
+    {
+        // Ambil ParentPengeluaran berdasarkan ID
+        $parentPengeluaran = ParentPengeluaran::with('pengeluaran')->find($id);
+        $categories = Category::where('jenis_kategori', 'pengeluaran')->get();
+
+        if (!$parentPengeluaran) {
+            return redirect()->route('pengeluaran.index')->with('error', 'Data tidak ditemukan.');
         }
 
-        // Commit transaksi
-        DB::commit();
-
-        return redirect()->route('pengeluaran.index')->with('success', 'Data berhasil diperbarui.');
-    } catch (\Exception $e) {
-        // Rollback jika terjadi kesalahan
-        DB::rollback();
-        return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage());
+        return view('pengeluaran.edit', compact('parentPengeluaran', 'categories'));
     }
-}
+
+    public function update(Request $request, $id)
+    {
+        // Validasi input
+        $request->validate([
+            'tanggal' => 'required|date',
+            'name.*' => 'required|string|max:255',
+            'description.*' => 'nullable|string|max:255',
+            'jumlah_satuan.*' => 'required|numeric|min:0',
+            'nominal.*' => 'required|numeric|min:0',
+            'jumlah.*' => 'required|numeric|min:0',
+            'dll.*' => 'nullable|string|max:255',
+            'category_id.*' => 'required|exists:categories,id', // Memastikan kategori ada
+            'image.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        // Temukan ParentPengeluaran
+        $parentPengeluaran = ParentPengeluaran::find($id);
+        if (!$parentPengeluaran) {
+            return redirect()->route('pengeluaran.index')->with('error', 'Data tidak ditemukan.');
+        }
+
+        // Mulai transaksi
+        DB::beginTransaction();
+        try {
+            // Update tanggal
+            $parentPengeluaran->tanggal = $request->tanggal;
+            $parentPengeluaran->save(); // Simpan tanggal
+
+            // Loop melalui data pengeluaran dan perbarui masing-masing
+            foreach ($request->name as $key => $name) {
+                // Ambil data pengeluaran dari relasi
+                $pengeluaran = $parentPengeluaran->pengeluaran[$key];
+
+                // Update data pengeluaran
+                $pengeluaran->name = $name;
+                $pengeluaran->description = $request->description[$key];
+                $pengeluaran->jumlah_satuan = $request->jumlah_satuan[$key];
+                $pengeluaran->nominal = $request->nominal[$key];
+                $pengeluaran->jumlah = $request->jumlah[$key];
+                $pengeluaran->dll = $request->dll[$key];
+                $pengeluaran->id = $request->id[$key]; // Perbarui ID kategori
+
+                // Menangani gambar
+                if ($request->hasFile('image.' . $key)) {
+                    // Hapus gambar lama jika ada
+                    if ($pengeluaran->image) {
+                        \Storage::disk('public')->delete($pengeluaran->image);
+                    }
+                    // Simpan gambar baru
+                    $pengeluaran->image = $request->file('image.' . $key)->store('pengeluaran_images', 'public');
+                }
+
+                // Simpan pengeluaran
+                $pengeluaran->save();
+            }
+
+            // Commit transaksi
+            DB::commit();
+
+            return redirect()->route('pengeluaran.index')->with('success', 'Data berhasil diperbarui.');
+        } catch (\Exception $e) {
+            // Rollback jika terjadi kesalahan
+            DB::rollback();
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage());
+        }
+    }
 
 
 
-    
-    
 
-public function cetakpgl(Request $request)
+
+
+    public function cetakpgl(Request $request)
     {
         // Dapatkan calon dengan jumlah suara terbanyak
-       
-     $year = $request->input('year');
-    
-    if ($year) {
-        
-         $pengeluaran = Pengeluaran::whereHas('parentPengeluaran', function($query) use ($year) {
-            $query->whereYear('tanggal',$year);    
-        })->with('category', 'parentPengeluaran')->get();
-    } else {
-        
-        $pengeluaran = Pengeluaran::with('category', 'ParentPengeluaran')->get();
-    }
-    
-    $totalPengeluaran = $pengeluaran->sum('jumlah');
 
-    $pdf = PDF::loadView('pengeluaran.pdf', compact( 'pengeluaran', 'totalPengeluaran', 'year'));
-    
-    $pdf->setPaper('A4', 'portrait');
-    
-    return $pdf->stream($year ? "laporan_$year.pdf" : "laporan_seluruh.pdf");
+        $year = $request->input('year');
 
-    // return view('halaman.cetakpgl',compact('pengeluaran'));
+        if ($year) {
+
+            $pengeluaran = Pengeluaran::whereHas('parentPengeluaran', function ($query) use ($year) {
+                $query->whereYear('tanggal', $year);
+            })->with('category', 'parentPengeluaran')->get();
+        } else {
+
+            $pengeluaran = Pengeluaran::with('category', 'ParentPengeluaran')->get();
+        }
+
+        $totalPengeluaran = $pengeluaran->sum('jumlah');
+
+        $pdf = PDF::loadView('pengeluaran.pdf', compact('pengeluaran', 'totalPengeluaran', 'year'));
+
+        $pdf->setPaper('A4', 'portrait');
+
+        return $pdf->stream($year ? "laporan_$year.pdf" : "laporan_seluruh.pdf");
+
+        // return view('halaman.cetakpgl',compact('pengeluaran'));
     }
- public function showDetail($id)
+    public function showDetail($id)
     {
 
 
-    // Mengambil data ParentPengeluaran beserta pengeluaran terkait dan kategori
-    $parentPengeluaran = ParentPengeluaran::with('pengeluaran.category')->findOrFail($id);
-        
-    // Melempar data ke view
-    return view('pengeluaran.detail', compact('parentPengeluaran'));
+        // Mengambil data ParentPengeluaran beserta pengeluaran terkait dan kategori
+        $parentPengeluaran = ParentPengeluaran::with('pengeluaran.category')->findOrFail($id);
 
-
+        // Melempar data ke view
+        return view('pengeluaran.detail', compact('parentPengeluaran'));
     }
 
     public function exportPengeluaranExcel(Request $request)
-{
-    $year = $request->input('year');
-    
-    if ($year) {
-        
-        $pengeluaran = Pengeluaran::whereHas('parentPengeluaran', function($query) use ($year) {
-            $query->whereYear('tanggal', $year);    
-        })->with('category', 'parentPengeluaran')->get();
-    } else {
-        $pengeluaran = Pengeluaran::with('category', 'parentPengeluaran')->get();
-    }
+    {
+        $year = $request->input('year');
 
-    return Excel::download(new PengeluaranExport( $pengeluaran, $year), $year ? "laporan_$year.xlsx" : "laporan_seluruh.xlsx");
-}
+        if ($year) {
+
+            $pengeluaran = Pengeluaran::whereHas('parentPengeluaran', function ($query) use ($year) {
+                $query->whereYear('tanggal', $year);
+            })->with('category', 'parentPengeluaran')->get();
+        } else {
+            $pengeluaran = Pengeluaran::with('category', 'parentPengeluaran')->get();
+        }
+
+        return Excel::download(new PengeluaranExport($pengeluaran, $year), $year ? "laporan_$year.xlsx" : "laporan_seluruh.xlsx");
+    }
 
 
     public function data()
@@ -315,35 +315,52 @@ public function cetakpgl(Request $request)
             })
             ->make(true);
     }
-    
-public function importPengeluaran(Request $request)
-{
-    $request->validate([
-        'file' => 'required', // File harus diupload
-        'file.*' => 'mimes:xls,xlsx|max:2048', // Validasi untuk setiap file
-    ]);
 
-    DB::beginTransaction(); // Mulai transaksi
-    
-    try {
-        if ($request->hasFile('file')) {
-            foreach ($request->file('file') as $file) {
-                // Ambil tanggal dari judul sheet atau dari request input
-                $tanggal = Carbon::now()->format('Y-m-d'); // Sesuaikan jika perlu mengambil tanggal dari sheet atau input
-                
-                // Import multiple file menggunakan class yang sama
-                Excel::import(new DataPengeluaranImportMultiple($tanggal), $file); // Proses impor
+    public function importPengeluaran(Request $request)
+    {
+        $request->validate([
+            'file' => 'required', // File harus diupload
+            'file.*' => 'mimes:xls,xlsx|max:2048', // Validasi untuk setiap file
+        ]);
+
+        DB::beginTransaction(); // Mulai transaksi
+
+        try {
+            if ($request->hasFile('file')) {
+                foreach ($request->file('file') as $file) {
+                    $spreadsheet = IOFactory::load($file);
+                    $sheetNames = $spreadsheet->getSheetNames();
+                    foreach ($sheetNames as $sheetIndex => $sheetName) {
+                        if ($sheetIndex == count($sheetNames) - 1) {
+                            break;
+                        }
+                        $sheet = $spreadsheet->getSheet($sheetIndex);
+
+                        $highestRow = $sheet->getHighestRow();
+                        $highestColumn = $sheet->getHighestColumn();
+
+                        Log::alert($sheetName);
+
+                        for ($row = 2; $row <= $highestRow; $row++) {
+                            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE);
+                            Log::alert($rowData);
+                        }
+                    }
+
+
+                    // // Import multiple file menggunakan class yang sama
+                    // Excel::import(new DataPengeluaranImportMultiple($file), $file); // Proses impor
+                }
             }
-        }
 
-        DB::commit(); // Commit transaksi jika tidak ada kesalahan
-        return redirect()->back()->with('success', 'Data pengeluaran berhasil diimpor!');
-    } catch (\Exception $e) {
-        DB::rollBack(); // Rollback jika ada kesalahan
-        \Log::error('Import failed: ' . $e->getMessage()); // Log kesalahan
-        return redirect()->back()->with('error', 'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage());
+            DB::commit(); // Commit transaksi jika tidak ada kesalahan
+            return redirect()->back()->with('success', 'Data pengeluaran berhasil diimpor!');
+        } catch (\Exception $e) {
+            DB::rollBack(); // Rollback jika ada kesalahan
+            \Log::error('Import failed: ' . $e->getMessage()); // Log kesalahan
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage());
+        }
     }
-}
 
 
 
@@ -351,6 +368,6 @@ public function importPengeluaran(Request $request)
     public function downloadTemplate()
     {
 
-   return Excel::download(new TemplateExport(), 'template_pengeluaran.xlsx');}
+        return Excel::download(new TemplateExport(), 'template_pengeluaran.xlsx');
     }
-    
+}
