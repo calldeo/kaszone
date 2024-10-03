@@ -177,7 +177,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="text-label">Category *</label>
+                                <label class="text-label">Kategori *</label>
                                 <select class="select2-with-label-single js-states form-control" id="category" name="category_id[]" required>
                                     <option value="">PILIH KATEGORI</option>
                             
@@ -354,7 +354,7 @@ $('#add-more-fields').on('click', function() {
             </div>
 
            <div class="form-group">
-                                        <label class="text-label">Category *</label>
+                                        <label class="text-label">Kategori *</label>
                                         <select class="select2-with-label-single js-states form-control" id="category" name="category_id[]" required>
                                             <option value="">PILIH KATEGORI</option>
                                     
@@ -365,18 +365,18 @@ $('#add-more-fields').on('click', function() {
                                     </div>
 
             <!-- Field untuk Foto Bukti Pengeluaran -->
-            <div class="form-group">
-                <label for="image">Foto Bukti Pengeluaran</label>
-                <div class="mb-3">
-                    <img id="profile-image" src="{{ asset('dash/images/cash.png') }}" alt="Gambar Bukti Pengeluaran" width="150" height="150">
-                </div>
-                <div class="file-upload-wrapper">
-                    <label class="file-upload-label" for="image">Pilih file</label>
-                    <input type="file" id="image" name="image[]" accept="image/*" onchange="updateImagePreview(this, 'profile-image')">
-                    <div id="file-upload-info" class="file-upload-info">Tidak ada file yang dipilih</div>
-                </div>
-                <label class="text-label text-danger mt-3">* Jika tidak ada perubahan, tidak perlu diisi</label>
-            </div>
+       <div class="form-group">
+    <label for="image1">Foto Bukti Pengeluaran 1</label>
+    <div class="mb-3">
+        <img id="profile-image1" src="{{ asset('dash/images/cash.png') }}" alt="Gambar Bukti Pengeluaran 1" width="150" height="150">
+    </div>
+    <div class="file-upload-wrapper">
+        <label class="file-upload-label" for="image1">Pilih file</label>
+        <input type="file" id="image1" name="image[]" accept="image/*" onchange="updateImagePreview(this, 'profile-image1', 'file-upload-info1')">
+        <div id="file-upload-info1" class="file-upload-info">Tidak ada file yang dipilih</div>
+    </div>
+    <label class="text-label text-danger mt-3">* Jika tidak ada perubahan, tidak perlu diisi</label>
+</div>
 
             <button type="button" class="btn btn-danger remove-field">Remove</button>
             <hr>
@@ -480,32 +480,24 @@ $('#add-more-fields').on('click', function() {
         </script>
        <script>
         
-          function updateImagePreview() {
-    const fileInput = document.getElementById('image');
-    const fileInfo = document.getElementById('file-upload-info');
-    const profileImage = document.getElementById('profile-image');
-    
-    if (fileInput.files.length > 0) {
-        const file = fileInput.files[0];
-        const reader = new FileReader();
-
-        reader.onload = function(e) {
-            // Menampilkan gambar yang dipilih
-            profileImage.src = e.target.result;
-            fileInfo.textContent = file.name; // Menampilkan nama file
-        };
-
-        reader.onerror = function() {
-            console.error('Error membaca file.');
-        };
-
-        reader.readAsDataURL(file); // Membaca file sebagai URL data
-    } else {
-        fileInfo.textContent = 'Tidak ada file yang dipilih';
-        // Menampilkan gambar default jika tidak ada file yang dipilih
-        profileImage.src = "{{ asset('dash/images/cash.png') }}"; // Menggunakan blade syntax untuk URL gambar default
+  function updateImagePreview(input, imageId, infoId) {
+        const file = input.files[0];
+        const fileUploadInfo = document.getElementById(infoId);
+        const imagePreview = document.getElementById(imageId);
+        
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imagePreview.src = e.target.result;
+                fileUploadInfo.textContent = file.name; // Tampilkan nama file yang dipilih
+            }
+            reader.readAsDataURL(file);
+        } else {
+            imagePreview.src = "{{ asset('dash/images/cash.png') }}"; // Ganti dengan gambar default
+            fileUploadInfo.textContent = "Tidak ada file yang dipilih";
+        }
     }
-}
+
 
 </script>
 <script>
@@ -517,7 +509,7 @@ $('#add-more-fields').on('click', function() {
 
         let jumlah = jumlahSatuan * nominal + dll;
 
-        document.getElementById('jumlah').value = jumlah.toFixed(3); // Mengisi hasil ke input 'jumlah'
+        document.getElementById('jumlah').value = jumlah.toFixed(2); // Mengisi hasil ke input 'jumlah'
     });
 </script>
 {{-- <script>
@@ -536,21 +528,25 @@ $('#add-more-fields').on('click', function() {
     });
 </script> --}}
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        function calculateTotal() {
-            const jumlahSatuan = parseFloat(document.getElementById('jumlah_satuan').value) || 0;
-            const nominal = parseFloat(document.getElementById('nominal').value) || 0;
-            const dll = parseFloat(document.getElementById('dll').value) || 0;
-            
-            const total = jumlahSatuan * nominal + dll;
-            document.getElementById('jumlah').value = total.toFixed(2);
-        }
-    
-        document.getElementById('jumlah_satuan').addEventListener('input', calculateTotal);
-        document.getElementById('nominal').addEventListener('input', calculateTotal);
-        document.getElementById('dll').addEventListener('input', calculateTotal);
-    });
- 
+ document.addEventListener('DOMContentLoaded', function () {
+    function calculateTotal() {
+        const jumlahSatuan = Number(document.getElementById('jumlah_satuan').value) || 0;
+        const nominal = Number(document.getElementById('nominal').value) || 0;
+        const dll = Number(document.getElementById('dll').value) || 0;
+
+        // Menghitung total
+        const total = (jumlahSatuan * nominal) + dll;
+
+        // Format total menjadi dua desimal dan menampilkan hasil
+        document.getElementById('jumlah').value = total.toFixed(2);
+    }
+
+    // Tambahkan event listener untuk setiap input
+    document.getElementById('jumlah_satuan').addEventListener('input', calculateTotal);
+    document.getElementById('nominal').addEventListener('input', calculateTotal);
+    document.getElementById('dll').addEventListener('input', calculateTotal);
+});
+
 
     </script>
 

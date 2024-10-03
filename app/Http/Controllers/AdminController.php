@@ -189,7 +189,7 @@ class AdminController extends Controller
                 return '
                     <div class="d-flex align-items-center">
                         <form action="/user/' . $row->id . '/edit_user" method="GET" class="mr-1">
-                            <button type="submit" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></button>
+                            <button type="submit" class="btn btn-warning btn-xs"><i class="fas fa-edit"></i></button>
                         </form>
                          <button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/user/' . $row->id . '/detail">
                     <i class="fa fa-eye"></i>
@@ -223,7 +223,7 @@ public function kategoris(Request $request) // KATEGORI
                     <div class="d-flex align-items-center">
                         <form action="' . route('kategori.edit', $row->id) . '" method="GET" class="mr-1">
                             <button type="submit" class="btn btn-warning btn-xs">
-                                <i class="fa fa-pencil"></i> 
+                                <i class="fas fa-edit"></i> 
                             </button>
                         </form>
                         
@@ -359,28 +359,30 @@ public function production(Request $request) // PENGELUARAN
                 }
                 return $jumlahSatuan ?: 'Tidak ada jumlah satuan';
             })
-            ->addColumn('nominal', function ($row) {
-                $nominal = '';
-                foreach ($row->pengeluaran as $val) {
-                    $nominal .= 'Rp ' . number_format($val->nominal, 2, ',', '.') . '<br>';
-                }
-                return $nominal ?: 'Tidak ada nominal';
-            })
-            ->addColumn('dll', function ($row) {
-                $dll = '';
-                foreach ($row->pengeluaran as $val) {
-                    $dll .= $val->dll . '<br>';
-                }
-                return $dll ?: 'Tidak ada data tambahan';
-            })
-            ->addColumn('jumlah', function ($row) {
-                $jumlah = '';
-                foreach ($row->pengeluaran as $val) {
-                    $jumlah .= 'Rp' . $val->jumlah . '<br>'; // Format tampilan
-                }
-                return $jumlah ?: 'Tidak ada jumlah';
-            })
-            
+           ->addColumn('nominal', function ($row) {
+    $nominal = '';
+    foreach ($row->pengeluaran as $val) {
+        // Format ke IDR
+        $nominal .= 'Rp ' . number_format($val->nominal, 0, ',', '.') . '<br>';
+    }
+    return $nominal ?: 'Tidak ada nominal';
+})
+->addColumn('dll', function ($row) {
+    $dll = '';
+    foreach ($row->pengeluaran as $val) {
+        $dll .= $val->dll . '<br>';
+    }
+    return $dll ?: 'Tidak ada data tambahan';
+})
+->addColumn('jumlah', function ($row) {
+    $jumlah = '';
+    foreach ($row->pengeluaran as $val) {
+        // Format ke IDR
+        $jumlah .= 'Rp ' . number_format($val->jumlah, 0, ',', '.') . '<br>';
+    }
+    return $jumlah ?: 'Tidak ada jumlah';
+})
+
             ->addColumn('category', function ($row) {
                 $categories = '';
                 foreach ($row->pengeluaran as $val) {

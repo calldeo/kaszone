@@ -71,7 +71,7 @@
                     <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="javascript:void(0)">Form</a></li>
-                            <li class="breadcrumb-item active"><a href="javascript:void(0)">Category</a></li>
+                            <li class="breadcrumb-item active"><a href="javascript:void(0)">Kategori</a></li>
                         </ol>
                     </div>
                         @if(session('error'))
@@ -94,7 +94,7 @@
                                     <form class="form-valide-with-icon" action="/kategori/store" method="post" enctype="multipart/form-data">
                                         @csrf
                                         <div class="form-group">
-                                            <label class="text-label">Name *</label>
+                                            <label class="text-label">Nama *</label>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"> <i class="fa fa-user"></i> </span>
@@ -106,7 +106,7 @@
                                             @enderror
                                         </div>
                                            <div class="form-group">
-                                            <label class="text-label">Description *</label>
+                                            <label class="text-label">Deskripsi *</label>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"> <i class="fa fa-user"></i> </span>
@@ -119,7 +119,7 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label class="text-label">Category Type *</label>
+                                            <label class="text-label">Jenis Kategori *</label>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"> <i class="fa fa-list"></i> </span>

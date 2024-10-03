@@ -72,7 +72,12 @@ class CategorySheetExport implements FromArray, WithHeadings, WithTitle
 
     public function array(): array
     {
-        $categories = Category::select('id', 'jenis_kategori', 'name')->get()->toArray();
+        // Mengambil kategori dengan jenis kategori 'pengeluaran'
+        $categories = Category::select('id', 'jenis_kategori', 'name')
+            ->where('jenis_kategori', '2') // Tambahkan kondisi untuk filter
+            ->get()
+            ->toArray();
+
         return $categories;
     }
 

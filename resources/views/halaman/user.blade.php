@@ -96,13 +96,13 @@
                                             <th style="width:50px;">
                                                 <strong>No</strong>
                                             </th>
-                                            <th><strong>Name</strong></th>
+                                            <th><strong>Nama</strong></th>
                                             <th><strong>Email</strong></th>
                                          
-                                            <th><strong>Gender</strong></th>
-                                            <th><strong>Address</strong></th>
-                                            <th><strong>Role</strong></th>
-                                            <th><strong>Option</strong></th>
+                                            <th><strong>Jenis Kelamin</strong></th>
+                                            <th><strong>Alamat</strong></th>
+                                            <th><strong>Peran</strong></th>
+                                            <th><strong>Opsi</strong></th>
                                         </tr>
                                     </thead>
                                    
@@ -186,7 +186,7 @@
                         <div class="col-sm-4">
                             <strong>Nama:</strong><br />
                             <strong>Email :</strong><br />
-                            <strong>Kelamin :</strong><br />
+                            <strong>Jenis Kelamin :</strong><br />
                             <strong>Alamat :</strong><br />
                             {{-- <strong>Kategori:</strong><br /> --}}
 

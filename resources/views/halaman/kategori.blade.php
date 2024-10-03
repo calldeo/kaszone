@@ -26,13 +26,13 @@
                 <div class="col-sm-6 p-md-0">
                     <div class="welcome-text">
                         <h4>Hi, Welcome Back!</h4>
-                        <p class="mb-0">Data Category</p>
+                        <p class="mb-0">Data Kategori</p>
                     </div>
                 </div>
                 <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="javascript:void(0)">Table</a></li>
-                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Category</a></li>
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Kategori</a></li>
                     </ol>
                 </div>
             </div>
@@ -42,7 +42,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title">Data Category</h4>
+                            <h4 class="card-title">Data Kategori</h4>
                             <div class="text-right">
                           {{-- <div class="input-group search-area right d-lg-inline-flex d-none">
                             <form id="searchForm">
@@ -63,7 +63,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="importModalLabel">Import Data Category</h5>
+                        <h5 class="modal-title" id="importModalLabel">Import Data Katagori</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -132,66 +132,13 @@
                                              <th style="width:50px;">
                                                 <strong>No</strong>
                                             </th>
-                                            <th><strong>Name Category</strong></th>
-                                            <th><strong>Category Type</strong></th>
-                                            <th><strong>Description</strong></th>
-                                            {{-- <th><strong>Status</strong></th> --}}
-                                            <th><strong>Option</strong></th>
+                                            <th><strong>Nama Kategori</strong></th>
+                                            <th><strong>Jenis Kategori</strong></th>
+                                            <th><strong>Deskripsi</strong></th>
+                                            <th><strong>Opsi</strong></th>
                                         </tr>
                                     </thead>
-                                    {{-- <tbody  id="adminTableBody">
-                                        @foreach($users as $g)
-                                        @if($g->level == 'admin')
-                                        <tr>
-                                            <td>
-                                                <div class="custom-control custom-checkbox checkbox-secondary check-lg mr-3">
-                                                    <input type="checkbox" class="custom-control-input" id="customCheckBox2" required="">
-                                                    <label class="custom-control-label" for="customCheckBox2"></label>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <h6>{{$g->id}}</h6>
-                                            </td>
-                                            <td>
-                                                <div class="media style-1">
-                                                    <span class="icon-name mr-2 bgl-info text-secondary">{{ substr($g->name, 0, 1) }}</span>
-                                                    <div class="media-body">
-                                                        <h6>{{ $g->name }}</h6>
-                                                        <span>{{ $g->email }}</a></span>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td><span class="badge badge-lg badge-secondary light">{{$g->level}}</span></td>
-                                            --}}
-{{--                                                 
-                                            <td>
-                                                @if($g->status_pemilihan == 'Belum Memilih')
-                                                <div class="d-flex align-items-center">
-                                                    <i class="fa fa-circle text-warning mr-1"></i>Belum Memilih</div>
-                                                @elseif($g->status_pemilihan == 'Sudah Memilih')
-                                                <div class="d-flex align-items-center">
-                                                    <i class="fa fa-circle text-success mr-1"></i>Sudah Memilih</div>
-                                                @endif
-                                            </td>                                             --}}
-                                            {{-- <td class="text-align: left;">
-                                                <div class="d-flex justify-content-center">
-                                                <form id="editForm_{{ $g->id }}" action="/admin/{{ $g->id }}/edit_admin" method="GET">
-                                                    <button type="submit" class="btn btn-warning shadow btn-xs sharp"><i class="fa fa-pencil"></i></button>
-                                                </form>
-
-                                                <div class="mx-1"></div> <!-- Tambahkan jarak di sini -->
-
-                                                <form id="deleteForm_{{ $g->id }}" action="{{ route('admin.destroy', $g->id) }}" method="POST" class="delete-form">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="button" class="btn btn-danger shadow btn-xs sharp delete-btn" data-id="{{ $g->id }}"><i class="fa fa-trash"></i></button>
-                                                </form>
-                                            </div>
-                                            </td>
-                                        </tr>
-                                        @endif
-                                        @endforeach
-                                    </tbody> --}}
+                                 
                                 </table>
                             </div>
                         </div>
@@ -220,73 +167,7 @@
     @include('template.scripts')
     
 
-    <!-- Pencarian -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function() {
-    let searchInput = document.getElementById('searchInput');
-
-    searchInput.addEventListener('input', function() {
-        let searchValue = searchInput.value;
-
-        fetch('/admin/search?search=' + encodeURIComponent(searchValue))
-            .then(response => response.json())
-            .then(data => {
-                updateTable(data);
-            })
-            .catch(error => console.error('Error:', error));
-    });
-
-            function updateTable(data) {
-                let adminTableBody = document.getElementById('adminTableBody');
-                adminTableBody.innerHTML = '';
-
-                data.forEach(g => {
-                    let statusLabel = g.status_pemilihan == 'Belum Memilih' ? 'Belum Memilih' : 'Sudah Memilih';
-
-                    let row = `
-                        <tr>
-                            <td>
-                                <div class="custom-control custom-checkbox checkbox-secondary check-lg mr-3">
-                                    <input type="checkbox" class="custom-control-input" id="customCheckBox_${g.id}" required="">
-                                    <label class="custom-control-label" for="customCheckBox_${g.id}"></label>
-                                </div>
-                            </td>
-                            <td><h6>${g.id}</h6></td>
-                            <td>
-                                <div class="media style-1">
-                                    <span class="icon-name mr-2 bgl-info text-secondary">${g.name.substring(0, 1)}</span>
-                                    <div class="media-body">
-                                        <h6>${g.name}</h6>
-                                        <span>${g.email}</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><span class="badge badge-lg badge-secondary light">${g.level}</span></td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <i class="fa fa-circle ${g.status_pemilihan == 'Sudah Memilih' ? 'text-success' : 'text-warning'} mr-1"></i>
-                                    ${g.status_pemilihan}
-                                </div>
-                            </td>
-                            <td class="text-align: left;">
-                                <div class="d-flex justify-content-center">
-                                    <form id="editForm_${g.id}" action="/admin/${g.id}/edit_admin" method="GET">
-                                        <button type="submit" class="btn btn-warning shadow btn-xs sharp"><i class="fa fa-pencil"></i></button>
-                                    </form>
-                                    <div class="mx-1"></div>
-                                    <form id="deleteForm_${g.id}" action="/admin/${g.id}/delete" method="POST" class="delete-form">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <button type="submit" class="btn btn-danger shadow btn-xs sharp delete-btn" data-id="${g.id}"><i class="fa fa-trash"></i></button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-                    adminTableBody.insertAdjacentHTML('beforeend', row);
-                });
-            }
-        });
-    </script>
+  
 
     <!-- Sweet Alert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>

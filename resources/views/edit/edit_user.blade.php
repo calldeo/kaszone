@@ -17,13 +17,13 @@
                 <div class="col-sm-6 p-md-0">
                     <div class="welcome-text">
                         <h4>Hi, Welcome Back!</h4>
-                        <p class="mb-0">Bendahara</p>
+                        <p class="mb-0">User</p>
                     </div>
                 </div>
                 <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="javascript:void(0)">Form</a></li>
-                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Edit Bendahara</a></li>
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Edit User</a></li>
                     </ol>
                 </div>
             </div>
@@ -40,7 +40,7 @@
                                     @method('put')
                                     @csrf
                                     <div class="form-group">
-                                        <label class="text-label">Name *</label>
+                                        <label class="text-label">Nama *</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"> <i class="fa fa-user"></i> </span>
@@ -74,7 +74,7 @@
                                         <label class="text-label text-danger mt-3">* Jika tidak ada perubahan, tidak perlu diisi</label>
                                     </div>
                                     <div class="form-group">
-                                        <label>Gender *</label>
+                                        <label>Jenis Kelamin *</label>
                                         <select class="form-control default-select" name="kelamin" required>
                                             <option value="">-- Select Gender --</option>
                                             <option value="laki-laki" {{ old('kelamin', $guruu->kelamin) == 'laki-laki' ? 'selected' : '' }}>Laki-Laki</option>
@@ -82,7 +82,7 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label class="text-label">Address *</label>
+                                        <label class="text-label">Alamat *</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"> <i class="fa fa-map-marker-alt"></i> </span>
@@ -91,7 +91,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="text-label">Select Role *</label>
+                                        <label class="text-label">Pilih Peran *</label>
                                         @foreach($roles as $role)
                                         <div class="mb-2">
                                             <input 

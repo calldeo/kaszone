@@ -51,7 +51,7 @@
 
                                     <!-- Name Field -->
                                     <div class="form-group">
-                                        <label class="text-label">Name *</label>
+                                        <label class="text-label">Nama *</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"> <i class="fa fa-user"></i> </span>
@@ -65,7 +65,7 @@
 
                                     <!-- Description Field -->
                                     <div class="form-group">
-                                        <label class="text-label">Description *</label>
+                                        <label class="text-label">Deskripsi *</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"> <i class="fa fa-file-text"></i> </span>
@@ -79,7 +79,7 @@
 
                                     <!-- Jenis Kategori Field -->
                                     <div class="form-group">
-                                        <label class="text-label">Category Type *</label>
+                                        <label class="text-label">Jenis Kategori *</label>
                                         <select class="form-control default-select" name="jenis_kategori" required>
                                             <option value="">-- Jenis Kategori --</option>
                                             <option value="1" {{ old('jenis_kategori', $category->jenis_kategori) == '1' ? 'selected' : '' }}>Pemasukan</option>
@@ -91,8 +91,8 @@
                                     </div>
 
                                     <!-- Buttons -->
-                                    <button type="button" class="btn btn-danger" onclick="redirectToKategori()">Cancel</button>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                    <button type="button" class="btn btn-danger btn-submit" onclick="redirectToKategori()">Cancel</button>
+                                    <button type="submit" class="btn btn-primary btn-cancel ">Submit</button>
                                 </form>
                             </div>
                         </div>

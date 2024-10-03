@@ -96,7 +96,7 @@
                                     <form class="form-valide-with-icon" action="/user/store" method="post" enctype="multipart/form-data">
                                         @csrf
                                         <div class="form-group">
-                                            <label class="text-label">Name *</label>
+                                            <label class="text-label">Nama *</label>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"> <i class="fa fa-user"></i> </span>
@@ -139,7 +139,7 @@
                                         </div>
                                        
                                          <div class="form-group">
-                                            <label>Gender *</label>
+                                            <label>Jenis Kelamin *</label>
                                             <select class="form-control default-select" id="sel1" name="kelamin" required>
                                                 {{-- <option  value="">--Select Gender--</option> --}}
                                                 <option  value="laki-laki">Laki-Laki</option>
@@ -152,7 +152,7 @@
                                             @enderror
                                         </div>
                                          <div class="form-group">
-                                            <label class="text-label">Address *</label>
+                                            <label class="text-label">ALamat *</label>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"> <i class="fa fa-map-marker-alt"></i> </span>
@@ -176,7 +176,7 @@
                                     <div class="form-group">
                                         <label>Role *</label>
                                         <select class="form-control default-select" id="sel1" name="level[]" multiple required>
-                                            <option value="" disabled>Select Role</option>
+                                            <option value="" disabled>Pilih Peran </option>
                                             @foreach($roles as $role)
                                                 <option value="{{ $role->name }}">{{ $role->name }}</option>
                                             @endforeach

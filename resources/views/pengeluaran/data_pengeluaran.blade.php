@@ -72,38 +72,31 @@
                             </div>
                         </div>
                         
-                                                <!-- Modal untuk Import Data -->
-                        <div id="importModal" class="modal fade" tabindex="-1" role="dialog">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Import Data Pengeluaran</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <a href="{{ route('download-template') }}" class="btn btn-success">Download Template</a>
-
-                                   <div class="modal-body">
-    <form action="{{ route('import-pengeluaran') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        <div class="form-group">
-            <label for="file">Pilih File Excel</label>
-            <input type="file" class="form-control" name="file[]" multiple required>
-            <small class="form-text text-muted">File yang diizinkan: .xls, .xlsx</small>
-        </div>
-        <div class="form-group">
-            <label for="description">Deskripsi (optional)</label>
-            <textarea class="form-control" name="description" rows="3"></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Import</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-    </form>
-</div>
-
-                                </div>
-                            </div>
-                        </div>
+                        <div id="importModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="importModalLabel">Import Data Pengeluaran</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form action="{{ route('import-pengeluaran') }}" method="POST" enctype="multipart/form-data">
+                                                                    @csrf
+                                                                    <div class="form-group">
+                                                                        <label for="file">Pilih File Excel</label>
+                                                                        <input type="file" class="dropify" id="file" name="file[]" multiple required accept=".xls,.xlsx">
+                                                                        <div style="text-align: left;">
+                                                                            <a href="{{ route('download-template') }}">Download Template Excel</a>
+                                                                        </div>
+                                                                    </div>
+                                                                    <button type="submit" class="btn btn-primary">Import</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
             <!-- Pengeluaran Section -->
             <div class="row">
                 <div class="col-lg-12">
@@ -277,6 +270,14 @@
             });
         }
     </script>
+<script>
+    $(document).ready(function(){
+        // Inisialisasi Dropify
+        $('.dropify').dropify();
 
+        // Mengubah ukuran font di area Dropify setelah inisialisasi
+        $('.dropify-wrapper .dropify-message p').css('font-size', '20px'); // Ganti '12px' dengan ukuran yang diinginkan
+    });
+</script>
 </body>
 </html>
