@@ -13,10 +13,7 @@
         <div class="container-fluid">
             <div class="row page-titles mx-0">
                 <div class="col-sm-6 p-md-0">
-                    <div class="welcome-text">
-                        <h4>Hi, Welcome Back!</h4>
-                        <p class="mb-0">Data Pengeluaran</p>
-                    </div>
+                   
                 </div>
             </div>
 
@@ -131,11 +128,12 @@
                                             <th><strong>Nama</strong></th>
                                             <th><strong>Deskripsi</strong></th>
                                             <th><strong>Kategori</strong></th>
-                                            <th><strong>Tanggal</strong></th>
-                                            <th><strong>Jumlah Satuan</strong></th>
-                                            <th><strong>Nominal(Rp)</strong></th>
+                                            {{-- <th><strong>Jumlah Satuan</strong></th> --}}
+                                            {{-- <th><strong>Nominal(Rp)</strong></th> --}}
                                             <th><strong>Total(Rp)</strong></th>
-                                            <th><strong>Foto</strong></th>
+                                            {{-- <th><strong>Foto</strong></th> --}}
+                                            <th><strong>Tanggal</strong></th>
+
                                             <th><strong>Opsi<strong></th>
 
                                         </tr>
@@ -143,7 +141,7 @@
                                   <tfoot>
                                     <tr>
                                         <td colspan="5" style="text-align: left; font-size: 1.25em; font-weight: bold;"><strong>Total Jumlah:</strong></td>
-                                        <td id="total-pengeluaran" style="text-align: left; font-size: 1.25em; font-weight: bold;">0</td>
+                                        <td id="total-jumlah" style="text-align: left; font-size: 1.25em; font-weight: bold;">0</td>
                                         <td></td> <!-- Kolom Opsi dikosongkan -->
                                     </tr>
                                 </tfoot>
@@ -244,28 +242,48 @@
                         d.end_created_at = filter.end_created_at;
                         
                     }
+
+                    
                 },
-                columns: [
-                    { data: 'DT_RowIndex',name: 'DT_RowIndex', orderable: false, searchable: false },
-                    { data: 'name', name: 'name' },
-                    { data: 'description', name: 'description' },
-                    { data: 'category', name: 'category'},
-                    { data: 'tanggal', name: 'tanggal' },
-                    { data: 'jumlah_satuan', name: 'jumlah_satuan' },
-                    { data: 'nominal',name: 'nominal' },
-                    { data: 'jumlah',name: 'jumlah' },
-                    { data: 'image',name:'image' },
+     columns: [
+    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+    { data: 'name', name: 'name' },
+    { data: 'description', name: 'description' },
+    { data: 'category', name: 'category' },
+    // { data: 'jumlah_satuan', name: 'jumlah_satuan' },
+    // { data: 'nominal', name: 'nominal' },
+    { data: 'jumlah', name: 'jumlah' }, // Jika ingin menghitung jumlah berdasarkan perkalian
+    // { data: 'image', name: 'image' },
+    { data: 'tanggal', name: 'tanggal' },
+    { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
+],
+drawCallback: function(settings) {
+    var api = this.api();
+    var totalJumlah = 0;
 
-                    { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
+    // Iterasi melalui semua baris di tabel
+    api.rows().every(function(rowIdx, tableLoop, rowLoop) {
+        var data = this.data(); // Dapatkan data per baris
 
-                ],
-                drawCallback: function(settings) {
-    var total = this.api().column(7).data().reduce(function(a, b) {
-        // Hapus "Rp" dan parse ke float
-        return a + parseFloat(b.replace(/Rp/g, '').replace(/,/g, '').trim()) || 0; 
-    }, 0);
-    $('#total-pengeluaran').html('Rp ' + total.toLocaleString());
+        // Ambil nilai dari kolom jumlah dan konversi ke angka
+        var jumlah = parseFloat(data.jumlah.replace(/Rp/g, '').replace(/\./g, '').replace(/,/g, '').trim()) || 0;
+
+        console.log("Jumlah:", jumlah); // Debugging untuk melihat data per baris
+
+        // Hitung total jumlah
+        totalJumlah += jumlah;
+    });
+
+    console.log("Total Jumlah:", totalJumlah); // Debugging total akhir
+
+    // Tampilkan total jumlah dalam format IDR
+    $('#total-jumlah').html(totalJumlah.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' }));
 }
+
+
+
+
+
 
             });
         }

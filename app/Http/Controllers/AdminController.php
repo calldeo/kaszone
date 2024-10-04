@@ -301,8 +301,6 @@ public function income(Request $request) // PEMASUKAN
             ->make(true);
     }
 }
-
-
 public function production(Request $request) // PENGELUARAN
 {
     if ($request->ajax()) {
@@ -311,11 +309,10 @@ public function production(Request $request) // PENGELUARAN
         $year = $request->input('year'); 
 
         $pengeluaran = ParentPengeluaran::with('pengeluaran.category')->select(['id', 'tanggal']);
-
+        
         if ($year) {
             $pengeluaran = $pengeluaran->whereYear('tanggal', $year);
         }
-            // $totalJumlah = $pemasukan->sum('jumlah');
 
         if ($startDate != null && $endDate != null) {
             $pengeluaran = $pengeluaran->whereBetween('tanggal', [$startDate, $endDate]);
@@ -359,30 +356,28 @@ public function production(Request $request) // PENGELUARAN
                 }
                 return $jumlahSatuan ?: 'Tidak ada jumlah satuan';
             })
-           ->addColumn('nominal', function ($row) {
-    $nominal = '';
-    foreach ($row->pengeluaran as $val) {
-        // Format ke IDR
-        $nominal .= 'Rp ' . number_format($val->nominal, 0, ',', '.') . '<br>';
-    }
-    return $nominal ?: 'Tidak ada nominal';
-})
-->addColumn('dll', function ($row) {
-    $dll = '';
-    foreach ($row->pengeluaran as $val) {
-        $dll .= $val->dll . '<br>';
-    }
-    return $dll ?: 'Tidak ada data tambahan';
-})
-->addColumn('jumlah', function ($row) {
-    $jumlah = '';
-    foreach ($row->pengeluaran as $val) {
-        // Format ke IDR
-        $jumlah .= 'Rp ' . number_format($val->jumlah, 0, ',', '.') . '<br>';
-    }
-    return $jumlah ?: 'Tidak ada jumlah';
-})
-
+            ->addColumn('nominal', function ($row) {
+                $nominal = '';
+                foreach ($row->pengeluaran as $val) {
+                    // Format ke IDR
+                    $nominal .= 'Rp ' . number_format($val->nominal, 0, ',', '.') . '<br>';
+                }
+                return $nominal ?: 'Tidak ada nominal';
+            })
+            ->addColumn('dll', function ($row) {
+                $dll = '';
+                foreach ($row->pengeluaran as $val) {
+                    $dll .= $val->dll . '<br>';
+                }
+                return $dll ?: 'Tidak ada data tambahan';
+            })
+            ->addColumn('jumlah', function ($row) {
+                $jumlah = 0;
+                foreach ($row->pengeluaran as $val) {
+                    $jumlah += $val->jumlah; // Akumulasi jumlah
+                }
+                return 'Rp ' . number_format($jumlah, 0, ',', '.') ?: 'Tidak ada jumlah'; // Tampilkan total
+            })
             ->addColumn('category', function ($row) {
                 $categories = '';
                 foreach ($row->pengeluaran as $val) {
@@ -396,13 +391,16 @@ public function production(Request $request) // PENGELUARAN
                     <a href="/pengeluaran/' . $row->id . '/detail" class="btn btn-info btn-xs mr-1">
                         <i class="fas fa-eye"></i>
                     </a>
+                    <a href="' . route('pengeluaran.deleteAll', $row->id) . '" class="btn btn-danger btn-xs" onclick="return confirm(\'Apakah Anda yakin ingin menghapus semua item ini?\')">
+                        <i class="fas fa-dumpster"></i> 
+                    </a>
                 </div>';
             })
             ->rawColumns(['image', 'name', 'description', 'jumlah_satuan', 'nominal', 'dll', 'jumlah', 'category', 'opsi'])
-            // ->with(['total_jumlah' => $totalJumlah])
             ->make(true);
     }
 }
+
 
 
 

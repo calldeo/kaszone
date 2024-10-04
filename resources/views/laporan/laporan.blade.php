@@ -12,22 +12,17 @@
     <div class="content-body">
         <div class="container-fluid">
             <div class="row page-titles mx-0">
-                <div class="col-sm-6 p-md-0">
-                    <div class="welcome-text">
-                        <h4>Hi, Welcome Back!</h4>
-                        <p class="mb-0">Data Laporan</p>
-                    </div>
-                </div>
+                <div class="col-sm-6 p-md-0"></div>
             </div>
 
             <!-- Filter Section -->
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
-                   <div class="card-header">
+                        <div class="card-header">
                             <h4 class="card-title">Data Pemasukan</h4>
                             <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex align-items-center"> <!-- Membungkus filter dalam d-flex -->
+                                <div class="d-flex align-items-center">
                                     <div class="example mr-3">
                                         <p class="mb-1">Filter Tahun</p>
                                         <select class="form-control" id="filter-year">
@@ -42,7 +37,7 @@
                                         <input class="form-control input-daterange-datepicker" type="text" name="daterange" placeholder="Masukkan Tanggal" disabled>
                                     </div>
                                 </div>
-                                <div class="d-flex align-items-center mt-3"> <!-- Membungkus tombol dalam d-flex -->
+                                <div class="d-flex align-items-center mt-3">
                                     @hasrole('Admin|Bendahara') 
                                     <form method="GET" action="{{ route('export.laporan') }}" id="export-pdf-form" class="mr-1">
                                         <input type="hidden" name="year" id="export-year" value="{{ old('year') }}" required />
@@ -71,12 +66,11 @@
                                         </tr>
                                     </thead>
                                     <tfoot>
-            <tr>
-                <th colspan="5"style="text-align: left; font-size: 1.25em; font-weight: bold;"><strong>Total Jumlah:</strong></th>
-                <th id="total-pemasukan" style="text-align: left; font-size: 1.25em; font-weight: bold;">0</th>
-            </tr>
-        </tfoot>
-
+                                        <tr>
+                                            <th colspan="5" style="text-align: left; font-size: 1.25em; font-weight: bold;"><strong>Total Jumlah:</strong></th>
+                                            <th id="total-pemasukan" style="text-align: left; font-size: 1.25em; font-weight: bold;">0</th>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                         </div>
@@ -100,19 +94,17 @@
                                             <th><strong>Nama</strong></th>
                                             <th><strong>Deskripsi</strong></th>
                                             <th><strong>Kategori</strong></th>
-                                            <th><strong>Tanggal</strong></th>
-                                            <th><strong>Jumlah Satuan</strong></th>
-                                            <th><strong>Nominal(Rp)</strong></th>
                                             <th><strong>Total(Rp)</strong></th>
+                                            <th><strong>Tanggal</strong></th>
                                         </tr>
                                     </thead>
-                                  <tfoot>
-                                    <tr>
-                                        <td colspan="5" style="text-align: left; font-size: 1.25em; font-weight: bold;"><strong>Total Jumlah:</strong></td>
-                                        <td id="total-pengeluaran" style="text-align: left; font-size: 1.25em; font-weight: bold;">0</td>
-                                        <td></td> <!-- Kolom Opsi dikosongkan -->
-                                    </tr>
-                                </tfoot>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="4" style="text-align: left; font-size: 1.25em; font-weight: bold;"><strong>Total Jumlah:</strong></td>
+                                            <td id="total-pengeluaran" style="text-align: left; font-size: 1.25em; font-weight: bold;">0</td>
+                                            <td></td> <!-- Kolom Opsi dikosongkan -->
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                         </div>
@@ -128,7 +120,7 @@
     <input type="hidden" id="table-url-pengeluaran" value="{{ route('production') }}">
 
     <script>
-       var filterData = {
+        var filterData = {
             year: null,
             start_created_at: null,
             end_created_at: null
@@ -144,7 +136,7 @@
                 locale: { 
                     format: 'YYYY-MM-DD'
                 },
-                autoUpdateInput: false // Prevent auto-filling on initialization
+                autoUpdateInput: false
             });
 
             // Event handler for year filter
@@ -194,12 +186,12 @@
                 processing: true,
                 serverSide: true,
                 destroy: true,
-                         language: {
-            paginate: {
-            next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
-            previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
-            }
-        },
+                language: {
+                    paginate: {
+                        next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+                        previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
+                    }
+                },
                 ajax: {
                     url: $('#table-url-pemasukan').val(),
                     data: function(d) {
@@ -216,95 +208,53 @@
                     { data: 'date' },
                     { data: 'jumlah' }
                 ],
-                drawCallback: function(settings) {
-    var total = this.api().column(5).data().reduce(function(a, b) {
-        // Pastikan untuk menghapus "Rp" dan memformat angka ke float
-        return a + (parseFloat(b.replace(/Rp/g, '').replace(/,/g, '').trim()) || 0);
-    }, 0);
-    $('#total-pemasukan').html('Rp ' + total.toLocaleString());
-}
-
+                footerCallback: function(row, data, start, end, display) {
+                    var totalJumlah = 0;
+                    data.forEach(function(item) {
+                        var jumlah = item.jumlah.replace(/Rp/g, '').replace(/\./g, '').trim();
+                        totalJumlah += parseFloat(jumlah) || 0;
+                    });
+                    $('#total-pemasukan').html( totalJumlah.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' }));
+                }
             });
         }
 
-        function pemasukanTables(filter) {
-    $('#pemasukanTables').DataTable({
-        processing: true,
-        serverSide: true,
-        destroy: true,
-        language: {
-            paginate: {
-                next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
-                previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
-            }
-        },
-        ajax: {
-            url: $('#table-url-pemasukan').val(),
-            data: function(d) {
-                d.year = filter.year;
-                d.start_created_at = filter.start_created_at;
-                d.end_created_at = filter.end_created_at;
-            }
-        },
-        columns: [
-            { data: 'DT_RowIndex', orderable: false, searchable: false },
-            { data: 'name' },
-            { data: 'description' },
-            { data: 'category' },
-            { data: 'date' },
-            { data: 'jumlah' }
-        ],
-        footerCallback: function(row, data, start, end, display) {
-            var totalJumlah = 0;
-            data.forEach(function(item) {
-                // Hapus 'Rp' dan ganti '.' dengan kosong agar bisa diparsing
-                var jumlah = item.jumlah.replace(/Rp/g, '').replace(/\./g, '').trim();
-                totalJumlah += parseFloat(jumlah) || 0;
+        function pengeluaranTables(filter) {
+            $('#pengeluaranTables').DataTable({
+                processing: true,
+                serverSide: true,
+                destroy: true,
+                language: {
+                    paginate: {
+                        next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+                        previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
+                    }
+                },
+                ajax: {
+                    url: $('#table-url-pengeluaran').val(),
+                    data: function(d) {
+                        d.year = filter.year;
+                        d.start_created_at = filter.start_created_at;
+                        d.end_created_at = filter.end_created_at;
+                    }
+                },
+                columns: [
+                    { data: 'DT_RowIndex', orderable: false, searchable: false },
+                    { data: 'name' },
+                    { data: 'description' },
+                    { data: 'category' },
+                    { data: 'jumlah' }, 
+                    { data: 'tanggal' }
+                ],
+                footerCallback: function(row, data, start, end, display) {
+                    var total = 0;
+                    data.forEach(function(item) {
+                        total += parseFloat(item.jumlah.replace(/Rp/g, '').replace(/\./g, '').trim()) || 0;
+                    });
+                    $('#total-pengeluaran').html( total.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' }));
+                }
             });
-            $('#total-pemasukan').html('Rp ' + totalJumlah.toLocaleString());
         }
-    });
-}
-
-function pengeluaranTables(filter) {
-    $('#pengeluaranTables').DataTable({
-        processing: true,
-        serverSide: true,
-        destroy: true,
-        language: {
-            paginate: {
-                next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
-                previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
-            }
-        },
-        ajax: {
-            url: $('#table-url-pengeluaran').val(),
-            data: function(d) {
-                d.year = filter.year;
-                d.start_created_at = filter.start_created_at;
-                d.end_created_at = filter.end_created_at;
-            }
-        },
-        columns: [
-            { data: 'DT_RowIndex', orderable: false, searchable: false },
-            { data: 'name' },
-            { data: 'description' },
-            { data: 'category' },
-            { data: 'tanggal' },
-            { data: 'jumlah_satuan' },
-            { data: 'nominal' },
-            { data: 'jumlah' }
-        ],
-        drawCallback: function(settings) {
-    var total = this.api().column(7).data().reduce(function(a, b) {
-        // Hapus "Rp" dan parse ke float
-        return a + parseFloat(b.replace(/Rp/g, '').replace(/,/g, '').trim()) || 0; 
-    }, 0);
-    $('#total-pengeluaran').html('Rp ' + total.toLocaleString());
-}
-    });
-}
-
     </script>
 
 </body>

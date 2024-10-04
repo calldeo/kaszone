@@ -20,10 +20,7 @@
             <!-- Add Project -->
             <div class="row page-titles mx-0">
                 <div class="col-sm-6 p-md-0">
-                    <div class="welcome-text">
-                        <h4>Hi, Welcome Back!</h4>
-                        <p class="mb-0">Data Pemasukan</p>
-                    </div>
+                
                 </div>
                 <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                     <ol class="breadcrumb">
@@ -295,15 +292,16 @@
                     { data: 'jumlah', name: 'jumlah' },
                     { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
                 ],
-                footerCallback: function(row, data, start, end, display) {
+   footerCallback: function(row, data, start, end, display) {
     var totalJumlah = 0;
     data.forEach(function(item) {
-        // Hapus 'Rp ' dan ganti '.' dengan kosong agar bisa diparsing
-        var jumlah = item.jumlah.replace(/Rp/g, '').replace(/\./g, '').trim();
+        var jumlah = item.jumlah.replace(/Rp/g, '').replace(/\./g, '').trim(); // Hapus 'Rp ' dan '.' untuk parsing
         totalJumlah += parseFloat(jumlah) || 0;
     });
-    $('#total-jumlah-value').text('Rp ' + totalJumlah.toLocaleString());
+    // Format total jumlah
+    $('#total-jumlah-value').text('Rp ' + totalJumlah.toLocaleString('id-ID')); // Format dengan locale Indonesia
 }
+
 
             });
         });

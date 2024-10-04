@@ -172,72 +172,89 @@ class PengeluaranController extends Controller
         return view('pengeluaran.edit', compact('parentPengeluaran', 'categories'));
     }
 
-    public function update(Request $request, $id)
-    {
-        // Validasi input
-        $request->validate([
-            'tanggal' => 'required|date',
-            'name.*' => 'required|string|max:255',
-            'description.*' => 'nullable|string|max:255',
-            'jumlah_satuan.*' => 'required|numeric|min:0',
-            'nominal.*' => 'required|numeric|min:0',
-            'jumlah.*' => 'required|numeric|min:0',
-            'dll.*' => 'nullable|string|max:255',
-            'category_id.*' => 'required|exists:categories,id', // Memastikan kategori ada
-            'image.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+public function update(Request $request, $id)
+{
+    // Validasi input
+    $request->validate([
+        'tanggal' => 'required|date',
+        'name.*' => 'required|string|max:255',
+        'description.*' => 'nullable|string|max:255',
+        'jumlah_satuan.*' => 'required|numeric|min:0',
+        'nominal.*' => 'required|numeric|min:0',
+        'jumlah.*' => 'required|numeric|min:0',
+        'dll.*' => 'nullable|string|max:255',
+        'category_id.*' => 'required|exists:categories,id',
+        'image.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
 
-        // Temukan ParentPengeluaran
-        $parentPengeluaran = ParentPengeluaran::find($id);
-        if (!$parentPengeluaran) {
-            return redirect()->route('pengeluaran.index')->with('error', 'Data tidak ditemukan.');
-        }
 
-        // Mulai transaksi
-        DB::beginTransaction();
-        try {
-            // Update tanggal
-            $parentPengeluaran->tanggal = $request->tanggal;
-            $parentPengeluaran->save(); // Simpan tanggal
+    $parentPengeluaran = ParentPengeluaran::find($id);
+    if (!$parentPengeluaran) {
+        return redirect()->route('pengeluaran.index')->with('error', 'Data tidak ditemukan.');
+    }
 
-            // Loop melalui data pengeluaran dan perbarui masing-masing
-            foreach ($request->name as $key => $name) {
-                // Ambil data pengeluaran dari relasi
+  
+    DB::beginTransaction();
+    try {
+   
+        $parentPengeluaran->tanggal = $request->tanggal;
+        $parentPengeluaran->save(); 
+
+        foreach ($request->name as $key => $name) {
+            if (isset($parentPengeluaran->pengeluaran[$key])) {
                 $pengeluaran = $parentPengeluaran->pengeluaran[$key];
 
-                // Update data pengeluaran
                 $pengeluaran->name = $name;
                 $pengeluaran->description = $request->description[$key];
                 $pengeluaran->jumlah_satuan = $request->jumlah_satuan[$key];
                 $pengeluaran->nominal = $request->nominal[$key];
                 $pengeluaran->jumlah = $request->jumlah[$key];
                 $pengeluaran->dll = $request->dll[$key];
-                $pengeluaran->id = $request->id[$key]; // Perbarui ID kategori
+                $pengeluaran->id = $request->id[$key];
 
-                // Menangani gambar
+         
                 if ($request->hasFile('image.' . $key)) {
-                    // Hapus gambar lama jika ada
+                
                     if ($pengeluaran->image) {
                         \Storage::disk('public')->delete($pengeluaran->image);
                     }
-                    // Simpan gambar baru
+              
                     $pengeluaran->image = $request->file('image.' . $key)->store('pengeluaran_images', 'public');
                 }
 
-                // Simpan pengeluaran
+               
                 $pengeluaran->save();
+            } else {
+              
+                $pengeluaranBaru = new Pengeluaran();
+                $pengeluaranBaru->name = $name;
+                $pengeluaranBaru->description = $request->description[$key] ?? null;
+                $pengeluaranBaru->jumlah_satuan = $request->jumlah_satuan[$key];
+                $pengeluaranBaru->nominal = $request->nominal[$key];
+                $pengeluaranBaru->jumlah = $request->jumlah[$key];
+                $pengeluaranBaru->dll = $request->dll[$key] ?? null;
+                $pengeluaranBaru->id = $request->id[$key];
+
+          
+                if ($request->hasFile('image.' . $key)) {
+                    $pengeluaranBaru->image = $request->file('image.' . $key)->store('pengeluaran_images', 'public');
+                }
+
+            
+                $parentPengeluaran->pengeluaran()->save($pengeluaranBaru);
             }
-
-            // Commit transaksi
-            DB::commit();
-
-            return redirect()->route('pengeluaran.index')->with('success', 'Data berhasil diperbarui.');
-        } catch (\Exception $e) {
-            // Rollback jika terjadi kesalahan
-            DB::rollback();
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage());
         }
+
+        DB::commit();
+
+        return redirect()->route('pengeluaran.index')->with('success', 'Data berhasil diperbarui.');
+    } catch (\Exception $e) {
+     
+        DB::rollback();
+        return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage());
     }
+}
+
 
 
 
