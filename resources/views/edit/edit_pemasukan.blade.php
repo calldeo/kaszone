@@ -105,28 +105,44 @@
         $(document).ready(function() {
             // Inisialisasi Select2
             $('.select2').select2();
-
+    
             // Fungsi untuk mendapatkan kategori dari server
             getCategories();
-
+    
             function getCategories() {
                 $.ajax({
-                    url: '/get-categories/1',
+                    url: '/get-categories/1', // Sesuaikan URL jika perlu
                     method: 'GET',
                     success: function(data) {
                         var $dropdown = $('#category');
-                        $dropdown.empty(); // Kosongkan dropdown
-
+                        var selectedCategoryId = "{{ $pemasukan->id }}"; // Simpan nilai kategori yang sudah dipilih sebelumnya
+                        
+                        // Kosongkan dropdown tapi pertahankan kategori yang dipilih
+                        $dropdown.empty(); 
+    
+                        // Tambahkan opsi default
                         $dropdown.append($('<option>', {
                             value: '',
                             text: 'Pilih Kategori'
                         }));
+    
+                        // Iterasi data yang diterima dari server
                         $.each(data, function(index, item) {
-                            $dropdown.append($('<option>', {
+                            var $option = $('<option>', {
                                 value: item.id,
                                 text: item.name
-                            }));
+                            });
+    
+                            // Pastikan opsi yang sesuai tetap terpilih
+                            if (item.id == selectedCategoryId) {
+                                $option.prop('selected', true);
+                            }
+    
+                            $dropdown.append($option);
                         });
+    
+                        // Refresh Select2 untuk menampilkan opsi terbaru
+                        $dropdown.trigger('change.select2');
                     },
                     error: function(xhr) {
                         console.error('Error fetching options:', xhr);
@@ -135,6 +151,7 @@
             }
         });
     </script>
+    
 </body>
 
 </html>

@@ -163,12 +163,11 @@ class PengeluaranController extends Controller
     {
         // Ambil ParentPengeluaran berdasarkan ID
         $parentPengeluaran = ParentPengeluaran::with('pengeluaran')->find($id);
-        $categories = Category::where('jenis_kategori', 'pengeluaran')->get();
+        $categories = Category::where('jenis_kategori', Category::PengeluaranCode)->get();
 
         if (!$parentPengeluaran) {
             return redirect()->route('pengeluaran.index')->with('error', 'Data tidak ditemukan.');
         }
-
         return view('pengeluaran.edit', compact('parentPengeluaran', 'categories'));
     }
 
@@ -188,7 +187,7 @@ public function update(Request $request, $id)
     ]);
 
 
-    $parentPengeluaran = ParentPengeluaran::find($id);
+    $parentPengeluaran = ParentPengeluaran::with('pengeluaran')->find($id);
     if (!$parentPengeluaran) {
         return redirect()->route('pengeluaran.index')->with('error', 'Data tidak ditemukan.');
     }
@@ -200,6 +199,7 @@ public function update(Request $request, $id)
         $parentPengeluaran->tanggal = $request->tanggal;
         $parentPengeluaran->save(); 
 
+        // dd($request,$parentPengeluaran);
         foreach ($request->name as $key => $name) {
             if (isset($parentPengeluaran->pengeluaran[$key])) {
                 $pengeluaran = $parentPengeluaran->pengeluaran[$key];
@@ -210,7 +210,7 @@ public function update(Request $request, $id)
                 $pengeluaran->nominal = $request->nominal[$key];
                 $pengeluaran->jumlah = $request->jumlah[$key];
                 $pengeluaran->dll = $request->dll[$key];
-                $pengeluaran->id = $request->id[$key];
+                $pengeluaran->id = $request->category_id[$key];
 
          
                 if ($request->hasFile('image.' . $key)) {
@@ -222,7 +222,6 @@ public function update(Request $request, $id)
                     $pengeluaran->image = $request->file('image.' . $key)->store('pengeluaran_images', 'public');
                 }
 
-               
                 $pengeluaran->save();
             } else {
               
