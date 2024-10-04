@@ -142,7 +142,7 @@
                                                 <select id="category_{{ $key }}" name="category_id[]" class="form-control select2 category-dropdown" required>
                                                     <option value="">Pilih Kategori</option>
                                                     @foreach($categories as $category)
-                                                        <option value="{{ $category->id }}" {{ (old('category_id.'.$key) == $category->id || $pengeluaran->category_id == $category->id) ? 'selected' : '' }}>
+                                                        <option value="{{ $category->id }}" {{ old('category_id', $category->id || $pengeluaran->category_id ) == $category->id ? 'selected' : '' }}>
                                                             {{ $category->name }}
                                                         </option>
                                                     @endforeach
@@ -206,44 +206,58 @@
 <script src="{{ asset('main.js') }}"></script>
 <script src="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.js"></script>
 
-<script>$(document).ready(function() {
-    getCategories(); // Memanggil fungsi untuk mengambil kategori
-
-    function getCategories() {
-        $.ajax({
-            url: '/get-categories/2',
-            method: 'GET',
-            success: function(data) {
-                $('.category-dropdown').each(function() {
-                    var $dropdown = $(this);
-                    $dropdown.empty();
-
+<script>
+    $(document).ready(function() {
+        // Inisialisasi Select2
+        $('.select2').select2();
+    
+        // Fungsi untuk mendapatkan kategori dari server
+        // getCategories();
+    
+        function getCategories() {
+            $.ajax({
+                url: '/get-categories/2', // Sesuaikan URL jika perlu
+                method: 'GET',
+                success: function(data) {
+                    var $dropdown = $('.category-dropdown'); // Ganti dengan selector yang sesuai
+                    var selectedCategoryId = "{{ $pengeluaran->id }}"; // Mengambil ID kategori dari objek pengeluaran
+    
+                    // Kosongkan dropdown tapi pertahankan kategori yang dipilih
+                    $dropdown.empty(); 
+    
+                    // Tambahkan opsi default
                     $dropdown.append($('<option>', {
                         value: '',
                         text: 'Pilih Kategori'
                     }));
-
+    
+                    // Iterasi data yang diterima dari server
                     $.each(data, function(index, item) {
-                        $dropdown.append($('<option>', {
+                        var $option = $('<option>', {
                             value: item.id,
                             text: item.name
-                        }));
+                        });
+    
+                        // Pastikan opsi yang sesuai tetap terpilih
+                        if (item.id == selectedCategoryId) {
+                            $option.prop('selected', true);
+                        }
+    
+                        $dropdown.append($option);
                     });
-                });
-
-                $('.category-dropdown').select2();
-            },
-            error: function(xhr) {
-                console.error('Error fetching categories:', xhr);
-                $('.category-dropdown').each(function() {
-                    $(this).append($('<option>', {
+    
+                    // Refresh Select2 untuk menampilkan opsi terbaru
+                    $dropdown.trigger('change.select2');
+                },
+                error: function(xhr) {
+                    console.error('Error fetching options:', xhr);
+                    $('.category-dropdown').append($('<option>', {
                         value: '',
                         text: 'Error loading categories'
                     }));
-                });
-            }
-        });
-    }
+                }
+            });
+        }
 
     // Fungsi untuk menghitung total
     function calculateTotal(key) {

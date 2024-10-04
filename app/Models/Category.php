@@ -26,6 +26,9 @@ class Category extends Model
         
     ];
 
+    public const PengeluaranCode = '2';  
+    public const PemasukanCode = '1';  
+
     // Anda dapat menambahkan attribute yang perlu di-hidden dari serialization di sini
     protected $hidden = [
         // 'example_hidden_attribute',
