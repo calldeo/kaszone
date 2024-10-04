@@ -426,7 +426,7 @@ public function roles(Request $request) // BENDAHARA
                 return '
                     <div class="d-flex align-items-center">
                         <form action="/role/' . $row->id . '/edit_role" method="GET" class="mr-1">
-                            <button type="submit" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></button>
+                            <button type="submit" class="btn btn-warning btn-xs"><i class="fa fa-edit"></i></button>
                         </form>
                       
                     </div>
