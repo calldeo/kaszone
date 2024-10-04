@@ -318,15 +318,18 @@ class AdminController extends Controller
                 $pengeluaran = $pengeluaran->whereBetween('tanggal', [$startDate, $endDate]);
             }
 
-            if ($request->input('search.value') != null) {
+         if ($request->input('search.value') != null) {
                 $pengeluaran = $pengeluaran->whereHas('pengeluaran', function ($query) use ($request) {
                     $query->where('name', 'like', '%' . $request->input('search.value') . '%')
                         ->orWhere('description', 'like', '%' . $request->input('search.value') . '%')
+                        // ->orWhere('jumlah', 'like', '%' . $request->input('search.value') . '%')
+                        ->orWhere('tanggal', 'like', '%' . $request->input('search.value') . '%')
                         ->orWhere('jumlah_satuan', 'like', '%' . $request->input('search.value') . '%')
                         ->orWhere('nominal', 'like', '%' . $request->input('search.value') . '%')
                         ->orWhere('dll', 'like', '%' . $request->input('search.value') . '%');
                 });
             }
+
 
             return DataTables::of($pengeluaran)
                 ->addIndexColumn()

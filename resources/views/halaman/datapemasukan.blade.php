@@ -48,7 +48,7 @@
                                             @endfor
                                         </select>
                                     </div>
-                                    <div class="example mr-5">
+                                    <div class="example mr-2">
                                         <p class="mb-1">Filter Tanggal</p>
                                         <input class="form-control input-daterange-datepicker" type="text" name="daterange" placeholder="Masukkan Tanggal" disabled>
                                     </div>

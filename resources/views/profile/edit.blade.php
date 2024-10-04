@@ -4,7 +4,6 @@
 <head>
     @include('template.headerr')
     <title>Edit Profile | {{ auth()->user()->name }}</title>
-   
 </head>
 
 <body>
@@ -59,27 +58,23 @@
                                     @csrf
                                     @method('PUT')
 
-                                 <div class="form-group">
+                                    <div class="form-group">
                                         <label for="foto_profil">Foto Profil</label>
                                         
                                         <!-- Menampilkan Foto Profil -->
-                                     <!-- Menampilkan Logo atau Default Profile -->
                                         <div class="mb-3">
-                                           <img src="{{ auth()->user()->logo ? asset('storage/' . auth()->user()->logo) : asset('dash/images/usr.png') }}" alt="Logo Profil" class="square-image" width="150" height="150">
-
+                                            <!-- Menampilkan Logo atau Default Profile -->
+                                            <img id="preview-image" src="{{ auth()->user()->logo ? asset('storage/' . auth()->user()->logo) : asset('dash/images/usr.png') }}" alt="Logo Profil" class="square-image" width="150" height="150">
                                         </div>
 
-                                        
-                 
                                         <div class="file-upload-wrapper ml-0">
                                             <label class="file-upload-label mr-0" for="foto_profil">Pilih file</label>
-                                            <input type="file" id="foto_profil" name="foto_profil" onchange="displayFileName()">
+                                            <input type="file" id="foto_profil" name="foto_profil" onchange="displayFileName(); previewImage();">
                                             <div id="file-upload-info" class="file-upload-info">Tidak ada file yang dipilih</div>
                                         </div>
                                         <!-- Keterangan -->
                                         <label class="text-label text-danger mt-3">* Jika tidak ada perubahan, tidak perlu diisi</label>
                                     </div>
-
 
                                     <div class="form-group">
                                         <label class="text-label">Name *</label>
@@ -148,7 +143,6 @@
 
                                     <div class="form-group">
                                         <button type="button" class="btn btn-danger btn-cancel" onclick="window.location.href='{{ route('home') }}'">Cancel</button>
-
                                         <button type="submit" class="btn mr-2 btn-primary btn-submit">Submit</button>
                                     </div>
                                 </form>
@@ -162,12 +156,32 @@
 
     @include('template.scripts')
     <script>
-    function displayFileName() {
-        var input = document.getElementById('foto_profil');
-        var info = document.getElementById('file-upload-info');
-        info.textContent = input.files.length > 0 ? input.files[0].name : 'Tidak ada file yang dipilih';
-    }
-</script>
+        function displayFileName() {
+            var input = document.getElementById('foto_profil');
+            var info = document.getElementById('file-upload-info');
+            info.textContent = input.files.length > 0 ? input.files[0].name : 'Tidak ada file yang dipilih';
+        }
+
+        function previewImage() {
+            var input = document.getElementById('foto_profil');
+            var preview = document.getElementById('preview-image');
+            var file = input.files[0];
+
+            // Pastikan file terpilih
+            if (file) {
+                var reader = new FileReader();
+
+                // Ketika file sudah dibaca
+                reader.onload = function(e) {
+                    // Set source dari img preview menjadi hasil pembacaan file
+                    preview.src = e.target.result;
+                }
+
+                // Baca file sebagai Data URL
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
 </body>
 
 </html>

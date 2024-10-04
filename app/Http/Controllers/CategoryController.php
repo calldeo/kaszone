@@ -17,8 +17,8 @@ class CategoryController extends Controller
     // Mendapatkan daftar kategori
     public function index()
     {
-      
-           $categories = Category::paginate(10); // Menggunakan pagination
+
+        $categories = Category::paginate(10); // Menggunakan pagination
         return view('halaman.kategori', compact('categories'));
     }
 
@@ -29,52 +29,52 @@ class CategoryController extends Controller
     }
 
     public function store(Request $request)
-{
-    $request->validate([
-        'name' => ['required', 'min:3', 'max:30'],
-        'jenis_kategori' => 'required',
-        'description' => ['required', 'min:3', 'max:30'],
-    ]);
+    {
+        $request->validate([
+            'name' => ['required', 'min:3', 'max:30'],
+            'jenis_kategori' => 'required',
+            'description' => ['required', 'min:3', 'max:30'],
+        ]);
 
-    DB::beginTransaction(); // Memulai transaksi
-    try {
-        // Membuat instance Category baru
-        $category = new Category();
-        $category->name = $request->name;
-        $category->jenis_kategori = $request->jenis_kategori;
-        $category->description = $request->description;
+        DB::beginTransaction(); // Memulai transaksi
+        try {
+            // Membuat instance Category baru
+            $category = new Category();
+            $category->name = $request->name;
+            $category->jenis_kategori = $request->jenis_kategori;
+            $category->description = $request->description;
 
-        // Menyimpan data kategori
-        $category->save();
+            // Menyimpan data kategori
+            $category->save();
 
-        // Commit transaksi jika tidak ada kesalahan
-        DB::commit();
+            // Commit transaksi jika tidak ada kesalahan
+            DB::commit();
 
-        return redirect('/kategori')->with('success', 'Kategori berhasil ditambahkan.');
-    } catch (\Throwable $th) {
-        // Rollback transaksi jika terjadi kesalahan
-        DB::rollback();
+            return redirect('/kategori')->with('success', 'Kategori berhasil ditambahkan.');
+        } catch (\Throwable $th) {
+            // Rollback transaksi jika terjadi kesalahan
+            DB::rollback();
 
-        return redirect('/kategori')->with('error', 'Kategori gagal ditambahkan! ' . $th->getMessage());
-    }
-}
-
-public function destroy($id)
-{
-    try {
-        $user = Category::find($id);
-        
-        if ($user) {
-            $user->forceDelete(); // Menghapus data secara permanen
-            return redirect('/kategori')->with('success', 'Data berhasil dihapus secara permanen');
-        } else {
-            return redirect('/kategori')->with('error', 'Data tidak ditemukan.');
+            return redirect('/kategori')->with('error', 'Kategori gagal ditambahkan! ' . $th->getMessage());
         }
-    } catch (\Exception $e) {
-        return redirect('/kategori')->with('error', 'Gagal menghapus data. Silakan coba lagi.');
     }
-}
-  public function edit($id)
+
+    public function destroy($id)
+    {
+        try {
+            $user = Category::find($id);
+
+            if ($user) {
+                $user->forceDelete(); // Menghapus data secara permanen
+                return redirect('/kategori')->with('success', 'Data berhasil dihapus secara permanen');
+            } else {
+                return redirect('/kategori')->with('error', 'Data tidak ditemukan.');
+            }
+        } catch (\Exception $e) {
+            return redirect('/kategori')->with('error', 'Gagal menghapus data. Silakan coba lagi.');
+        }
+    }
+    public function edit($id)
     {
         $category = Category::find($id);
 
@@ -127,69 +127,70 @@ public function destroy($id)
 
 
 
-    public function kategoriimportexcel(Request $request) {
+    public function kategoriimportexcel(Request $request)
+    {
         // Mulai transaksi database
         DB::beginTransaction();
-    
+
         try {
             // Validasi file
             $request->validate([
                 'file' => 'required|file|mimes:xlsx,xls,csv|max:2048', // Sesuaikan dengan format yang diizinkan
             ]);
-    
+
             // Hapus semua data lama dari tabel Category
-    
+
             // Pindahkan file ke folder DataKategori
             $file = $request->file('file');
             $namafile = $file->getClientOriginalName();
             $file->move(public_path('DataKategori'), $namafile);
-    
+
             // Impor data dari file Excel
             Excel::import(new KategoriImport, public_path('DataKategori/' . $namafile));
-    
+
             // Commit transaksi jika semua operasi berhasil
             DB::commit();
-    
+
             // Hapus file setelah impor selesai
             @unlink(public_path('DataKategori/' . $namafile)); // Menghapus file dari server
-    
+
             return redirect('/kategori')->with('success', 'Data Berhasil Ditambahkan');
         } catch (\Exception $e) {
             // Rollback transaksi jika terjadi kesalahan
             DB::rollBack();
-    
+
             // Log error jika diperlukan
             \Log::error('Import kategori failed: ' . $e->getMessage());
-    
+
             return redirect('/kategori')->with('error', 'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage());
         }
     }
-  public function cetaklaporan()
+    public function cetaklaporan()
     {
         // Dapatkan calon dengan jumlah suara terbanyak
-       
-            $category = Category::all();
-       $pdf = PDF::loadview('halaman.cetaklaporan',compact('category'));
-       $pdf->setPaper('A4','potrait');
-       return $pdf->stream('category.pdf');
+
+        $category = Category::all();
+        $pdf = PDF::loadview('halaman.cetaklaporan', compact('category'));
+        $pdf->setPaper('A4', 'potrait');
+        return $pdf->stream('category.pdf');
 
 
-    return view('halaman.cetaklaporan',compact('category'));
+        return view('halaman.cetaklaporan', compact('category'));
     }
-    
+
     // Method untuk mendapatkan detail kategori
-public function showDetail($id)
-{
-    $category = Category::find($id);
-    if ($category) {
-        return response()->json($category);
-    } else {
-        return response()->json(['message' => 'Kategori tidak ditemukan.'], 404);
+    public function showDetail($id)
+    {
+        $category = Category::find($id);
+        if ($category) {
+            return response()->json($category);
+        } else {
+            return response()->json(['message' => 'Kategori tidak ditemukan.'], 404);
+        }
     }
-}
-public function downloadTemplate()
-{
-    $filePath = public_path('templates/template-category.xlsx'); // Path ke file template
-    return response()->download($filePath);
-}
+    public function downloadTemplate()
+    {
+        $filePath = public_path('templates/template-category.xlsx'); // Path ke file template
+        return response()->download($filePath);
+    }
 }

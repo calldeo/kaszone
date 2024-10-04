@@ -158,135 +158,133 @@
 
 
     <input type="hidden" id="table-url-pengeluaran" value="{{ route('production') }}">
+<script>
+    var filterData = {
+        year: null,
+        start_created_at: null,
+        end_created_at: null
+    };
+$(document).ready(function() {
+    // Disable date picker at the start
+    $('.input-daterange-datepicker').prop('disabled', true);
 
-    <script>
-       var filterData = {
-            year: null,
-            start_created_at: null,
-            end_created_at: null
-        };
-
-        $(document).ready(function() {
-            // Disable date picker at the start
-            $('.input-daterange-datepicker').prop('disabled', true);
-
-            // Initialize daterangepicker
-            $('.input-daterange-datepicker').daterangepicker({
-                opens: 'left',
-                locale: { 
-                    format: 'YYYY-MM-DD'
-                },
-                autoUpdateInput: false // Prevent auto-filling on initialization
-            });
-
-            // Event handler for year filter
-            $('#filter-year').on('change', function() {
-                var selectedYear = $(this).val();
-                if (selectedYear !== "") {
-                    $('.input-daterange-datepicker').prop('disabled', false);
-                    filterData.year = selectedYear;
-
-                    // Set default start and end date for the selected year
-                    filterData.start_created_at = selectedYear + '-01-01';
-                    filterData.end_created_at = selectedYear + '-12-31';
-
-                    // Update daterangepicker dates
-                    $('.input-daterange-datepicker').data('daterangepicker').setStartDate(filterData.start_created_at);
-                    $('.input-daterange-datepicker').data('daterangepicker').setEndDate(filterData.end_created_at);
-
-                    // Reload the tables
- 
-                    pengeluaranTables(filterData);
-                } else {
-                    $('.input-daterange-datepicker').prop('disabled', true);
-                }
-            });
-
-            // Update input after selecting date range
-            $('.input-daterange-datepicker').on('apply.daterangepicker', function(ev, picker) {
-                // Update input value
-                $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
-
-                // Update filter data
-                filterData.start_created_at = picker.startDate.format('YYYY-MM-DD');
-                filterData.end_created_at = picker.endDate.format('YYYY-MM-DD');
-
-                // Reload the tables
-   
-                pengeluaranTables(filterData);
-            });
-
-            // Load tables on page load
-
-            pengeluaranTables(filterData);
-        });
-
-  
-
-        function pengeluaranTables(filter) {
-            $('#pengeluaranTables').DataTable({
-                processing: true,
-                serverSide: true,
-                destroy: true,
-                         language: {
-            paginate: {
-            next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
-            previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
-            }
+    // Initialize daterangepicker with DD/MM/YYYY format
+    $('.input-daterange-datepicker').daterangepicker({
+        opens: 'left',
+        locale: { 
+            format: 'DD/MM/YYYY' // Changed format to DD/MM/YYYY
         },
-                ajax: {
-                    url: $('#table-url-pengeluaran').val(),
-                    data: function(d) {
-                        d.year = filter.year;
-                        d.start_created_at = filter.start_created_at;
-                        d.end_created_at = filter.end_created_at;
-                        
-                    }
-
-                    
-                },
-     columns: [
-    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-    { data: 'name', name: 'name' },
-    { data: 'description', name: 'description' },
-    { data: 'category', name: 'category' },
-    // { data: 'jumlah_satuan', name: 'jumlah_satuan' },
-    // { data: 'nominal', name: 'nominal' },
-    { data: 'jumlah', name: 'jumlah' }, // Jika ingin menghitung jumlah berdasarkan perkalian
-    // { data: 'image', name: 'image' },
-    { data: 'tanggal', name: 'tanggal' },
-    { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
-],
-drawCallback: function(settings) {
-    var api = this.api();
-    var totalJumlah = 0;
-
-    // Iterasi melalui semua baris di tabel
-    api.rows().every(function(rowIdx, tableLoop, rowLoop) {
-        var data = this.data(); // Dapatkan data per baris
-
-        // Ambil nilai dari kolom jumlah dan konversi ke angka
-        var jumlah = parseFloat(data.jumlah.replace(/Rp/g, '').replace(/\./g, '').replace(/,/g, '').trim()) || 0;
-
-        console.log("Jumlah:", jumlah); // Debugging untuk melihat data per baris
-
-        // Hitung total jumlah
-        totalJumlah += jumlah;
+        autoUpdateInput: false // Prevent auto-filling on initialization
     });
 
-    console.log("Total Jumlah:", totalJumlah); // Debugging total akhir
+    // Event handler for year filter
+    $('#filter-year').on('change', function() {
+        var selectedYear = $(this).val();
+        $('#export-year').val(selectedYear); // Update hidden export year fields
+        $('#export-year-excel').val(selectedYear);
 
-    // Tampilkan total jumlah dalam format IDR
-    $('#total-jumlah').html(totalJumlah.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' }));
-}
+        if (selectedYear !== "") {
+            // Enable date picker and reset date range input
+            $('.input-daterange-datepicker').prop('disabled', false);
 
+            // Set filter data with selected year
+            filterData.year = selectedYear;
 
+            // Set default start and end date for the selected year
+            filterData.start_created_at = selectedYear + '-01-01';
+            filterData.end_created_at = selectedYear + '-12-31';
 
+            // Update daterangepicker dates and display them in DD/MM/YYYY format
+            $('.input-daterange-datepicker').data('daterangepicker').setStartDate(filterData.start_created_at);
+            $('.input-daterange-datepicker').data('daterangepicker').setEndDate(filterData.end_created_at);
 
+            // Automatically fill the input with start and end date in new format
+            var formattedStartDate = moment(filterData.start_created_at).format('DD/MM/YYYY');
+            var formattedEndDate = moment(filterData.end_created_at).format('DD/MM/YYYY');
+            $('.input-daterange-datepicker').val(formattedStartDate + ' - ' + formattedEndDate);
 
+            // Reload the tables
+            pengeluaranTables(filterData);
+        } else {
+            // Disable date picker and reset filter data when year is cleared
+            $('.input-daterange-datepicker').prop('disabled', true);
+            $('.input-daterange-datepicker').val(''); // Clear date range input
+            filterData.year = null;
+            filterData.start_created_at = null;
+            filterData.end_created_at = null;
 
-            });
+            // Reload the tables with no year filter
+            pengeluaranTables(filterData);
         }
+    });
+
+    // Update input after selecting date range
+    $('.input-daterange-datepicker').on('apply.daterangepicker', function(ev, picker) {
+        // Update input value with selected date range in DD/MM/YYYY format
+        $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+
+        // Update filter data with selected date range
+        filterData.start_created_at = picker.startDate.format('YYYY-MM-DD');
+        filterData.end_created_at = picker.endDate.format('YYYY-MM-DD');
+
+        // Reload the tables with new date range filter
+        pengeluaranTables(filterData);
+    });
+
+    // Load tables on page load
+    pengeluaranTables(filterData);
+});
+
+
+    function pengeluaranTables(filter) {
+        $('#pengeluaranTables').DataTable({
+            processing: true,
+            serverSide: true,
+            destroy: true,
+            language: {
+                paginate: {
+                    next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+                    previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>'
+                }
+            },
+            ajax: {
+                url: $('#table-url-pengeluaran').val(),
+                data: function(d) {
+                    d.year = filter.year;
+                    d.start_created_at = filter.start_created_at;
+                    d.end_created_at = filter.end_created_at;
+                }
+            },
+            columns: [
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                { data: 'name', name: 'name' },
+                { data: 'description', name: 'description' },
+                { data: 'category', name: 'category' },
+                { data: 'jumlah', name: 'jumlah' },
+                { data: 'tanggal', name: 'tanggal' },
+                { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
+            ],
+            drawCallback: function(settings) {
+                var api = this.api();
+                var totalJumlah = 0;
+
+                // Calculate total amount
+                api.rows().every(function(rowIdx, tableLoop, rowLoop) {
+                    var data = this.data();
+                    var jumlah = parseFloat(data.jumlah.replace(/Rp/g, '').replace(/\./g, '').replace(/,/g, '').trim()) || 0;
+                    totalJumlah += jumlah;
+                });
+
+                // Display total amount in IDR format
+                $('#total-jumlah').html(totalJumlah.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' }));
+            }
+        });
+    }
+
+
+
+
+      
     </script>
 <script>
     $(document).ready(function(){
