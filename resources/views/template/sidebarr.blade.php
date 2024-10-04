@@ -1,3 +1,7 @@
+        
+@php
+use Illuminate\Support\Facades\Log;
+@endphp
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
 <div class="deznav">
     <div class="deznav-scroll">
@@ -8,9 +12,16 @@
             <h5 class="name"><span class="font-w400">Hello,</span>{{auth()->user()->name}}</h5>
             <p class="email"><a href="javascript:void(0);" class="cf_email">{{auth()->user()->email}}</a></p>
         </div>
-        
+           @php
+                $permissions = session('permissions');
+          Log::alert($permissions);
+            @endphp
+
+            {{-- @if($activeRole=='Admin') --}}
         <ul class="metismenu" id="menu">
             {{-- Daftar menu berdasarkan peran pengguna --}}
+         @if(in_array('Home',$permissions))   
+
             @can('Home')
             <li class="nav-label first"></li>
             <li><a  href="/home" aria-expanded="false">
@@ -20,6 +31,8 @@
                
             </li>
             @endcan
+@endif
+         @if(in_array('Bendahara',$permissions))   
 
             @can('Bendahara')
             <li class="{{ request()->is('user*') || request()->is('add_user') ? 'mm-active active-no-child' : '' }}">
@@ -29,16 +42,18 @@
                 </a>
             </li>
             @endcan
-
-            @can('Kategori')
-            <li class="{{ request()->is('kategori*') || request()->is('add_kategori') ? 'mm-active active-no-child' : '' }}">
-                <a href="/kategori" aria-expanded="{{ request()->is('kategori*') || request()->is('add_kategori') ? 'true' : 'false' }}" class="{{ request()->is('kategori*') || request()->is('add_kategori') ? 'mm-active' : '' }}">
-                    <i class="bi bi-grid"></i>
-                    <span class="nav-text">Kategori</span>
-                </a>
-            </li>
-            @endcan
-
+@endif
+            @if(in_array('Kategori',$permissions))
+                @can('Kategori')
+                <li class="{{ request()->is('kategori*') || request()->is('add_kategori') ? 'mm-active active-no-child' : '' }}">
+                    <a href="/kategori" aria-expanded="{{ request()->is('kategori*') || request()->is('add_kategori') ? 'true' : 'false' }}" class="{{ request()->is('kategori*') || request()->is('add_kategori') ? 'mm-active' : '' }}">
+                        <i class="bi bi-grid"></i>
+                        <span class="nav-text">Kategori</span>
+                    </a>
+                </li>
+                @endcan
+            @endif
+         @if(in_array('Data Pemasukan',$permissions))   
             @can('Data Pemasukan')
             <li class="{{ request()->is('pemasukan*') || request()->is('add_pemasukan') ? 'mm-active active-no-child' : '' }}">
                 <a href="/pemasukan" aria-expanded="{{ request()->is('pemasukan*') || request()->is('add_pemasukan') ? 'true' : 'false' }}" class="{{ request()->is('pemasukan*') || request()->is('add_pemasukan') ? 'mm-active' : '' }}">
@@ -47,6 +62,8 @@
                 </a>
             </li>
             @endcan
+@endif
+         @if(in_array('Data Pengeluaran',$permissions))   
 
             @can('Data Pengeluaran')
             <li class="{{ request()->is('pengeluaran*') || request()->is('add_pengeluaran') ? 'mm-active active-no-child' : '' }}">
@@ -56,13 +73,17 @@
                 </a>
             </li>
             @endcan
-            @can('Data Pengeluaran')
+@endif
+
+         @if(in_array('Laporan',$permissions))   
+
+            @can('Laporan')
                <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
 							<i class="flaticon-381-network"></i>
 							<span class="nav-text">Laporan Keuangan</span>
 						</a>
                         <ul aria-expanded="false">
-                            @can('Data Pengeluaran')
+                            @can('Laporan')
             <li class="{{ request()->is('laporan*') || request()->is('laporan') ? 'mm-active active-no-child' : '' }}">
                 <a href="/laporan" aria-expanded="{{ request()->is('laporan*') || request()->is('laporan') ? 'true' : 'false' }}" class="{{ request()->is('pengeluaran*') || request()->is('laporan') ? 'mm-active' : '' }}">
                     <i class="bi bi-wallet2"></i>
@@ -70,7 +91,7 @@
                 </a>
             </li>
             @endcan
-            @can('Data Pengeluaran')
+            @can('Laporan')
             <li class="{{ request()->is('keuangan*') || request()->is('keuangan') ? 'mm-active active-no-child' : '' }}">
                 <a href="/laporan-kas" aria-expanded="{{ request()->is('keuangan*') || request()->is('keuangan') ? 'true' : 'false' }}" class="{{ request()->is('pengeluaran*') || request()->is('keuangan') ? 'mm-active' : '' }}">
                     <i class="bi bi-cash-coin"></i>
@@ -82,6 +103,9 @@
                     </li>
                     <li>
            @endcan
+@endif
+
+         @if(in_array('Role',$permissions))   
 
             @can('Role')
             <li class="{{ request()->is('role*') || request()->is('add_role') ? 'mm-active active-no-child' : '' }}">
@@ -91,6 +115,7 @@
                 </a>
             </li>
             @endcan
+            @endif
         </ul>
     </div>
 </div>

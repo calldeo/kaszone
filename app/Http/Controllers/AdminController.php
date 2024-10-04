@@ -385,17 +385,28 @@ public function production(Request $request) // PENGELUARAN
                 }
                 return $categories;
             })
-            ->addColumn('opsi', function ($row) {
-                return '
-                <div class="d-flex align-items-center">
-                    <a href="/pengeluaran/' . $row->id . '/detail" class="btn btn-info btn-xs mr-1">
-                        <i class="fas fa-eye"></i>
-                    </a>
-                    <a href="' . route('pengeluaran.deleteAll', $row->id) . '" class="btn btn-danger btn-xs" onclick="return confirm(\'Apakah Anda yakin ingin menghapus semua item ini?\')">
-                        <i class="fas fa-dumpster"></i> 
-                    </a>
-                </div>';
-            })
+                            ->addColumn('opsi', function ($row) {
+             
+                    $buttons = '
+                    <div class="d-flex align-items-center">
+                        <a href="/pengeluaran/' . $row->id . '/detail" class="btn btn-info btn-xs mr-1">
+                            <i class="fas fa-eye"></i>
+                        </a>';
+
+                
+                    if (auth()->user()->hasRole(['Admin', 'Bendahara'])) {
+                        $buttons .= '
+                        <a href="' . route('pengeluaran.deleteAll', $row->id) . '" class="btn btn-danger btn-xs" onclick="return confirm(\'Apakah Anda yakin ingin menghapus semua item ini?\')">
+                            <i class="fas fa-dumpster"></i> 
+                        </a>';
+                    }
+
+                    $buttons .= '</div>';
+
+                    return $buttons;
+                })
+
+
             ->rawColumns(['image', 'name', 'description', 'jumlah_satuan', 'nominal', 'dll', 'jumlah', 'category', 'opsi'])
             ->make(true);
     }

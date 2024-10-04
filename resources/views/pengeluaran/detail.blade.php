@@ -37,6 +37,7 @@
             <div class="card">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <span>Informasi</span>
+                    @hasrole('Admin|Bendahara') 
                     @if($pengeluaran = $parentPengeluaran->pengeluaran->first())
                         <a href="{{ route('pengeluaran.edit', $pengeluaran->id_parent) }}" class="btn btn-warning btn-xs mr-1">
                             <i class="fas fa-edit"></i> Edit
@@ -44,6 +45,10 @@
                     @else
                         <span>Tidak ada pengeluaran yang tersedia.</span>
                     @endif
+                    @endhasrole
+                 <button  onclick="window.location.href='/pengeluaran'" class="btn btn-danger btn-xs mr-1">
+                           <i class="fas fa-arrow-left"></i> Kembali
+                        </button>
                 </div>
                 <div class="card-body">
                     @if(session('error'))
@@ -153,9 +158,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-footer">
-                                <button type="button" class="btn btn-danger btn-cancel" onclick="window.location.href='/pengeluaran'">Cancel</button>
-                            </div>
+                           
                         </div>
                     </div>
                 @endforeach

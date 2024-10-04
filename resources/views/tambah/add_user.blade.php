@@ -149,7 +149,7 @@
                                             @enderror
                                         </div>
                                          <div class="form-group">
-                                            <label class="text-label">ALamat *</label>
+                                            <label class="text-label">Alamat *</label>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"> <i class="fa fa-map-marker-alt"></i> </span>

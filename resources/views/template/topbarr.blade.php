@@ -160,12 +160,12 @@
         <input type="hidden" name="role" id="roleInput" value="{{ session('active_role') }}">
         
         <!-- Tombol untuk role Admin -->
-        <button type="button" id="adminButton" onclick="switchRole('admin')" class="dropdown-item btn btn-sm text-left {{ session('activeRole') === 'admin' ? 'btn-primary text-white' : 'btn-secondary' }}">
+        <button type="button" id="adminButton" onclick="switchRole('Admin')" class="dropdown-item btn btn-sm text-left {{ session('activeRole') === 'Admin' ? 'btn-primary text-white' : 'btn-secondary' }}">
             Ganti ke Admin
         </button>
         
         <!-- Tombol untuk role Bendahara -->
-        <button type="button" id="bendaharaButton" onclick="switchRole('bendahara')" class="dropdown-item btn btn-sm text-left {{ session('activeRole') === 'bendahara' ? 'btn-primary text-white' : 'btn-secondary' }}">
+        <button type="button" id="bendaharaButton" onclick="switchRole('Bendahara')" class="dropdown-item btn btn-sm text-left {{ session('activeRole') === 'Bendahara' ? 'btn-primary text-white' : 'btn-secondary' }}">
             Ganti ke Bendahara
         </button>
     </form>
@@ -176,12 +176,12 @@
             document.getElementById('roleInput').value = role;
 
             // Update button classes based on selected role
-            if (role === 'admin') {
+            if (role === 'Admin') {
                 document.getElementById('adminButton').classList.remove('btn-secondary');
                 document.getElementById('adminButton').classList.add('btn-primary');
                 document.getElementById('bendaharaButton').classList.remove('btn-primary');
                 document.getElementById('bendaharaButton').classList.add('btn-secondary');
-            } else if (role === 'bendahara') {
+            } else if (role === 'Bendahara') {
                 document.getElementById('bendaharaButton').classList.remove('btn-secondary');
                 document.getElementById('bendaharaButton').classList.add('btn-primary');
                 document.getElementById('adminButton').classList.remove('btn-primary');
