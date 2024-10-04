@@ -184,7 +184,23 @@ if (!session()->has('activeRole')) {
         $activeRole = Session::get('activeRole');
         
         // Dapatkan permissions yang terkait dengan role aktif
-        $permissions = $user->getPermissionsViaRoles()->pluck('name')->toArray();
+        // $permissions = $user->getPermissionsViaRoles()->pluck('name')->toArray();
+
+        if ($activeRole) {
+    // Dapatkan role dengan nama aktif dari database
+    $activeRole = \Spatie\Permission\Models\Role::where('name', $activeRole)->first();
+
+    if ($activeRole) {
+        // Dapatkan permissions yang terkait dengan role aktif
+        $permissions = $activeRole->permissions->pluck('name')->toArray();
+    } else {
+        // Jika role tidak ditemukan
+        $permissions = [];
+    }
+} else {
+    // Jika tidak ada role aktif, set permissions ke array kosong
+    $permissions = [];
+}
 
         // Set permissions di session atau sesuai kebutuhan Anda
         Session::put('permissions', $permissions);

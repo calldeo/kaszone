@@ -60,7 +60,7 @@
                                         <i class="fa fa-plus"></i>
                                     </a>
                                     @endhasrole
-                                    @hasrole('Admin|Bendahara') 
+                                    @hasrole('Admin|Bendahara|Reader') 
                                     <form method="GET" action="{{ route('export.pemasukan') }}" id="export-pdf-form" class="mr-2">
                                         <input type="hidden" name="year" id="export-year" value="{{ old('year') }}" />
                                         <button type="submit" title="Export PDF" class="btn btn-info"><i class="fa fa-print"></i></button>

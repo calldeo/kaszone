@@ -45,13 +45,13 @@
                                     </a>
                                     @endhasrole
                                     
-                                    @hasrole('Admin|Bendahara') 
+                                    @hasrole('Admin|Bendahara|Reader') 
                                     <a href="/cetakpgl" target="_blank" class="btn btn-info mr-2" title="Print Report">
                                         <i class="fa fa-print"></i>
                                     </a>
                                     @endhasrole
                                     
-                                    @hasrole('Admin|Bendahara') 
+                                    @hasrole('Admin|Bendahara|Reader') 
                                     <form method="POST" action="{{ route('export.pengeluaran.excel') }}" id="export-excel-form" class="mr-2 d-inline"> <!-- Menambahkan d-inline agar tidak ada blok baru -->
                                         @csrf
                                         <input type="hidden" name="year" id="export-year-excel" value="{{ old('year') }}" />

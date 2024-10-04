@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -48,8 +49,37 @@ public function postlogin(Request $request)
         'email' => $request->email,
         'password' => $request->password,
     ];
+   
 
     if (Auth::attempt($infologin)) {
+         $user= User::where('email',$request->email)->first();
+
+    Session::put('activeRole',$user->getRoleNames()[0]);
+    
+     $activeRole = Session::get('activeRole');
+        
+        // Dapatkan permissions yang terkait dengan role aktif
+        // $permissions = $user->getPermissionsViaRoles()->pluck('name')->toArray();
+
+        if ($activeRole) {
+    // Dapatkan role dengan nama aktif dari database
+    $activeRole = \Spatie\Permission\Models\Role::where('name', $activeRole)->first();
+
+    if ($activeRole) {
+        // Dapatkan permissions yang terkait dengan role aktif
+        $permissions = $activeRole->permissions->pluck('name')->toArray();
+    } else {
+        // Jika role tidak ditemukan
+        $permissions = [];
+    }
+} else {
+    // Jika tidak ada role aktif, set permissions ke array kosong
+    $permissions = [];
+}
+
+        // Set permissions di session atau sesuai kebutuhan Anda
+        Session::put('permissions', $permissions);
+
         return redirect('home');
     } else {
         // Set a session variable for the login error
