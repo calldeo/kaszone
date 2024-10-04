@@ -223,6 +223,7 @@ public function update(Request $request, $id)
                 }
 
                 $pengeluaran->save();
+                // dd($request,$pengeluaran);
             } else {
               
                 $pengeluaranBaru = new Pengeluaran();
