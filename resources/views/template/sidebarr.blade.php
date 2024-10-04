@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Log;
         </div>
            @php
           
-                $permissions = session('permissions' ?? []);
+                $permissions = session('permissions') ?? [];
           Log::alert($permissions);
             @endphp
 
