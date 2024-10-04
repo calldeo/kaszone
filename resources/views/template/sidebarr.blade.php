@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Log;
             <p class="email"><a href="javascript:void(0);" class="cf_email">{{auth()->user()->email}}</a></p>
         </div>
            @php
-           $permissions=[];
-                $permissions = session('permissions');
+          
+                $permissions = session('permissions' ?? []);
           Log::alert($permissions);
             @endphp
 
