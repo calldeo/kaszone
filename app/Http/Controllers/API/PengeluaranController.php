@@ -103,88 +103,106 @@ public function store(Request $request)
         ], 500);
     }
 }
+
 public function update(Request $request, $id)
-    {
-        // Validasi input
-        $request->validate([
-            'tanggal' => 'required|date',
-            'name.*' => 'required|string|max:255',
-            'description.*' => 'nullable|string|max:255',
-            'jumlah_satuan.*' => 'required|numeric|min:0',
-            'nominal.*' => 'required|numeric|min:0',
-            'jumlah.*' => 'required|numeric|min:0',
-            'dll.*' => 'nullable|string|max:255',
-            'category_id.*' => 'required|exists:categories,id',
-            'image.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+{
+   
+    $validator = Validator::make($request->all(), [
+        'tanggal' => 'required|date',
+        'name' => 'required|array',
+        'name.*' => 'required|string|max:255',
+        'description' => 'nullable|array',
+        'description.*' => 'nullable|string|max:255',
+        'jumlah_satuan' => 'required|array',
+        'jumlah_satuan.*' => 'required|numeric|min:0',
+        'nominal' => 'required|array',
+        'nominal.*' => 'required|numeric|min:0',
+        'jumlah' => 'required|array',
+        'jumlah.*' => 'required|numeric|min:0',
+        'dll' => 'nullable|array',
+        'dll.*' => 'nullable|numeric',
+        'id' => 'required|array',
+        'id.*' => 'required|exists:categories,id',
+        'image' => 'nullable|array',
+        'image.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
 
-        $parentPengeluaran = ParentPengeluaran::with('pengeluaran')->find($id);
-        if (!$parentPengeluaran) {
-            return response()->json(['status' => 'error', 'message' => 'Data tidak ditemukan.'], 404);
-        }
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Validasi gagal',
+            'errors' => $validator->errors()
+        ], 422);
+    }
 
-        DB::beginTransaction();
-        try {
-            $parentPengeluaran->tanggal = $request->tanggal;
-            $parentPengeluaran->save();
+    $parentPengeluaran = ParentPengeluaran::with('pengeluaran')->find($id);
+    if (!$parentPengeluaran) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Data tidak ditemukan.'
+        ], 404);
+    }
 
-            $pengeluaranUpdated = [];
-            foreach ($request->name as $key => $name) {
-                if (isset($parentPengeluaran->pengeluaran[$key])) {
-                    $pengeluaran = $parentPengeluaran->pengeluaran[$key];
+    DB::beginTransaction();
+    try {
+        
+        $parentPengeluaran->tanggal = $request->tanggal;
+        $parentPengeluaran->save();
 
-                    $pengeluaran->name = $name;
-                    $pengeluaran->description = $request->description[$key];
-                    $pengeluaran->jumlah_satuan = $request->jumlah_satuan[$key];
-                    $pengeluaran->nominal = $request->nominal[$key];
-                    $pengeluaran->jumlah = $request->jumlah[$key];
-                    $pengeluaran->dll = $request->dll[$key];
-                    $pengeluaran->category_id = $request->category_id[$key]; // Perbaiki penggunaan field ID
+        $pengeluaranData = [];
 
-                    if ($request->hasFile('image.' . $key)) {
-                        if ($pengeluaran->image) {
-                            \Storage::disk('public')->delete($pengeluaran->image);
-                        }
-                        $pengeluaran->image = $request->file('image.' . $key)->store('pengeluaran_images', 'public');
-                    }
-
-                    $pengeluaran->save();
-                    $pengeluaranUpdated[] = $pengeluaran; // Simpan pengeluaran yang diperbarui
-                } else {
-                    $pengeluaranBaru = new Pengeluaran();
-                    $pengeluaranBaru->name = $name;
-                    $pengeluaranBaru->description = $request->description[$key] ?? null;
-                    $pengeluaranBaru->jumlah_satuan = $request->jumlah_satuan[$key];
-                    $pengeluaranBaru->nominal = $request->nominal[$key];
-                    $pengeluaranBaru->jumlah = $request->jumlah[$key];
-                    $pengeluaranBaru->dll = $request->dll[$key] ?? null;
-                    $pengeluaranBaru->category_id = $request->category_id[$key]; // Perbaiki penggunaan field ID
-
-                    if ($request->hasFile('image.' . $key)) {
-                        $pengeluaranBaru->image = $request->file('image.' . $key)->store('pengeluaran_images', 'public');
-                    }
-
-                    $parentPengeluaran->pengeluaran()->save($pengeluaranBaru);
-                    $pengeluaranUpdated[] = $pengeluaranBaru; // Simpan pengeluaran baru
-                }
+        foreach ($request->name as $key => $name) {
+            if (isset($parentPengeluaran->pengeluaran[$key])) {
+                $pengeluaran = $parentPengeluaran->pengeluaran[$key];
+            } else {
+                $pengeluaran = new Pengeluaran();
+                $pengeluaran->id_parent = $parentPengeluaran->id;
             }
 
-            DB::commit();
+            $pengeluaran->name = $name;
+            $pengeluaran->description = $request->description[$key] ?? null;
+            $pengeluaran->jumlah_satuan = $request->jumlah_satuan[$key] ?? 0;
+            $pengeluaran->nominal = $request->nominal[$key] ?? 0;
+            $pengeluaran->jumlah = $request->jumlah[$key] ?? 0;
+            $pengeluaran->dll = $request->dll[$key] ?? 0; 
+            $pengeluaran->id = $request->id[$key] ?? null;
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Data berhasil diperbarui.',
-                'parentPengeluaran' => $parentPengeluaran,
-                'pengeluaran' => $pengeluaranUpdated,
-            ], 200);
-        } catch (\Exception $e) {
-            DB::rollback();
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage(),
-            ], 500);
+            if ($request->hasFile('image.' . $key)) {
+                if ($pengeluaran->image) {
+                    Storage::disk('public')->delete($pengeluaran->image);
+                }
+                $pengeluaran->image = $request->file('image.' . $key)->store('pengeluaran_images', 'public');
+            }
+
+            $pengeluaran->save();
+
+            $pengeluaranData[] = $pengeluaran;
         }
+
+        
+        $existingIds = $parentPengeluaran->pengeluaran->pluck('id')->toArray();
+        $requestIds = collect($request->input('id'))->filter()->toArray();
+        $idsToDelete = array_diff($existingIds, $requestIds);
+        Pengeluaran::destroy($idsToDelete);
+
+        DB::commit();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data berhasil diperbarui.',
+            'data' => [
+                'parent_pengeluaran' => $parentPengeluaran,
+                'pengeluaran' => $pengeluaranData
+            ]
+        ], 200);
+    } catch (\Exception $e) {
+        DB::rollback();
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage() . $e->getLine(),
+        ], 500);
     }
+}
 
 
  public function delete($id_data)
