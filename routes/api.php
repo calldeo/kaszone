@@ -102,9 +102,13 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/create', [PengeluaranController::class, 'create']);
         Route::post('/store', [PengeluaranController::class, 'store']);
         Route::get('/show/{id}', [PengeluaranController::class, 'show']);
-        Route::put('/update/{id}', [PengeluaranController::class, 'update']);
+        Route::put('/pengeluaran/{id}', [PengeluaranController::class, 'update']); // Update pengeluaran
         Route::delete('/destroy/{id}', [PengeluaranController::class, 'destroy']);
         Route::get('/detail/{id}', [PengeluaranController::class, 'showDetail']);
+        Route::delete('/pengeluaran/{id}', [PengeluaranController::class, 'delete']); // Delete individual pengeluaran
+        Route::delete('/pengeluaran/parent/{id}', [PengeluaranController::class, 'deleteAll']);
+
+
 
 
     });
