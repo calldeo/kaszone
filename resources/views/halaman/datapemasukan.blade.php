@@ -100,9 +100,10 @@
                                                     <div class="form-group">
                                                         <label for="file">Pilih File Excel</label>
                                                         <input type="file" class="dropify" id="file" name="file" required accept=".xls,.xlsx">
-                                                        <div style="text-align: left;">
-                                                            <a href="{{ route('download-template-pemasukan') }}">Download Template Excel</a>
-                                                        </div>
+                                                      <a href="{{ route('download.template.pemasukan') }}" class="btn btn-secondary mr-2" title="Download Template Excel">
+                                                        <i class="fa fa-download"></i> Download Template
+                                                    </a>
+
                                                     </div>
                                                     <button type="submit" class="btn btn-primary">Import</button>
                                                 </form>

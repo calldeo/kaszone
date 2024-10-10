@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use PDF;
+use Illuminate\Support\Facades\Log;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 
 class PemasukanController extends Controller
@@ -224,8 +227,11 @@ class PemasukanController extends Controller
             $namafile = $file->getClientOriginalName();
             $file->move(public_path('DataPemasukan'), $namafile);
 
-            // Impor data dari file Excel
-            Excel::import(new PemasukanImport, public_path('DataPemasukan/' . $namafile));
+            // Impor data hanya dari worksheet pertama
+            Excel::import(new PemasukanImport, public_path('DataPemasukan/' . $namafile), null, \Maatwebsite\Excel\Excel::XLSX, [
+                'startRow' => 2,
+                'onlySheets' => [0] // Hanya impor worksheet pertama
+            ]);
 
             // Commit transaksi jika semua operasi berhasil
             DB::commit();
@@ -244,13 +250,52 @@ class PemasukanController extends Controller
             return redirect('/pemasukan')->with('error', 'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage());
         }
     }
-
-    public function downloadTemplate()
+    
+     public function downloadTemplate()
     {
-        // Path ke template Excel untuk pemasukan
-        $pathToFile = public_path('templates/template_pemasukan.xlsx');
+        Log::info('Memulai proses download template');
 
-        return response()->download($pathToFile);
+        $spreadsheet = new Spreadsheet();
+        $incomeSheet = $spreadsheet->getActiveSheet();
+        $incomeSheet->setTitle('Pemasukan');
+
+        $incomeSheet->setCellValue('A1', 'Nama');
+        $incomeSheet->setCellValue('B1', 'Deskripsi');
+        $incomeSheet->setCellValue('C1', 'Tanggal');
+        $incomeSheet->setCellValue('D1', 'Jumlah');
+        $incomeSheet->setCellValue('E1', 'Kode Kategori');
+
+        $categorySheet = $spreadsheet->createSheet();
+        $categorySheet->setTitle('Kategori Pemasukan');
+
+        $categorySheet->setCellValue('A1', 'Kode Kategori');
+        $categorySheet->setCellValue('B1', 'Nama Kategori');
+
+        $categories = Category::where('jenis', 'pemasukan')->get();
+        Log::info('Jumlah kategori yang ditemukan: ' . $categories->count());
+
+        $row = 2;
+        foreach ($categories as $category) {
+            $categorySheet->setCellValue('A' . $row, $category->kode ?? 'N/A');
+            $categorySheet->setCellValue('B' . $row, $category->nama ?? 'N/A');
+            $row++;
+        }
+
+        Log::info('Selesai mengisi data kategori');
+
+        $writer = new Xlsx($spreadsheet);
+        $fileName = 'template_pemasukan_' . date('YmdHis') . '.xlsx';
+
+        Log::info('Menyimpan file: ' . $fileName);
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $fileName . '"');
+        header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+        header('Cache-Control: post-check=0, pre-check=0', false);
+        header('Pragma: no-cache');
+
+        $writer->save('php://output');
+        exit;
     }
 
 

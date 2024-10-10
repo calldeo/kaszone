@@ -117,6 +117,17 @@ use Illuminate\Support\Facades\Log;
             </li>
             @endcan
             @endif
+
+            @if(in_array('Role',$permissions))   
+            @can('Role')
+            <li class="{{ request()->is('setting-saldo*') || request()->is('setting-saldo') ? 'mm-active active-no-child' : '' }}">
+                <a href="/setting-saldo" aria-expanded="{{ request()->is('setting-saldo*') || request()->is('setting-saldo') ? 'true' : 'false' }}" class="{{ request()->is('setting-saldo*') || request()->is('setting-saldo') ? 'mm-active' : '' }}">
+                    <i class="bi bi-gear-fill"></i>
+                    <span class="nav-text">Setting Saldo</span>
+                </a>
+            </li>
+            @endcan
+            @endif
         </ul>
     </div>
 </div>
