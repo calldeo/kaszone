@@ -112,20 +112,9 @@ class PengeluaranController extends Controller
 
     private function convertToNumeric($value)
     {
-<<<<<<< Updated upstream
-        // Hapus semua karakter non-numerik kecuali titik desimal dan koma
-        $numericValue = preg_replace('/[^0-9.,]/', '', $value);
-        
-        // Ganti koma dengan titik
-        $numericValue = str_replace(',', '.', $numericValue);
-        
-        // Konversi ke float
-        return floatval($numericValue);
-=======
         // Hapus semua karakter non-numerik kecuali titik desimal
         $numericValue = preg_replace('/[^0-9]/', '', $value);
         return $numericValue;
->>>>>>> Stashed changes
     }
 
 
