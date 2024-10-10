@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\PemasukanExport;
-use App\Imports\PemasukanImport;
+use PDF;
 use App\Models\Category;
 use App\Models\Pemasukan;
 use Illuminate\Http\Request;
+use App\Exports\PemasukanExport;
+use App\Imports\PemasukanImport;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
-use PDF;
-
+use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class PemasukanController extends Controller
 {
@@ -224,8 +225,11 @@ class PemasukanController extends Controller
             $namafile = $file->getClientOriginalName();
             $file->move(public_path('DataPemasukan'), $namafile);
 
-            // Impor data dari file Excel
-            Excel::import(new PemasukanImport, public_path('DataPemasukan/' . $namafile));
+            // Impor data hanya dari worksheet pertama
+            Excel::import(new PemasukanImport, public_path('DataPemasukan/' . $namafile), null, \Maatwebsite\Excel\Excel::XLSX, [
+                'startRow' => 2,
+                'onlySheets' => [0] // Hanya impor worksheet pertama
+            ]);
 
             // Commit transaksi jika semua operasi berhasil
             DB::commit();
@@ -244,50 +248,125 @@ class PemasukanController extends Controller
             return redirect('/pemasukan')->with('error', 'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage());
         }
     }
+    
 
-    public function downloadTemplate()
+
+
+
+     public function downloadTemplate()
     {
-        // Path ke template Excel untuk pemasukan
-        $pathToFile = public_path('templates/template_pemasukan.xlsx');
+        // Buat objek spreadsheet baru
+        $spreadsheet = new Spreadsheet();
 
-        return response()->download($pathToFile);
+        // Worksheet untuk Pemasukan
+        $incomeSheet = $spreadsheet->getActiveSheet();
+        $incomeSheet->setTitle('Pemasukan');
+
+        // Tambahkan header untuk sheet Pemasukan
+        $incomeSheet->setCellValue('A1', 'Nama');
+        $incomeSheet->setCellValue('B1', 'Deskripsi');
+        $incomeSheet->setCellValue('C1', 'Tanggal');
+        $incomeSheet->setCellValue('D1', 'Jumlah');
+        $incomeSheet->setCellValue('E1', 'Kode Kategori');
+
+        // Worksheet untuk Kategori Pemasukan
+        $categorySheet = $spreadsheet->createSheet();
+        $categorySheet->setTitle('Kategori Pemasukan');
+
+        // Tambahkan header untuk sheet Kategori
+        $categorySheet->setCellValue('A1', 'Kode Kategori');
+        $categorySheet->setCellValue('B1', 'Nama Kategori');
+
+        // Ambil kategori dengan jenis 'pemasukan' dari database
+        $categories = Category::where('jenis_kategori', '1')->get();
+        
+        // Isi data kategori ke dalam sheet Kategori
+        $row = 2; // Mulai dari baris ke-2 (setelah header)
+        foreach ($categories as $category) {
+            $categorySheet->setCellValue('A' . $row, $category->id);  // Kode Kategori
+            $categorySheet->setCellValue('B' . $row, $category->name);  // Nama Kategori
+            $row++;
+        }
+
+        // Buat file Excel dan simpan ke dalam output buffer
+        $writer = new Xlsx($spreadsheet);
+        $fileName = 'template_pemasukan.xlsx';
+
+        // Set response untuk mendownload file
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $fileName . '"');
+        header('Cache-Control: max-age=0');
+
+        $writer->save('php://output');
+        exit;
     }
+
+
     public function exportPemasukanPDF(Request $request)
     {
         $year = $request->input('year');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        $query = Pemasukan::query();
 
         if ($year) {
-            $pemasukan = Pemasukan::whereYear('date', $year)->get();
-        } else {
-            $pemasukan = Pemasukan::all();
+            $query->whereYear('date', $year);
         }
 
-        $pdf = PDF::loadView('pemasukan.pdf', compact('pemasukan', 'year'));
+        if ($startDate && $endDate) {
+            $query->whereBetween('date', [$startDate, $endDate]);
+        }
+
+        $pemasukan = $query->get();
+
+        $pdf = PDF::loadView('pemasukan.pdf', compact('pemasukan', 'year', 'startDate', 'endDate'));
 
         $pdf->setPaper('A4', 'portrait');
 
-        return $pdf->stream($year ? "pemasukan_$year.pdf" : "pemasukan_seluruh.pdf");
+        if ($startDate && $endDate) {
+            $filename = "pemasukan_{$startDate}sampai{$endDate}.pdf";
+        } elseif ($year) {
+            $filename = "pemasukan_tahun_{$year}.pdf";
+        } else {
+            $filename = "pemasukan_seluruh.pdf";
+        }
+
+        return $pdf->stream($filename);
     }
 
     public function exportPemasukanExcel(Request $request)
     {
         $year = $request->input('year');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        $query = Pemasukan::query();
 
         if ($year) {
-            $pemasukan = Pemasukan::whereYear('date', $year)->get();
-        } else {
-            $pemasukan = Pemasukan::all();
+            $query->whereYear('date', $year);
         }
 
-        return Excel::download(new PemasukanExport($pemasukan,  $year), $year ? "pemasukan_$year.xlsx" : "pemasukan_seluruh.xlsx");
+        if ($startDate && $endDate) {
+            $query->whereBetween('date', [$startDate, $endDate]);
+        }
+
+        $pemasukan = $query->get();
+
+        if ($startDate && $endDate) {
+            $filename = "pemasukan_{$startDate}sampai{$endDate}.xlsx";
+        } elseif ($year) {
+            $filename = "pemasukan_tahun_{$year}.xlsx";
+        } else {
+            $filename = "pemasukan_seluruh.xlsx";
+        }
+
+        return Excel::download(new PemasukanExport($pemasukan, $year, $startDate, $endDate), $filename);
     }
 
     public function getCategories($jenisKategori)
     {
-        // dd($jenisKategori);
-
         $options = Category::where('jenis_kategori', $jenisKategori)->get();
-
 
         $formattedOptions = $options->map(function ($item) {
             return [
@@ -295,7 +374,6 @@ class PemasukanController extends Controller
                 'name' => $item->name,
             ];
         });
-
 
         return response()->json($formattedOptions);
     }
