@@ -252,42 +252,73 @@ class PemasukanController extends Controller
 
         return response()->download($pathToFile);
     }
+
+
     public function exportPemasukanPDF(Request $request)
     {
         $year = $request->input('year');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        $query = Pemasukan::query();
 
         if ($year) {
-            $pemasukan = Pemasukan::whereYear('date', $year)->get();
-        } else {
-            $pemasukan = Pemasukan::all();
+            $query->whereYear('date', $year);
         }
 
-        $pdf = PDF::loadView('pemasukan.pdf', compact('pemasukan', 'year'));
+        if ($startDate && $endDate) {
+            $query->whereBetween('date', [$startDate, $endDate]);
+        }
+
+        $pemasukan = $query->get();
+
+        $pdf = PDF::loadView('pemasukan.pdf', compact('pemasukan', 'year', 'startDate', 'endDate'));
 
         $pdf->setPaper('A4', 'portrait');
 
-        return $pdf->stream($year ? "pemasukan_$year.pdf" : "pemasukan_seluruh.pdf");
+        if ($startDate && $endDate) {
+            $filename = "pemasukan_{$startDate}_sampai_{$endDate}.pdf";
+        } elseif ($year) {
+            $filename = "pemasukan_tahun_{$year}.pdf";
+        } else {
+            $filename = "pemasukan_seluruh.pdf";
+        }
+
+        return $pdf->stream($filename);
     }
 
     public function exportPemasukanExcel(Request $request)
     {
         $year = $request->input('year');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        $query = Pemasukan::query();
 
         if ($year) {
-            $pemasukan = Pemasukan::whereYear('date', $year)->get();
-        } else {
-            $pemasukan = Pemasukan::all();
+            $query->whereYear('date', $year);
         }
 
-        return Excel::download(new PemasukanExport($pemasukan,  $year), $year ? "pemasukan_$year.xlsx" : "pemasukan_seluruh.xlsx");
+        if ($startDate && $endDate) {
+            $query->whereBetween('date', [$startDate, $endDate]);
+        }
+
+        $pemasukan = $query->get();
+
+        if ($startDate && $endDate) {
+            $filename = "pemasukan_{$startDate}_sampai_{$endDate}.xlsx";
+        } elseif ($year) {
+            $filename = "pemasukan_tahun_{$year}.xlsx";
+        } else {
+            $filename = "pemasukan_seluruh.xlsx";
+        }
+
+        return Excel::download(new PemasukanExport($pemasukan, $year, $startDate, $endDate), $filename);
     }
 
     public function getCategories($jenisKategori)
     {
-        // dd($jenisKategori);
-
         $options = Category::where('jenis_kategori', $jenisKategori)->get();
-
 
         $formattedOptions = $options->map(function ($item) {
             return [
@@ -295,7 +326,6 @@ class PemasukanController extends Controller
                 'name' => $item->name,
             ];
         });
-
 
         return response()->json($formattedOptions);
     }

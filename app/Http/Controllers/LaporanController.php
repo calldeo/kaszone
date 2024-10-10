@@ -41,45 +41,88 @@ class LaporanController extends Controller
     public function exportLaporanPDF(Request $request)
     {
         $year = $request->input('year');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        $pemasukanQuery = Pemasukan::query();
+        $pengeluaranQuery = Pengeluaran::with('category', 'parentPengeluaran');
 
         if ($year) {
-            $pemasukan = Pemasukan::whereYear('date', $year)->get();
-
-            $pengeluaran = Pengeluaran::whereHas('parentPengeluaran', function ($query) use ($year) {
+            $pemasukanQuery->whereYear('date', $year);
+            $pengeluaranQuery->whereHas('parentPengeluaran', function ($query) use ($year) {
                 $query->whereYear('tanggal', $year);
-            })->with('category', 'parentPengeluaran')->get();
-        } else {
-            $pemasukan = Pemasukan::all();
-            $pengeluaran = Pengeluaran::with('category', 'ParentPengeluaran')->get();
+            });
         }
+
+        if ($startDate && $endDate) {
+            $pemasukanQuery->whereBetween('date', [$startDate, $endDate]);
+            $pengeluaranQuery->whereHas('parentPengeluaran', function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('tanggal', [$startDate, $endDate]);
+            });
+        }
+
+        $pemasukan = $pemasukanQuery->get();
+        $pengeluaran = $pengeluaranQuery->get();
 
         $totalPemasukan = $pemasukan->sum('jumlah');
         $totalPengeluaran = $pengeluaran->sum('jumlah');
         $selisih = $totalPemasukan - $totalPengeluaran;
 
-        $pdf = PDF::loadView('laporan.pdf', compact('pemasukan', 'pengeluaran', 'totalPemasukan', 'totalPengeluaran', 'selisih', 'year'));
+        $pdf = PDF::loadView('laporan.pdf', compact('pemasukan', 'pengeluaran', 'totalPemasukan', 'totalPengeluaran', 'selisih', 'year', 'startDate', 'endDate'));
 
         $pdf->setPaper('A4', 'portrait');
 
-        return $pdf->stream($year ? "laporan_$year.pdf" : "laporan_seluruh.pdf");
-    }
+        $filename = "laporan";
+        if ($year) {
+            $filename .= "_$year";
+        }
+        if ($startDate && $endDate) {
+            $startDateFormatted = date('d-m-Y', strtotime($startDate));
+            $endDateFormatted = date('d-m-Y', strtotime($endDate));
+            $filename .= "_" . $startDateFormatted . "_" . $endDateFormatted;
+        }
+        $filename .= ".pdf";
 
+        return $pdf->stream($filename);
+    }
 
     public function exportLaporanExcel(Request $request)
     {
         $year = $request->input('year');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        $pemasukanQuery = Pemasukan::query();
+        $pengeluaranQuery = Pengeluaran::with('category', 'parentPengeluaran');
 
         if ($year) {
-            $pemasukan = Pemasukan::whereYear('date', $year)->get();
-
-            $pengeluaran = Pengeluaran::whereHas('parentPengeluaran', function ($query) use ($year) {
+            $pemasukanQuery->whereYear('date', $year);
+            $pengeluaranQuery->whereHas('parentPengeluaran', function ($query) use ($year) {
                 $query->whereYear('tanggal', $year);
-            })->with('category', 'parentPengeluaran')->get();
-        } else {
-            $pemasukan = Pemasukan::all();
-            $pengeluaran = Pengeluaran::with('category', 'parentPengeluaran')->get();
+            });
         }
 
-        return Excel::download(new LaporanExport($pemasukan, $pengeluaran, $year), $year ? "laporan_$year.xlsx" : "laporan_seluruh.xlsx");
+        if ($startDate && $endDate) {
+            $pemasukanQuery->whereBetween('date', [$startDate, $endDate]);
+            $pengeluaranQuery->whereHas('parentPengeluaran', function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('tanggal', [$startDate, $endDate]);
+            });
+        }
+
+        $pemasukan = $pemasukanQuery->get();
+        $pengeluaran = $pengeluaranQuery->get();
+
+        $filename = "laporan";
+        if ($year) {
+            $filename .= "_$year";
+        }
+        if ($startDate && $endDate) {
+            $startDateFormatted = date('d-m-Y', strtotime($startDate));
+            $endDateFormatted = date('d-m-Y', strtotime($endDate));
+            $filename .= "_" . $startDateFormatted . "_" . $endDateFormatted;
+        }
+        $filename .= ".xlsx";
+
+        return Excel::download(new LaporanExport($pemasukan, $pengeluaran, $year, $startDate, $endDate), $filename);
     }
 }

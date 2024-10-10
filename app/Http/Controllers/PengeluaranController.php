@@ -43,9 +43,9 @@ class PengeluaranController extends Controller
             'name.*' => 'required|string|max:255',
             'description.*' => 'nullable|string',
             'jumlah_satuan.*' => 'required|numeric|min:0',
-            'nominal.*' => 'required|numeric|min:0',
-            'dll.*' => 'required|numeric|min:0',
-            'jumlah.*' => 'required|numeric|min:0',
+            'nominal.*' => 'required',
+            'dll.*' => 'required',
+            'jumlah.*' => 'required',
             'category_id.*' => 'required|exists:categories,id',
             'image.*' => 'nullable|mimes:jpg,jpeg,png|max:2048',
             'tanggal.*' => 'required|date_format:Y-m-d|exists:pengeluaran_parent,tanggal'
@@ -73,8 +73,9 @@ class PengeluaranController extends Controller
 
                 if ($existingPengeluaran) {
 
-                    $existingPengeluaran->jumlah += $request->input('jumlah')[$i] ?? 0;
-                    $existingPengeluaran->nominal += $request->input('nominal')[$i] ?? 0;
+                    $existingPengeluaran->jumlah += $this->convertToNumeric($request->input('jumlah')[$i]) ?? 0;
+                    $existingPengeluaran->nominal += $this->convertToNumeric($request->input('nominal')[$i]) ?? 0;
+                    $existingPengeluaran->dll += $this->convertToNumeric($request->input('dll')[$i]) ?? 0;
                     $existingPengeluaran->save();
                 } else {
 
@@ -82,9 +83,9 @@ class PengeluaranController extends Controller
                     $pengeluaran->name = $name;
                     $pengeluaran->description = $request->input('description')[$i] ?? null;
                     $pengeluaran->jumlah_satuan = $request->input('jumlah_satuan')[$i] ?? 0;
-                    $pengeluaran->nominal = $request->input('nominal')[$i] ?? 0;
-                    $pengeluaran->dll = $request->input('dll')[$i] ?? 0;
-                    $pengeluaran->jumlah = $request->input('jumlah')[$i] ?? 0;
+                    $pengeluaran->nominal = $this->convertToNumeric($request->input('nominal')[$i]) ?? 0;
+                    $pengeluaran->dll = $this->convertToNumeric($request->input('dll')[$i]) ?? 0;
+                    $pengeluaran->jumlah = $this->convertToNumeric($request->input('jumlah')[$i]) ?? 0;
 
 
                     $pengeluaran->id = $request->input('category_id')[$i];
@@ -107,6 +108,18 @@ class PengeluaranController extends Controller
             DB::rollBack();
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
+    }
+
+    private function convertToNumeric($value)
+    {
+        // Hapus semua karakter non-numerik kecuali titik desimal dan koma
+        $numericValue = preg_replace('/[^0-9.,]/', '', $value);
+        
+        // Ganti koma dengan titik
+        $numericValue = str_replace(',', '.', $numericValue);
+        
+        // Konversi ke float
+        return floatval($numericValue);
     }
 
 
@@ -260,34 +273,97 @@ public function update(Request $request, $id)
 
 
 
+  public function cetakpgl(Request $request)
+{
+    // Mengambil tahun dan tanggal dari input permintaan
+    $year = $request->input('year');
+    $startDate = $request->input('start_date');
+    $endDate = $request->input('end_date');
 
-    public function cetakpgl(Request $request)
+    // Memulai query
+    $query = Pengeluaran::query()->with('category', 'parentPengeluaran');
+
+    // Menerapkan filter berdasarkan tahun dan tanggal jika ada
+    if ($year) {
+        $query->whereHas('parentPengeluaran', function ($q) use ($year) {
+            $q->whereYear('tanggal', $year);
+        });
+    }
+
+    if ($startDate && $endDate) {
+        $query->whereHas('parentPengeluaran', function ($q) use ($startDate, $endDate) {
+            $q->whereBetween('tanggal', [$startDate, $endDate]);
+        });
+    }
+
+    // Mengambil data pengeluaran
+    $pengeluaran = $query->get();
+
+    // Menghitung total pengeluaran
+    $totalPengeluaran = $pengeluaran->sum('jumlah');
+
+    // Memuat view PDF dengan data pengeluaran
+    $pdf = PDF::loadView('pengeluaran.pdf', compact('pengeluaran', 'totalPengeluaran', 'year', 'startDate', 'endDate'));
+
+    // Mengatur ukuran kertas PDF
+    $pdf->setPaper('A4', 'portrait');
+
+    // Menyesuaikan nama file berdasarkan filter yang dipilih
+    if ($startDate && $endDate) {
+        $startDateFormatted = date('d-m-Y', strtotime($startDate));
+        $endDateFormatted = date('d-m-Y', strtotime($endDate));
+        $filename = "pengeluaran_{$startDateFormatted}_sampai_{$endDateFormatted}.pdf";
+    } elseif ($year) {
+        $filename = "pengeluaran_tahun_{$year}.pdf";
+    } else {
+        $filename = "pengeluaran_seluruh.pdf";
+    }
+
+    // Mengalirkan PDF ke browser
+    return $pdf->stream($filename);
+}
+
+
+  
+
+    
+    public function exportPengeluaranExcel(Request $request)
     {
-        // Dapatkan calon dengan jumlah suara terbanyak
-
         $year = $request->input('year');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        $query = Pengeluaran::query()->with('category', 'parentPengeluaran');
 
         if ($year) {
-
-            $pengeluaran = Pengeluaran::whereHas('parentPengeluaran', function ($query) use ($year) {
-                $query->whereYear('tanggal', $year);
-            })->with('category', 'parentPengeluaran')->get();
-        } else {
-
-            $pengeluaran = Pengeluaran::with('category', 'ParentPengeluaran')->get();
+            $query->whereHas('parentPengeluaran', function ($q) use ($year) {
+                $q->whereYear('tanggal', $year);
+            });
         }
 
-        $totalPengeluaran = $pengeluaran->sum('jumlah');
+        if ($startDate && $endDate) {
+            $query->whereHas('parentPengeluaran', function ($q) use ($startDate, $endDate) {
+                $q->whereBetween('tanggal', [$startDate, $endDate]);
+            });
+        }
 
-        $pdf = PDF::loadView('pengeluaran.pdf', compact('pengeluaran', 'totalPengeluaran', 'year'));
+        $pengeluaran = $query->get();
 
-        $pdf->setPaper('A4', 'portrait');
+        // Menyesuaikan nama file berdasarkan filter yang dipilih
+        if ($startDate && $endDate) {
+            $startDateFormatted = date('d-m-Y', strtotime($startDate));
+            $endDateFormatted = date('d-m-Y', strtotime($endDate));
+            $filename = "laporan_pengeluaran_{$startDateFormatted}_sampai_{$endDateFormatted}.xlsx";
+        } elseif ($year) {
+            $filename = "laporan_pengeluaran_tahun_{$year}.xlsx";
+        } else {
+            $filename = "laporan_pengeluaran_seluruh.xlsx";
+        }
 
-        return $pdf->stream($year ? "laporan_$year.pdf" : "laporan_seluruh.pdf");
-
-        // return view('halaman.cetakpgl',compact('pengeluaran'));
+        return Excel::download(new PengeluaranExport($pengeluaran, $year, $startDate, $endDate), $filename);
     }
-    public function showDetail($id)
+
+  public function showDetail($id)
     {
 
 
@@ -297,23 +373,6 @@ public function update(Request $request, $id)
         // Melempar data ke view
         return view('pengeluaran.detail', compact('parentPengeluaran'));
     }
-
-    public function exportPengeluaranExcel(Request $request)
-    {
-        $year = $request->input('year');
-
-        if ($year) {
-
-            $pengeluaran = Pengeluaran::whereHas('parentPengeluaran', function ($query) use ($year) {
-                $query->whereYear('tanggal', $year);
-            })->with('category', 'parentPengeluaran')->get();
-        } else {
-            $pengeluaran = Pengeluaran::with('category', 'parentPengeluaran')->get();
-        }
-
-        return Excel::download(new PengeluaranExport($pengeluaran, $year), $year ? "laporan_$year.xlsx" : "laporan_seluruh.xlsx");
-    }
-
 
     public function data()
     {

@@ -40,14 +40,22 @@
                                 <div class="d-flex align-items-center mt-3">
                                     @hasrole('Admin|Bendahara') 
                                     <form method="GET" action="{{ route('export.laporan') }}" id="export-pdf-form" class="mr-1">
-                                        <input type="hidden" name="year" id="export-year" value="{{ old('year') }}" required />
+                                        <input type="hidden" name="year" id="export-year-pdf" value="{{ old('year') }}" />
+                                        <input type="hidden" name="start_date" id="export-start-date-pdf" value="{{ old('start_date') }}" />
+                                        <input type="hidden" name="end_date" id="export-end-date-pdf" value="{{ old('end_date') }}" />
                                         <button type="submit" class="btn btn-info">
                                             <i class="fa fa-print"></i>
                                         </button>
                                     </form>
-                                    <a href="{{ url('/export-laporan-excel') }}"  class="btn btn-success" title="Export to Excel">
-                                        <i class="fa fa-file-excel"></i>
-                                    </a>
+                                    <form method="POST" action="{{ route('export.laporan.excel') }}" id="export-excel-form" class="mr-1">
+                                        @csrf
+                                        <input type="hidden" name="year" id="export-year-excel" value="{{ old('year') }}" />
+                                        <input type="hidden" name="start_date" id="export-start-date-excel" value="{{ old('start_date') }}" />
+                                        <input type="hidden" name="end_date" id="export-end-date-excel" value="{{ old('end_date') }}" />
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="fa fa-file-excel"></i>
+                                        </button>
+                                    </form>
                                     @endhasrole
                                 </div>
                             </div>
@@ -134,9 +142,11 @@
         $('.input-daterange-datepicker').daterangepicker({
             opens: 'left',
             locale: { 
-                format: 'DD-MM-YYYY' // Ubah format menjadi dd-mm-yyyy
+                format: 'DD-MM-YYYY'
             },
-            autoUpdateInput: false // Mencegah pengisian otomatis
+            autoUpdateInput: false,
+            minDate: moment().startOf('year'),
+            maxDate: moment().endOf('year')
         });
 
         // Event handler for year filter
@@ -147,15 +157,22 @@
                 filterData.year = selectedYear;
 
                 // Reset start and end date
-                filterData.start_created_at = selectedYear + '-01-01'; // Mengatur tanggal awal
-                filterData.end_created_at = selectedYear + '-12-31';   // Mengatur tanggal akhir
+                filterData.start_created_at = selectedYear + '-01-01';
+                filterData.end_created_at = selectedYear + '-12-31';
 
-                // Update daterangepicker dates
-                $('.input-daterange-datepicker').data('daterangepicker').setStartDate(filterData.start_created_at);
-                $('.input-daterange-datepicker').data('daterangepicker').setEndDate(filterData.end_created_at);
+                // Update daterangepicker dates and options
+                $('.input-daterange-datepicker').data('daterangepicker').setStartDate(moment(filterData.start_created_at));
+                $('.input-daterange-datepicker').data('daterangepicker').setEndDate(moment(filterData.end_created_at));
+                $('.input-daterange-datepicker').data('daterangepicker').minDate = moment(filterData.start_created_at);
+                $('.input-daterange-datepicker').data('daterangepicker').maxDate = moment(filterData.end_created_at);
 
                 // Update input value
                 $('.input-daterange-datepicker').val(moment(filterData.start_created_at).format('DD-MM-YYYY') + ' - ' + moment(filterData.end_created_at).format('DD-MM-YYYY'));
+
+                // Update hidden inputs for export
+                $('#export-year-pdf, #export-year-excel').val(selectedYear);
+                $('#export-start-date-pdf, #export-start-date-excel').val(filterData.start_created_at);
+                $('#export-end-date-pdf, #export-end-date-excel').val(filterData.end_created_at);
 
             } else {
                 // Jika "Pilih Tahun" dipilih, hapus filter dan tampilkan seluruh data
@@ -166,7 +183,14 @@
                 $('.input-daterange-datepicker').prop('disabled', true);
                 $('.input-daterange-datepicker').val(''); // Menghapus nilai input
 
-                // Reload the tables to show all data
+                // Reset daterangepicker
+                $('.input-daterange-datepicker').data('daterangepicker').setStartDate(moment().startOf('year'));
+                $('.input-daterange-datepicker').data('daterangepicker').setEndDate(moment().endOf('year'));
+                $('.input-daterange-datepicker').data('daterangepicker').minDate = moment().startOf('year');
+                $('.input-daterange-datepicker').data('daterangepicker').maxDate = moment().endOf('year');
+
+                // Reset hidden inputs for export
+                $('#export-year-pdf, #export-year-excel, #export-start-date-pdf, #export-start-date-excel, #export-end-date-pdf, #export-end-date-excel').val('');
             }
 
             // Reload the tables with the updated filter data
@@ -182,6 +206,10 @@
             // Update filter data
             filterData.start_created_at = picker.startDate.format('YYYY-MM-DD');
             filterData.end_created_at = picker.endDate.format('YYYY-MM-DD');
+
+            // Update hidden inputs for export
+            $('#export-start-date-pdf, #export-start-date-excel').val(filterData.start_created_at);
+            $('#export-end-date-pdf, #export-end-date-excel').val(filterData.end_created_at);
 
             // Reload the tables
             pemasukanTables(filterData);

@@ -100,6 +100,7 @@ Route::group(['middleware' => ['auth','permission:Kategori']], function (){
     Route::put('/kategori/{id}', [CategoryController::class, 'update'])->name('kategori.update');
     Route::post('/importkategori', [CategoryController::class, 'kategoriimportexcel'])->name('import-kategori');
     Route::get('/cetaklaporan',[CategoryController::class,'cetaklaporan'])->name('cetaklaporan');
+    Route::get('/download-template-kategori', 'CategoryController@downloadTemplate')->name('download-template-kategori');
     Route::get('/kategori/{id}/detail', [CategoryController::class, 'showDetail'])->name('kategori.showDetail');
 
 });
@@ -139,7 +140,6 @@ Route::group(['middleware' => ['auth','permission:Data Pengeluaran']], function 
     Route::get('/pengeluaran/data', [AdminController::class, 'tabe'])->name('admin.tabe');
     Route::get('pengeluaran/tabe', [PengeluaranController::class, 'tabe'])->name('pengeluaran.tabe');
     Route::get('/pengeluaran/{id_data}/detail', [PengeluaranController::class, 'showDetail'])->name('pengeluaran.showDetail');
-    Route::get('/download-template-kategori', [CategoryController::class, 'downloadTemplate'])->name('download-template-kategori');
     Route::get('/pengeluaran/delete/{id_data}', [PengeluaranController::class, 'delete'])->name('pengeluaran.delete');
     Route::get('/pengeluaran/deleteAll/{id}', [PengeluaranController::class, 'deleteAll'])->name('pengeluaran.deleteAll');
     Route::post('/import-pengeluaran', [PengeluaranController::class, 'importPengeluaran'])->name('import-pengeluaran');
@@ -152,7 +152,7 @@ Route::group(['middleware' => ['auth','permission:Data Pengeluaran']], function 
     Route::get('/laporan', [LaporanController::class, 'index'])->name('index');
     Route::get('/laporan-kas', [LaporanController::class, 'laporanKas'])->name('laporanKas');
     Route::get('/export-laporan', [LaporanController::class, 'exportLaporanPDF'])->name('export.laporan');
-    Route::get('/export-laporan-excel', [LaporanController::class, 'exportLaporanExcel'])->name('export.laporan.excel');
+    Route::post('/export-laporan-excel', [LaporanController::class, 'exportLaporanExcel'])->name('export.laporan.excel');
 
 
 
