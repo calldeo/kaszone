@@ -97,14 +97,18 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
 
 
-       Route::prefix('outcome')->group(function () {
+    Route::prefix('outcome')->middleware('auth:api')->group(function () {
         Route::get('/all', [PengeluaranController::class, 'getAllOutcome']);
         Route::get('/create', [PengeluaranController::class, 'create']);
         Route::post('/store', [PengeluaranController::class, 'store']);
         Route::get('/show/{id}', [PengeluaranController::class, 'show']);
-        Route::put('/update/{id}', [PengeluaranController::class, 'update']);
+        Route::put('/update/{id}', [PengeluaranController::class, 'update']); 
         Route::delete('/destroy/{id}', [PengeluaranController::class, 'destroy']);
         Route::get('/detail/{id}', [PengeluaranController::class, 'showDetail']);
+        Route::delete('/pengeluaran/{id}', [PengeluaranController::class, 'delete']); 
+        Route::delete('/pengeluaran/parent/{id}', [PengeluaranController::class, 'deleteAll']);
+
+
 
 
     });

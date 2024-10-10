@@ -100,7 +100,10 @@ Route::group(['middleware' => ['auth','permission:Kategori']], function (){
     Route::put('/kategori/{id}', [CategoryController::class, 'update'])->name('kategori.update');
     Route::post('/importkategori', [CategoryController::class, 'kategoriimportexcel'])->name('import-kategori');
     Route::get('/cetaklaporan',[CategoryController::class,'cetaklaporan'])->name('cetaklaporan');
+    Route::get('/download-template-kategori', [CategoryController::class, 'downloadTemplateExcel'])->name('download-template-kategori');
     Route::get('/kategori/{id}/detail', [CategoryController::class, 'showDetail'])->name('kategori.showDetail');
+    Route::get('/download-template-kategori', [CategoryController::class, 'downloadTemplateExcel'])->name('download-template-kategori');
+
 
 });
 
@@ -115,7 +118,9 @@ Route::group(['middleware' => ['auth','permission:Data Pemasukan']], function ()
     Route::get('pemasukan/tob', [PemasukanController::class, 'tob'])->name('pemasukan.tob');
     Route::get('/pemasukan/{id_data}/detail', [PemasukanController::class, 'showDetail'])->name('pemasukan.showDetail');
     Route::post('/importpemasukan', [PemasukanController::class, 'pemasukanImportExcel'])->name('import-pemasukan');
-    Route::get('/download-template-pemasukan', [PemasukanController::class, 'downloadTemplate'])->name('download-template-pemasukan');
+    // Route::get('/download-template-pemasukan', [PemasukanController::class, 'downloadTemplate'])->name('download-template-pemasukan');
+    Route::get('/download-template-pemasukan', [PemasukanController::class, 'downloadTemplate'])->name('download.template.pemasukan');
+
     Route::get('/get-categories/{jenis_kategori}', [PemasukanController::class, 'getCategories']);
     Route::get('/export-pemasukan', [PemasukanController::class, 'exportPemasukanPDF'])->name('export.pemasukan');
     Route::post('/export-pemasukan-excel', [PemasukanController::class, 'exportPemasukanExcel'])->name('export.pemasukan.excel');
@@ -139,7 +144,6 @@ Route::group(['middleware' => ['auth','permission:Data Pengeluaran']], function 
     Route::get('/pengeluaran/data', [AdminController::class, 'tabe'])->name('admin.tabe');
     Route::get('pengeluaran/tabe', [PengeluaranController::class, 'tabe'])->name('pengeluaran.tabe');
     Route::get('/pengeluaran/{id_data}/detail', [PengeluaranController::class, 'showDetail'])->name('pengeluaran.showDetail');
-    Route::get('/download-template-kategori', [CategoryController::class, 'downloadTemplate'])->name('download-template-kategori');
     Route::get('/pengeluaran/delete/{id_data}', [PengeluaranController::class, 'delete'])->name('pengeluaran.delete');
     Route::get('/pengeluaran/deleteAll/{id}', [PengeluaranController::class, 'deleteAll'])->name('pengeluaran.deleteAll');
     Route::post('/import-pengeluaran', [PengeluaranController::class, 'importPengeluaran'])->name('import-pengeluaran');
@@ -152,7 +156,7 @@ Route::group(['middleware' => ['auth','permission:Data Pengeluaran']], function 
     Route::get('/laporan', [LaporanController::class, 'index'])->name('index');
     Route::get('/laporan-kas', [LaporanController::class, 'laporanKas'])->name('laporanKas');
     Route::get('/export-laporan', [LaporanController::class, 'exportLaporanPDF'])->name('export.laporan');
-    Route::get('/export-laporan-excel', [LaporanController::class, 'exportLaporanExcel'])->name('export.laporan.excel');
+    Route::post('/export-laporan-excel', [LaporanController::class, 'exportLaporanExcel'])->name('export.laporan.excel');
 
 
 
@@ -162,6 +166,10 @@ Route::group(['middleware' => ['auth','permission:Data Pengeluaran']], function 
 Route::group(['middleware' => ['auth','permission:Role']], function (){
 
     route::get('/role',[RoleController::class,'role'])->name('role');
+    route::get('/setting-saldo',[RoleController::class,'saldo'])->name('saldo');
+    Route::get('/edit-minimal-saldo', [RoleController::class, 'editMinimalSaldo'])->name('edit.minimal.saldo');
+    Route::put('/update-minimal-saldo', [RoleController::class, 'updateMinimalSaldo'])->name('update.minimal.saldo');
+
     Route::get('/role/{id}/edit_role  ',[RoleController::class,'edit']);
     Route::put('/role/{id}',[RoleController::class,'update']);
     Route::get('/add_role', [RoleController::class, 'create']);

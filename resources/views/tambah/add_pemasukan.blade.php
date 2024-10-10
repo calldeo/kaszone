@@ -105,12 +105,16 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
                                             </div>
-                                            <input type="number" step="0.01" min="0" class="form-control" name="jumlah" placeholder="Enter amount.." value="{{ old('jumlah') }}" required>
+                                            <input type="text" class="form-control" name="jumlah_display" id="jumlah" placeholder="Rp 0" value="{{ old('jumlah_display') }}" required oninput="formatInput()">
+                                            <input type="hidden" name="jumlah" id="jumlah_value"> <!-- Input tersembunyi untuk menyimpan nilai numerik -->
                                         </div>
                                         @error('jumlah')
                                         <span class="mt-2 text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
+                                    
+                                    
+                                    
                         
                                     <div class="form-group">
                                         <label class="text-label">Category *</label>
@@ -195,6 +199,33 @@
         });
     }
 });
+function formatInput() {
+            const input = document.getElementById('jumlah');
+            const hiddenInput = document.getElementById('jumlah_value');
+            
+            // Menghapus semua karakter kecuali angka
+            let value = input.value.replace(/[^0-9]/g, '');
+
+            // Jika ada nilai, format sebagai angka
+            if (value) {
+                // Konversi menjadi format lokal
+                const formattedValue = parseInt(value).toLocaleString('id-ID');
+                input.value = 'Rp ' + formattedValue; // Menambahkan 'Rp' di depan
+                hiddenInput.value = value; // Menyimpan nilai numerik di input tersembunyi
+            } else {
+                input.value = 'Rp 0'; // Jika tidak ada input
+                hiddenInput.value = ''; // Mengosongkan nilai tersembunyi
+            }
+        }
+
+        // Menangkap pengiriman form untuk mengupdate nilai jumlah jika perlu
+        $('form').on('submit', function() {
+            const input = document.getElementById('jumlah_value');
+            if (!input.value) {
+                input.value = '0'; // Set nilai default jika kosong
+            }
+        });
+    
 
 </script>
 

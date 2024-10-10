@@ -35,21 +35,24 @@
 
             <!-- Informasi Umum -->
             <div class="card">
-                <div class="card-header d-flex align-items-center justify-content-between">
-                    <span>Informasi</span>
-                    @hasrole('Admin|Bendahara') 
-                    @if($pengeluaran = $parentPengeluaran->pengeluaran->first())
-                        <a href="{{ route('pengeluaran.edit', $pengeluaran->id_parent) }}" class="btn btn-warning btn-xs mr-1">
-                            <i class="fas fa-edit"></i> Edit
-                        </a>
-                    @else
-                        <span>Tidak ada pengeluaran yang tersedia.</span>
-                    @endif
-                    @endhasrole
-                 <button  onclick="window.location.href='/pengeluaran'" class="btn btn-danger btn-xs mr-1">
-                           <i class="fas fa-arrow-left"></i> Kembali
-                        </button>
-                </div>
+            <div class="card-header d-flex align-items-center justify-content-between">
+    <span>Informasi</span>
+    <div class="d-flex align-items-center">
+        @hasrole('Admin|Bendahara') 
+        @if($pengeluaran = $parentPengeluaran->pengeluaran->first())
+            <button onclick="window.location.href='/pengeluaran'" class="btn btn-danger btn-xs mr-1">
+                <i class="fas fa-arrow-left"></i> Kembali
+            </button>
+            <a href="{{ route('pengeluaran.edit', $pengeluaran->id_parent) }}" class="btn btn-warning btn-xs mr-1">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+        @else
+            <span>Tidak ada pengeluaran yang tersedia.</span>
+        @endif
+        @endhasrole
+    </div>
+</div>
+
                 <div class="card-body">
                     @if(session('error'))
                         <div class="alert alert-danger alert-dismissible fade show">
@@ -119,9 +122,10 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Nominal</label>
-                                            <input type="text" name="nominal" class="form-control editable-input" value="Rp{{ number_format($pengeluaran->nominal, 2, ',', '.') }}" readonly>
+                                            <input type="text" name="nominal" class="form-control editable-input" value="Rp{{ number_format($pengeluaran->nominal, 0, ',', '.') }}" readonly>
                                         </div>
                                     </div>
+                                    
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label>Jumlah Satuan</label>
@@ -131,13 +135,15 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Lain-lain</label>
-                                            <input type="text" name="dll" class="form-control editable-input" value="Rp{{ $pengeluaran->dll }}" readonly>
+                                            <input type="text" name="dll" class="form-control editable-input" value="Rp{{ number_format($pengeluaran->dll, 0, ',', '.') }}" readonly>
                                         </div>
                                     </div>
+                                    
+                                    
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Total</label>
-                                            <input type="text" name="jumlah" class="form-control editable-input"value="Rp{{ number_format($pengeluaran->jumlah, 2, ',', '.') }}" readonly>
+                                            <input type="text" name="jumlah" class="form-control editable-input"value="Rp{{ number_format($pengeluaran->jumlah, 0, ',', '.') }}" readonly>
                                         </div>
                                     </div>
                                 </div>

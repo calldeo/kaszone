@@ -5,9 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laporan PDF</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-bottom: 20px;
         }
         table, th, td {
             border: 1px solid black;
@@ -16,15 +21,21 @@
             padding: 8px;
             text-align: left;
         }
+        th {
+            background-color: #f2f2f2;
+        }
         /* CSS untuk memulai halaman baru */
         .page-break {
             page-break-before: always;
             margin: 20px 0; /* optional: memberi jarak */
         }
+        h4 {
+            margin: 10px 0; /* memberi jarak untuk total */
+        }
     </style>
 </head>
 <body>
-    <h2>Laporan Keuangan Tahun {{ $year }}</h2>
+    <h2 style="text-align: center;">Laporan Keuangan Tahun {{ $year }}</h2>
 
     <h3>Pemasukan</h3>
     <table>
@@ -34,7 +45,7 @@
                 <th>Nama</th>
                 <th>Deskripsi</th>
                 <th>Kategori</th>
-                <th>Jumlah</th>
+                <th>Jumlah (Rp)</th>
                 <th>Tanggal</th>
             </tr>
         </thead>
@@ -65,9 +76,8 @@
                 <th>Kategori</th>
                 <th>Jumlah Item</th>
                 <th>Harga (Rp)</th>
-                <th>Lain - Lain</th>
-                <th>Total</th>
-                {{-- <th>Bukti Pembayaran</th> --}}
+                <th>Lain-lain (Rp)</th>
+                <th>Total (Rp)</th>
                 <th>Tanggal</th>
             </tr>
         </thead>
@@ -79,23 +89,17 @@
                 <td>{{ $pgl->description }}</td>
                 <td>{{ $pgl->category ? $pgl->category->name : 'Kategori tidak ditemukan' }}</td>
                 <td>{{ $pgl->jumlah_satuan }}</td>
-                <td>{{ $pgl->nominal }}</td>
-                <td>{{ $pgl->dll }}</td>
+                <td>{{ number_format($pgl->nominal, 0, ',', '.') }}</td>
+                <td>{{ number_format($pgl->dll, 0, ',', '.') }}</td>
                 <td>{{ number_format($pgl->jumlah, 0, ',', '.') }}</td>
-                {{-- <td>
-                    @if($item->image) 
-                        <img src="{{ public_path('public/str/images/' . $item->image) }}" class="image" alt="Bukti Pembayaran">
-                    @else
-                        Tidak ada gambar
-                    @endif --}}
                 <td>{{ $pgl->parentPengeluaran ? \Carbon\Carbon::parse($pgl->parentPengeluaran->tanggal)->format('d-m-Y') : 'Tanggal tidak ditemukan' }}</td>
             </tr>
             @endforeach
         </tbody>
     </table>
 
-    <h4>Total Pemasukan: Rp{{ number_format($totalPemasukan, 0, ',', '.') }}</h4>
-    <h4>Total Pengeluaran: Rp{{ number_format($totalPengeluaran, 0, ',', '.') }}</h4>
-    <h4>Selisih: Rp{{ number_format($selisih, 0, ',', '.') }}</h4>
+    <h4>Total Pemasukan: Rp {{ number_format($totalPemasukan, 0, ',', '.') }}</h4>
+    <h4>Total Pengeluaran: Rp {{ number_format($totalPengeluaran, 0, ',', '.') }}</h4>
+    <h4>Selisih: Rp {{ number_format($selisih, 0, ',', '.') }}</h4>
 </body>
 </html>

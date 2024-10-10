@@ -339,7 +339,7 @@
                                 <select id="category_${pengeluaranCount}" name="category_id[]" class="form-control select2 category-dropdown" required>
                                     <option value="">Pilih Kategori</option>
                                     @foreach($categories as $category)
-                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                        <option value="{{ $category->id }}" {{ $pengeluaran->id == $category->id ? 'selected' : '' }}>
                                     @endforeach
                                 </select>
                             </div>

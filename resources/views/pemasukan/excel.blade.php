@@ -1,28 +1,46 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Laporan Excel</title>
+    <title>Laporan Excel Pemasukan</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1, h2 {
+            color: #333;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 20px;
         }
         th, td {
-            border: 1px solid black;
-            padding: 8px;
+            border: 1px solid #ddd;
+            padding: 12px;
             text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tfoot tr {
+            background-color: #e9e9e9;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <h1>Laporan Pemasukan  {{ $year ? $year : 'Seluruh' }}</h1>
+    <h1>Laporan Pemasukan {{ $year ? "Tahun $year" : 'Seluruh Periode' }}</h1>
 
-    <h2>Pemasukan</h2>
     <table>
         <thead>
             <tr>
-               <th>No</th>
+                <th>No</th>
                 <th>Nama</th>
                 <th>Deskripsi</th>
                 <th>Kategori</th>
@@ -37,10 +55,17 @@
                 <td>{{ $item->name }}</td>
                 <td>{{ $item->description }}</td>
                 <td>{{ $item->category ? $item->category->name : 'Kategori tidak ditemukan' }}</td>
-                <td>{{ number_format($item->jumlah, 0, ',', '.') }}</td>
+                <td>Rp {{ number_format($item->jumlah, 0, ',', '.') }}</td>
                 <td>{{ \Carbon\Carbon::parse($item->date)->format('d-m-Y') }}</td>
             </tr>
             @endforeach
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4" style="text-align: right;">Total Jumlah:</td>
+                <td colspan="2">Rp {{ number_format($pemasukan->sum('jumlah'), 0, ',', '.') }}</td>
+            </tr>
+        </tfoot>
+    </table>
 </body>
 </html>

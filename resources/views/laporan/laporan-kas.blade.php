@@ -169,15 +169,22 @@
                 ],
                 footerCallback: function(row, data, start, end, display) {
             var totalJumlah = 0;
+
             data.forEach(function(item) {
                 // Hapus 'Rp' dan ganti '.' dengan kosong agar bisa diparsing
                 var jumlah = item.jumlah.replace(/Rp/g, '').replace(/\./g, '').trim();
                 totalJumlah += parseFloat(jumlah) || 0;
             });
-            $('#total-pemasukan').html('Rp ' + totalJumlah.toLocaleString());
+
+            // Format total jumlah ke format Rupiah dengan dua desimal (,00)
+            var formattedTotal = totalJumlah.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+            // Tampilkan total dengan format Rupiah di elemen '#total-pemasukan'
+            $('#total-pemasukan').html('Rp ' + formattedTotal);
         }
-            });
-        }
+    });
+}
+
 </script>
 
 

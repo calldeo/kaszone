@@ -70,10 +70,9 @@
                                         <i class="fas fa-dollar-sign"></i> <!-- Ikon dolar -->
                                     </span>
                                 </div>
-                                <input type="number" step="0.01" class="form-control" id="val-jumlah" name="jumlah" value="{{ old('jumlah', $pemasukan->jumlah ?? '') }}" placeholder="Masukkan jumlah.." required>
+                                <input type="text" class="form-control" id="val-jumlah" name="jumlah" value="{{ old('jumlah', 'Rp' . number_format($pemasukan->jumlah, 0, ',', '.')) }}" placeholder="Rp0,00" required>
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -149,8 +148,41 @@
                     }
                 });
             }
+    
+            // Memformat kembali nilai "Rp" saat form diisi dengan data dari database
+            var jumlahValue = $('#val-jumlah').val();
+            if (jumlahValue) {
+                // Hapus pemisah ribuan dan Rp jika ada, lalu format kembali
+                jumlahValue = jumlahValue.replace(/Rp/g, '').replace(/\./g, '').trim();
+                $('#val-jumlah').val('Rp' + numberWithCommas(jumlahValue)); // Format kembali dengan "Rp"
+            }
+    
+            // Ketika input jumlah berubah
+            $('#val-jumlah').on('input', function() {
+                var value = $(this).val().replace(/Rp/g, '').replace(/\./g, '').trim(); // Menghapus "Rp" dan pemisah ribuan
+                // Cek apakah value valid
+                if (!isNaN(value) && value !== '') {
+                    // Format ke "Rp" dengan pemisah ribuan
+                    $(this).val('Rp' + numberWithCommas(value));
+                } else {
+                    // Reset jika tidak valid
+                    $(this).val('');
+                }
+            });
+    
+            // Fungsi untuk menambahkan pemisah ribuan
+            function numberWithCommas(x) {
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            }
+    
+            // Mengubah nilai sebelum mengirim form
+            $('form').on('submit', function() {
+                var jumlahInput = $('#val-jumlah').val().replace(/Rp/g, '').replace(/\./g, '').trim(); // Menghapus "Rp" dan pemisah ribuan
+                $('#val-jumlah').val(jumlahInput); // Memastikan nilai yang dikirim adalah angka tanpa "Rp" dan pemisah ribuan
+            });
         });
     </script>
+    
     
 </body>
 

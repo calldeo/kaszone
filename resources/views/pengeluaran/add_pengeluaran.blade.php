@@ -117,14 +117,26 @@
 
                             
 
+                            {{-- <!-- Deskripsi Field -->
+                            <div class="form-group">
+                                <label class="text-label">Deskripsi</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-book"></i></span>
+                                    </div>
+                                    <textarea class="form-control" name="description[]" placeholder="Enter description..">{{ old('description') }}</textarea>
+                                </div>
+                            </div> --}}
+
                             <!-- Nominal Field -->
                             <div class="form-group">
-                                <label class="text-label">Nominal (Rp) *</label>
+                                <label class="text-label">Nominal *</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
                                     </div>
-                                    <input type="number" step="0.01" class="form-control" id="nominal" name="nominal[]" placeholder="Enter amount.." value="{{ old('nominal') }}" required>
+                                    <input type="text" class="form-control nominal" id="nominal" name="nominal[]" placeholder="Enter amount.." required oninput="formatInputNominal(event); calculateTotal(event);"> <!-- Input tersembunyi untuk nilai numerik -->
+                                    <input type="hidden" name="nominal_hidden[]" id="nominal_value">
                                 </div>
                                 @error('nominal')
                                 <span class="mt-2 text-danger">{{ $message }}</span>
@@ -138,7 +150,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
                                     </div>
-                                    <input type="number" step="0.01" class="form-control" id="jumlah_satuan" name="jumlah_satuan[]" placeholder="Enter amount.." value="{{ old('jumlah_satuan') }}" required>
+                                    <input type="number" step="0.01" class="form-control" id="jumlah_satuan" name="jumlah_satuan[]" placeholder="Enter amount.." value="{{ old('jumlah_satuan') }}" required oninput="calculateTotal(event);">
                                 </div>
                                 @error('jumlah_satuan')
                                 <span class="mt-2 text-danger">{{ $message }}</span>
@@ -152,7 +164,8 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
                                     </div>
-                                    <input type="number" step="0.01" class="form-control" id="dll" name="dll[]" placeholder="Enter amount.." value="{{ old('dll') }}" required>
+                                    <input type="text" class="form-control dll" id="dll" name="dll[]" placeholder="Enter amount.." required oninput="formatInputDll(event); calculateTotal(event);">
+                                    <input type="hidden" name="dll_hidden[]" id="dll_value"> <!-- Input tersembunyi untuk nilai numerik -->
                                 </div>
                                 @error('dll')
                                 <span class="mt-2 text-danger">{{ $message }}</span>
@@ -166,7 +179,8 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
                                     </div>
-                                    <input type="number" step="0.01" class="form-control" id="jumlah" name="jumlah[]" placeholder="Enter amount.." value="{{ old('jumlah') }}" required>
+                                    <input type="text" class="form-control jumlah" id="jumlah" name="jumlah[]" placeholder="Masukkan jumlah.." value="{{ old('jumlah') }}" required readonly>
+                                    <input type="hidden" id="jumlah_hidden" name="jumlah_hidden[]">
                                 </div>
                                 @error('jumlah')
                                 <span class="mt-2 text-danger">{{ $message }}</span>
@@ -177,7 +191,6 @@
                                 <label class="text-label">Kategori *</label>
                                 <select class="select2-with-label-single js-states form-control" id="category" name="category_id[]" required>
                                     <option value="">PILIH KATEGORI</option>
-                            
                                 </select>
                                 @error('category_id')
                                 <span class="mt-2 text-danger">{{ $message }}</span>
@@ -192,7 +205,7 @@
                                 </div>
                                 <div class="file-upload-wrapper">
                                     <label class="file-upload-label" for="image">Pilih file</label>
-                                    <input type="file" id="image" name="image[]" accept="image/*" onchange="updateImagePreview(this, 'profile-image')">
+                                    <input type="file" id="image" name="image[]" accept="image/*" onchange="updateImagePreview(event, 'profile-image')">
                                     <div id="file-upload-info" class="file-upload-info">Tidak ada file yang dipilih</div>
                                 </div>
                                 <label class="text-label text-danger mt-3">* Jika tidak ada perubahan, tidak perlu diisi</label>
@@ -230,322 +243,237 @@
     @include('template.scripts')
 </body>
 <script>
-    $(document).ready(function() {
-        // Fungsi untuk mengambil kategori dari server
-        function getCategories(callback) {
-            $.ajax({
-                url: '/get-categories/2',
-                method: 'GET',
-                success: function(data) {
-                    if (callback) callback(data);
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error fetching categories:', error);
-                }
-            });
-        }
+   function formatInputNominal(event) {
+    const input = event.target;
+    const hiddenInput = input.nextElementSibling; 
+    let value = input.value.replace(/[^0-9]/g, ''); 
 
-        // Memanggil getCategories pada saat memuat halaman
+    if (value) {
+        const formattedValue = parseInt(value).toLocaleString('id-ID'); 
+        input.value = 'Rp ' + formattedValue; 
+        hiddenInput.value = value;
+    } else {
+        input.value = 'Rp 0';
+        hiddenInput.value = ''; 
+    }
+}
+
+function formatInputDll(event) {
+    const input = event.target; 
+    const hiddenInput = input.nextElementSibling; 
+    let value = input.value.replace(/[^0-9]/g, ''); 
+
+    if (value) {
+        const formattedValue = parseInt(value).toLocaleString('id-ID'); 
+        input.value = 'Rp ' + formattedValue; 
+        hiddenInput.value = value; 
+    } else {
+        input.value = 'Rp 0';
+        hiddenInput.value = '';
+    }
+}
+
+function calculateTotal(event) {
+    const container = event.target.closest('.dynamic-field');
+    const jumlahSatuan = parseInt(container.querySelector('[name="jumlah_satuan[]"]').value) || 0; 
+
+    const nominalString = container.querySelector('[name="nominal_hidden[]"]').value;
+    const nominal = parseInt(nominalString) || 0; 
+
+    const dllString = container.querySelector('[name="dll_hidden[]"]').value;
+    const dll = parseInt(dllString) || 0; 
+
+    const total = jumlahSatuan * nominal + dll; 
+
+    const formattedTotal = 'Rp ' + total.toLocaleString('id-ID'); 
+
+    container.querySelector('[name="jumlah[]"]').value = formattedTotal; 
+    container.querySelector('[name="jumlah_hidden[]"]').value = total; 
+
+    updateGrandTotal(); 
+}
+
+function updateGrandTotal() {
+    let grandTotal = 0;
+    document.querySelectorAll('[name="jumlah_hidden[]"]').forEach(function(input) {
+        grandTotal += parseInt(input.value) || 0; 
+    });
+
+    const formattedGrandTotal = 'Rp ' + grandTotal.toLocaleString('id-ID'); 
+    document.getElementById('grand-total').textContent = formattedGrandTotal; 
+}
+
+
+$('form').on('submit', function() {
+    document.querySelectorAll('input[name="nominal_hidden[]"], input[name="dll_hidden[]"]').forEach(function(input) {
+        if (!input.value) {
+            input.value = '0'; 
+        }
+    });
+});
+
+function getCategories(callback) {
+    $.ajax({
+        url: '/get-categories/2',
+        method: 'GET',
+        success: function(data) {
+            if (callback) callback(data);
+        },
+        error: function(xhr, status, error) {
+            console.error('Error fetching categories:', error);
+        }
+    });
+}
+
+function updateImagePreview(event, imageId) {
+    const input = event.target;
+    const file = input.files[0];
+    const image = document.getElementById(imageId);
+    const fileInfo = input.parentElement.querySelector('.file-upload-info');
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            image.src = e.target.result;
+            fileInfo.textContent = file.name;
+        };
+        reader.readAsDataURL(file);
+    } else {
+        image.src = '{{ asset('dash/images/cash.png') }}';
+        fileInfo.textContent = 'Tidak ada file yang dipilih';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    let iterate = 1;
+
+    getCategories(function(categories) {
+        document.querySelectorAll('#dynamic-fields-container .dynamic-field select[name="category_id[]"]').forEach(function(dropdown) {
+            dropdown.innerHTML = '<option value="">--PILIH KATEGORI--</option>';
+            categories.forEach(function(item) {
+                dropdown.innerHTML += `<option value="${item.id}">${item.name}</option>`;
+            });
+            $(dropdown).select2();
+        });
+    });
+
+    document.getElementById('add-more-fields').addEventListener('click', function() {
+        const newFieldSet = `
+            <div class="dynamic-field">
+                <div class="form-group">
+                    <label class="text-label">Nama Pengeluaran *</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-user"></i></span>
+                        </div>
+                        <input type="text" class="form-control" name="name[]" placeholder="Enter name.." required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="text-label">Deskripsi</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-book"></i></span>
+                        </div>
+                        <textarea class="form-control" name="description[]" placeholder="Enter description.."></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="text-label">Nominal *</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                        </div>
+                        <input type="text" class="form-control nominal${iterate}" name="nominal[]" placeholder="Enter amount.." required oninput="formatInputNominal(event); calculateTotal(event);">
+                        <input type="hidden" name="nominal_hidden[]"> <!-- Input tersembunyi untuk nilai numerik -->
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="text-label">Jumlah Satuan *</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                        </div>
+                        <input type="number" step="1" class="form-control jumlah_satuan" name="jumlah_satuan[]" placeholder="Enter amount.." required oninput="calculateTotal(event);">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="text-label">Dll *</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                        </div>
+                        <input type="text" class="form-control dll${iterate}" name="dll[]" placeholder="Enter amount.." required oninput="formatInputDll(event); calculateTotal(event);">
+                        <input type="hidden" name="dll_hidden[]"> <!-- Input tersembunyi untuk nilai numerik -->
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="text-label">Jumlah *</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                        </div>
+                        <input type="text" class="form-control jumlah" name="jumlah[]" placeholder="Enter amount.." required readonly>
+                        <input type="hidden" name="jumlah_hidden[]">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="text-label">Kategori *</label>
+                    <select class="select2-with-label-single js-states form-control" name="category_id[]" required>
+                        <option value="">PILIH KATEGORI</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="image${iterate}">Foto Bukti Pengeluaran</label>
+                    <div class="mb-3">
+                        <img id="profile-image${iterate}" src="{{ asset('dash/images/cash.png') }}" alt="Gambar Bukti Pengeluaran" width="150" height="150">
+                    </div>
+                    <div class="file-upload-wrapper">
+                        <label class="file-upload-label" for="image${iterate}">Pilih file</label>
+                        <input type="file" id="image${iterate}" name="image[]" accept="image/*" onchange="updateImagePreview(event, 'profile-image${iterate}')">
+                        <div id="file-upload-info${iterate}" class="file-upload-info">Tidak ada file yang dipilih</div>
+                    </div>
+                    <label class="text-label text-danger mt-3">* Jika tidak ada perubahan, tidak perlu diisi</label>
+                </div>
+
+                <button type="button" class="btn btn-danger remove-field">Remove</button>
+                <hr>
+            </div>
+        `;
+
+        document.getElementById('dynamic-fields-container').insertAdjacentHTML('beforeend', newFieldSet);
+
         getCategories(function(categories) {
-            // Setiap dropdown yang ada di halaman ini diisi dengan kategori
-            $('#dynamic-fields-container .dynamic-field select[name="category_id[]"]').each(function() {
-                var $dropdown = $(this);
-                $dropdown.empty(); // Kosongkan opsi yang ada
-                $dropdown.append('<option value="">--PILIH KATEGORI--</option>');
-                $.each(categories, function(index, item) {
-                    $dropdown.append($('<option>', {
-                        value: item.id,
-                        text: item.name
-                    }));
-                });
+            const newDropdown = document.querySelector('#dynamic-fields-container .dynamic-field:last-child select[name="category_id[]"]');
+            newDropdown.innerHTML = '<option value="">Select Category</option>';
+            categories.forEach(function(item) {
+                newDropdown.innerHTML += `<option value="${item.id}">${item.name}</option>`;
             });
-        });
-        
-
-        // Fungsi untuk memperbarui pratinjau gambar
-        function updateImagePreview(input, imageId) {
-            var file = input.files[0];
-            var $image = $('#' + imageId);
-            if (file) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    $image.attr('src', e.target.result);
-                    $(input).siblings('.file-upload-info').text(file.name);
-                };
-                reader.readAsDataURL(file);
-            } else {
-                $image.attr('src', '{{ asset('dash/images/cash.png') }}');
-                $(input).siblings('.file-upload-info').text('Tidak ada file yang dipilih');
-            }
-        }
-
-        // Mendengarkan perubahan pada input file
-        $(document).on('change', 'input[type="file"]', function() {
-            updateImagePreview(this, $(this).siblings('img').attr('id'));
+            $(newDropdown).select2();
         });
 
-        $(document).ready(function() {
-    // Menambahkan lebih banyak bidang formulir
-$('#add-more-fields').on('click', function() {
-    var newFieldSet = `
-        <div class="dynamic-field">
-            <div class="form-group">
-                <label class="text-label">Nama Pengeluaran*</label>
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fa fa-user"></i></span>
-                    </div>
-                    <input type="text" class="form-control" name="name[]" placeholder="Enter name.." required>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="text-label">Deskripsi</label>
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-book"></i></span>
-                    </div>
-                    <textarea class="form-control" name="description[]" placeholder="Enter description.."></textarea>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="text-label">Nominal (Rp) *</label>
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                    </div>
-                    <input type="number" step="0.01" class="form-control nominal" name="nominal[]" placeholder="Enter amount.." required>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="text-label">Jumlah Satuan *</label>
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                    </div>
-                    <input type="number" step="0.01" class="form-control jumlah_satuan" name="jumlah_satuan[]" placeholder="Enter amount.." required>
-                </div>
-            </div>
-
-
-            <div class="form-group">
-                <label class="text-label">Dll *</label>
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                    </div>
-                    <input type="number" step="0.01" class="form-control dll" name="dll[]" placeholder="Enter amount.." required>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="text-label">Jumlah *</label>
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                    </div>
-                    <input type="number" step="0.01" class="form-control jumlah" name="jumlah[]" placeholder="Enter amount.." required readonly>
-                </div>
-            </div>
-
-           <div class="form-group">
-                                        <label class="text-label">Kategori *</label>
-                                        <select class="select2-with-label-single js-states form-control" id="category" name="category_id[]" required>
-                                            <option value="">PILIH KATEGORI</option>
-                                    
-                                        </select>
-                                        @error('category_id')
-                                        <span class="mt-2 text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-
-            <!-- Field untuk Foto Bukti Pengeluaran -->
-       <div class="form-group">
-    <label for="image1">Foto Bukti Pengeluaran 1</label>
-    <div class="mb-3">
-        <img id="profile-image1" src="{{ asset('dash/images/cash.png') }}" alt="Gambar Bukti Pengeluaran 1" width="150" height="150">
-    </div>
-    <div class="file-upload-wrapper">
-        <label class="file-upload-label" for="image1">Pilih file</label>
-        <input type="file" id="image1" name="image[]" accept="image/*" onchange="updateImagePreview(this, 'profile-image1', 'file-upload-info1')">
-        <div id="file-upload-info1" class="file-upload-info">Tidak ada file yang dipilih</div>
-    </div>
-    <label class="text-label text-danger mt-3">* Jika tidak ada perubahan, tidak perlu diisi</label>
-</div>
-
-            <button type="button" class="btn btn-danger remove-field">Remove</button>
-            <hr>
-        </div>
-    `;
-
-        $('#dynamic-fields-container').append(newFieldSet);
-
-        // Set event listener untuk menghitung jumlah otomatis
-        calculateTotal();
-
-        // Fungsi untuk menghitung jumlah otomatis
-        function calculateTotal() {
-            $('#dynamic-fields-container').on('input', '.jumlah_satuan, .nominal, .dll', function() {
-                var $parent = $(this).closest('.dynamic-field');
-                var jumlahSatuan = parseFloat($parent.find('.jumlah_satuan').val()) || 0;
-                var nominal = parseFloat($parent.find('.nominal').val()) || 0;
-                var dll = parseFloat($parent.find('.dll').val()) || 0;
-
-                // Hitung total dan isi field jumlah
-                var total = jumlahSatuan * nominal + dll;
-                $parent.find('.jumlah').val(total.toFixed(2)); // Isi field jumlah dengan nilai total
-            });
-        }
-
-        // Memuat ulang kategori untuk bidang baru
-        getCategories(function(categories) {
-            $('#dynamic-fields-container .dynamic-field:last-child select[name="category_id[]"]').each(function() {
-                var $dropdown = $(this);
-                $dropdown.empty(); // Kosongkan opsi yang ada
-                $dropdown.append('<option value="">--PILIH KATEGORI--</option>');
-                $.each(categories, function(index, item) {
-                    $dropdown.append($('<option>', {
-                        value: item.id,
-                        text: item.name
-                    }));
-                });
-                   $dropdown.select2();
-            });
-            
-        });
-    });
-});
-
-
-    // Menangani penghapusan bidang formulir
-    $('#dynamic-fields-container').on('click', '.remove-field', function() {
-        $(this).closest('.dynamic-field').remove();
+        iterate++;
     });
 
-    // Memastikan tombol "Remove" terlihat pada saat memuat
-    $('#dynamic-fields-container').on('DOMNodeInserted', function(event) {
-        if ($(event.target).hasClass('dynamic-field')) {
-            $(event.target).find('.remove-field').show();
+    document.getElementById('dynamic-fields-container').addEventListener('click', function(event) {
+        if (event.target.classList.contains('remove-field')) {
+            event.target.closest('.dynamic-field').remove();
+            updateGrandTotal();
         }
     });
-});
-</script>
-</script>
-  <script>
-  $(document).ready(function() {
-    getCategories(); // Memanggil fungsi untuk mengambil kategori
 
-    function getCategories() {
-        $.ajax({
-            url: '/get-categories/2 ', // Sesuaikan URL sesuai kebutuhan
-            method: 'GET',
-            success: function(data) {
-                var $dropdown = $('#category'); // Mengambil elemen dropdown dengan ID 'category'
-                $dropdown.empty(); // Menghapus opsi yang ada sebelumnya
-
-                // Menambahkan opsi default
-                $dropdown.append($('<option>', {
-                    value: '',
-                    text: 'Select Category'
-                }));
-
-                // Menambahkan kategori ke dropdown
-                $.each(data, function(index, item) {
-                    $dropdown.append($('<option>', {
-                        value: item.id, // Memastikan ini sesuai dengan respons API
-                        text: item.name // Menggunakan 'nama_kategori' sesuai dengan respons API
-                    }));
-                });
-
-                $dropdown.select2(); // Inisialisasi Select2
-            },
-            error: function(xhr) {
-                console.error('Error fetching categories:', xhr); // Mencetak kesalahan di konsol
-                // Menampilkan pesan kesalahan di UI
-                $('#category').append($('<option>', {
-                    value: '',
-                    text: 'Error loading categories'
-                }));
-            }
-        });
-    }
+    // Tambahkan elemen untuk menampilkan grand total
+    const grandTotalElement = document.createElement('div');
+    grandTotalElement.innerHTML = '<strong>Total Keseluruhan: <span id="grand-total">Rp 0</span></strong>';
+    document.querySelector('form').appendChild(grandTotalElement);
 });
 
-
-        </script>
-       <script>
-        
-  function updateImagePreview(input, imageId, infoId) {
-        const file = input.files[0];
-        const fileUploadInfo = document.getElementById(infoId);
-        const imagePreview = document.getElementById(imageId);
-        
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                imagePreview.src = e.target.result;
-                fileUploadInfo.textContent = file.name; // Tampilkan nama file yang dipilih
-            }
-            reader.readAsDataURL(file);
-        } else {
-            imagePreview.src = "{{ asset('dash/images/cash.png') }}"; // Ganti dengan gambar default
-            fileUploadInfo.textContent = "Tidak ada file yang dipilih";
-        }
-    }
-
-
 </script>
-<script>
-    document.addEventListener('input', function () {
-        let jumlahSatuan = parseFloat(document.getElementById('jumlah_satuan').value) || 0;
-        let nominal = parseFloat(document.getElementById('nominal').value) || 0;
-        let dll = parseFloat(document.getElementById('dll').value) || 0;
-
-
-        let jumlah = jumlahSatuan * nominal + dll;
-
-        document.getElementById('jumlah').value = jumlah.toFixed(2); // Mengisi hasil ke input 'jumlah'
-    });
-</script>
-{{-- <script>
-    $(document).ready(function() {
-        // Inisialisasi Bootstrap Datepicker
-        $('#datepicker').datepicker({
-            format: 'dd/mm/yyyy', // Format tanggal
-            todayHighlight: true,
-            autoclose: true
-        });
-
-        // Menampilkan input saat tombol diklik
-        $('#datepicker-toggle').on('click', function() {
-            $('#datepicker').toggle(); // Toggle visibilitas input
-        });
-    });
-</script> --}}
-<script>
- document.addEventListener('DOMContentLoaded', function () {
-    function calculateTotal() {
-        const jumlahSatuan = Number(document.getElementById('jumlah_satuan').value) || 0;
-        const nominal = Number(document.getElementById('nominal').value) || 0;
-        const dll = Number(document.getElementById('dll').value) || 0;
-
-        // Menghitung total
-        const total = (jumlahSatuan * nominal) + dll;
-
-        // Format total menjadi dua desimal dan menampilkan hasil
-        document.getElementById('jumlah').value = total.toFixed(2);
-    }
-
-    // Tambahkan event listener untuk setiap input
-    document.getElementById('jumlah_satuan').addEventListener('input', calculateTotal);
-    document.getElementById('nominal').addEventListener('input', calculateTotal);
-    document.getElementById('dll').addEventListener('input', calculateTotal);
-});
-
-
-    </script>
-
-    
 </html>

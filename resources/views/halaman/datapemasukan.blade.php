@@ -63,12 +63,16 @@
                                     @hasrole('Admin|Bendahara|Reader') 
                                     <form method="GET" action="{{ route('export.pemasukan') }}" id="export-pdf-form" class="mr-2">
                                         <input type="hidden" name="year" id="export-year" value="{{ old('year') }}" />
+                                        <input type="hidden" name="start_date" id="export-start-date" value="{{ old('start_date') }}" />
+                                        <input type="hidden" name="end_date" id="export-end-date" value="{{ old('end_date') }}" />
                                         <button type="submit" title="Export PDF" class="btn btn-info"><i class="fa fa-print"></i></button>
                                     </form>
                                     
                                     <form method="POST" action="{{ route('export.pemasukan.excel') }}" id="export-excel-form" class="mr-2">
                                         @csrf
                                         <input type="hidden" name="year" id="export-year-excel" value="{{ old('year') }}" />
+                                        <input type="hidden" name="start_date" id="export-start-date-excel" value="{{ old('start_date') }}" />
+                                        <input type="hidden" name="end_date" id="export-end-date-excel" value="{{ old('end_date') }}" />
                                         <button type="submit" title="Export Excel" class="btn btn-success"><i class="fa fa-file-excel"></i></button>
                                     </form>
                                     @endhasrole
@@ -96,9 +100,10 @@
                                                     <div class="form-group">
                                                         <label for="file">Pilih File Excel</label>
                                                         <input type="file" class="dropify" id="file" name="file" required accept=".xls,.xlsx">
-                                                        <div style="text-align: left;">
-                                                            <a href="{{ route('download-template-pemasukan') }}">Download Template Excel</a>
-                                                        </div>
+                                                      <a href="{{ route('download.template.pemasukan') }}" class="btn btn-secondary mr-2" title="Download Template Excel">
+                                                        <i class="fa fa-download"></i> Download Template
+                                                    </a>
+
                                                     </div>
                                                     <button type="submit" class="btn btn-primary">Import</button>
                                                 </form>
@@ -244,11 +249,23 @@
 
                     $('.input-daterange-datepicker').data('daterangepicker').setStartDate(filterData.start_created_at);
                     $('.input-daterange-datepicker').data('daterangepicker').setEndDate(filterData.end_created_at);
+                    
+                    // Update hidden inputs for export
+                    $('#export-start-date').val(filterData.start_created_at);
+                    $('#export-end-date').val(filterData.end_created_at);
+                    $('#export-start-date-excel').val(filterData.start_created_at);
+                    $('#export-end-date-excel').val(filterData.end_created_at);
                 } else {
                     $('.input-daterange-datepicker').prop('disabled', true);
                     filterData.year = null;
                     filterData.start_created_at = null;
                     filterData.end_created_at = null;
+                    
+                    // Clear hidden inputs for export
+                    $('#export-start-date').val('');
+                    $('#export-end-date').val('');
+                    $('#export-start-date-excel').val('');
+                    $('#export-end-date-excel').val('');
                 }
 
                 reloadTable(); // Reload table with new filters
@@ -258,6 +275,13 @@
             $('.input-daterange-datepicker').on('apply.daterangepicker', function(ev, picker) {
                 filterData.start_created_at = picker.startDate.format('YYYY-MM-DD');
                 filterData.end_created_at = picker.endDate.format('YYYY-MM-DD');
+                
+                // Update hidden inputs for export
+                $('#export-start-date').val(filterData.start_created_at);
+                $('#export-end-date').val(filterData.end_created_at);
+                $('#export-start-date-excel').val(filterData.start_created_at);
+                $('#export-end-date-excel').val(filterData.end_created_at);
+                
                 reloadTable(); // Reload table with new date filters
             });
 

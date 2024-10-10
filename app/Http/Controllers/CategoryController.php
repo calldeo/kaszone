@@ -188,9 +188,23 @@ class CategoryController extends Controller
             return response()->json(['message' => 'Kategori tidak ditemukan.'], 404);
         }
     }
+    // public function downloadTemplate()
+    // {
+    //     $filePath = public_path('templates/template-category.xlsx'); // Path ke file template
+    //     return response()->download($filePath);
+    // }
+    
     public function downloadTemplate()
     {
-        $filePath = public_path('templates/template-category.xlsx'); // Path ke file template
-        return response()->download($filePath);
+        $pathFile = public_path('templates/template-kategori.xlsx');
+        
+        if (file_exists($pathFile)) {
+            return response()->download($pathFile, 'template-kategori.xlsx', [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'Content-Disposition' => 'attachment; filename="template-kategori.xlsx"'
+            ]);
+        } else {
+            return redirect()->back()->with('error', 'File template tidak ditemukan.');
+        }
     }
 }
