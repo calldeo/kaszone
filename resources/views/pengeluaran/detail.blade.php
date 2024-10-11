@@ -137,7 +137,7 @@
                                             <label>Lain-lain</label>
                                             <input type="text" name="dll" class="form-control editable-input" value="Rp{{ number_format($pengeluaran->dll, 0, ',', '.') }}" readonly>
                                         </div>
-                                    </div>
+                                    </div>                                    
                                     
                                     
                                     <div class="col-md-3">

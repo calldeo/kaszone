@@ -77,93 +77,111 @@
                     </div>
 
                     <!-- Container untuk Pengeluaran -->
-                    <div id="pengeluaran-container">
+                    <div id="pengeluaran-container" class="accordion">
                         @foreach($parentPengeluaran->pengeluaran as $key => $pengeluaran)
                             <div class="card mt-4 pengeluaran-item" data-key="{{ $key }}">
-                                <div class="card-header bg-primary text-white">
-                                    Edit Pengeluaran {{ $loop->iteration }}
-                                    <div>
-                                        @if($parentPengeluaran->pengeluaran->count() > 1)
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-danger btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class="fas fa-trash-alt"></i> Hapus
-                                                </button>
-                                                <div class="dropdown-menu">
-                                                    <a href="{{ route('pengeluaran.delete', $pengeluaran->id_data) }}" class="dropdown-item" onclick="return confirm('Apakah Anda yakin ingin menghapus item ini?')">
-                                                        <i class="fas fa-trash"></i> Hapus Satu
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        @endif
-                                    </div>
+                                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center" id="heading{{ $key }}">
+                                    <h2 class="mb-0">
+                                        <button class="btn btn-link text-white" type="button" data-toggle="collapse" data-target="#collapse{{ $key }}" aria-expanded="true" aria-controls="collapse{{ $key }}">
+                                            Edit Pengeluaran {{ $loop->iteration }}
+                                        </button>
+                                    </h2>
+                                    <button class="btn btn-light btn-sm" type="button" data-toggle="collapse" data-target="#collapse{{ $key }}" aria-expanded="true" aria-controls="collapse{{ $key }}">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
                                 </div>
                                 
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="name_{{ $key }}">Nama</label>
-                                                <input type="text" id="name_{{ $key }}" name="name[]" class="form-control" value="{{ old('name.'.$key, $pengeluaran->name) }}" required>
+                                <div id="collapse{{ $key }}" class="collapse show" aria-labelledby="heading{{ $key }}" data-parent="#pengeluaran-container">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="name_{{ $key }}">Nama</label>
+                                                    <input type="text" id="name_{{ $key }}" name="name[]" class="form-control" value="{{ old('name.'.$key, $pengeluaran->name) }}" required>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="description_{{ $key }}">Deskripsi</label>
-                                                <textarea id="description_{{ $key }}" name="description[]" class="form-control" rows="1">{{ old('description.'.$key, $pengeluaran->description) }}</textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="jumlah_satuan_{{ $key }}">Jumlah Satuan</label>
-                                                <input type="text" id="jumlah_satuan_{{ $key }}" name="jumlah_satuan[]" class="form-control jumlah_satuan" data-key="{{ $key }}" value="{{ old('jumlah_satuan.'.$key, $pengeluaran->jumlah_satuan) }}" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="nominal_{{ $key }}">Nominal</label>
-                                                <input type="text" id="nominal_{{ $key }}" name="nominal[]" class="form-control nominal" data-key="{{ $key }}" value="{{ old('nominal.'.$key, $pengeluaran->nominal) }}" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="jumlah_{{ $key }}">Total</label>
-                                                <input type="text" id="jumlah_{{ $key }}" name="jumlah[]" class="form-control jumlah" value="{{ old('jumlah.'.$key, $pengeluaran->jumlah) }}" readonly>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="category_{{ $key }}">Kategori</label>
-                                                <select id="category_{{ $key }}" name="category_id[]" class="form-control select2 category-dropdown" required>
-                                                    <option value="">Pilih Kategori</option>
-                                                    @foreach($categories as $category)
-                                                        <option value="{{ $category->id }}" {{ $pengeluaran->id == $category->id ? 'selected' : '' }}>
-                                                            {{ $category->name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="description_{{ $key }}">Deskripsi</label>
+                                                    <textarea id="description_{{ $key }}" name="description[]" class="form-control" rows="1">{{ old('description.'.$key, $pengeluaran->description) }}</textarea>
+                                                </div>
                                             </div>
                                         </div>
 
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="dll_{{ $key }}">Lain-lain</label>
-                                                <input type="text" id="dll_{{ $key }}" name="dll[]" class="form-control dll" data-key="{{ $key }}" value="{{ old('dll.'.$key, $pengeluaran->dll) }}">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="jumlah_satuan_{{ $key }}">Jumlah Satuan</label>
+                                                    <input type="text" id="jumlah_satuan_{{ $key }}" name="jumlah_satuan[]" class="form-control jumlah_satuan" data-key="{{ $key }}" value="{{ old('jumlah_satuan.'.$key, $pengeluaran->jumlah_satuan) }}" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="nominal_{{ $key }}">Nominal</label>
+                                                    <div class="input-group">
+                                                        <input type="text" id="nominal_{{ $key }}" name="nominal[]" class="form-control nominal" data-key="{{ $key }}" 
+                                                               value="{{ old('nominal.'.$key, 'Rp' . number_format($pengeluaran->nominal, 0, ',', '.')) }}" 
+                                                               placeholder="Rp0,00" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="jumlah_{{ $key }}">Total</label>
+                                                    <div class="input-group">
+                                                        <input type="text" id="jumlah_{{ $key }}" name="jumlah[]" class="form-control jumlah"
+                                                               value="{{ old('jumlah.'.$key, 'Rp' . number_format($pengeluaran->jumlah, 0, ',', '.')) }}" 
+                                                               placeholder="Rp0,00" readonly>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="image_{{ $key }}">Gambar</label>
-                                                <input type="file" id="image_{{ $key }}" name="image[]" class="form-control">
-                                                <img src="{{ $pengeluaran->image ? asset('storage/' . $pengeluaran->image) : asset('dash/images/cash.png') }}" alt="Gambar" class="img-thumbnail mt-2">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="category_{{ $key }}">Kategori</label>
+                                                    <select id="category_{{ $key }}" name="category_id[]" class="form-control select2 category-dropdown" required>
+                                                        <option value="">Pilih Kategori</option>
+                                                        @foreach($categories as $category)
+                                                            <option value="{{ $category->id }}" {{ $pengeluaran->id == $category->id ? 'selected' : '' }}>
+                                                                {{ $category->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="dll_{{ $key }}">Lain-lain</label>
+                                                    <div class="input-group">
+                                                        <input type="text" id="dll_{{ $key }}" name="dll[]" class="form-control dll" data-key="{{ $key }}" 
+                                                               value="{{ old('dll.'.$key, 'Rp' . number_format($pengeluaran->dll, 0, ',', '.')) }}" 
+                                                               placeholder="Rp0,00">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="image_{{ $key }}">Gambar</label>
+                                                    <input type="file" id="image_{{ $key }}" name="image[]" class="form-control">
+                                                    <img src="{{ $pengeluaran->image ? asset('storage/' . $pengeluaran->image) : asset('dash/images/cash.png') }}" alt="Gambar" class="img-thumbnail mt-2">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row mt-3">
+                                            <div class="col-md-12">
+                                                @if($parentPengeluaran->pengeluaran->count() > 1)
+                                                    <a href="{{ route('pengeluaran.delete', $pengeluaran->id_data) }}" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus item ini?')">
+                                                        <i class="fas fa-trash-alt"></i> Hapus
+                                                    </a>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -171,18 +189,18 @@
                             </div>
                         @endforeach
                     </div>
-
                     <!-- Tombol untuk menambah pengeluaran -->
-                    <div class="mt-3">
-                        <button type="button" class="btn btn-success" id="add-pengeluaran">
+                    <div class="mt-4 d-flex justify-content-end">
+                        <button type="button" class="btn btn-info btn-lg" id="add-pengeluaran">
                             <i class="fas fa-plus"></i> Tambah Pengeluaran
                         </button>
                     </div>
-
-                    <div class="mt-4">
-                        <button type="button" class="btn btn-danger" onclick="window.location.href='/pengeluaran'">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                    
+                    <div class="mt-4 d-flex justify-content-end">
+                        {{-- <button type="button" class="btn btn-danger" onclick="window.location.href='/pengeluaran'">Cancel</button> --}}
+                        <button type="submit" class="btn mr-2 btn-primary btn-submit">Submit</button>
                     </div>
+                    
                 </form>
 
             </div>
@@ -210,10 +228,8 @@
     $(document).ready(function() {
         // Inisialisasi Select2
         $('.select2').select2();
-    
+        
         // Fungsi untuk mendapatkan kategori dari server
-        // getCategories();
-    
         function getCategories() {
             $.ajax({
                 url: '/get-categories/2', // Sesuaikan URL jika perlu
@@ -221,31 +237,31 @@
                 success: function(data) {
                     var $dropdown = $('.category-dropdown'); // Ganti dengan selector yang sesuai
                     var selectedCategoryId = "{{ $pengeluaran->id }}"; // Mengambil ID kategori dari objek pengeluaran
-    
+
                     // Kosongkan dropdown tapi pertahankan kategori yang dipilih
-                    $dropdown.empty(); 
-    
+                    $dropdown.empty();
+
                     // Tambahkan opsi default
                     $dropdown.append($('<option>', {
                         value: '',
                         text: 'Pilih Kategori'
                     }));
-    
+
                     // Iterasi data yang diterima dari server
                     $.each(data, function(index, item) {
                         var $option = $('<option>', {
                             value: item.id,
                             text: item.name
                         });
-    
+
                         // Pastikan opsi yang sesuai tetap terpilih
                         if (item.id == selectedCategoryId) {
                             $option.prop('selected', true);
                         }
-    
+
                         $dropdown.append($option);
                     });
-    
+
                     // Refresh Select2 untuk menampilkan opsi terbaru
                     $dropdown.trigger('change.select2');
                 },
@@ -259,126 +275,125 @@
             });
         }
 
-    // Fungsi untuk menghitung total
-    function calculateTotal(key) {
-        const jumlahSatuan = parseFloat($(`#jumlah_satuan_${key}`).val()) || 0;
-        const nominal = parseFloat($(`#nominal_${key}`).val()) || 0;
-        const dll = parseFloat($(`#dll_${key}`).val()) || 0;
-        const total = (jumlahSatuan * nominal) + dll;
-        $(`#jumlah_${key}`).val(total.toFixed(2));
-    }
+        // Fungsi untuk menghitung total
+        function calculateTotal(key) {
+            const jumlahSatuan = parseFloat($(`#jumlah_satuan_${key}`).val()) || 0;
+            const nominal = parseFloat($(`#nominal_${key}`).val().replace(/[^0-9.-]+/g,"")) || 0; // Menghapus format mata uang
+            const dll = parseFloat($(`#dll_${key}`).val().replace(/[^0-9.-]+/g,"")) || 0; // Menghapus format mata uang
+            const total = (jumlahSatuan * nominal) + dll;
+            $(`#jumlah_${key}`).val('Rp' + total.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ".")); // Menampilkan format mata uang
+        }
 
-    // Event listener untuk menghitung total
-    $(document).on('input', '.jumlah_satuan, .nominal, .dll', function() {
-        const key = $(this).data('key');
-        calculateTotal(key);
-    });
+        // Event listener untuk menghitung total
+        $(document).on('input', '.jumlah_satuan, .nominal, .dll', function() {
+            const key = $(this).data('key');
+            calculateTotal(key);
+        });
 
-    // Tambah pengeluaran
-    let pengeluaranCount = {{ $parentPengeluaran->pengeluaran->count() }};
-    $('#add-pengeluaran').on('click', function() {
-        pengeluaranCount++;
-        const newPengeluaran = `
-            <div class="card mt-4 pengeluaran-item" data-key="${pengeluaranCount}">
-                <div class="card-header bg-primary text-white">
-                    Tambah Pengeluaran ${pengeluaranCount}
-                    <div>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-danger btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-trash-alt"></i> Hapus
+        // Tambah pengeluaran
+        let pengeluaranCount = {{ $parentPengeluaran->pengeluaran->count() }};
+        $('#add-pengeluaran').on('click', function() {
+            pengeluaranCount++;
+            const newPengeluaran = `
+                <div class="card mt-4 pengeluaran-item" data-key="${pengeluaranCount}">
+                    <div class="card-header bg-primary text-white" id="heading${pengeluaranCount}">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link text-white" type="button" data-toggle="collapse" data-target="#collapse${pengeluaranCount}" aria-expanded="true" aria-controls="collapse${pengeluaranCount}">
+                                Tambah Pengeluaran ${pengeluaranCount}
                             </button>
-                            <div class="dropdown-menu">
-                                <a href="javascript:void(0);" class="dropdown-item remove-pengeluaran">
-                                    <i class="fas fa-trash"></i> Hapus
-                                </a>
+                        </h2>
+                    </div>
+                    <div id="collapse${pengeluaranCount}" class="collapse show" aria-labelledby="heading${pengeluaranCount}" data-parent="#pengeluaran-container">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="name_${pengeluaranCount}">Nama</label>
+                                        <input type="text" id="name_${pengeluaranCount}" name="name[]" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="description_${pengeluaranCount}">Deskripsi</label>
+                                        <textarea id="description_${pengeluaranCount}" name="description[]" class="form-control" rows="1"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="jumlah_satuan_${pengeluaranCount}">Jumlah Satuan</label>
+                                        <input type="text" id="jumlah_satuan_${pengeluaranCount}" name="jumlah_satuan[]" class="form-control jumlah_satuan" data-key="${pengeluaranCount}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="nominal_${pengeluaranCount}">Nominal</label>
+                                        <input type="text" id="nominal_${pengeluaranCount}" name="nominal[]" class="form-control nominal" data-key="${pengeluaranCount}" placeholder="Rp0,00" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="jumlah_${pengeluaranCount}">Total</label>
+                                        <input type="text" id="jumlah_${pengeluaranCount}" name="jumlah[]" class="form-control jumlah" readonly>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="category_${pengeluaranCount}">Kategori</label>
+                                        <select id="category_${pengeluaranCount}" name="category_id[]" class="form-control select2 category-dropdown" required>
+                                            <option value="">Pilih Kategori</option>
+                                            @foreach($categories as $category)
+                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="dll_${pengeluaranCount}">Lain-lain</label>
+                                        <input type="text" id="dll_${pengeluaranCount}" name="dll[]" class="form-control dll" data-key="${pengeluaranCount}" placeholder="Rp0,00">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="image_${pengeluaranCount}">Gambar</label>
+                                        <input type="file" id="image_${pengeluaranCount}" name="image[]" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <button type="button" class="btn btn-danger btn-sm remove-pengeluaran">
+                                        <i class="fas fa-trash-alt"></i> Hapus
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="name_${pengeluaranCount}">Nama</label>
-                                <input type="text" id="name_${pengeluaranCount}" name="name[]" class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="description_${pengeluaranCount}">Deskripsi</label>
-                                <textarea id="description_${pengeluaranCount}" name="description[]" class="form-control" rows="1"></textarea>
-                            </div>
-                        </div>
-                    </div>
+            `;
+            $('#pengeluaran-container').append(newPengeluaran);
+            $('.select2').select2();
+            getCategories(); // Inisialisasi Select2 setelah menambah elemen baru
+        });
 
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="jumlah_satuan_${pengeluaranCount}">Jumlah Satuan</label>
-                                <input type="text" id="jumlah_satuan_${pengeluaranCount}" name="jumlah_satuan[]" class="form-control jumlah_satuan" data-key="${pengeluaranCount}" required>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="nominal_${pengeluaranCount}">Nominal</label>
-                                <input type="text" id="nominal_${pengeluaranCount}" name="nominal[]" class="form-control nominal" data-key="${pengeluaranCount}" required>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="jumlah_${pengeluaranCount}">Total</label>
-                                <input type="text" id="jumlah_${pengeluaranCount}" name="jumlah[]" class="form-control jumlah" readonly>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="category_${pengeluaranCount}">Kategori</label>
-                                <select id="category_${pengeluaranCount}" name="category_id[]" class="form-control select2 category-dropdown" required>
-                                    <option value="">Pilih Kategori</option>
-                                    @foreach($categories as $category)
-                                        <option value="{{ $category->id }}" {{ $pengeluaran->id == $category->id ? 'selected' : '' }}>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="dll_${pengeluaranCount}">Lain-lain</label>
-                                <input type="text" id="dll_${pengeluaranCount}" name="dll[]" class="form-control dll" data-key="${pengeluaranCount}">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="image_${pengeluaranCount}">Gambar</label>
-                                <input type="file" id="image_${pengeluaranCount}" name="image[]" class="form-control">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-        $('#pengeluaran-container').append(newPengeluaran);
-        $('.select2').select2();
-        getCategories(); // Inisialisasi Select2 setelah menambah elemen baru
+        // Menghapus pengeluaran
+        $(document).on('click', '.remove-pengeluaran', function() {
+            $(this).closest('.pengeluaran-item').remove();
+        });
     });
-
-    // Menghapus pengeluaran
-    $(document).on('click', '.remove-pengeluaran', function() {
-        $(this).closest('.pengeluaran-item').remove();
-    });
-});
-
-
-
-
 </script>
+
 
 </body>
 </html>
