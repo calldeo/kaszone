@@ -210,7 +210,7 @@ function formatInput() {
             if (value) {
                 // Konversi menjadi format lokal
                 const formattedValue = parseInt(value).toLocaleString('id-ID');
-                input.value = 'Rp ' + formattedValue; // Menambahkan 'Rp' di depan
+                input.value = 'Rp' + formattedValue; // Menambahkan 'Rp' di depan
                 hiddenInput.value = value; // Menyimpan nilai numerik di input tersembunyi
             } else {
                 input.value = 'Rp 0'; // Jika tidak ada input

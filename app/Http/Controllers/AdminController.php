@@ -18,18 +18,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
-    public function admin(Request $request)
-    {
-        $search = $request->search;
-        // $users = User::where('name', 'LIKE', '%' . $request->search . '%')->paginate(10);
-
-        // // Mengambil semua data user dengan level admin
-        // $users = User::where('level', 'admin')->paginate(10);
-
-        // Meneruskan data ke tampilan
-        return view('halaman.admin');
-    }
-
+   
     public function table(Request $request)
     {
         if ($request->ajax()) {
@@ -65,101 +54,6 @@ class AdminController extends Controller
     }
 
 
-    public function destroy($id)
-    {
-        try {
-            $user = User::find($id);
-
-            if ($user) {
-                $user->forceDelete(); // Menghapus data secara permanen
-                return redirect('/admin')->with('success', 'Data berhasil dihapus secara permanen');
-            } else {
-                return redirect('/admin')->with('error', 'Data tidak ditemukan.');
-            }
-        } catch (\Exception $e) {
-            return redirect('/admin')->with('error', 'Gagal menghapus data. Silakan coba lagi.');
-        }
-    }
-
-    public function add_admin()
-    {
-
-        $roles = Role::all();
-        return view('tambah.add_admin', compact('roles'));
-    }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => ['required', 'min:3', 'max:30', function ($attribute, $value, $fail) {
-                // Check if the name already exists in the database
-                if (User::where('name', $value)->exists()) {
-                    $fail($attribute . ' is registered.');
-                }
-            }],
-            'email' => 'required|unique:users,email',
-            'password' => ['required', 'min:8', 'max:12'],
-            'kelamin' => 'required',
-            'alamat' => ['required', 'min:3', 'max:30'],
-        ]);
-
-        // Create the user
-        $admin =  User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            // 'level' => $request->level,  // Menambahkan kolom level
-            'alamat' => $request->alamat,
-            'kelamin' => $request->kelamin,
-
-        ]);
-        $admin->assignRole($request->level);
-
-        return redirect('/admin')->with('success', 'Data Berhasil Ditambahkan');
-    }
-
-
-    public function edit($id)
-    {
-        $admin = User::find($id);
-        unset($admin->password); // Jangan mengirimkan password ke tampilan
-
-
-        return view('edit.edit_admin', compact('admin'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $admin = User::find($id);
-
-        $request->validate([
-            'name' => ['required', 'min:3', 'max:30'],
-            'email' => 'required|email|unique:users,email,' . $admin->id,
-            'password' => ['nullable', 'min:8', 'max:12'], // Mengubah menjadi nullable
-            'kelamin' => 'required',
-            'alamat' => ['required', 'min:3', 'max:30'],
-
-        ]);
-
-        $data = [
-            'name' => $request->name,
-
-            'email' => $request->email,
-            'kelamin' => $request->kelamin,
-            'alamat' => $request->alamat,
-
-        ];
-        $admin->assignRole($request->level);
-
-        // Menambahkan password ke data hanya jika ada input password
-        if ($request->filled('password')) {
-            $data['password'] = bcrypt($request->password);
-        }
-
-        $admin->update($data);
-
-        return redirect('/admin')->with('update_success', 'Data Berhasil Diupdate');
-    }
 
 
 
@@ -276,7 +170,7 @@ class AdminController extends Controller
                     return Carbon::parse($row->date)->format('d-m-Y'); // Format: hari-bulan-tahun
                 })
                 ->editColumn('jumlah', function ($row) {
-                    return 'Rp ' . number_format($row->jumlah, 2, ',', '.'); // Menambahkan Rp dan format angka
+                    return 'Rp' . number_format($row->jumlah, 0, ',', '.'); // Menambahkan Rp dan format angka tanpa desimal
                 })
                 ->addColumn('opsi', function ($row) {
                     $user = auth()->user();
@@ -297,7 +191,7 @@ class AdminController extends Controller
                     return '<div class="d-flex align-items-center">' . $editButton . $viewButton . $deleteButton . '</div>';
                 })
                 ->rawColumns(['opsi'])
-                ->with(['total_jumlah' => 'Rp ' . number_format($totalJumlah, 2, ',', '.')]) // Tambahkan Rp pada total jumlah
+                ->with(['total_jumlah' => 'Rp' . number_format($totalJumlah, 2, ',', '.')]) // Tambahkan Rp pada total jumlah
                 ->make(true);
         }
     }
@@ -373,7 +267,7 @@ class AdminController extends Controller
                     $nominal = '';
                     foreach ($row->pengeluaran as $val) {
                         // Format ke IDR
-                        $nominal .= 'Rp ' . number_format($val->nominal, 0, ',', '.') . '<br>';
+                        $nominal .= 'Rp' . number_format($val->nominal, 0, ',', '.') . '<br>';
                     }
                     return $nominal ?: 'Tidak ada nominal';
                 })
@@ -389,7 +283,7 @@ class AdminController extends Controller
                     foreach ($row->pengeluaran as $val) {
                         $jumlah += $val->jumlah; // Akumulasi jumlah
                     }
-                    return 'Rp ' . number_format($jumlah, 0, ',', '.') ?: 'Tidak ada jumlah'; // Tampilkan total
+                    return 'Rp' . number_format($jumlah, 0, ',', '.') ?: 'Tidak ada jumlah'; // Tampilkan total
                 })
                 ->addColumn('category', function ($row) {
                     $categories = '';

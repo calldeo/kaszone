@@ -254,7 +254,7 @@
                     var jumlah = item.jumlah.replace(/Rp/g, '').replace(/\./g, '').trim();
                     totalJumlah += parseFloat(jumlah) || 0;
                 });
-                $('#total-pemasukan').html(totalJumlah.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' }));
+                $('#total-pemasukan').html('Rp' + totalJumlah.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }));
             }
         });
     }
@@ -291,7 +291,7 @@
                 data.forEach(function(item) {
                     total += parseFloat(item.jumlah.replace(/Rp/g, '').replace(/\./g, '').trim()) || 0;
                 });
-                $('#total-pengeluaran').html(total.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' }));
+                $('#total-pengeluaran').html('Rp' + total.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }));
             }
         });
     }

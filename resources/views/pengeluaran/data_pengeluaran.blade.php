@@ -142,9 +142,10 @@
                                     </thead>
                                   <tfoot>
                                     <tr>
-                                        <td colspan="5" style="text-align: left; font-size: 1.25em; font-weight: bold;"><strong>Total Jumlah:</strong></td>
+                                        <td colspan="4" style="text-align: left; font-size: 1.25em; font-weight: bold;"><strong>Total Jumlah:</strong></td>
                                         <td id="total-jumlah" style="text-align: left; font-size: 1.25em; font-weight: bold;">0</td>
                                         <td></td> <!-- Kolom Opsi dikosongkan -->
+                                        <td></td> <!-- Kolom tambahan untuk menyesuaikan dengan jumlah kolom -->
                                     </tr>
                                 </tfoot>
                                 </table>
@@ -280,7 +281,7 @@ $(document).ready(function() {
                 });
 
                 // Tampilkan total jumlah dalam format IDR
-                $('#total-jumlah').html(totalJumlah.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' }));
+                $('#total-jumlah').html('Rp' + totalJumlah.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }));
             }
         });
     }
