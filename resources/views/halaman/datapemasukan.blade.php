@@ -324,7 +324,7 @@
         totalJumlah += parseFloat(jumlah) || 0;
     });
     // Format total jumlah
-    $('#total-jumlah-value').text('Rp ' + totalJumlah.toLocaleString('id-ID')); // Format dengan locale Indonesia
+    $('#total-jumlah-value').text('Rp' + totalJumlah.toLocaleString('id-ID')); // Format dengan locale Indonesia
 }
 
 

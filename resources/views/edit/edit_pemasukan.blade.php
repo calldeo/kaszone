@@ -39,13 +39,27 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="name">Nama</label>
-                                    <input type="text" id="name" name="name" class="form-control" value="{{ $pemasukan->name }}" required>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-tag"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" id="name" name="name" class="form-control" value="{{ $pemasukan->name }}" required>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="description">Deskripsi</label>
-                                    <textarea id="description" name="description" class="form-control" rows="3">{{ $pemasukan->description }}</textarea>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-align-left"></i>
+                                            </span>
+                                        </div>
+                                        <textarea id="description" name="description" class="form-control" rows="3">{{ $pemasukan->description }}</textarea>
+                                    </div>
                                 </div>
                             </div>
                         </div>
