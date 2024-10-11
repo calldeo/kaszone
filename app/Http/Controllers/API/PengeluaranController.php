@@ -255,56 +255,6 @@ public function deleteAll($id)
     ], 404);
 }
 
- public function delete($id_data)
-{
-    $pengeluaran = Pengeluaran::find($id_data);
-
-    if ($pengeluaran) {
-        $sameParentCount = Pengeluaran::where('id_parent', $pengeluaran->id_parent)->count();
-
-        if ($sameParentCount > 1) {
-            $pengeluaran->delete();
-            return response()->json([
-                'status' => 'success', 
-                'message' => 'Item berhasil dihapus.'
-            ], 200);
-        } else {
-            return response()->json([
-                'status' => 'error', 
-                'error' => 'Tidak dapat menghapus item, karena hanya ada 1 data.'
-            ], 400);
-        }
-    }
-
-    return response()->json([
-        'status' => 'error',
-        'error' => 'Item tidak ditemukan.'
-    ], 404);
-}
-
-public function deleteAll($id)
-{
-    $parentPengeluaran = ParentPengeluaran::find($id);
-
-    if ($parentPengeluaran) {
-     
-        $parentPengeluaran->pengeluaran()->delete();
-
-        
-        $parentPengeluaran->delete();
-
-        return response()->json([
-            'status' => 'success', 
-            'message' => 'Semua pengeluaran berhasil dihapus.'
-        ], 200);
-    }
-
-    return response()->json([
-        'status' => 'error', 
-        'error' => 'Data tidak ditemukan.'
-    ], 404);
-}
-
      public function showDetail($id)
     {
         // Mencari kategori berdasarkan ID
