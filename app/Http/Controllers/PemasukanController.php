@@ -225,9 +225,9 @@ class PemasukanController extends Controller
             $namafile = $file->getClientOriginalName();
             $file->move(public_path('DataPemasukan'), $namafile);
 
-            // Impor data hanya dari worksheet pertama
+            // Impor data dari baris kedua (di bawah header)
             Excel::import(new PemasukanImport, public_path('DataPemasukan/' . $namafile), null, \Maatwebsite\Excel\Excel::XLSX, [
-                'startRow' => 2,
+                'startRow' => 2, // Mulai dari baris kedua (di bawah header)
                 'onlySheets' => [0] // Hanya impor worksheet pertama
             ]);
 
@@ -248,8 +248,6 @@ class PemasukanController extends Controller
             return redirect('/pemasukan')->with('error', 'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage());
         }
     }
-    
-
 
 
 

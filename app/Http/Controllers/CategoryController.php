@@ -126,7 +126,6 @@ class CategoryController extends Controller
     }
 
 
-
     public function kategoriimportexcel(Request $request)
     {
         // Mulai transaksi database
@@ -138,15 +137,16 @@ class CategoryController extends Controller
                 'file' => 'required|file|mimes:xlsx,xls,csv|max:2048', // Sesuaikan dengan format yang diizinkan
             ]);
 
-            // Hapus semua data lama dari tabel Category
-
             // Pindahkan file ke folder DataKategori
             $file = $request->file('file');
             $namafile = $file->getClientOriginalName();
             $file->move(public_path('DataKategori'), $namafile);
 
             // Impor data dari file Excel
-            Excel::import(new KategoriImport, public_path('DataKategori/' . $namafile));
+            Excel::import(new KategoriImport, public_path('DataKategori/' . $namafile), null, \Maatwebsite\Excel\Excel::XLSX, [
+                'startRow' => 2,
+                'onlySheets' => [0]
+            ]);
 
             // Commit transaksi jika semua operasi berhasil
             DB::commit();
@@ -188,23 +188,33 @@ class CategoryController extends Controller
             return response()->json(['message' => 'Kategori tidak ditemukan.'], 404);
         }
     }
-    // public function downloadTemplate()
-    // {
-    //     $filePath = public_path('templates/template-category.xlsx'); // Path ke file template
-    //     return response()->download($filePath);
-    // }
-    
-    public function downloadTemplate()
+    public function downloadTemplateExcel()
     {
-        $pathFile = public_path('templates/template-kategori.xlsx');
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         
-        if (file_exists($pathFile)) {
-            return response()->download($pathFile, 'template-kategori.xlsx', [
-                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                'Content-Disposition' => 'attachment; filename="template-kategori.xlsx"'
-            ]);
-        } else {
-            return redirect()->back()->with('error', 'File template tidak ditemukan.');
-        }
+        // Worksheet pertama
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Data Kategori');
+        $sheet->setCellValue('A1', 'Nama');
+        $sheet->setCellValue('B1', 'Jenis Kategori');
+        $sheet->setCellValue('C1', 'Deskripsi');
+        
+        // Worksheet kedua
+        $sheet2 = $spreadsheet->createSheet();
+        $sheet2->setTitle('Jenis Kategori');
+        $sheet2->setCellValue('A1', 'Kode');
+        $sheet2->setCellValue('B1', 'Jenis Kategori');
+        $sheet2->setCellValue('A2', '1');
+        $sheet2->setCellValue('B2', 'Pemasukan');
+        $sheet2->setCellValue('A3', '2');
+        $sheet2->setCellValue('B3', 'Pengeluaran');
+        
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $filename = 'template-category.xlsx';
+        $filePath = storage_path('app/public/' . $filename);
+        $writer->save($filePath);
+        
+        return response()->download($filePath, $filename)->deleteFileAfterSend(true);
     }
+   
 }

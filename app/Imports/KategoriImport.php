@@ -15,10 +15,15 @@ class KategoriImport implements ToModel, WithHeadingRow
     */
     public function model(array $row)
     {
+
+           if (empty($row['nama'])) {
+            \Log::warning('Name is missing in row: ' . json_encode($row));
+            return null; // Jika name kosong, lewati baris ini
+        }
         return new Category([
-            'name' => $row['name'],
+            'name' => $row['nama'],
             'jenis_kategori' => $row['jenis_kategori'],
-            'description' => $row['description'],
+            'description' => $row['deskripsi'],
         ]);
     }
 }

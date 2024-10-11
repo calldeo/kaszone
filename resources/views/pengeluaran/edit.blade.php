@@ -34,7 +34,13 @@
 
         <!-- Informasi Umum -->
         <div class="card">
-            <div class="card-header">Informasi </div>
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Informasi</span>
+                <div class="form-group mb-0">
+                    <label for="tanggal" class="mr-2">Tanggal:</label>
+                    <span id="tanggal">{{ \Carbon\Carbon::parse(old('tanggal', $parentPengeluaran->tanggal))->format('d-m-Y') }}</span>
+                </div>
+            </div>
             <div class="card-body">
                 @if(session('error'))
                     <div class="alert alert-danger alert-dismissible fade show">
@@ -67,32 +73,17 @@
                     @csrf
                     @method('PUT')
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="tanggal">Tanggal</label>
-                                <input type="text" id="tanggal" class="form-control" name="tanggal" value="{{ old('tanggal', $parentPengeluaran->tanggal) }}" readonly>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- Container untuk Pengeluaran -->
-                    <div id="pengeluaran-container" class="accordion">
+                    <div id="accordion-pengeluaran" class="accordion accordion-primary">
                         @foreach($parentPengeluaran->pengeluaran as $key => $pengeluaran)
-                            <div class="card mt-4 pengeluaran-item" data-key="{{ $key }}">
-                                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center" id="heading{{ $key }}">
-                                    <h2 class="mb-0">
-                                        <button class="btn btn-link text-white" type="button" data-toggle="collapse" data-target="#collapse{{ $key }}" aria-expanded="true" aria-controls="collapse{{ $key }}">
-                                            Edit Pengeluaran {{ $loop->iteration }}
-                                        </button>
-                                    </h2>
-                                    <button class="btn btn-light btn-sm" type="button" data-toggle="collapse" data-target="#collapse{{ $key }}" aria-expanded="true" aria-controls="collapse{{ $key }}">
-                                        <i class="fa fa-plus"></i>
-                                    </button>
+                            <div class="accordion__item pengeluaran-item" data-key="{{ $key }}">
+                                <div class="accordion__header rounded-lg" data-toggle="collapse" data-target="#collapse{{ $key }}">
+                                    <span class="accordion__header--text">Edit Pengeluaran {{ $loop->iteration }}</span>
+                                    <span class="accordion__header--indicator"></span>
                                 </div>
                                 
-                                <div id="collapse{{ $key }}" class="collapse show" aria-labelledby="heading{{ $key }}" data-parent="#pengeluaran-container">
-                                    <div class="card-body">
+                                <div id="collapse{{ $key }}" class="collapse accordion__body show" data-parent="#accordion-pengeluaran">
+                                    <div class="accordion__body--text">
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
@@ -295,16 +286,13 @@
         $('#add-pengeluaran').on('click', function() {
             pengeluaranCount++;
             const newPengeluaran = `
-                <div class="card mt-4 pengeluaran-item" data-key="${pengeluaranCount}">
-                    <div class="card-header bg-primary text-white" id="heading${pengeluaranCount}">
-                        <h2 class="mb-0">
-                            <button class="btn btn-link text-white" type="button" data-toggle="collapse" data-target="#collapse${pengeluaranCount}" aria-expanded="true" aria-controls="collapse${pengeluaranCount}">
-                                Tambah Pengeluaran ${pengeluaranCount}
-                            </button>
-                        </h2>
+                <div class="accordion__item pengeluaran-item" data-key="${pengeluaranCount}">
+                    <div class="accordion__header rounded-lg" data-toggle="collapse" data-target="#collapse${pengeluaranCount}">
+                        <span class="accordion__header--text">Tambah Pengeluaran ${pengeluaranCount}</span>
+                        <span class="accordion__header--indicator"></span>
                     </div>
-                    <div id="collapse${pengeluaranCount}" class="collapse show" aria-labelledby="heading${pengeluaranCount}" data-parent="#pengeluaran-container">
-                        <div class="card-body">
+                    <div id="collapse${pengeluaranCount}" class="collapse accordion__body show" data-parent="#accordion-pengeluaran">
+                        <div class="accordion__body--text">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -382,7 +370,7 @@
                     </div>
                 </div>
             `;
-            $('#pengeluaran-container').append(newPengeluaran);
+            $('#accordion-pengeluaran').append(newPengeluaran);
             $('.select2').select2();
             getCategories(); // Inisialisasi Select2 setelah menambah elemen baru
         });

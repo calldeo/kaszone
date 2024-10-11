@@ -2,6 +2,8 @@
 /public/build
 /public/hot
 /public/storage
+/public/DataKategori
+/public/DataPemasukan
 /storage/*.key
 /vendor
 .env

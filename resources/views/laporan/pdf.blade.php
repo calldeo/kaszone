@@ -24,13 +24,17 @@
         th {
             background-color: #f2f2f2;
         }
-        /* CSS untuk memulai halaman baru */
         .page-break {
             page-break-before: always;
-            margin: 20px 0; /* optional: memberi jarak */
+            margin: 20px 0;
         }
         h4 {
-            margin: 10px 0; /* memberi jarak untuk total */
+            margin: 10px 0;
+        }
+        .selisih {
+            margin-top: 20px;
+            text-align: right;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -61,9 +65,14 @@
             </tr>
             @endforeach
         </tbody>
+         <tfoot>
+            <tr class="total-row">
+                <td colspan="4" style="text-align: right;">Total Jumlah:</td>
+                <td colspan="2">Rp {{ number_format($pemasukan->sum('jumlah'), 0, ',', '.') }}</td>
+            </tr>
+        </tfoot>
     </table>
 
-    <!-- Menambahkan halaman baru sebelum pengeluaran -->
     <div class="page-break"></div>
 
     <h3>Pengeluaran</h3>
@@ -72,7 +81,6 @@
             <tr>
                 <th>No</th>
                 <th>Nama</th>
-                <th>Deskripsi</th>
                 <th>Kategori</th>
                 <th>Jumlah Item</th>
                 <th>Harga (Rp)</th>
@@ -86,7 +94,6 @@
             <tr>
                 <td>{{ $key + 1 }}</td>
                 <td>{{ $pgl->name }}</td>
-                <td>{{ $pgl->description }}</td>
                 <td>{{ $pgl->category ? $pgl->category->name : 'Kategori tidak ditemukan' }}</td>
                 <td>{{ $pgl->jumlah_satuan }}</td>
                 <td>{{ number_format($pgl->nominal, 0, ',', '.') }}</td>
@@ -96,10 +103,16 @@
             </tr>
             @endforeach
         </tbody>
+         <tfoot>
+            <tr class="total-row">
+                <td colspan="6" style="text-align: right;">Total Jumlah:</td>
+                <td colspan="2">Rp {{ number_format($pengeluaran->sum('jumlah'), 0, ',', '.') }}</td>
+            </tr>
+        </tfoot>
     </table>
 
-    <h4>Total Pemasukan: Rp {{ number_format($totalPemasukan, 0, ',', '.') }}</h4>
-    <h4>Total Pengeluaran: Rp {{ number_format($totalPengeluaran, 0, ',', '.') }}</h4>
-    <h4>Selisih: Rp {{ number_format($selisih, 0, ',', '.') }}</h4>
+    <div class="selisih">
+        Selisih Antara Pemasukan dan Pengeluaran: Rp {{ number_format($selisih, 0, ',', '.') }}
+    </div>
 </body>
 </html>

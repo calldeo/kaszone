@@ -33,7 +33,7 @@
             <tr>
                 <th>No</th>
                 <th>Nama</th>
-                <th>Deskripsi</th>
+                {{-- <th>Deskripsi</th> --}}
                 <th>Kategori</th>
                 <th>Jumlah Item</th>
                 <th>Harga (Rp)</th>
@@ -48,7 +48,7 @@
             <tr>
                 <td>{{ $key + 1 }}</td>
                 <td>{{ $pgl->name }}</td>
-                <td>{{ $pgl->description }}</td>
+                {{-- <td>{{ $pgl->description }}</td> --}}
                 <td>{{ $pgl->category ? $pgl->category->name : 'Kategori tidak ditemukan' }}</td>
                 <td>{{ $pgl->jumlah_satuan }}</td>
                 <td>{{ $pgl->nominal }}</td>

@@ -102,8 +102,6 @@ Route::group(['middleware' => ['auth','permission:Kategori']], function (){
     Route::get('/cetaklaporan',[CategoryController::class,'cetaklaporan'])->name('cetaklaporan');
     Route::get('/download-template-kategori', [CategoryController::class, 'downloadTemplateExcel'])->name('download-template-kategori');
     Route::get('/kategori/{id}/detail', [CategoryController::class, 'showDetail'])->name('kategori.showDetail');
-    Route::get('/download-template-kategori', [CategoryController::class, 'downloadTemplateExcel'])->name('download-template-kategori');
-
 
 });
 
