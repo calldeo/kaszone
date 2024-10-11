@@ -32,7 +32,7 @@
                         </div>
                         <div class="card-body">
                             <div class="basic-form">
-                                <form action="{{ route('update.saldo') }}" method="POST">
+                                <form action="{{ route('update.minimal.saldo') }}" method="POST">
                                     @csrf
                                     @method('PUT')
                                     <div class="form-group">
@@ -41,7 +41,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">Rp</span>
                                             </div>
-                                            <input type="number" class="form-control" name="saldo" value="{{ $saldo }}" required>
+                                            <input type="text" class="form-control" value="Rp {{ number_format($saldo, 0, ',', '.') }}" readonly>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -50,11 +50,12 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">Rp</span>
                                             </div>
-                                            <input type="number" class="form-control" name="minimal_saldo" value="{{ $minimalSaldo }}" required>
+                                            <input type="text" class="form-control nominal" id="nominal" name="saldo" placeholder="Enter amount.." required oninput="formatInputSaldo(event);" value="{{ 'Rp ' . number_format($minimalSaldo, 0, ',', '.') }}">
+                                            <input type="hidden" name="saldo_hidden" id="nominal_value" value="{{ $minimalSaldo }}">
                                         </div>
                                     </div>
                                     <button type="button" class="btn btn-danger btn-cancel" onclick="window.location.href='{{ route('saldo') }}'">Batal</button>
-                                    <button type="submit" class="btn mr-2 btn-primary btn-submit">Simpan Perubahan</button>
+                                    <button type="submit" class="btn mr-2 btn-primary btn-submit">Submit</button>
                                 </form>
                             </div>
                         </div>
@@ -73,5 +74,22 @@
     </div>
 
     @include('template.scripts')
+    
+    <script>
+    function formatInputSaldo(event) {
+        const input = event.target;
+        const hiddenInput = input.nextElementSibling; 
+        let value = input.value.replace(/[^0-9]/g, ''); 
+
+        if (value) {
+            const formattedValue = parseInt(value).toLocaleString('id-ID'); 
+            input.value = 'Rp ' + formattedValue; 
+            hiddenInput.value = value;
+        } else {
+            input.value = 'Rp 0';
+            hiddenInput.value = ''; 
+        }
+    }
+    </script>
 </body>
 </html>

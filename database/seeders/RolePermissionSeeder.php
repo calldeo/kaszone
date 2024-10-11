@@ -21,7 +21,7 @@ class RolePermissionSeeder extends Seeder
         Permission::UpdateOrCreate(['name'=>'Admin']);
         Permission::UpdateOrCreate(['name'=>'Bendahara']);
         Permission::UpdateOrCreate(['name'=> 'Kategori']);
-        Permission::UpdateOrCreate(['name'=> 'Role']);
+        Permission::UpdateOrCreate(['name'=> 'Setting']);
         Permission::UpdateOrCreate(['name'=>'Data Pemasukan']);
         Permission::UpdateOrCreate(['name'=>'Data Pengeluaran']);
         Permission::UpdateOrCreate(['name'=>'Laporan']);
@@ -41,7 +41,7 @@ class RolePermissionSeeder extends Seeder
         $roleAdmin->givePermissionTo('Data Pemasukan');
         $roleAdmin->givePermissionTo('Data Pengeluaran');
         $roleAdmin->givePermissionTo('Laporan');
-        $roleAdmin->givePermissionTo('Role');
+        $roleAdmin->givePermissionTo('Setting');
 
 
 

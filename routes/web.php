@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LaporanController;
-use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\CategoryController;
@@ -161,16 +161,16 @@ Route::group(['middleware' => ['auth','permission:Data Pengeluaran']], function 
 
     
 });
-Route::group(['middleware' => ['auth','permission:Role']], function (){
+Route::group(['middleware' => ['auth','permission:Setting']], function (){
 
-    route::get('/role',[RoleController::class,'role'])->name('role');
-    route::get('/setting-saldo',[RoleController::class,'saldo'])->name('saldo');
-    Route::get('/edit-minimal-saldo', [RoleController::class, 'editMinimalSaldo'])->name('edit.minimal.saldo');
-    Route::put('/update-minimal-saldo', [RoleController::class, 'updateMinimalSaldo'])->name('update.minimal.saldo');
+    route::get('/role',[SettingController::class,'role'])->name('role');
+    route::get('/setting-saldo',[SettingController::class,'saldo'])->name('saldo');
+    Route::get('/edit-minimal-saldo', [SettingController::class, 'editMinimalSaldo'])->name('edit.minimal.saldo');
+    Route::put('/update-minimal-saldo', [SettingController::class, 'updateMinimalSaldo'])->name('update.minimal.saldo');
 
-    Route::get('/role/{id}/edit_role  ',[RoleController::class,'edit']);
-    Route::put('/role/{id}',[RoleController::class,'update']);
-    Route::get('/add_role', [RoleController::class, 'create']);
-    Route::post('/role/store', [RoleController::class, 'store']);
+    Route::get('/role/{id}/edit_role  ',[SettingController::class,'edit']);
+    Route::put('/role/{id}',[SettingController::class,'update']);
+    Route::get('/add_role', [SettingController::class, 'create']);
+    Route::post('/role/store', [SettingController::class, 'store']);
 });
 Route::post('/switch-role', [BendaharaController::class, 'switchRole'])->name('switchRole');

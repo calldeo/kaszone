@@ -7,16 +7,17 @@ use Carbon\Carbon;
 use App\Models\Category;
 use App\Models\Pemasukan;
 use App\Models\Pengeluaran;
+use App\Models\SettingSaldo;
 use Illuminate\Http\Request;
 use App\Exports\TemplateExport;
 use App\Models\ParentPengeluaran;
 use App\Exports\PengeluaranExport;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Support\Facades\Validator;
 use App\Imports\DataPengeluaranImportMultiple;
-use Illuminate\Support\Facades\Log;
-use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class PengeluaranController extends Controller
 {
@@ -24,10 +25,11 @@ class PengeluaranController extends Controller
     public function index()
     {
         $pengeluaran = Pengeluaran::with('category')->get();
-
+        
         // Menggunakan pagination
         return view('pengeluaran.data_pengeluaran', compact('pengeluaran'));
     }
+    
     public function create()
     {
         // $categories = Category::all(); // Mengambil semua kategori

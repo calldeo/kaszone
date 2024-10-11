@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Pemasukan;
 use App\Models\Pengeluaran;
+use App\Models\SettingSaldo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
-class RoleController extends Controller
+class SettingController extends Controller
 {
     //
      public function role(Request $request)
@@ -98,44 +99,44 @@ class RoleController extends Controller
 
     public function saldo(Request $request)
     {
+        $totalPemasukan = Pemasukan::sum('jumlah');
+        $totalPengeluaran = Pengeluaran::sum('jumlah');
         
-       $totalPemasukan = Pemasukan::sum('jumlah');
-    $totalPengeluaran = Pengeluaran::sum('jumlah');
-        
-    $saldo = $totalPemasukan - $totalPengeluaran;
+        $saldo = $totalPemasukan - $totalPengeluaran;
 
-    // Passing data ke view
-    return view('halaman.saldo', compact('totalPemasukan', 'totalPengeluaran', 'saldo'));
+        // Ambil nilai minimal saldo dari SettingSaldo
+        $minimalSaldo = SettingSaldo::first()->saldo ?? 0;
+
+        // Passing data ke view
+        return view('halaman.saldo', compact('totalPemasukan', 'totalPengeluaran', 'saldo', 'minimalSaldo'));
     }
-
 
 public function editMinimalSaldo()
 {
-    // Ambil nilai minimal saldo dari database atau file konfigurasi
-    // Contoh menggunakan model Setting:
-    // $minimalSaldo = Setting::where('key', 'minimal_saldo')->first()->value ?? 0;
+    $settingSaldo = SettingSaldo::first();
+    $minimalSaldo = $settingSaldo ? $settingSaldo->saldo : 0;
     
-    $minimalSaldo = 0; // Ganti dengan nilai sebenarnya dari database
-    
-    // Ambil saldo saat ini
     $totalPemasukan = Pemasukan::sum('jumlah');
     $totalPengeluaran = Pengeluaran::sum('jumlah');
     $saldo = $totalPemasukan - $totalPengeluaran;
     
     return view('edit.edit_saldo', compact('minimalSaldo', 'saldo'));
 }
+
 public function updateMinimalSaldo(Request $request)
 {
-    $request->validate([
-        'minimal_saldo' => 'required|numeric|min:0'
-    ]);
+    try {
+        $request->validate([
+            'saldo_hidden' => 'required|numeric|min:0',
+        ]);
 
-    $minimalSaldo = $request->minimal_saldo;
+        $settingSaldo = SettingSaldo::firstOrNew();
+        $settingSaldo->saldo = $request->saldo_hidden;
+        $settingSaldo->save();
 
-    // Simpan minimal saldo ke database atau file konfigurasi
-    // Contoh menggunakan model Setting:
-    // Setting::updateOrCreate(['key' => 'minimal_saldo'], ['value' => $minimalSaldo]);
-
-    return redirect()->back()->with('success', 'Minimal saldo berhasil diperbarui');
+        return redirect()->route('saldo')->with('success', 'Minimal saldo berhasil diperbarui');
+    } catch (\Exception $e) {
+        return redirect()->route('saldo')->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+    }
 }
 }
