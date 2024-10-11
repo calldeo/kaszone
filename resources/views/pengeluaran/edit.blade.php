@@ -219,12 +219,15 @@
         // Fungsi untuk mendapatkan kategori dari server
         // getCategories();
     
-        function getCategories() {
+        function getCategories(countItem = null) {
             $.ajax({
                 url: '/get-categories/2', // Sesuaikan URL jika perlu
                 method: 'GET',
                 success: function(data) {
                     var $dropdown = $('.category-dropdown'); // Ganti dengan selector yang sesuai
+                    if (countItem != null) {
+                        var $dropdown = $('.category-dropdown' + countItem);
+                    }
                     var selectedCategoryId = "{{ $pengeluaran->id }}"; // Mengambil ID kategori dari objek pengeluaran
     
                     // Kosongkan dropdown tapi pertahankan kategori yang dipilih
@@ -244,15 +247,19 @@
                         });
     
                         // Pastikan opsi yang sesuai tetap terpilih
-                        if (item.id == selectedCategoryId) {
-                            $option.prop('selected', true);
+                        if (countItem == null) {
+                            if (item.id == selectedCategoryId) {
+                                $option.prop('selected', true);
+                            }
                         }
     
                         $dropdown.append($option);
                     });
     
-                    // Refresh Select2 untuk menampilkan opsi terbaru
-                    $dropdown.trigger('change.select2');
+                    if (isAddItem == false) {
+                        // Refresh Select2 untuk menampilkan opsi terbaru
+                        $dropdown.trigger('change.select2');
+                    }
                 },
                 error: function(xhr) {
                     console.error('Error fetching options:', xhr);
@@ -377,7 +384,7 @@ $('form').on('submit', function() {
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="category_${pengeluaranCount}">Kategori</label>
-                                    <select id="category_${pengeluaranCount}" name="category_id[]" class="form-control select2 category-dropdown" required>
+                                    <select id="category_${pengeluaranCount}" name="category_id[]" class="form-control select2 category-dropdown${pengeluaranCount}" required>
                                         <option value="">Pilih Kategori</option>
                                         @foreach($categories as $category)
                                             <option value="{{ $category->id }}" {{ $pengeluaran->id == $category->id ? 'selected' : '' }}>
@@ -416,7 +423,7 @@ $('form').on('submit', function() {
         `;
         $('#pengeluaran-container').append(newPengeluaran);
         $('.select2').select2();
-        getCategories(); // Inisialisasi Select2 setelah menambah elemen baru
+        getCategories(pengeluaranCount); // Inisialisasi Select2 setelah menambah elemen baru
     });
 
     // Menghapus pengeluaran

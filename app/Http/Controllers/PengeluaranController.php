@@ -243,7 +243,7 @@ public function update(Request $request, $id)
                 $pengeluaranBaru->nominal = $request->nominal[$key];
                 $pengeluaranBaru->jumlah = $request->jumlah[$key];
                 $pengeluaranBaru->dll = $request->dll[$key] ?? null;
-                $pengeluaranBaru->id = $request->id[$key];
+                $pengeluaranBaru->id = $request->category_id[$key];
 
           
                 if ($request->hasFile('image.' . $key)) {
