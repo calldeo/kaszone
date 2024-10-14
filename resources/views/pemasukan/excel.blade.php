@@ -32,6 +32,9 @@
             background-color: #e9e9e9;
             font-weight: bold;
         }
+        .total-label {
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -55,15 +58,15 @@
                 <td>{{ $item->name }}</td>
                 <td>{{ $item->description }}</td>
                 <td>{{ $item->category ? $item->category->name : 'Kategori tidak ditemukan' }}</td>
-                <td>Rp {{ number_format($item->jumlah, 0, ',', '.') }}</td>
+                <td>Rp{{ number_format($item->jumlah, 0, ',', '.') }}</td>
                 <td>{{ \Carbon\Carbon::parse($item->date)->format('d-m-Y') }}</td>
             </tr>
             @endforeach
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="4" style="text-align: right;">Total Jumlah:</td>
-                <td colspan="2">Rp {{ number_format($pemasukan->sum('jumlah'), 0, ',', '.') }}</td>
+                <td colspan="4" style="text-align: right;" class="total-label"><strong>Total Jumlah:</strong></td>
+                <td colspan="2"><strong>Rp{{ number_format($pemasukan->sum('jumlah'), 0, ',', '.') }}</strong></td>
             </tr>
         </tfoot>
     </table>

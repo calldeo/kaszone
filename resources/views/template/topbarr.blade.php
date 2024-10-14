@@ -83,10 +83,10 @@
                                             @if($saldo <= $minimalSaldo)
                                                 text-danger
                                             @endif">
-                                            Saldo: Rp {{ number_format($saldo, 0, ',', '.') }}
+                                            Saldo: Rp{{ number_format($saldo, 0, ',', '.') }}
                                         </h5>
                                         @if($saldo <= $minimalSaldo)
-                                            <p class="text-warning mb-0">Peringatan: Saldo Anda sudah di batas minimal (Rp {{ number_format($minimalSaldo, 0, ',', '.') }})</p>
+                                            <p class="text-warning mb-0">Peringatan: Saldo Anda sudah di batas minimal (Rp{{ number_format($minimalSaldo, 0, ',', '.') }})</p>
                                         @endif
                                     </div>
                                 </div>

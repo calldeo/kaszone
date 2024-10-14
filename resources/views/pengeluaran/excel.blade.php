@@ -44,9 +44,9 @@
                 <td>{{ $pgl->description }}</td>
                 <td>{{ $pgl->category ? $pgl->category->name : 'Kategori tidak ditemukan' }}</td>
                 <td>{{ $pgl->jumlah_satuan }}</td>
-                <td>{{ $pgl->nominal }}</td>
-                <td>{{ $pgl->dll }}</td>
-                <td>{{ number_format($pgl->jumlah, 0, ',', '.') }}</td>
+                <td>Rp{{ number_format($pgl->nominal, 0, ',', '.') }}</td>
+                <td>Rp{{ number_format($pgl->dll, 0, ',', '.') }}</td>
+                <td>Rp{{ number_format($pgl->jumlah, 0, ',', '.') }}</td>
                 {{-- <td>
                     @if($item->image) 
                         <img src="{{ public_path('public/str/images/' . $item->image) }}" class="image" alt="Bukti Pembayaran">
@@ -57,6 +57,12 @@
             </tr>
             @endforeach
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="7" style="text-align: right;"><strong>Total:</strong></td>
+                <td colspan="2"><strong>Rp{{ number_format($pengeluaran->sum('jumlah'), 0, ',', '.') }}</strong></td>
+            </tr>
+        </tfoot>
     </table>
 </body>
 </html>

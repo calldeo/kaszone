@@ -388,7 +388,7 @@ public function update(Request $request, $id)
             })
             ->make(true);
     }
-    
+
 public function importPengeluaran(Request $request)
 {
     $request->validate([
@@ -439,14 +439,15 @@ public function importPengeluaran(Request $request)
                         
                         $pengeluaran = new Pengeluaran();
                         $pengeluaran->name = $rowData[0][0]; 
-                        $pengeluaran->description = $rowData[0][1]  ?? null;
+                        $pengeluaran->description = $rowData[0][1] ?? null;
                         $pengeluaran->jumlah_satuan = $rowData[0][2] ?? 0; 
                         $pengeluaran->nominal = $rowData[0][3] ?? 0; 
                         $pengeluaran->dll = $rowData[0][4] ?? 0; 
-                        $pengeluaran->jumlah = $rowData[0][5] ?? 0; 
+                        
+                        // Menghitung jumlah secara otomatis
+                        $pengeluaran->jumlah = ($pengeluaran->jumlah_satuan * $pengeluaran->nominal) + $pengeluaran->dll;
 
-                  
-                        $pengeluaran->id = $rowData[0][6] ?? null; 
+                        $pengeluaran->id = $rowData[0][5] ?? null; // Mengubah indeks karena kolom jumlah dihapus
                         $pengeluaran->id_parent = $parentPengeluaran->id;
 
                       
@@ -470,7 +471,6 @@ public function importPengeluaran(Request $request)
         return redirect()->back()->with('error', 'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage());
     }
 }
-
 
 
 

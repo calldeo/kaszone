@@ -52,14 +52,14 @@ class DataPengeluaranSheetExport1 implements FromArray, WithHeadings, WithTitle
     public function array(): array
     {
         return [
-            ['', '', '', '', '', '', '', ''],
-            ['', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '',''],
+            ['', '', '', '', '', '',''],
         ];
     }
 
     public function headings(): array
     {
-        return ['Nama Pengeluaran', 'Deskripsi', 'Jumlah Satuan', 'Nominal(Rp)', 'dll(Rp)', 'Total', 'Kategori'];
+        return ['Nama Pengeluaran', 'Deskripsi', 'Jumlah Satuan', 'Nominal(Rp)', 'dll(Rp)',  'Kategori'];
     }
 }
 
