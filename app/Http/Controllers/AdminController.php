@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
-   
+
     public function table(Request $request)
     {
         if ($request->ajax()) {
@@ -158,8 +158,10 @@ class AdminController extends Controller
             if ($startDate != null && $endDate != null) {
                 $pemasukan = $pemasukan->whereBetween('date', [$startDate, $endDate]);
             }
-
             $totalJumlah = $pemasukan->sum('jumlah');
+            if ($request->input('total_data') === 'true') {
+                return $totalJumlah;
+            }
 
             return DataTables::of($pemasukan)
                 ->addIndexColumn()
@@ -212,7 +214,7 @@ class AdminController extends Controller
                 $pengeluaran = $pengeluaran->whereBetween('tanggal', [$startDate, $endDate]);
             }
 
-         if ($request->input('search.value') != null) {
+            if ($request->input('search.value') != null) {
                 $pengeluaran = $pengeluaran->whereHas('pengeluaran', function ($query) use ($request) {
                     $query->where('name', 'like', '%' . $request->input('search.value') . '%')
                         ->orWhere('description', 'like', '%' . $request->input('search.value') . '%')

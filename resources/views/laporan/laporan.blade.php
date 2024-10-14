@@ -38,7 +38,7 @@
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-center mt-3">
-                                    @hasrole('Admin|Bendahara') 
+                                    @hasrole('Admin|Bendahara')
                                     <form method="GET" action="{{ route('export.laporan') }}" id="export-pdf-form" class="mr-1">
                                         <input type="hidden" name="year" id="export-year-pdf" value="{{ old('year') }}" />
                                         <input type="hidden" name="start_date" id="export-start-date-pdf" value="{{ old('start_date') }}" />
@@ -141,7 +141,7 @@
         // Initialize daterangepicker
         $('.input-daterange-datepicker').daterangepicker({
             opens: 'left',
-            locale: { 
+            locale: {
                 format: 'DD-MM-YYYY'
             },
             autoUpdateInput: false,
@@ -229,7 +229,7 @@
             language: {
                 paginate: {
                     next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
-                    previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
+                    previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>'
                 }
             },
             ajax: {
@@ -249,12 +249,24 @@
                 { data: 'jumlah' }
             ],
             footerCallback: function(row, data, start, end, display) {
-                var totalJumlah = 0;
-                data.forEach(function(item) {
-                    var jumlah = item.jumlah.replace(/Rp/g, '').replace(/\./g, '').trim();
-                    totalJumlah += parseFloat(jumlah) || 0;
-                });
-                $('#total-pemasukan').html('Rp' + totalJumlah.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }));
+                filter.total_data = true
+                totalPemasukan(filter)
+            }
+        });
+    }
+
+    function totalPemasukan(filter){
+        $.ajax({
+            url: $('#table-url-pemasukan').val(),
+            method: 'GET',
+            data: filter,
+            success: function(data) {
+                console.log(data);
+                var jumlah = data.replace(/Rp/g, '').replace(/\./g, '').trim();
+                $('#total-pemasukan').html('Rp' + jumlah.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }));
+            },
+            error: function(xhr, error, thrown) {
+                console.error('AJAX Error:', xhr.responseText);
             }
         });
     }
@@ -267,7 +279,7 @@
             language: {
                 paginate: {
                     next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
-                    previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
+                    previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>'
                 }
             },
             ajax: {
@@ -283,7 +295,7 @@
                 { data: 'name' },
                 { data: 'description' },
                 { data: 'category' },
-                { data: 'jumlah' }, 
+                { data: 'jumlah' },
                 { data: 'tanggal' }
             ],
             footerCallback: function(row, data, start, end, display) {
