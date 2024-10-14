@@ -354,7 +354,7 @@
                 modal.find('#description').text('');
                 modal.find('#date').text('');
                 modal.find('#jumlah').text('');
-            modal.find('#category').text(''); // Kosongkan kategori
+                modal.find('#category').text(''); 
 
                 
                 $.ajax({
@@ -365,10 +365,16 @@
                         modal.find('#id_data').text(data.id_data || 'N/A');
                         modal.find('#name').text(data.name || 'N/A');
                         modal.find('#description').text(data.description || 'N/A');
-                        modal.find('#date').text(data.date || 'N/A');
-                        modal.find('#jumlah').text(data.jumlah || 'N/A');
-                    modal.find('#category').text(data.category_name || 'N/A');
-
+                        // Format tanggal menjadi dd-mm-yyyy
+                        var date = new Date(data.date);
+                        var formattedDate = date.getDate().toString().padStart(2, '0') + '-' +
+                                            (date.getMonth() + 1).toString().padStart(2, '0') + '-' +
+                                            date.getFullYear();
+                        modal.find('#date').text(formattedDate || 'N/A');
+                        // Format jumlah menjadi Rp10.000
+                        var formattedJumlah = 'Rp' + parseFloat(data.jumlah || 0).toLocaleString('id-ID');
+                        modal.find('#jumlah').text(formattedJumlah);
+                        modal.find('#category').text(data.category_name || 'N/A');
                     },
                     error: function(xhr, status, error) {
                         console.log(xhr.responseText); // Tampilkan pesan kesalahan di konsol
