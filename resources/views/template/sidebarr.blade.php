@@ -108,22 +108,22 @@ use Illuminate\Support\Facades\Log;
 
          @if(in_array('Setting',$permissions))   
             @can('Setting')
-            <li>
-                <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+            <li class="{{ request()->is('role*') || request()->is('add_role') || request()->is('setting-saldo*') || request()->is('edit-minimal-saldo') ? 'mm-active' : '' }}">
+                <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="{{ request()->is('role*') || request()->is('add_role') || request()->is('setting-saldo*') || request()->is('edit-minimal-saldo') ? 'true' : 'false' }}">
                     <i class="bi bi-gear"></i>
                     <span class="nav-text">Pengaturan</span>
                 </a>
-                <ul aria-expanded="false">
+                <ul aria-expanded="{{ request()->is('role*') || request()->is('add_role') || request()->is('setting-saldo*') || request()->is('edit-minimal-saldo') ? 'true' : 'false' }}">
                     <li class="{{ request()->is('role*') || request()->is('add_role') ? 'mm-active' : '' }}">
                         <a href="/role" aria-expanded="{{ request()->is('role*') || request()->is('add_role') ? 'true' : 'false' }}" class="{{ request()->is('role*') || request()->is('add_role') ? 'mm-active' : '' }}">
                             <i class="bi bi-person-gear"></i>
                             <span class="nav-text">Role</span>
                         </a>
                     </li>
-                    <li class="{{ request()->is('setting-saldo*') || request()->is('setting-saldo') ? 'mm-active' : '' }}">
-                        <a href="/setting-saldo" aria-expanded="{{ request()->is('setting-saldo*') || request()->is('setting-saldo') ? 'true' : 'false' }}" class="{{ request()->is('setting-saldo*') || request()->is('setting-saldo') ? 'mm-active' : '' }}">
-                            {{-- <i class="bi bi-cash-coin"></i> --}}
-                            <span class="nav-text"> Saldo</span>
+                    <li class="{{ request()->is('setting-saldo*') || request()->is('edit-minimal-saldo') ? 'mm-active' : '' }}">
+                        <a href="/setting-saldo" aria-expanded="{{ request()->is('setting-saldo*') || request()->is('edit-minimal-saldo') ? 'true' : 'false' }}" class="{{ request()->is('setting-saldo*') || request()->is('edit-minimal-saldo') ? 'mm-active' : '' }}">
+                            <i class="bi bi-cash-coin"></i>
+                            <span class="nav-text">Saldo</span>
                         </a>
                     </li>
                 </ul>
