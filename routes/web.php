@@ -77,10 +77,10 @@ route::get('/roles',[AdminController::class,'roles'])->name('roles');
 
 Route::group(['middleware' => ['auth','permission:Bendahara']], function (){
 
-    Route::post('/importbendahara', [BendaharaController::class, 'bendaharaimportexcel'])->name('import-bendahara');
+    Route::post('/importbendahara', [BendaharaController::class, 'userImportExcel'])->name('import-bendahara');
     route::get('/user',[BendaharaController::class,'bendahara'])->name('bendahara');
     Route::delete('/user/{id}/destroy', [BendaharaController::class, 'destroy'])->name('user.destroy');
-    route::get('/add_user',[BendaharaController::class,'add_user'])->name('add_user');
+    route::get('/add_user',[BendaharaController::class,'show'])->name('add_user');
     Route::post('/user/store',[BendaharaController::class,'store']);
     Route::get('/user/{id}/edit_user  ',[BendaharaController::class,'edit']);
     Route::put('/guruu/{id}',[BendaharaController::class,'update']);

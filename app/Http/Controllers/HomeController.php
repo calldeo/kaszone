@@ -15,17 +15,15 @@ class HomeController extends Controller
 {
   public function index()
   {
-    // Hitung saldo yang tersedia
-    // Ambil total pemasukan dan total pengeluaran
+  
     $totalPemasukan = Pemasukan::sum('jumlah');
     $totalPengeluaran = Pengeluaran::sum('jumlah');
 
     $saldo = $totalPemasukan - $totalPengeluaran;
 
-    // Ambil nilai minimal saldo dari SettingSaldo
     $minimalSaldo = SettingSaldo::first()->saldo ?? 0;
 
-    // Passing data ke view
+    
     return view('home', compact('totalPemasukan', 'totalPengeluaran', 'saldo', 'minimalSaldo'));
   }
 }
