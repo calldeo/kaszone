@@ -78,8 +78,8 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>Rp {{ number_format($saldo, 0, ',', '.') }}</td>
-                                            <td>Rp {{ number_format($minimalSaldo, 0, ',', '.') }}</td>
+                                            <td>Rp{{ number_format($saldo, 0, ',', '.') }}</td>
+                                            <td>Rp{{ number_format($minimalSaldo, 0, ',', '.') }}</td>
                                             <td>
                                                 <a href="{{ route('edit.minimal.saldo') }}" class="btn btn-primary btn-sm">
                                                     <i class="fa fa-edit"></i> 
