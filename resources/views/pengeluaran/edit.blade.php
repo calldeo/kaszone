@@ -112,7 +112,7 @@
                                                 <div class="form-group">
                                                     <label for="nominal_{{ $key }}">Nominal</label>
                                                     <input type="text" id="nominal_{{ $key }}" name="nominal[]" class="form-control nominal" data-key="{{ $key }}" 
-                                                        value="{{ old('nominal.'.$key, 'Rp ' . number_format($pengeluaran->nominal, 0, ',', '.')) }}" required >
+                                                        value="{{ old('nominal.'.$key, 'Rp' . number_format($pengeluaran->nominal, 0, ',', '.')) }}" required >
                                                 </div>
                                             </div>
                                             
@@ -120,7 +120,7 @@
                                                 <div class="form-group">
                                                     <label for="jumlah_{{ $key }}">Total</label>
                                                     <input type="text" id="jumlah_{{ $key }}" name="jumlah[]" class="form-control jumlah" 
-                                                        value="{{ old('jumlah.'.$key, 'Rp ' . number_format($pengeluaran->jumlah, 0, ',', '.')) }}" required readonly>
+                                                        value="{{ old('jumlah.'.$key, 'Rp' . number_format($pengeluaran->jumlah, 0, ',', '.')) }}" required readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -144,7 +144,7 @@
                                                 <div class="form-group">
                                                     <label for="dll_{{ $key }}">Lain-lain</label>
                                                     <input type="text" id="dll_{{ $key }}" name="dll[]" class="form-control dll" data-key="{{ $key }}" 
-                                                        value="{{ old('dll.'.$key, 'Rp ' . number_format($pengeluaran->dll, 0, ',', '.')) }}" required>
+                                                        value="{{ old('dll.'.$key, 'Rp' . number_format($pengeluaran->dll, 0, ',', '.')) }}" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -279,7 +279,7 @@ function formatCurrency(input) {
     // Cek jika nilai adalah angka
     if (!isNaN(value) && value !== '') {
         // Format kembali dengan "Rp" dan pemisah ribuan
-        $(input).val('Rp ' + numberWithCommas(value));
+        $(input).val('Rp' + numberWithCommas(value));
     } else {
         // Reset jika tidak valid
         $(input).val('');
@@ -294,7 +294,7 @@ function calculateTotal(key) {
     
     // Hitung total
     const total = (jumlahSatuan * nominal) + dll;
-    $(`#jumlah_${key}`).val('Rp ' + numberWithCommas(total.toFixed(0))); // Format total ke "Rp"
+    $(`#jumlah_${key}`).val('Rp' + numberWithCommas(total.toFixed(0))); // Format total ke "Rp"
 }
 
 // Event listener untuk format currency saat input pada nominal dan dll
