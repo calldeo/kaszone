@@ -5,33 +5,16 @@
     @include('template.headerr')
     <title>PityCash | {{auth()->user()->level}} | Add Pemasukan</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    {{-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" /> --}}
     
 </head>
 
 <body>
-    <!--*******
-        Preloader start
-    ********-->
     @include('template.topbarr')
-    <!--************
-        Header end ti-comment-alt
-    *************-->
 
-    <!--************
-        Sidebar start
-    *************-->
     @include('template.sidebarr')
-    <!--************
-        Sidebar end
-    *************-->
 
-    <!--************
-        Content body start
-    *************-->
     <div class="content-body">
         <div class="container-fluid">
-            <!-- row -->
             <div class="row page-titles mx-0">
                 <div class="col-sm-6 p-md-0">
                   
@@ -44,7 +27,6 @@
                 </div>
             </div>
 
-            <!-- Error Message -->
             @if(session('error'))
                 <div class="alert alert-danger alert-dismissible fade show">
                     <strong>Error!</strong> {{ session('error') }}
@@ -52,7 +34,6 @@
                 </div>
             @endif
 
-            <!-- Add Pemasukan Form -->
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
@@ -106,16 +87,13 @@
                                                 <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
                                             </div>
                                             <input type="text" class="form-control" name="jumlah_display" id="jumlah" placeholder="Rp 0" value="{{ old('jumlah_display') }}" required oninput="formatInput()">
-                                            <input type="hidden" name="jumlah" id="jumlah_value"> <!-- Input tersembunyi untuk menyimpan nilai numerik -->
+                                            <input type="hidden" name="jumlah" id="jumlah_value">
                                         </div>
                                         @error('jumlah')
                                         <span class="mt-2 text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
                                     
-                                    
-                                    
-                        
                                     <div class="form-group">
                                         <label class="text-label">Category *</label>
                                         <select class="select2-with-label-single js-states form-control" id="category" name="category_id" required>
@@ -138,59 +116,43 @@
             </div>
         </div>
     </div>
-    <!--************
-        Content body end
-    *************-->
 
-    <!--************
-        Footer start
-    *************-->
     <div class="footer">
         <div class="copyright">
             <p>Copyright © Designed &amp; Developed by <a href="/home" target="_blank">SYNC</a> 2024</p>
         </div>
     </div>
-    <!--************
-        Footer end
-    *************-->
 
-    <!--************
-        Scripts
-    *************-->
-    <!-- Required vendors -->
     @include('template.scripts')
 </body>
 <script>
   $(document).ready(function() {
-    getCategories(); // Memanggil fungsi untuk mengambil kategori
+    getCategories();
 
     function getCategories() {
         $.ajax({
-            url: '/get-categories/1', // Sesuaikan URL sesuai kebutuhan
+            url: '/get-categories/1',
             method: 'GET',
             success: function(data) {
-                var $dropdown = $('#category'); // Mengambil elemen dropdown dengan ID 'category'
-                $dropdown.empty(); // Menghapus opsi yang ada sebelumnya
+                var $dropdown = $('#category');
+                $dropdown.empty();
 
-                // Menambahkan opsi default
                 $dropdown.append($('<option>', {
                     value: '',
                     text: 'Select Category'
                 }));
 
-                // Menambahkan kategori ke dropdown
                 $.each(data, function(index, item) {
                     $dropdown.append($('<option>', {
-                        value: item.id, // Memastikan ini sesuai dengan respons API
-                        text: item.name // Menggunakan 'nama_kategori' sesuai dengan respons API
+                        value: item.id,
+                        text: item.name
                     }));
                 });
 
-                $dropdown.select2(); // Inisialisasi Select2
+                $dropdown.select2();
             },
             error: function(xhr) {
-                console.error('Error fetching categories:', xhr); // Mencetak kesalahan di konsol
-                // Menampilkan pesan kesalahan di UI
+                console.error('Error fetching categories:', xhr);
                 $('#category').append($('<option>', {
                     value: '',
                     text: 'Error loading categories'
@@ -203,38 +165,26 @@ function formatInput() {
             const input = document.getElementById('jumlah');
             const hiddenInput = document.getElementById('jumlah_value');
             
-            // Menghapus semua karakter kecuali angka
             let value = input.value.replace(/[^0-9]/g, '');
 
-            // Jika ada nilai, format sebagai angka
             if (value) {
-                // Konversi menjadi format lokal
                 const formattedValue = parseInt(value).toLocaleString('id-ID');
-                input.value = 'Rp' + formattedValue; // Menambahkan 'Rp' di depan
-                hiddenInput.value = value; // Menyimpan nilai numerik di input tersembunyi
+                input.value = 'Rp' + formattedValue;
+                hiddenInput.value = value;
             } else {
-                input.value = 'Rp 0'; // Jika tidak ada input
-                hiddenInput.value = ''; // Mengosongkan nilai tersembunyi
+                input.value = 'Rp 0';
+                hiddenInput.value = '';
             }
         }
 
-        // Menangkap pengiriman form untuk mengupdate nilai jumlah jika perlu
         $('form').on('submit', function() {
             const input = document.getElementById('jumlah_value');
             if (!input.value) {
-                input.value = '0'; // Set nilai default jika kosong
+                input.value = '0';
             }
         });
     
 
 </script>
 
-
-
-
-
-
-{{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
-    {{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script> --}}
-    
 </html>

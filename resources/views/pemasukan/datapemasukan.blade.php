@@ -6,18 +6,11 @@
     <title>PityCash | {{ auth()->user()->level }} | Pemasukan</title>
 </head>
 <body>
-    <!-- Preloader start -->
     @include('template.topbarr')
-    <!-- Header end -->
-
-    <!-- Sidebar start -->
     @include('template.sidebarr')
-    <!-- Sidebar end -->
 
-    <!-- Content body start -->
     <div class="content-body">
         <div class="container-fluid">
-            <!-- Add Project -->
             <div class="row page-titles mx-0">
                 <div class="col-sm-6 p-md-0">
                 
@@ -35,7 +28,6 @@
                     <div class="card">
                         <div class="card-header">
                             <h4 class="card-title">Data Pemasukan</h4>
-                            {{-- <h5 id="total-jumlah" class="mt-2">Total Jumlah: Rp <span id="total-jumlah-value">0</span></h5> --}}
 
                             <div class="d-flex align-items-center justify-content-between">
                                 <div class="d-flex align-items-center">
@@ -161,7 +153,7 @@
                                     <tr>
                                         <td colspan="5" style="text-align: left; font-size: 1.25em; font-weight: bold;"><strong>Total Jumlah:</strong></td>
                                         <td id="total-jumlah-value" style="text-align: left; font-size: 1.25em; font-weight: bold;">0</td>
-                                        <td></td> <!-- Kolom Opsi dikosongkan -->
+                                        <td></td>
                                     </tr>
                                 </tfoot>
                                 </table>
@@ -173,7 +165,6 @@
         </div>
     </div>
 
-    <!-- Detail Modal -->
     <div class="modal fade" id="adminDetailModal" tabindex="-1" role="dialog" aria-labelledby="adminDetailModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -210,7 +201,6 @@
         </div>
     </div>
 
-    <!-- Scripts -->
     @include('template.scripts')
 
     <input type="hidden" id="table-url-pemasukan" value="{{ route('income') }}">
@@ -227,7 +217,6 @@
         $(document).ready(function() {
             $('.input-daterange-datepicker').prop('disabled', true);
 
-            // DateRangePicker setup
             $('.input-daterange-datepicker').daterangepicker({
                 opens: 'left',
                 locale: {
@@ -235,7 +224,6 @@
                 }
             });
 
-            // Event listener for year filter change
             $('#filter-year').on('change', function() {
                 var selectedYear = $(this).val();
                 $('#export-year').val(selectedYear);
@@ -251,7 +239,6 @@
                     $('.input-daterange-datepicker').data('daterangepicker').setStartDate(filterData.start_created_at);
                     $('.input-daterange-datepicker').data('daterangepicker').setEndDate(filterData.end_created_at);
                     
-                    // Update hidden inputs for export
                     $('#export-start-date').val(filterData.start_created_at);
                     $('#export-end-date').val(filterData.end_created_at);
                     $('#export-start-date-excel').val(filterData.start_created_at);
@@ -262,31 +249,27 @@
                     filterData.start_created_at = null;
                     filterData.end_created_at = null;
                     
-                    // Clear hidden inputs for export
                     $('#export-start-date').val('');
                     $('#export-end-date').val('');
                     $('#export-start-date-excel').val('');
                     $('#export-end-date-excel').val('');
                 }
 
-                reloadTable(); // Reload table with new filters
+                reloadTable();
             });
 
-            // Event listener for date range change
             $('.input-daterange-datepicker').on('apply.daterangepicker', function(ev, picker) {
                 filterData.start_created_at = picker.startDate.format('YYYY-MM-DD');
                 filterData.end_created_at = picker.endDate.format('YYYY-MM-DD');
                 
-                // Update hidden inputs for export
                 $('#export-start-date').val(filterData.start_created_at);
                 $('#export-end-date').val(filterData.end_created_at);
                 $('#export-start-date-excel').val(filterData.start_created_at);
                 $('#export-end-date-excel').val(filterData.end_created_at);
                 
-                reloadTable(); // Reload table with new date filters
+                reloadTable();
             });
 
-            // Initialize the DataTable
             $('#pemasukanTables').DataTable({
                 processing: true,
                 serverSide: true,
@@ -305,7 +288,7 @@
                         d.end_created_at = filterData.end_created_at;
                     },
                     error: function(xhr, error, thrown) {
-                        console.error('AJAX Error:', xhr.responseText); // Log AJAX error response
+                        console.error('AJAX Error:', xhr.responseText);
                     }
                 },
                 columns: [
@@ -320,11 +303,10 @@
    footerCallback: function(row, data, start, end, display) {
     var totalJumlah = 0;
     data.forEach(function(item) {
-        var jumlah = item.jumlah.replace(/Rp/g, '').replace(/\./g, '').trim(); // Hapus 'Rp ' dan '.' untuk parsing
+        var jumlah = item.jumlah.replace(/Rp/g, '').replace(/\./g, '').trim();
         totalJumlah += parseFloat(jumlah) || 0;
     });
-    // Format total jumlah
-    $('#total-jumlah-value').text('Rp' + totalJumlah.toLocaleString('id-ID')); // Format dengan locale Indonesia
+    $('#total-jumlah-value').text('Rp' + totalJumlah.toLocaleString('id-ID'));
 }
 
 
@@ -343,12 +325,11 @@
             $('#kategoriTable').DataTable();
             
             $('#adminDetailModal').on('show.bs.modal', function(event) {
-                var button = $(event.relatedTarget); // Tombol yang memicu modal
-                var url = button.data('url'); // Ambil info dari atribut data-*
+                var button = $(event.relatedTarget);
+                var url = button.data('url');
                 
                 var modal = $(this);
                 
-                // Kosongkan konten modal sebelum memuat data baru
                 modal.find('#id_data').text('');
                 modal.find('#name').text('');
                 modal.find('#description').text('');
@@ -361,23 +342,20 @@
                     url: url,
                     method: 'GET',
                     success: function(data) {
-                        // Isi modal dengan data baru
                         modal.find('#id_data').text(data.id_data || 'N/A');
                         modal.find('#name').text(data.name || 'N/A');
                         modal.find('#description').text(data.description || 'N/A');
-                        // Format tanggal menjadi dd-mm-yyyy
                         var date = new Date(data.date);
                         var formattedDate = date.getDate().toString().padStart(2, '0') + '-' +
                                             (date.getMonth() + 1).toString().padStart(2, '0') + '-' +
                                             date.getFullYear();
                         modal.find('#date').text(formattedDate || 'N/A');
-                        // Format jumlah menjadi Rp10.000
                         var formattedJumlah = 'Rp' + parseFloat(data.jumlah || 0).toLocaleString('id-ID');
                         modal.find('#jumlah').text(formattedJumlah);
                         modal.find('#category').text(data.category_name || 'N/A');
                     },
                     error: function(xhr, status, error) {
-                        console.log(xhr.responseText); // Tampilkan pesan kesalahan di konsol
+                        console.log(xhr.responseText);
                         modal.find('.modal-body').html('Terjadi kesalahan saat memuat detail');
                     }
                 });
@@ -388,11 +366,9 @@
 
 <script>
     $(document).ready(function(){
-        // Inisialisasi Dropify
         $('.dropify').dropify();
 
-        // Mengubah ukuran font di area Dropify setelah inisialisasi
-        $('.dropify-wrapper .dropify-message p').css('font-size', '20px'); // Ganti '12px' dengan ukuran yang diinginkan
+        $('.dropify-wrapper .dropify-message p').css('font-size', '20px');
     });
 </script>
 

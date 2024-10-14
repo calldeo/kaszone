@@ -30,14 +30,13 @@ class PemasukanController extends Controller
 
 
 
-        return view('halaman.datapemasukan', compact('pemasukan', 'year'));
+        return view('pemasukan.datapemasukan', compact('pemasukan', 'year'));
     }
 
     public function create()
     {
-        // $categories = Category::all(); // Mengambil semua kategori
-        // $categories = Category::where('jenis_kategori', '1')->get();
-        return view('tambah.add_pemasukan');
+
+        return view('pemasukan.add_pemasukan');
     }
 
     public function store(Request $request)
@@ -52,7 +51,7 @@ class PemasukanController extends Controller
 
         DB::beginTransaction();
         try {
-            //code... 
+        
             $pemasukan = new Pemasukan();
             $pemasukan->name = $request->name;
             $pemasukan->description = $request->description;
@@ -62,18 +61,15 @@ class PemasukanController extends Controller
 
 
 
-            // dd($pemasukan);
+
             $pemasukan->save();
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
             return redirect('/pemasukan')->with('success', 'Pemasukan gagal ditambahkan!' . $th->getMessage());
 
-            //throw $th;
         }
         return redirect('/pemasukan')->with('success', 'Pemasukan berhasil ditambahkan!');
-
-        // Pemasukan::create($request->all());
 
     }
 
@@ -94,63 +90,12 @@ class PemasukanController extends Controller
         }
     }
 
-
-    // public function edit($id_data)
-    // {
-    //     $pemasukan = Pemasukan::findOrFail($id_data);
-    //     $categories = Category::where('jenis_kategori', '1')->get();
-
-    //     return view('edit.edit_pemasukan', compact('pemasukan', 'categories'));
-    // }
-
-    // public function update(Request $request, $id_data)
-    // {
-    //     // Validate input
-    //     $request->validate([
-    //         'name' => ['required', 'min:3', 'max:30'],
-    //         'description' => ['required', 'min:3', 'max:255'],
-    //         'date' => ['required', 'date'],
-    //         'jumlah' => 'required|numeric|min:0',
-    //         'category_id' => ['nullable', 'exists:categories,id'],
-    //     ]);
-
-    //     // Start database transaction
-    //     DB::beginTransaction();
-
-    //     try {
-    //         // Find the pemasukan data by ID
-    //         $pemasukan = Pemasukan::findOrFail($id_data);
-
-    //         // Update pemasukan data
-    //         $pemasukan->name = $request->name;
-    //         $pemasukan->description = $request->description;
-    //         $pemasukan->date = $request->date;
-    //         $pemasukan->jumlah = $request->jumlah;
-    //         $pemasukan->category_id = $request->category_id ?? $pemasukan->category_id; // Use existing category if not provided
-
-    //         // Save changes
-    //         $pemasukan->save();
-
-    //         // Commit transaction
-    //         DB::commit();
-
-    //         // Redirect with success message
-    //         return redirect('/pemasukan')->with('update_success', 'Data pemasukan berhasil diperbarui.');
-    //     } catch (\Throwable $th) {
-    //         // Rollback transaction on error
-    //         DB::rollback();
-
-    //         // Redirect with error message
-    //         return redirect('/pemasukan')->with('error', 'Pemasukan gagal diperbarui! ' . $th->getMessage());
-    //     }
-    // }
-
     public function edit($id_data)
     {
         $pemasukan = Pemasukan::findOrFail($id_data);
         $categories = Category::where('jenis_kategori', 'pemasukan')->get();
 
-        return view('edit.edit_pemasukan', compact('id_data', 'pemasukan', 'categories'));
+        return view('pemasukan.edit_pemasukan', compact('id_data', 'pemasukan', 'categories'));
     }
 
     public function update(Request $request, $id_data)
@@ -163,7 +108,7 @@ class PemasukanController extends Controller
             'category_id' => 'nullable|exists:categories,id',
         ]);
 
-        // Mulai transaksi database
+        
         DB::beginTransaction();
 
         try {
@@ -176,12 +121,12 @@ class PemasukanController extends Controller
 
             $pemasukan->save();
 
-            // Commit transaksi
+            
             DB::commit();
 
             return redirect('/pemasukan')->with('success', 'Pemasukan updated successfully');
         } catch (\Exception $e) {
-            // Rollback transaksi jika ada kesalahan
+            
             DB::rollBack();
 
             return redirect('/pemasukan')->with('error', 'Terjadi kesalahan saat mengimpor data' . $e->getMessage());
@@ -190,7 +135,7 @@ class PemasukanController extends Controller
 
 
 
-    // Method untuk mendapatkan detail kategori
+    
     public function showDetail($id_data)
     {
         $pemasukan = Pemasukan::with('category')->find($id_data);
@@ -205,44 +150,44 @@ class PemasukanController extends Controller
             'description' => $pemasukan->description,
             'date' => $pemasukan->date,
             'jumlah' => $pemasukan->jumlah,
-            'category_name' => $pemasukan->category->name, // Ambil nama kategori
+            'category_name' => $pemasukan->category->name, 
         ]);
     }
 
     public function pemasukanImportExcel(Request $request)
     {
-        // Mulai transaksi database
+        
         DB::beginTransaction();
 
         try {
-            // Validasi file
+            
             $request->validate([
-                'file' => 'required|file|mimes:xlsx,xls,csv|max:2048', // Sesuaikan dengan format yang diizinkan
+                'file' => 'required|file|mimes:xlsx,xls,csv|max:2048', 
             ]);
 
-            // Pindahkan file ke folder DataPemasukan
+            
             $file = $request->file('file');
             $namafile = $file->getClientOriginalName();
             $file->move(public_path('DataPemasukan'), $namafile);
 
-            // Impor data dari baris kedua (di bawah header)
+            
             Excel::import(new PemasukanImport, public_path('DataPemasukan/' . $namafile), null, \Maatwebsite\Excel\Excel::XLSX, [
-                'startRow' => 2, // Mulai dari baris kedua (di bawah header)
-                'onlySheets' => [0] // Hanya impor worksheet pertama
+                'startRow' => 2, 
+                'onlySheets' => [0] 
             ]);
 
-            // Commit transaksi jika semua operasi berhasil
+            
             DB::commit();
 
-            // Hapus file setelah impor selesai
-            @unlink(public_path('DataPemasukan/' . $namafile)); // Menghapus file dari server
+            
+            @unlink(public_path('DataPemasukan/' . $namafile)); 
 
             return redirect('/pemasukan')->with('success', 'Data Berhasil Ditambahkan');
         } catch (\Exception $e) {
-            // Rollback transaksi jika terjadi kesalahan
+            
             DB::rollBack();
 
-            // Log error jika diperlukan
+        
             \Log::error('Import Pemasukan failed: ' . $e->getMessage());
 
             return redirect('/pemasukan')->with('error', 'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage());
@@ -253,44 +198,44 @@ class PemasukanController extends Controller
 
      public function downloadTemplate()
     {
-        // Buat objek spreadsheet baru
+        
         $spreadsheet = new Spreadsheet();
 
-        // Worksheet untuk Pemasukan
+    
         $incomeSheet = $spreadsheet->getActiveSheet();
         $incomeSheet->setTitle('Pemasukan');
 
-        // Tambahkan header untuk sheet Pemasukan
+        
         $incomeSheet->setCellValue('A1', 'Nama');
         $incomeSheet->setCellValue('B1', 'Deskripsi');
         $incomeSheet->setCellValue('C1', 'Tanggal');
         $incomeSheet->setCellValue('D1', 'Jumlah');
         $incomeSheet->setCellValue('E1', 'Kode Kategori');
 
-        // Worksheet untuk Kategori Pemasukan
+        
         $categorySheet = $spreadsheet->createSheet();
         $categorySheet->setTitle('Kategori Pemasukan');
 
-        // Tambahkan header untuk sheet Kategori
+        
         $categorySheet->setCellValue('A1', 'Kode Kategori');
         $categorySheet->setCellValue('B1', 'Nama Kategori');
 
-        // Ambil kategori dengan jenis 'pemasukan' dari database
+        
         $categories = Category::where('jenis_kategori', '1')->get();
         
-        // Isi data kategori ke dalam sheet Kategori
-        $row = 2; // Mulai dari baris ke-2 (setelah header)
+        
+        $row = 2; 
         foreach ($categories as $category) {
-            $categorySheet->setCellValue('A' . $row, $category->id);  // Kode Kategori
-            $categorySheet->setCellValue('B' . $row, $category->name);  // Nama Kategori
+            $categorySheet->setCellValue('A' . $row, $category->id);  
+            $categorySheet->setCellValue('B' . $row, $category->name);  
             $row++;
         }
 
-        // Buat file Excel dan simpan ke dalam output buffer
+        
         $writer = new Xlsx($spreadsheet);
         $fileName = 'template_pemasukan.xlsx';
 
-        // Set response untuk mendownload file
+        
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . $fileName . '"');
         header('Cache-Control: max-age=0');
