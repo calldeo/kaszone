@@ -17,7 +17,6 @@
                 </div>
             </div>
 
-            <!-- Filter Section -->
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
@@ -46,7 +45,7 @@
                                     @endhasrole
                                     
                                  @hasrole('Admin|Bendahara|Reader') 
-                                    <form method="GET" action="{{ route('cetakpgl') }}" id="export-pdf-form" class="mr-2">
+                                    <form method="GET" action="{{ route('export.pengeluaran.pdf') }}" id="export-pdf-form" class="mr-2">
                                         <input type="hidden" name="year" id="export-year" value="{{ old('year') }}" />
                                         <input type="hidden" name="start_date" id="export-start-date" value="" />
                                         <input type="hidden" name="end_date" id="export-end-date" value="" />
@@ -62,7 +61,6 @@
                                     </form>
                                     @endhasrole
                                     @hasrole('Admin|Bendahara')
-                                    <!-- Import Data Button -->
                                     <button class="btn btn-primary" data-toggle="modal" data-target="#importModal" title="Import Data">
                                         <i class="fa fa-file-import"></i> 
                                     </button>
@@ -96,7 +94,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-            <!-- Pengeluaran Section -->
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
@@ -130,10 +127,7 @@
                                             <th><strong>Nama</strong></th>
                                             <th><strong>Deskripsi</strong></th>
                                             <th><strong>Kategori</strong></th>
-                                            {{-- <th><strong>Jumlah Satuan</strong></th> --}}
-                                            {{-- <th><strong>Nominal(Rp)</strong></th> --}}
                                             <th><strong>Total(Rp)</strong></th>
-                                            {{-- <th><strong>Foto</strong></th> --}}
                                             <th><strong>Tanggal</strong></th>
 
                                             <th><strong>Opsi<strong></th>
@@ -144,8 +138,8 @@
                                     <tr>
                                         <td colspan="4" style="text-align: left; font-size: 1.25em; font-weight: bold;"><strong>Total Jumlah:</strong></td>
                                         <td id="total-jumlah" style="text-align: left; font-size: 1.25em; font-weight: bold;">0</td>
-                                        <td></td> <!-- Kolom Opsi dikosongkan -->
-                                        <td></td> <!-- Kolom tambahan untuk menyesuaikan dengan jumlah kolom -->
+                                        <td></td>
+                                        <td></td>
                                     </tr>
                                 </tfoot>
                                 </table>
@@ -168,10 +162,8 @@
         end_created_at: null
     };
 $(document).ready(function() {
-    // Nonaktifkan date picker di awal
     $('.input-daterange-datepicker').prop('disabled', true);
 
-    // Inisialisasi daterangepicker dengan format YYYY/MM/DD
     $('.input-daterange-datepicker').daterangepicker({
         opens: 'left',
         locale: { 
@@ -180,7 +172,6 @@ $(document).ready(function() {
         autoUpdateInput: false
     });
 
-    // Event handler untuk filter tahun
     $('#filter-year').on('change', function() {
         var selectedYear = $(this).val();
         $('#export-year').val(selectedYear);
@@ -197,7 +188,6 @@ $(document).ready(function() {
             var formattedEndDate = moment(filterData.end_created_at).format('YYYY/MM/DD');
             $('.input-daterange-datepicker').val(formattedStartDate + ' - ' + formattedEndDate);
             
-            // Perbarui hidden fields untuk ekspor
             $('#export-start-date').val(formattedStartDate);
             $('#export-end-date').val(formattedEndDate);
             $('#export-start-date-excel').val(formattedStartDate);
@@ -211,7 +201,6 @@ $(document).ready(function() {
             filterData.start_created_at = null;
             filterData.end_created_at = null;
             
-            // Kosongkan hidden fields untuk ekspor
             $('#export-start-date').val('');
             $('#export-end-date').val('');
             $('#export-start-date-excel').val('');
@@ -221,13 +210,11 @@ $(document).ready(function() {
         }
     });
 
-    // Perbarui input setelah memilih rentang tanggal
     $('.input-daterange-datepicker').on('apply.daterangepicker', function(ev, picker) {
         $(this).val(picker.startDate.format('YYYY/MM/DD') + ' - ' + picker.endDate.format('YYYY/MM/DD'));
         filterData.start_created_at = picker.startDate.format('YYYY-MM-DD');
         filterData.end_created_at = picker.endDate.format('YYYY-MM-DD');
         
-        // Perbarui hidden fields untuk ekspor
         $('#export-start-date').val(picker.startDate.format('YYYY/MM/DD'));
         $('#export-end-date').val(picker.endDate.format('YYYY/MM/DD'));
         $('#export-start-date-excel').val(picker.startDate.format('YYYY/MM/DD'));
@@ -236,7 +223,6 @@ $(document).ready(function() {
         pengeluaranTables(filterData);
     });
 
-    // Muat tabel saat halaman dimuat
     pengeluaranTables(filterData);
 });
 
@@ -273,14 +259,12 @@ $(document).ready(function() {
                 var api = this.api();
                 var totalJumlah = 0;
 
-                // Hitung total jumlah
                 api.rows().every(function(rowIdx, tableLoop, rowLoop) {
                     var data = this.data();
                     var jumlah = parseFloat(data.jumlah.replace(/Rp/g, '').replace(/\./g, '').replace(/,/g, '').trim()) || 0;
                     totalJumlah += jumlah;
                 });
 
-                // Tampilkan total jumlah dalam format IDR
                 $('#total-jumlah').html('Rp' + totalJumlah.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }));
             }
         });
@@ -293,11 +277,9 @@ $(document).ready(function() {
     </script>
 <script>
     $(document).ready(function(){
-        // Inisialisasi Dropify
         $('.dropify').dropify();
 
-        // Mengubah ukuran font di area Dropify setelah inisialisasi
-        $('.dropify-wrapper .dropify-message p').css('font-size', '20px'); // Ganti '12px' dengan ukuran yang diinginkan
+        $('.dropify-wrapper .dropify-message p').css('font-size', '20px');
     });
 </script>
 </body>

@@ -3,25 +3,19 @@
 
 <head>
     @include('template.headerr')
-    <title>PityCash | {{ auth()->user()->level }} | Pengeluaran</title>
+    <title>PityCash | {{ auth()->user()->level }} | Edit Data Pengeluaran</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 
 <body>
 
-<!-- Preloader start -->
 @include('template.topbarr')
-<!-- Header end -->
 
-<!-- Sidebar start -->
 @include('template.sidebarr')
-<!-- Sidebar end -->
 
-<!-- Content body start -->
 <div class="content-body">
     <div class="container-fluid">
 
-        <!-- Page Title and Breadcrumb -->
         <div class="row page-titles mx-0">
             <div class="col-sm-6 p-md-0"></div>
             <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
@@ -32,7 +26,6 @@
             </div>
         </div>
 
-        <!-- Informasi Umum -->
         <div class="card">
             <div class="card-header">Informasi </div>
             <div class="card-body">
@@ -76,7 +69,6 @@
                         </div>
                     </div>
 
-                    <!-- Container untuk Pengeluaran -->
                     <div id="accordion-one" class="accordion accordion-primary">
                         @foreach($parentPengeluaran->pengeluaran as $key => $pengeluaran)
                             <div class="accordion__item">
@@ -174,10 +166,8 @@
                         @endforeach
                     </div>
 
-                    <!-- Container untuk menambah pengeluaran baru -->
                     <div id="pengeluaran-container"></div>
 
-                    <!-- Tombol untuk menambah pengeluaran -->
                     <div class="mt-3 text-right">
                         <button type="button" class="btn btn-info rounded" id="add-pengeluaran">
                             <i class="fas fa-plus"></i> Tambah Pengeluaran
@@ -194,59 +184,46 @@
         </div>
     </div>
 </div>
-<!-- Content body end -->
 
-<!-- Footer start -->
 <div class="footer">
     <div class="copyright">
         <p>Copyright © Designed &amp; Developed by <a href="/home" target="_blank">SYNC</a> 2024</p>
     </div>
 </div>
-<!-- Footer end -->
 
-<!-- Required Scripts -->
 @include('template.scripts')
 
-<!-- Custom Scripts -->
 <script src="{{ asset('main.js') }}"></script>
 <script src="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.js"></script>
 
 <script>
     $(document).ready(function() {
-        // Inisialisasi Select2
         $('.select2').select2();
-    
-        // Fungsi untuk mendapatkan kategori dari server
-        // getCategories();
     
         function getCategories(countItem = null) {
             $.ajax({
-                url: '/get-categories/2', // Sesuaikan URL jika perlu
+                url: '/get-categories/2',
                 method: 'GET',
                 success: function(data) {
-                    var $dropdown = $('.category-dropdown'); // Ganti dengan selector yang sesuai
+                    var $dropdown = $('.category-dropdown');
                     if (countItem != null) {
                         var $dropdown = $('.category-dropdown' + countItem);
                     }
-                    var selectedCategoryId = "{{ $pengeluaran->id }}"; // Mengambil ID kategori dari objek pengeluaran
+                    var selectedCategoryId = "{{ $pengeluaran->id }}";
     
-                    // Kosongkan dropdown tapi pertahankan kategori yang dipilih
                     $dropdown.empty(); 
     
-                    // Tambahkan opsi default
                     $dropdown.append($('<option>', {
                         value: '',
                         text: 'Pilih Kategori'
                     }));
     
-                    // Iterasi data yang diterima dari server
                     $.each(data, function(index, item) {
                         var $option = $('<option>', {
                             value: item.id,
                             text: item.name
                         });
     
-                        // Pastikan opsi yang sesuai tetap terpilih
                         if (countItem == null) {
                             if (item.id == selectedCategoryId) {
                                 $option.prop('selected', true);
@@ -257,7 +234,6 @@
                     });
     
                     if (isAddItem == false) {
-                        // Refresh Select2 untuk menampilkan opsi terbaru
                         $dropdown.trigger('change.select2');
                     }
                 },
@@ -271,67 +247,53 @@
             });
         }
 
-   // Fungsi untuk menambahkan pemisah ribuan dan prefix "Rp"
 function formatCurrency(input) {
-    // Menghapus "Rp" dan pemisah ribuan, kemudian trim nilai
     var value = $(input).val().replace(/Rp/g, '').replace(/\./g, '').trim();
     
-    // Cek jika nilai adalah angka
     if (!isNaN(value) && value !== '') {
-        // Format kembali dengan "Rp" dan pemisah ribuan
         $(input).val('Rp' + numberWithCommas(value));
     } else {
-        // Reset jika tidak valid
         $(input).val('');
     }
 }
 
-// Fungsi untuk menghitung total
 function calculateTotal(key) {
     const jumlahSatuan = parseFloat($(`#jumlah_satuan_${key}`).val().replace(/Rp/g, '').replace(/\./g, '').trim()) || 0;
     const nominal = parseFloat($(`#nominal_${key}`).val().replace(/Rp/g, '').replace(/\./g, '').trim()) || 0;
     const dll = parseFloat($(`#dll_${key}`).val().replace(/Rp/g, '').replace(/\./g, '').trim()) || 0;
     
-    // Hitung total
     const total = (jumlahSatuan * nominal) + dll;
-    $(`#jumlah_${key}`).val('Rp' + numberWithCommas(total.toFixed(0))); // Format total ke "Rp"
+    $(`#jumlah_${key}`).val('Rp' + numberWithCommas(total.toFixed(0)));
 }
 
-// Event listener untuk format currency saat input pada nominal dan dll
 $(document).on('input', '.nominal, .dll', function() {
-    formatCurrency(this); // Format nilai saat input
-    const key = $(this).data('key'); // Ambil key dari data atribut
-    calculateTotal(key); // Hitung total setelah format
+    formatCurrency(this);
+    const key = $(this).data('key');
+    calculateTotal(key);
 });
 
-// Fungsi untuk menghitung total ketika input jumlah satuan berubah
 $(document).on('input', '.jumlah_satuan', function() {
-    const key = $(this).data('key'); // Ambil key dari data atribut
-    calculateTotal(key); // Hitung total
+    const key = $(this).data('key');
+    calculateTotal(key);
 });
 
-// Fungsi untuk menambahkan pemisah ribuan
 function numberWithCommas(x) {
     return x.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 }
 
-// Mengubah nilai sebelum mengirim form
 $('form').on('submit', function() {
-    // Untuk setiap input nominal dan dll
     $('.nominal, .dll').each(function() {
-        var inputVal = $(this).val().replace(/Rp/g, '').replace(/\./g, '').trim(); // Hapus "Rp" dan pemisah ribuan
-        $(this).val(inputVal); // Pastikan nilai yang dikirim adalah angka
+        var inputVal = $(this).val().replace(/Rp/g, '').replace(/\./g, '').trim();
+        $(this).val(inputVal);
     });
     
-    // Jika Anda ingin melakukan hal yang sama untuk jumlah, Anda bisa menambahkannya juga
     $('.jumlah').each(function() {
-        var inputVal = $(this).val().replace(/Rp/g, '').replace(/\./g, '').trim(); // Hapus "Rp" dan pemisah ribuan
-        $(this).val(inputVal); // Pastikan nilai yang dikirim adalah angka
+        var inputVal = $(this).val().replace(/Rp/g, '').replace(/\./g, '').trim();
+        $(this).val(inputVal);
     });
 });
 
 
-    // Tambah pengeluaran
     let pengeluaranCount = {{ $parentPengeluaran->pengeluaran->count() }};
     $('#add-pengeluaran').on('click', function() {
         pengeluaranCount++;
