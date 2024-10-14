@@ -9,19 +9,17 @@
 
 <body>
 
-    <!-- Preloader start -->
+
     @include('template.topbarr')
-    <!-- Header end -->
 
-    <!-- Sidebar start -->
     @include('template.sidebarr')
-    <!-- Sidebar end -->
+   
 
-    <!-- Content body start -->
+    
     <div class="content-body">
         <div class="container-fluid">
             
-            <!-- Add Project -->
+            
             <div class="row page-titles mx-0">
                 <div class="col-sm-6 p-md-0">
                 
@@ -33,7 +31,7 @@
                     </ol>
                 </div>
             </div>
-            <!-- row -->
+           
 
             <div class="row">
                 <div class="col-lg-12">
@@ -41,11 +39,7 @@
                         <div class="card-header">
                             <h4 class="card-title">Data Kategori</h4>
                             <div class="text-right">
-                          {{-- <div class="input-group search-area right d-lg-inline-flex d-none">
-                            <form id="searchForm">
-                                <input id="searchInput" type="text" class="form-control" placeholder="Cari sesuatu di sini..." name="query">
-                            </form>
-                          </div> --}}
+                    
                            <a href="/add_kategori" class="btn btn-warning ml-0" title="Add">
                         <i class="fa fa-plus"></i>
                     </a>
@@ -55,7 +49,7 @@
                       <button type="button" class="btn btn-success ml-2" title="Import" data-toggle="modal" data-target="#importModal">
             <i class="fa fa-upload"></i> 
         </button>
-        <!-- Modal untuk impor data guru -->
+        
         <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -66,7 +60,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <!-- Form untuk mengunggah file Excel -->
+                        
                         <form action="{{ route('import-kategori') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group" style="text-align: left;">
@@ -140,40 +134,33 @@
                             </div>
                         </div>
                                <div class="d-flex justify-content-end">
-                    {{-- {{ $users->links() }} --}}
+                    
                 </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Content body end -->
 
-    <!-- Footer start -->
     <div class="footer">
         <div class="copyright">
             <p>Copyright © Designed &amp; Developed by <a href="/home" target="_blank">SYNC</a> 2024</p>
         </div>
     </div>
-    <!-- Footer end -->
 
-    <!-- Main wrapper end -->
-
-    <!-- Scripts -->
-    <!-- Required vendors -->
     @include('template.scripts')
     
 
   
 
-    <!-- Sweet Alert -->
+    
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <script>
         $(document).ready(function() {
             $('.delete-btn').click(function() {
                 var id = $(this).data('id');
-                // Tampilkan sweet alert ketika tombol hapus diklik
+                
                 Swal.fire({
                     title: 'Apakah anda yakin hapus data ini?',
                     text: "Data akan dihapus secara permanen",
@@ -184,9 +171,9 @@
                     confirmButtonText: 'Iya, hapus data!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // Jika pengguna mengonfirmasi penghapusan, kirim formulir hapus
+                        
                         $('#deleteForm_' + id).submit();
-                        // Tampilkan alert ketika data berhasil dihapus
+                        
                         Swal.fire(
                             'Data dihapus!',
                             'Data berhasil dihapus',
@@ -205,9 +192,8 @@
 
 $(document).ready(function() {
     $('#adminDetailModal').on('show.bs.modal', function(event) {
-        var button = $(event.relatedTarget); // Tombol yang memicu modal
-        var url = button.data('url'); // Ambil info dari atribut data-*
-        
+        var button = $(event.relatedTarget); 
+        var url = button.data('url'); 
         var modal = $(this);
         $.ajax({
             url: url,
@@ -218,7 +204,7 @@ $(document).ready(function() {
                 modal.find('#description').text(data.description);
             },
             error: function(xhr, status, error) {
-                console.log(xhr.responseText); // Tampilkan pesan kesalahan di konsol
+                console.log(xhr.responseText); 
                 modal.find('.modal-body').html('Terjadi kesalahan saat memuat detail');
             }
         });
@@ -230,7 +216,7 @@ $(document).ready(function() {
     
     
 
-<!-- Modal HTML -->
+
 <div class="modal fade" id="adminDetailModal" tabindex="-1" role="dialog" aria-labelledby="adminDetailModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -264,11 +250,10 @@ $(document).ready(function() {
 
 <script>
     $(document).ready(function(){
-        // Inisialisasi Dropify
+        
         $('.dropify').dropify();
 
-        // Mengubah ukuran font di area Dropify setelah inisialisasi
-        $('.dropify-wrapper .dropify-message p').css('font-size', '20px'); // Ganti '12px' dengan ukuran yang diinginkan
+        $('.dropify-wrapper .dropify-message p').css('font-size', '20px'); 
     });
 </script>
 
