@@ -6,33 +6,13 @@
     @include('template.headerr')
     <title>PityCash | {{auth()->user()->level}} | Add Data User</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-
 </head>
 <body>
-
-    <!--*******
-        Preloader start
-    ********-->
      @include('template.topbarr')
-        <!--************
-            Header end ti-comment-alt
-        *************-->
-
-        <!--************
-            Sidebar start
-        *************-->
        @include('template.sidebarr')
-        <!--************
-            Sidebar end
-        *************-->
         
-        <!--************
-            Content body start
-        *************-->
         <div class="content-body">
             <div class="container-fluid">
-                <!-- Add Project -->
                 <div class="modal fade" id="addProjectSidebar">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -80,7 +60,6 @@
                                 <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span></button>
                             </div>
                             @endif
-                <!-- row -->
                 <div class="row">
                 
                     <div class="col-lg-12">
@@ -138,11 +117,8 @@
                                          <div class="form-group">
                                             <label>Jenis Kelamin *</label>
                                             <select class="form-control default-select" id="sel1" name="kelamin" required>
-                                                {{-- <option  value="">--Select Gender--</option> --}}
                                                 <option  value="laki-laki">Laki-Laki</option>
                                                 <option  value="perempuan">Perempuan</option>
-                                                {{-- <option  value="guru">Guru</option>
-                                                <option  value="siswa">Siswa</option> --}}
                                             </select>
                                             @error('kelamin')
                                             <span class="mt-4 text-danger">{{$message}}</span>
@@ -160,16 +136,6 @@
                                             <span class="mt-4 text-danger">{{$message}}</span>
                                             @enderror
                                         </div>
-                                         <!-- Role -->
-                                    {{-- <div class="mb-6">
-                                        <label for="level" class="block text-sm font-medium text-gray-700">Peran  : </label> 
-                                        <select name="level" id="level" class="mt-1 block w-full border custom-border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-3" required>
-                                            <option value="" disabled selected>Pilih peran</option>
-                                            @foreach($roles as $role)
-                                                <option value="{{ $role->name }}">{{ $role->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div> --}}
                                     <div class="form-group">
                                         <label>Role *</label>
                                         <select class="form-control default-select" id="sel1" name="level[]" multiple required>
@@ -192,41 +158,15 @@
                 </div>
             </div>
         </div>
-        <!--************
-            Content body end
-        *************-->
 
-
-        <!--************
-            Footer start
-        *************-->
         <div class="footer">
             <div class="copyright">
                 <p>Copyright © Designed &amp; Developed by <a href="/home" target="_blank">SYNC</a> 2024</p>
             </div>
         </div>
-        <!--************
-            Footer end
-        *************-->
-
-        <!--************
-           Support ticket button start
-        *************-->
-
-        <!--************
-           Support ticket button end
-        *************-->
-
         
     </div>
-    <!--************
-        Main wrapper end
-    *************-->
 
-    <!--************
-        Scripts
-    *************-->
-    <!-- Required vendors -->
  @include('template.scripts')
  
 </body>

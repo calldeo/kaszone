@@ -35,10 +35,10 @@ class BendaharaController extends Controller
         }
     }
 
-    public function show()
+    public function create()
     {
         $roles = Role::all();
-        return view('user.add_user', compact('roles'));
+        return view('user.add', compact('roles'));
     }
 
     public function store(Request $request)
@@ -85,7 +85,7 @@ class BendaharaController extends Controller
         $roles = Role::all();
         $guruu = User::find($id);
 
-        return view('user.edit_user', compact('guruu', 'roles'));
+        return view('user.edit', compact('guruu', 'roles'));
     }
 
     public function update(Request $request, $id)

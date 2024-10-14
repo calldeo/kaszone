@@ -7,16 +7,15 @@
 
       <style>
         .dataTables_wrapper .bendaharaTable_length .bootstrap-select .dropdown-toggle {
-            font-size: 2rem; /* Ukuran font yang lebih besar */
-            padding: 1rem 2rem; /* Padding yang lebih besar di sekitar teks */
-            border-radius: 4px; /* Radius sudut untuk dropdown */
-            border: 1px solid #ccc; /* Border untuk dropdown */
+            font-size: 2rem;
+            padding: 1rem 2rem;
+            border-radius: 4px;
+            border: 1px solid #ccc;
         }
 
-        /* Jika dropdown memiliki elemen select yang di-custom */
         .dataTables_wrapper .BendaharaTable_length .bootstrap-select .dropdown-menu {
-            font-size: 1.5rem; /* Ukuran font di dalam menu dropdown */
-            padding: 1rem; /* Padding dalam menu dropdown */
+            font-size: 1.5rem;
+            padding: 1rem;
         }
     </style>
 
@@ -26,18 +25,12 @@
 
 <body>
 
-    <!-- Preloader start -->
     @include('template.topbarr')
-    <!-- Header end -->
 
-    <!-- Sidebar start -->
     @include('template.sidebarr')
-    <!-- Sidebar end -->
 
-    <!-- Content body start -->
     <div class="content-body">
         <div class="container-fluid">
-            <!-- Add Project -->
             <div class="row page-titles mx-0">
                 <div class="col-sm-6 p-md-0">
             
@@ -49,7 +42,6 @@
                     </ol>
                 </div>
             </div>
-            <!-- row -->
 
             <div class="row">
                 <div class="col-lg-12">
@@ -58,7 +50,7 @@
                             <h4 class="card-title">Data User</h4>
                             <div class="text-right">
                         
-                    <a href="/add_user" class="btn btn-success" title="Add">
+                    <a href="/add" class="btn btn-success" title="Add">
                         <i class="fa fa-plus"></i>
                     </a>
                 </div>
@@ -107,39 +99,28 @@
                             </div>
                         </div>
                                <div class="d-flex justify-content-end">
-                    {{-- {{ $users->links() }} --}}
                 </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Content body end -->
 
-    <!-- Footer start -->
     <div class="footer">
         <div class="copyright">
             <p>Copyright © Designed &amp; Developed by <a href="/home" target="_blank">SYNC</a> 2024</p>
         </div>
     </div>
-    <!-- Footer end -->
 
-    <!-- Main wrapper end -->
-
-    <!-- Scripts -->
-    <!-- Required vendors -->
     @include('template.scripts')
     <input type="hidden" id="table-url" value="{{ route('users') }}">
     <script src="{{ asset('main.js') }}"></script>
-    {{-- <script src="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.js"></script> --}}
-    <!-- Sweet Alert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <script>
         $(document).ready(function() {
             $('.delete-btn').click(function() {
                 var id = $(this).data('id');
-                // Tampilkan sweet alert ketika tombol hapus diklik
                 Swal.fire({
                     title: 'Apakah anda yakin hapus data ini?',
                     text: "Data akan dihapus secara permanen",
@@ -150,9 +131,7 @@
                     confirmButtonText: 'Iya, hapus data!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // Jika pengguna mengonfirmasi penghapusan, kirim formulir hapus
                         $('#deleteForm_' + id).submit();
-                        // Tampilkan alert ketika data berhasil dihapus
                         Swal.fire(
                             'Data dihapus!',
                             'Data berhasil dihapus',
@@ -164,11 +143,6 @@
         });
     </script>
 
-
-
-
-
-!-- Modal HTML -->
     <div class="modal fade" id="adminDetailModal" tabindex="-1" role="dialog" aria-labelledby="adminDetailModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -185,7 +159,6 @@
                             <strong>Email :</strong><br />
                             <strong>Jenis Kelamin :</strong><br />
                             <strong>Alamat :</strong><br />
-                            {{-- <strong>Kategori:</strong><br /> --}}
 
                         </div>
                         <div class="col-sm-8">
@@ -210,26 +183,20 @@
             $('#bendaharaTable').DataTable();
             
             $('#adminDetailModal').on('show.bs.modal', function(event) {
-                var button = $(event.relatedTarget); // Tombol yang memicu modal
-                var url = button.data('url'); // Ambil info dari atribut data-*
+                var button = $(event.relatedTarget);
+                var url = button.data('url');
                 
                 var modal = $(this);
                 
-                // Kosongkan konten modal sebelum memuat data baru
-                // modal.find('#id_data').text('');
                 modal.find('#name').text('');
                 modal.find('#email').text('');
                 modal.find('#kelamin').text('');
                 modal.find('#alamat').text('');
-           // Kosongkan kategori
-
                 
                 $.ajax({
                     url: url,
                     method: 'GET',
                     success: function(data) {
-                        // Isi modal dengan data baru
-                        // modal.find('#id_data').text(data.id_data || 'N/A');
                         modal.find('#name').text(data.name || 'N/A');
                         modal.find('#email').text(data.email || 'N/A');
                         modal.find('#kelamin').text(data.kelamin || 'N/A');
@@ -237,7 +204,7 @@
 
                     },
                     error: function(xhr, status, error) {
-                        console.log(xhr.responseText); // Tampilkan pesan kesalahan di konsol
+                        console.log(xhr.responseText);
                         modal.find('.modal-body').html('Terjadi kesalahan saat memuat detail');
                     }
                 });
