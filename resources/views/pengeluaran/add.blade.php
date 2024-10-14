@@ -4,23 +4,16 @@
 <head>
     @include('template.headerr')
     <title>PityCash | {{ auth()->user()->level }} | Add Pengeluaran</title>
-    <!-- Include necessary CSS libraries -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 
 <body>
-    <!-- Preloader start -->
     @include('template.topbarr')
-    <!-- Header end -->
 
-    <!-- Sidebar start -->
     @include('template.sidebarr')
-    <!-- Sidebar end -->
 
-    <!-- Content body start -->
     <div class="content-body">
         <div class="container-fluid">
-            <!-- Page Title and Breadcrumb -->
             <div class="row page-titles mx-0">
                 <div class="col-sm-6 p-md-0">
                   
@@ -60,7 +53,6 @@
                             </div>
                             @endif
 
-         <!-- Add Pemasukan Form -->
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
@@ -73,24 +65,19 @@
             <div class="card-body">
                 <form class="form-valide-with-icon" action="/pengeluaran/store" method="post" enctype="multipart/form-data">
                     @csrf
-   <!-- Tanggal input di sebelah kanan judul -->
                 <div class="form-group mb-2 d-flex align-items-center">
-                    {{-- <label class="text-label mr-2 mb-0">Tanggal *</label> --}}
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                         </div>
-                        <!-- Menggunakan input tipe date bawaan HTML5 -->
                         <input type="date" class="form-control" name="tanggal" value="{{ old('tanggal') }}" required>
                     </div>
                     @error('tanggal')
                     <span class="mt-2 text-danger">{{ $message }}</span>
                     @enderror
                 </div>
-                    <!-- Container for dynamically added fields -->
                     <div id="dynamic-fields-container">
                         <div class="dynamic-field">
-                            <!-- Nama Pengeluaran Field -->
                             <div class="form-group">
                                 <label class="text-label">Nama Pengeluaran *</label>
                                 <div class="input-group">
@@ -104,7 +91,6 @@
                                 @enderror
                             </div>
 
-                            <!-- Deskripsi Field -->
                             <div class="form-group">
                                 <label class="text-label">Deskripsi</label>
                                 <div class="input-group">
@@ -115,27 +101,13 @@
                                 </div>
                             </div>
 
-                            
-
-                            {{-- <!-- Deskripsi Field -->
-                            <div class="form-group">
-                                <label class="text-label">Deskripsi</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-book"></i></span>
-                                    </div>
-                                    <textarea class="form-control" name="description[]" placeholder="Enter description..">{{ old('description') }}</textarea>
-                                </div>
-                            </div> --}}
-
-                            <!-- Nominal Field -->
                             <div class="form-group">
                                 <label class="text-label">Nominal *</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
                                     </div>
-                                    <input type="text" class="form-control nominal" id="nominal" name="nominal[]" placeholder="Enter amount.." required oninput="formatInputNominal(event); calculateTotal(event);"> <!-- Input tersembunyi untuk nilai numerik -->
+                                    <input type="text" class="form-control nominal" id="nominal" name="nominal[]" placeholder="Enter amount.." required oninput="formatInputNominal(event); calculateTotal(event);">
                                     <input type="hidden" name="nominal_hidden[]" id="nominal_value">
                                 </div>
                                 @error('nominal')
@@ -143,7 +115,6 @@
                                 @enderror
                             </div>
 
-                            <!-- Jumlah Satuan Field -->
                             <div class="form-group">
                                 <label class="text-label">Jumlah Satuan *</label>
                                 <div class="input-group">
@@ -157,7 +128,6 @@
                                 @enderror
                             </div>
 
-                            <!-- Dll Field -->
                             <div class="form-group">
                                 <label class="text-label">Dll *</label>
                                 <div class="input-group">
@@ -165,14 +135,13 @@
                                         <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
                                     </div>
                                     <input type="text" class="form-control dll" id="dll" name="dll[]" placeholder="Enter amount.." required oninput="formatInputDll(event); calculateTotal(event);">
-                                    <input type="hidden" name="dll_hidden[]" id="dll_value"> <!-- Input tersembunyi untuk nilai numerik -->
+                                    <input type="hidden" name="dll_hidden[]" id="dll_value">
                                 </div>
                                 @error('dll')
                                 <span class="mt-2 text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
 
-                            <!-- Jumlah Field -->
                             <div class="form-group">
                                 <label class="text-label">Jumlah *</label>
                                 <div class="input-group">
@@ -197,7 +166,6 @@
                                 @enderror
                             </div>
 
-                            <!-- Foto Bukti Pengeluaran Field -->
                             <div class="form-group">
                                 <label for="image">Foto Bukti Pengeluaran</label>
                                 <div class="mb-3">
@@ -215,12 +183,10 @@
                         <hr>
                     </div>
 
-                    <!-- Button to add new set of fields -->
                     <div class="d-flex justify-content-end">
                         <button type="button" class="btn btn-info" id="add-more-fields">Add Pengeluaran</button>
                     </div>
 
-                    <!-- Submit and Cancel buttons -->
                     <button type="button" class="btn btn-danger btn-cancel" onclick="window.location.href='/pengeluaran'">Cancel</button>
                     <button type="submit" class="btn btn-primary btn-submit">Submit</button>
                 </form>
@@ -229,17 +195,12 @@
     </div>
 </div>
 
-    <!-- Content body end -->
-
-    <!-- Footer start -->
     <div class="footer">
         <div class="copyright">
             <p>Copyright © Designed &amp; Developed by <a href="/home" target="_blank">SYNC</a> 2024</p>
         </div>
     </div>
-    <!-- Footer end -->
 
-    <!-- Scripts -->
     @include('template.scripts')
 </body>
 <script>

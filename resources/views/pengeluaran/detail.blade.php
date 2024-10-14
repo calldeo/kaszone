@@ -3,24 +3,17 @@
 
 <head>
     @include('template.headerr')
-    <title>PityCash | {{ auth()->user()->level }} | Pengeluaran</title>
+    <title>PityCash | {{ auth()->user()->level }} | Detail Pengeluaran</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    {{-- <link rel="stylesheet" href="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.css"> --}}
 </head>
 
 <body>
-    <!-- Preloader start -->
     @include('template.topbarr')
-    <!-- Header end -->
 
-    <!-- Sidebar start -->
     @include('template.sidebarr')
-    <!-- Sidebar end -->
 
-    <!-- Content body start -->
     <div class="content-body">
         <div class="container-fluid">
-            <!-- Page Title and Breadcrumb -->
             <div class="row page-titles mx-0">
                 <div class="col-sm-6 p-md-0">
                  
@@ -33,7 +26,6 @@
                 </div>
             </div>
 
-            <!-- Informasi Umum -->
             <div class="card">
             <div class="card-header d-flex align-items-center justify-content-between">
     <span>Informasi</span>
@@ -171,20 +163,15 @@
             </div>
         </div>
     </div>
-    <!-- Content body end -->
 
-    <!-- Footer start -->
     <div class="footer">
         <div class="copyright">
             <p>Copyright © Designed &amp; Developed by <a href="/home" target="_blank">SYNC</a> 2024</p>
         </div>
     </div>
-    <!-- Footer end -->
 
-    <!-- Required Scripts -->
     @include('template.scripts')
 
-    <!-- Custom Scripts -->
     <input type="hidden" id="table-url" value="{{ route('production') }}">
     <script src="{{ asset('main.js') }}"></script>
     <script src="https://cdn.datatables.net/v/bs5/dt-2.1.3/datatables.min.js"></script>

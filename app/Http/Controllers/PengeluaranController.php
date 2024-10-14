@@ -21,25 +21,20 @@ use App\Imports\DataPengeluaranImportMultiple;
 
 class PengeluaranController extends Controller
 {
-    //
     public function index()
     {
         $pengeluaran = Pengeluaran::with('category')->get();
         
-        // Menggunakan pagination
         return view('pengeluaran.data_pengeluaran', compact('pengeluaran'));
     }
     
     public function create()
     {
-        // $categories = Category::all(); // Mengambil semua kategori
-        // $categories = Category::where('jenis_kategori', 'pengeluaran')->get();
-        return view('pengeluaran.add_pengeluaran');
+        return view('pengeluaran.add');
     }
 
     public function store(Request $request)
     {
-        // Validasi input
         $request->validate([
             'file.*' => 'required|mimes:xls,xlsx|max:2048',
             'name.*' => 'required|string|max:255',
@@ -114,7 +109,6 @@ class PengeluaranController extends Controller
 
     private function convertToNumeric($value)
     {
-        // Hapus semua karakter non-numerik kecuali titik desimal
         $numericValue = preg_replace('/[^0-9]/', '', $value);
         return $numericValue;
     }
@@ -145,17 +139,13 @@ class PengeluaranController extends Controller
 
     public function deleteAll($id)
     {
-        // Temukan ParentPengeluaran berdasarkan ID
         $parentPengeluaran = ParentPengeluaran::find($id);
 
         if ($parentPengeluaran) {
-            // Hapus semua pengeluaran terkait
             $parentPengeluaran->pengeluaran()->delete();
 
-            // Hapus ParentPengeluaran itu sendiri
             $parentPengeluaran->delete();
 
-            // Redirect ke halaman pengeluaran
             return redirect()->route('pengeluaran.index')->with('success', 'Semua pengeluaran  berhasil dihapus.');
         } else {
             return redirect()->back()->with('error', 'Data tidak ditemukan.');
@@ -171,7 +161,6 @@ class PengeluaranController extends Controller
 
     public function edit($id)
     {
-        // Ambil ParentPengeluaran berdasarkan ID
         $parentPengeluaran = ParentPengeluaran::with('pengeluaran')->find($id);
         $categories = Category::where('jenis_kategori', Category::PengeluaranCode)->get();
 
@@ -183,7 +172,6 @@ class PengeluaranController extends Controller
 
 public function update(Request $request, $id)
 {
-    // Validasi input
     $request->validate([
         'tanggal' => 'required|date',
         'name.*' => 'required|string|max:255',
@@ -209,7 +197,6 @@ public function update(Request $request, $id)
         $parentPengeluaran->tanggal = $request->tanggal;
         $parentPengeluaran->save(); 
 
-        // dd($request,$parentPengeluaran);
         foreach ($request->name as $key => $name) {
             if (isset($parentPengeluaran->pengeluaran[$key])) {
                 $pengeluaran = $parentPengeluaran->pengeluaran[$key];
@@ -233,7 +220,6 @@ public function update(Request $request, $id)
                 }
 
                 $pengeluaran->save();
-                // dd($request,$pengeluaran);
             } else {
               
                 $pengeluaranBaru = new Pengeluaran();
@@ -270,17 +256,14 @@ public function update(Request $request, $id)
 
 
 
-  public function cetakpgl(Request $request)
+  public function exportPengeluaranPdf(Request $request)
 {
-    // Mengambil tahun dan tanggal dari input permintaan
     $year = $request->input('year');
     $startDate = $request->input('start_date');
     $endDate = $request->input('end_date');
 
-    // Memulai query
     $query = Pengeluaran::query()->with('category', 'parentPengeluaran');
 
-    // Menerapkan filter berdasarkan tahun dan tanggal jika ada
     if ($year) {
         $query->whereHas('parentPengeluaran', function ($q) use ($year) {
             $q->whereYear('tanggal', $year);
@@ -293,19 +276,14 @@ public function update(Request $request, $id)
         });
     }
 
-    // Mengambil data pengeluaran
     $pengeluaran = $query->get();
 
-    // Menghitung total pengeluaran
     $totalPengeluaran = $pengeluaran->sum('jumlah');
 
-    // Memuat view PDF dengan data pengeluaran
     $pdf = PDF::loadView('pengeluaran.pdf', compact('pengeluaran', 'totalPengeluaran', 'year', 'startDate', 'endDate'));
 
-    // Mengatur ukuran kertas PDF
     $pdf->setPaper('A4', 'portrait');
 
-    // Menyesuaikan nama file berdasarkan filter yang dipilih
     if ($startDate && $endDate) {
         $startDateFormatted = date('d-m-Y', strtotime($startDate));
         $endDateFormatted = date('d-m-Y', strtotime($endDate));
@@ -316,7 +294,6 @@ public function update(Request $request, $id)
         $filename = "pengeluaran_seluruh.pdf";
     }
 
-    // Mengalirkan PDF ke browser
     return $pdf->stream($filename);
 }
 
@@ -346,7 +323,6 @@ public function update(Request $request, $id)
 
         $pengeluaran = $query->get();
 
-        // Menyesuaikan nama file berdasarkan filter yang dipilih
         if ($startDate && $endDate) {
             $startDateFormatted = date('d-m-Y', strtotime($startDate));
             $endDateFormatted = date('d-m-Y', strtotime($endDate));
@@ -364,10 +340,8 @@ public function update(Request $request, $id)
     {
 
 
-        // Mengambil data ParentPengeluaran beserta pengeluaran terkait dan kategori
         $parentPengeluaran = ParentPengeluaran::with('pengeluaran.category')->findOrFail($id);
 
-        // Melempar data ke view
         return view('pengeluaran.detail', compact('parentPengeluaran'));
     }
 

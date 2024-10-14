@@ -22,16 +22,14 @@ class AdminController extends Controller
     public function table(Request $request)
     {
         if ($request->ajax()) {
-            // Query users with the 'admin' role
-            $admins = User::role('admin') // Filter users by the 'admin' role
-                ->with('roles') // Eager load roles
+            $admins = User::role('admin')
+                ->with('roles')
                 ->select(['id', 'name', 'email',  'kelamin', 'alamat'])
                 ->get();
 
             return DataTables::of($admins)
-                ->addIndexColumn() // Menambahkan indeks otomatis
+                ->addIndexColumn()
                 ->addColumn('roles', function ($row) {
-                    // Mengambil nama role dan menggabungkannya menjadi string
                     return $row->roles->pluck('name')->implode(', ');
                 })
                 ->addColumn('opsi', function ($row) {
@@ -48,41 +46,28 @@ class AdminController extends Controller
                     </div>
                 ';
                 })
-                ->rawColumns(['roles', 'opsi']) // Pastikan kolom ini dianggap sebagai HTML
+                ->rawColumns(['roles', 'opsi'])
                 ->make(true);
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-    public function users(Request $request) //bendahara
+    public function users(Request $request)
     {
         if ($request->ajax()) {
-            // Ambil pengguna dengan peran 'bendahara' dan 'admin'
-            $bendahara = User::role(['bendahara', 'admin', 'reader']) // Mengambil pengguna dengan peran 'bendahara' atau 'admin'
-                ->with('roles') // Eager load roles
+            $bendahara = User::role(['bendahara', 'admin', 'reader'])
+                ->with('roles')
                 ->select(['id', 'name', 'email', 'kelamin', 'alamat'])
                 ->get();
 
             return DataTables::of($bendahara)
-                ->addIndexColumn() // Menambahkan indeks otomatis
+                ->addIndexColumn()
                 ->addColumn('roles', function ($row) {
-                    // Mengambil nama role dan menggabungkannya menjadi string
                     return $row->roles->pluck('name')->implode(', ');
                 })
                 ->addColumn('opsi', function ($row) {
                     return '
                     <div class="d-flex align-items-center">
-                        <form action="/user/' . $row->id . '/edit_user" method="GET" class="mr-1">
+                        <form action="/user/' . $row->id . '/edit" method="GET" class="mr-1">
                             <button type="submit" class="btn btn-warning btn-xs"><i class="fas fa-edit"></i></button>
                         </form>
                          <button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/user/' . $row->id . '/detail">
@@ -96,13 +81,13 @@ class AdminController extends Controller
                     </div>
                 ';
                 })
-                ->rawColumns(['roles', 'opsi']) // Pastikan kolom ini dianggap sebagai HTML
+                ->rawColumns(['roles', 'opsi'])
                 ->make(true);
         }
     }
 
 
-    public function kategoris(Request $request) // KATEGORI
+    public function kategoris(Request $request)
     {
         if ($request->ajax()) {
             $categories = Category::select(['id', 'name', 'jenis_kategori', 'description'])->get();
@@ -142,7 +127,7 @@ class AdminController extends Controller
 
 
 
-    public function income(Request $request) // PEMASUKAN
+    public function income(Request $request)
     {
         if ($request->ajax()) {
             $startDate = $request->input('start_created_at');
@@ -169,10 +154,10 @@ class AdminController extends Controller
                     return $row->category ? $row->category->name : 'Tidak ada kategori';
                 })
                 ->editColumn('date', function ($row) {
-                    return Carbon::parse($row->date)->format('d-m-Y'); // Format: hari-bulan-tahun
+                    return Carbon::parse($row->date)->format('d-m-Y');
                 })
                 ->editColumn('jumlah', function ($row) {
-                    return 'Rp' . number_format($row->jumlah, 0, ',', '.'); // Menambahkan Rp dan format angka tanpa desimal
+                    return 'Rp' . number_format($row->jumlah, 0, ',', '.');
                 })
                 ->addColumn('opsi', function ($row) {
                     $user = auth()->user();
@@ -180,7 +165,6 @@ class AdminController extends Controller
                     $viewButton = '<button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/pemasukan/' . $row->id_data . '/detail"><i class="fa fa-eye"></i></button>';
                     $deleteButton = '';
 
-                    // Check user role and set buttons accordingly
                     if ($user->hasRole('Admin') || $user->hasRole('Bendahara')) {
                         $editButton = '<a href="/pemasukan/' . $row->id_data . '/edit" class="btn btn-warning btn-xs mr-1"><i class="fas fa-edit"></i></i></a>';
                         $deleteButton = '<form action="/pemasukan/' . $row->id_data . '/destroy" method="POST" style="display:inline;">' .
@@ -193,11 +177,11 @@ class AdminController extends Controller
                     return '<div class="d-flex align-items-center">' . $editButton . $viewButton . $deleteButton . '</div>';
                 })
                 ->rawColumns(['opsi'])
-                ->with(['total_jumlah' => 'Rp' . number_format($totalJumlah, 2, ',', '.')]) // Tambahkan Rp pada total jumlah
+                ->with(['total_jumlah' => 'Rp' . number_format($totalJumlah, 2, ',', '.')])
                 ->make(true);
         }
     }
-    public function production(Request $request) // PENGELUARAN
+    public function production(Request $request)
     {
         if ($request->ajax()) {
             $startDate = $request->input('start_created_at');
@@ -218,7 +202,6 @@ class AdminController extends Controller
                 $pengeluaran = $pengeluaran->whereHas('pengeluaran', function ($query) use ($request) {
                     $query->where('name', 'like', '%' . $request->input('search.value') . '%')
                         ->orWhere('description', 'like', '%' . $request->input('search.value') . '%')
-                        // ->orWhere('jumlah', 'like', '%' . $request->input('search.value') . '%')
                         ->orWhere('tanggal', 'like', '%' . $request->input('search.value') . '%')
                         ->orWhere('jumlah_satuan', 'like', '%' . $request->input('search.value') . '%')
                         ->orWhere('nominal', 'like', '%' . $request->input('search.value') . '%')
@@ -268,7 +251,6 @@ class AdminController extends Controller
                 ->addColumn('nominal', function ($row) {
                     $nominal = '';
                     foreach ($row->pengeluaran as $val) {
-                        // Format ke IDR
                         $nominal .= 'Rp' . number_format($val->nominal, 0, ',', '.') . '<br>';
                     }
                     return $nominal ?: 'Tidak ada nominal';
@@ -283,9 +265,9 @@ class AdminController extends Controller
                 ->addColumn('jumlah', function ($row) {
                     $jumlah = 0;
                     foreach ($row->pengeluaran as $val) {
-                        $jumlah += $val->jumlah; // Akumulasi jumlah
+                        $jumlah += $val->jumlah;
                     }
-                    return 'Rp' . number_format($jumlah, 0, ',', '.') ?: 'Tidak ada jumlah'; // Tampilkan total
+                    return 'Rp' . number_format($jumlah, 0, ',', '.') ?: 'Tidak ada jumlah';
                 })
                 ->addColumn('category', function ($row) {
                     $categories = '';
@@ -324,13 +306,13 @@ class AdminController extends Controller
 
 
 
-    public function roles(Request $request) // BENDAHARA
+    public function roles(Request $request)
     {
         if ($request->ajax()) {
             $role = Role::select(['id', 'name', 'guard_name'])->get();
 
             return DataTables::of($role)
-                ->addIndexColumn() // Menambahkan indeks otomatis
+                ->addIndexColumn()
                 ->addColumn('opsi', function ($row) {
                     return '
                     <div class="d-flex align-items-center">
@@ -341,14 +323,12 @@ class AdminController extends Controller
                     </div>
                 ';
                 })
-                ->rawColumns(['opsi']) // Pastikan kolom ini dianggap sebagai HTML
+                ->rawColumns(['opsi'])
                 ->make(true);
         }
-
-        // Sesuaikan dengan view yang Anda miliki
     }
 
-    public function reportIncome(Request $request) // PEMASUKAN
+    public function reportIncome(Request $request)
     {
 
         if ($request->ajax()) {

@@ -9,28 +9,14 @@
 </head>
 <body>
 
-    <!--*******
-        Preloader start
-    ********-->
+    
      @include('template.topbarr')
-        <!--************
-            Header end ti-comment-alt
-        *************-->
-
-        <!--************
-            Sidebar start
-        *************-->
-       @include('template.sidebarr')
-        <!--************
-            Sidebar end
-        *************-->
         
-        <!--************
-            Content body start
-        *************-->
+       @include('template.sidebarr')
+        
         <div class="content-body">
             <div class="container-fluid">
-                <!-- Add Project -->
+                
                 <div class="modal fade" id="addProjectSidebar">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -78,7 +64,7 @@
                             </div>
                             @endif
                 </div>
-                <!-- row -->
+                
                 <div class="row">
                 
                     <div class="col-lg-12">
@@ -143,44 +129,20 @@
                 </div>
             </div>
         </div>
-        <!--************
-            Content body end
-        *************-->
-
-
-        <!--************
-            Footer start
-        *************-->
+    
         <div class="footer">
             <div class="copyright">
                 <p>Copyright © Designed &amp; Developed by <a href="/home" target="_blank">SYNC</a> 2024</p>
             </div>
         </div>
-        <!--************
-            Footer end
-        *************-->
-
-        <!--************
-           Support ticket button start
-        *************-->
-
-        <!--************
-           Support ticket button end
-        *************-->
+        
 
         
     </div>
-    <!--************
-        Main wrapper end
-    *************-->
 
-    <!--************
-        Scripts
-    *************-->
-    <!-- Required vendors -->
  @include('template.scripts')
 </body>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> <!-- Include SweetAlert library -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> 
 
 
 </html>

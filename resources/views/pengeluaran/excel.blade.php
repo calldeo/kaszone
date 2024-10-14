@@ -32,7 +32,6 @@
                 <th>Harga (Rp)</th>
                 <th>Lain - Lain</th>
                 <th>Total</th>
-                {{-- <th>Bukti Pembayaran</th> --}}
                 <th>Tanggal</th>
             </tr>
         </thead>
@@ -47,12 +46,6 @@
                 <td>Rp{{ number_format($pgl->nominal, 0, ',', '.') }}</td>
                 <td>Rp{{ number_format($pgl->dll, 0, ',', '.') }}</td>
                 <td>Rp{{ number_format($pgl->jumlah, 0, ',', '.') }}</td>
-                {{-- <td>
-                    @if($item->image) 
-                        <img src="{{ public_path('public/str/images/' . $item->image) }}" class="image" alt="Bukti Pembayaran">
-                    @else
-                        Tidak ada gambar
-                    @endif --}}
                 <td>{{ $pgl->parentPengeluaran ? \Carbon\Carbon::parse($pgl->parentPengeluaran->tanggal)->format('d-m-Y') : 'Tanggal tidak ditemukan' }}</td>
             </tr>
             @endforeach

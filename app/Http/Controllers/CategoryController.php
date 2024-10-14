@@ -14,18 +14,18 @@ use PDF;
 
 class CategoryController extends Controller
 {
-    // Mendapatkan daftar kategori
+    
     public function index()
     {
 
-        $categories = Category::paginate(10); // Menggunakan pagination
-        return view('halaman.kategori', compact('categories'));
+        $categories = Category::paginate(10); 
+        return view('kategori.kategori', compact('categories'));
     }
 
     public function add_kategori()
     {
-        // Meneruskan data ke tampilan
-        return view('tambah.add_kategori');
+        
+        return view('kategori.add_kategori');
     }
 
     public function store(Request $request)
@@ -36,23 +36,23 @@ class CategoryController extends Controller
             'description' => ['required', 'min:3', 'max:30'],
         ]);
 
-        DB::beginTransaction(); // Memulai transaksi
+        DB::beginTransaction(); 
         try {
-            // Membuat instance Category baru
+            
             $category = new Category();
             $category->name = $request->name;
             $category->jenis_kategori = $request->jenis_kategori;
             $category->description = $request->description;
 
-            // Menyimpan data kategori
+            
             $category->save();
 
-            // Commit transaksi jika tidak ada kesalahan
+            
             DB::commit();
 
             return redirect('/kategori')->with('success', 'Kategori berhasil ditambahkan.');
         } catch (\Throwable $th) {
-            // Rollback transaksi jika terjadi kesalahan
+            
             DB::rollback();
 
             return redirect('/kategori')->with('error', 'Kategori gagal ditambahkan! ' . $th->getMessage());
@@ -65,7 +65,7 @@ class CategoryController extends Controller
             $user = Category::find($id);
 
             if ($user) {
-                $user->forceDelete(); // Menghapus data secara permanen
+                $user->forceDelete(); 
                 return redirect('/kategori')->with('success', 'Data berhasil dihapus secara permanen');
             } else {
                 return redirect('/kategori')->with('error', 'Data tidak ditemukan.');
@@ -78,47 +78,47 @@ class CategoryController extends Controller
     {
         $category = Category::find($id);
 
-        // Cek jika kategori tidak ditemukan
+    
         if (!$category) {
             return redirect('/kategori')->with('error', 'Kategori tidak ditemukan.');
         }
 
-        return view('edit.edit_kategori', compact('category'));
+        return view('kategori.edit_kategori', compact('category'));
     }
 
     public function update(Request $request, $id)
     {
-        // Validasi input
+        
         $request->validate([
             'name' => ['required', 'min:3', 'max:30'],
             'jenis_kategori' => 'required',
             'description' => ['nullable', 'min:3', 'max:100'],
         ]);
 
-        // Temukan kategori berdasarkan ID
+        
         $category = Category::find($id);
 
-        // Cek jika kategori tidak ditemukan
+        
         if (!$category) {
             return redirect('/kategori')->with('error', 'Kategori tidak ditemukan.');
         }
 
-        DB::beginTransaction(); // Memulai transaksi
+        DB::beginTransaction(); 
         try {
-            // Memperbarui data kategori yang ada
+            
             $category->name = $request->name;
             $category->jenis_kategori = $request->jenis_kategori;
             $category->description = $request->description;
 
-            // Menyimpan perubahan kategori
+            
             $category->save();
 
-            // Commit transaksi jika tidak ada kesalahan
+            
             DB::commit();
 
             return redirect('/kategori')->with('success', 'Kategori berhasil diperbarui.');
         } catch (\Throwable $th) {
-            // Rollback transaksi jika terjadi kesalahan
+            
             DB::rollback();
 
             return redirect('/kategori')->with('error', 'Kategori gagal diperbarui! ' . $th->getMessage());
@@ -128,38 +128,37 @@ class CategoryController extends Controller
 
     public function kategoriimportexcel(Request $request)
     {
-        // Mulai transaksi database
+        
         DB::beginTransaction();
 
         try {
-            // Validasi file
+            
             $request->validate([
-                'file' => 'required|file|mimes:xlsx,xls,csv|max:2048', // Sesuaikan dengan format yang diizinkan
+                'file' => 'required|file|mimes:xlsx,xls,csv|max:2048', 
             ]);
 
-            // Pindahkan file ke folder DataKategori
+            
             $file = $request->file('file');
             $namafile = $file->getClientOriginalName();
             $file->move(public_path('DataKategori'), $namafile);
 
-            // Impor data dari file Excel
+            
             Excel::import(new KategoriImport, public_path('DataKategori/' . $namafile), null, \Maatwebsite\Excel\Excel::XLSX, [
                 'startRow' => 2,
                 'onlySheets' => [0]
             ]);
 
-            // Commit transaksi jika semua operasi berhasil
             DB::commit();
 
-            // Hapus file setelah impor selesai
-            @unlink(public_path('DataKategori/' . $namafile)); // Menghapus file dari server
+        
+            @unlink(public_path('DataKategori/' . $namafile)); 
 
             return redirect('/kategori')->with('success', 'Data Berhasil Ditambahkan');
         } catch (\Exception $e) {
-            // Rollback transaksi jika terjadi kesalahan
+            
             DB::rollBack();
 
-            // Log error jika diperlukan
+            
             \Log::error('Import kategori failed: ' . $e->getMessage());
 
             return redirect('/kategori')->with('error', 'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage());
@@ -167,7 +166,7 @@ class CategoryController extends Controller
     }
     public function cetaklaporan()
     {
-        // Dapatkan calon dengan jumlah suara terbanyak
+        
 
         $category = Category::all();
         $pdf = PDF::loadview('halaman.cetaklaporan', compact('category'));
@@ -175,10 +174,10 @@ class CategoryController extends Controller
         return $pdf->stream('category.pdf');
 
 
-        return view('halaman.cetaklaporan', compact('category'));
+        return view('kategori.cetaklaporan', compact('category'));
     }
 
-    // Method untuk mendapatkan detail kategori
+    
     public function showDetail($id)
     {
         $category = Category::find($id);
@@ -192,14 +191,14 @@ class CategoryController extends Controller
     {
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         
-        // Worksheet pertama
+        
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setTitle('Data Kategori');
         $sheet->setCellValue('A1', 'Nama');
         $sheet->setCellValue('B1', 'Jenis Kategori');
         $sheet->setCellValue('C1', 'Deskripsi');
         
-        // Worksheet kedua
+        
         $sheet2 = $spreadsheet->createSheet();
         $sheet2->setTitle('Jenis Kategori');
         $sheet2->setCellValue('A1', 'Kode');

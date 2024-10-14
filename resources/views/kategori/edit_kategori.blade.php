@@ -9,18 +9,16 @@
 
 <body>
 
-    <!-- Preloader start -->
+
     @include('template.topbarr')
-    <!-- Header end -->
 
-    <!-- Sidebar start -->
     @include('template.sidebarr')
-    <!-- Sidebar end -->
+    
 
-    <!-- Content body start -->
+    
     <div class="content-body">
         <div class="container-fluid">
-            <!-- Page Titles -->
+            
             <div class="row page-titles mx-0">
                 <div class="col-sm-6 p-md-0">
                  
@@ -33,7 +31,7 @@
                 </div>
             </div>
 
-            <!-- Form Edit Kategori -->
+            
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
@@ -46,7 +44,7 @@
                                     @method('PUT')
                                     @csrf
 
-                                    <!-- Name Field -->
+                                    
                                     <div class="form-group">
                                         <label class="text-label">Nama *</label>
                                         <div class="input-group">
@@ -60,7 +58,7 @@
                                         @enderror
                                     </div>
 
-                                    <!-- Description Field -->
+                                    
                                     <div class="form-group">
                                         <label class="text-label">Deskripsi *</label>
                                         <div class="input-group">
@@ -74,7 +72,7 @@
                                         @enderror
                                     </div>
 
-                                    <!-- Jenis Kategori Field -->
+                                    
                                     <div class="form-group">
                                         <label class="text-label">Jenis Kategori *</label>
                                         <select class="form-control default-select" name="jenis_kategori" required>
@@ -87,7 +85,7 @@
                                         @enderror
                                     </div>
 
-                                    <!-- Buttons -->
+                                    
                                     <button type="button" class="btn btn-danger btn-submit" onclick="redirectToKategori()">Cancel</button>
                                     <button type="submit" class="btn btn-primary btn-cancel ">Submit</button>
                                 </form>
@@ -96,24 +94,19 @@
                     </div>
                 </div>
             </div>
-            <!-- End of Form Edit Kategori -->
-
+            
         </div>
     </div>
-    <!-- Content body end -->
-
-    <!-- Footer start -->
+    
     <div class="footer">
         <div class="copyright">
             <p>Copyright © Designed &amp; Developed by <a href="/home" target="_blank">SYNC</a> 2024</p>
         </div>
     </div>
-    <!-- Footer end -->
 
-    <!-- Scripts -->
     @include('template.scripts')
 
-    <!-- Redirect to Kategori Function -->
+    
     <script>
         function redirectToKategori() {
             window.location.href = "{{ url('/kategori') }}";
