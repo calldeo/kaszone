@@ -41,7 +41,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">Rp</span>
                                             </div>
-                                            <input type="text" class="form-control" value="Rp {{ number_format($saldo, 0, ',', '.') }}" readonly>
+                                            <input type="text" class="form-control" value="Rp{{ number_format($saldo, 0, ',', '.') }}" readonly>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -50,7 +50,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">Rp</span>
                                             </div>
-                                            <input type="text" class="form-control nominal" id="nominal" name="saldo" placeholder="Enter amount.." required oninput="formatInputSaldo(event);" value="{{ 'Rp ' . number_format($minimalSaldo, 0, ',', '.') }}">
+                                            <input type="text" class="form-control nominal" id="nominal" name="saldo" placeholder="Enter amount.." required oninput="formatInputSaldo(event);" value="Rp{{ number_format($minimalSaldo, 0, ',', '.') }}">
                                             <input type="hidden" name="saldo_hidden" id="nominal_value" value="{{ $minimalSaldo }}">
                                         </div>
                                     </div>
@@ -83,10 +83,10 @@
 
         if (value) {
             const formattedValue = parseInt(value).toLocaleString('id-ID'); 
-            input.value = 'Rp ' + formattedValue; 
+            input.value = 'Rp' + formattedValue; 
             hiddenInput.value = value;
         } else {
-            input.value = 'Rp 0';
+            input.value = 'Rp0';
             hiddenInput.value = ''; 
         }
     }
