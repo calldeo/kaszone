@@ -68,7 +68,7 @@
                 <td>{{ $item->name }}</td>
                 <td>{{ $item->description }}</td>
                 <td>{{ $item->category ? $item->category->name : 'Kategori tidak ditemukan' }}</td>
-                <td>Rp {{ number_format($item->jumlah, 0, ',', '.') }}</td>
+                <td>Rp{{ number_format($item->jumlah, 0, ',', '.') }}</td>
                 <td>{{ \Carbon\Carbon::parse($item->date)->format('d-m-Y') }}</td>
             </tr>
             @endforeach
@@ -76,7 +76,7 @@
         <tfoot>
             <tr class="total-row">
                 <td colspan="4" style="text-align: right;">Total Jumlah:</td>
-                <td colspan="2">Rp {{ number_format($pemasukan->sum('jumlah'), 0, ',', '.') }}</td>
+                <td colspan="2">Rp{{ number_format($pemasukan->sum('jumlah'), 0, ',', '.') }}</td>
             </tr>
         </tfoot>
     </table>

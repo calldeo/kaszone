@@ -116,7 +116,7 @@ use Illuminate\Support\Facades\Log;
                 <ul aria-expanded="{{ request()->is('role*') || request()->is('add_role') || request()->is('setting-saldo*') || request()->is('edit-minimal-saldo') ? 'true' : 'false' }}">
                     <li class="{{ request()->is('role*') || request()->is('add_role') ? 'mm-active' : '' }}">
                         <a href="/role" aria-expanded="{{ request()->is('role*') || request()->is('add_role') ? 'true' : 'false' }}" class="{{ request()->is('role*') || request()->is('add_role') ? 'mm-active' : '' }}">
-                            <i class="bi bi-person-gear"></i>
+                            <i class="fa fa-user-cog"></i>
                             <span class="nav-text">Role</span>
                         </a>
                     </li>

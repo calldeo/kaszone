@@ -60,7 +60,7 @@
                 <td>{{ $item->name }}</td>
                 <td>{{ $item->description }}</td>
                 <td>{{ $item->category ? $item->category->name : 'Kategori tidak ditemukan' }}</td>
-                <td>{{ number_format($item->jumlah, 0, ',', '.') }}</td>
+                <td>Rp{{ number_format($item->jumlah, 0, ',', '.') }}</td>
                 <td>{{ \Carbon\Carbon::parse($item->date)->format('d-m-Y') }}</td>
             </tr>
             @endforeach
@@ -68,7 +68,7 @@
          <tfoot>
             <tr class="total-row">
                 <td colspan="4" style="text-align: right;">Total Jumlah:</td>
-                <td colspan="2">Rp {{ number_format($pemasukan->sum('jumlah'), 0, ',', '.') }}</td>
+                <td colspan="2">Rp{{ number_format($pemasukan->sum('jumlah'), 0, ',', '.') }}</td>
             </tr>
         </tfoot>
     </table>
@@ -96,9 +96,9 @@
                 <td>{{ $pgl->name }}</td>
                 <td>{{ $pgl->category ? $pgl->category->name : 'Kategori tidak ditemukan' }}</td>
                 <td>{{ $pgl->jumlah_satuan }}</td>
-                <td>{{ number_format($pgl->nominal, 0, ',', '.') }}</td>
-                <td>{{ number_format($pgl->dll, 0, ',', '.') }}</td>
-                <td>{{ number_format($pgl->jumlah, 0, ',', '.') }}</td>
+                <td>Rp{{ number_format($pgl->nominal, 0, ',', '.') }}</td>
+                <td>Rp{{ number_format($pgl->dll, 0, ',', '.') }}</td>
+                <td>Rp{{ number_format($pgl->jumlah, 0, ',', '.') }}</td>
                 <td>{{ $pgl->parentPengeluaran ? \Carbon\Carbon::parse($pgl->parentPengeluaran->tanggal)->format('d-m-Y') : 'Tanggal tidak ditemukan' }}</td>
             </tr>
             @endforeach
@@ -106,13 +106,13 @@
          <tfoot>
             <tr class="total-row">
                 <td colspan="6" style="text-align: right;">Total Jumlah:</td>
-                <td colspan="2">Rp {{ number_format($pengeluaran->sum('jumlah'), 0, ',', '.') }}</td>
+                <td colspan="2">Rp{{ number_format($pengeluaran->sum('jumlah'), 0, ',', '.') }}</td>
             </tr>
         </tfoot>
     </table>
 
     <div class="selisih">
-        Selisih Antara Pemasukan dan Pengeluaran: Rp {{ number_format($selisih, 0, ',', '.') }}
+        Selisih Antara Pemasukan dan Pengeluaran: Rp{{ number_format($selisih, 0, ',', '.') }}
     </div>
 </body>
 </html>
