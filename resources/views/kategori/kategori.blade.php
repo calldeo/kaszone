@@ -16,10 +16,8 @@
    
 
     
-    <div class="content-body">
+    <div class="content-body" style="margin-top: -60px;"> <!-- Atur margin-top untuk menggeser konten ke atas -->
         <div class="container-fluid">
-            
-            
             <div class="row page-titles mx-0">
                 <div class="col-sm-6 p-md-0">
                 

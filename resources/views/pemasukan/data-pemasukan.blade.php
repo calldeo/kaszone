@@ -9,10 +9,10 @@
     @include('template.topbarr')
     @include('template.sidebarr')
 
-    <div class="content-body">
-        <div class="container-fluid">
-            <div class="row page-titles mx-0">
-                <div class="col-sm-6 p-md-0">
+    <div class="content-body" style="margin-top: -60px;"> <!-- Atur margin-top untuk menggeser konten ke atas -->
+    <div class="container-fluid">
+        <div class="row page-titles mx-0">
+            <div class="col-sm-6 p-md-0">
                 
                 </div>
                 <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
@@ -25,7 +25,7 @@
 
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="card">
+                    <div class="card" style="margin-top: -30px;">
                         <div class="card-header">
                             <h4 class="card-title">Data Pemasukan</h4>
 
