@@ -50,7 +50,7 @@
                             <h4 class="card-title">Data User</h4>
                             <div class="text-right">
                         
-                    <a href="/add" class="btn btn-success" title="Add">
+                    <a href="/add-user" class="btn btn-success" title="Add">
                         <i class="fa fa-plus"></i>
                     </a>
                 </div>

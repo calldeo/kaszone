@@ -4,7 +4,7 @@
 
 <head>
     @include('template.headerr')
-    <title>PityCash | {{auth()->user()->level}} | Add</title>
+    <title>PityCash | {{auth()->user()->level}} | Add Data Kategori</title>
 
 </head>
 <body>
@@ -70,7 +70,7 @@
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Add</h4>
+                                <h4 class="card-title">Add Data Kategori</h4>
                             </div>
                             <div class="card-body">
                                 <div class="basic-form">
@@ -108,7 +108,7 @@
                                                     <span class="input-group-text"> <i class="fa fa-list"></i> </span>
                                                 </div>
                                                 <select class="form-control" name="jenis_kategori" required>
-                                                    <option value="" disabled selected>Select Category type</option>
+                                                    <option value="" disabled selected>--PILIH TIPE KATEGORI--</option>
                                                     <option value="1">Pemasukan</option>
                                                     <option value="2">Pengeluaran</option>
                                                 </select>

@@ -38,7 +38,7 @@
                             <h4 class="card-title">Data Kategori</h4>
                             <div class="text-right">
                     
-                           <a href="/add" class="btn btn-warning ml-0" title="Add">
+                           <a href="/add-kategori" class="btn btn-warning ml-0" title="Add">
                         <i class="fa fa-plus"></i>
                     </a>
                     <a href="/export-kategori" target="blank" class="btn btn-info ml-2" title="Print Report">

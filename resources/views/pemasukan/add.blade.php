@@ -68,7 +68,7 @@
                                     </div>
                         
                                     <div class="form-group">
-                                        <label class="text-label">Date *</label>
+                                        <label class="text-label">Tanggal *</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-calendar"></i></span>
@@ -95,7 +95,7 @@
                                     </div>
                                     
                                     <div class="form-group">
-                                        <label class="text-label">Category *</label>
+                                        <label class="text-label">Kategori *</label>
                                         <select class="select2-with-label-single js-states form-control" id="category" name="category_id" required>
                                             <option value="">PILIH KATEGORI</option>
                                     
@@ -139,7 +139,7 @@
 
                 $dropdown.append($('<option>', {
                     value: '',
-                    text: 'Select Category'
+                    text: '--PILIH KATEGORI--'
                 }));
 
                 $.each(data, function(index, item) {

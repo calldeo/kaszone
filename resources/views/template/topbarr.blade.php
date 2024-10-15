@@ -150,65 +150,42 @@
 <form id="logout-form" action="/logout" method="POST" style="display: none;">
     @csrf
 </form>
-
-
     <!-- Cek jika user memiliki lebih dari satu role -->
-@if(auth()->user()->roles->count() > 1)
-    <!-- Role Switch Form -->
-    <form id="roleSwitchForm" action="{{ route('switchRole') }}" method="POST" class="px-2 py-1">
-        @csrf
-        <input type="hidden" name="role" id="roleInput" value="{{ session('active_role') }}">
-        
-        <!-- Tombol untuk role Admin -->
-        <button type="button" id="adminButton" onclick="switchRole('Admin')" class="dropdown-item btn btn-sm text-left {{ session('activeRole') === 'Admin' ? 'btn-primary text-white' : 'btn-secondary' }}">
-            Ganti ke Admin
-        </button>
-        
-        <!-- Tombol untuk role Bendahara -->
-        <button type="button" id="bendaharaButton" onclick="switchRole('Bendahara')" class="dropdown-item btn btn-sm text-left {{ session('activeRole') === 'Bendahara' ? 'btn-primary text-white' : 'btn-secondary' }}">
-            Ganti ke Bendahara
-        </button>
+    @if(auth()->user()->roles->count() > 1)
+        <!-- Role Switch Form -->
+        <form id="roleSwitchForm" action="{{ route('switchRole') }}" method="POST" class="px-2 py-1">
+            @csrf
+            <input type="hidden" name="role" id="roleInput" value="{{ session('activeRole') }}">
+            
+            @foreach(auth()->user()->roles as $role)
+                <button type="button" id="{{ $role->name }}Button" onclick="switchRole('{{ $role->name }}')" class="dropdown-item btn btn-sm text-left {{ session('activeRole') === $role->name ? 'btn-primary text-white' : 'btn-secondary' }}">
+                    Ganti ke {{ $role->name }}
+                </button>
+            @endforeach
+        </form>
 
-        <!-- Tombol untuk role Reader -->
-        <button type="button" id="readerButton" onclick="switchRole('Reader')" class="dropdown-item btn btn-sm text-left {{ session('activeRole') === 'Reader' ? 'btn-primary text-white' : 'btn-secondary' }}">
-            Ganti ke Reader
-        </button>
-    </form>
-</div>
-                <script>
+        </div>
+        <script>
         function switchRole(role) {
             // Update value of hidden input
             document.getElementById('roleInput').value = role;
 
             // Update button classes based on selected role
-            if (role === 'Admin') {
-                document.getElementById('adminButton').classList.remove('btn-secondary');
-                document.getElementById('adminButton').classList.add('btn-primary');
-                document.getElementById('bendaharaButton').classList.remove('btn-primary');
-                document.getElementById('bendaharaButton').classList.add('btn-secondary');
-                document.getElementById('readerButton').classList.remove('btn-primary');
-                document.getElementById('readerButton').classList.add('btn-secondary');
-            } else if (role === 'Bendahara') {
-                document.getElementById('bendaharaButton').classList.remove('btn-secondary');
-                document.getElementById('bendaharaButton').classList.add('btn-primary');
-                document.getElementById('adminButton').classList.remove('btn-primary');
-                document.getElementById('adminButton').classList.add('btn-secondary');
-                document.getElementById('readerButton').classList.remove('btn-primary');
-                document.getElementById('readerButton').classList.add('btn-secondary');
-            } else if (role === 'Reader') {
-                document.getElementById('readerButton').classList.remove('btn-secondary');
-                document.getElementById('readerButton').classList.add('btn-primary');
-                document.getElementById('adminButton').classList.remove('btn-primary');
-                document.getElementById('adminButton').classList.add('btn-secondary');
-                document.getElementById('bendaharaButton').classList.remove('btn-primary');
-                document.getElementById('bendaharaButton').classList.add('btn-secondary');
-            }
+            @foreach(auth()->user()->roles as $role)
+                if (role === '{{ $role->name }}') {
+                    document.getElementById('{{ $role->name }}Button').classList.remove('btn-secondary');
+                    document.getElementById('{{ $role->name }}Button').classList.add('btn-primary', 'text-white');
+                } else {
+                    document.getElementById('{{ $role->name }}Button').classList.remove('btn-primary', 'text-white');
+                    document.getElementById('{{ $role->name }}Button').classList.add('btn-secondary');
+                }
+            @endforeach
 
             // Submit the form
             document.getElementById('roleSwitchForm').submit();
         }
-    </script>
-@endif                 
+        </script>
+    @endif                 
                                 
                             
 

@@ -38,13 +38,13 @@
                                 </div>
                                 
                                 <div class="d-flex align-items-center mt-4">
-                                    @hasrole('Admin|Bendahara') 
-                                    <a href="/add_pengeluaran" class="btn btn-warning mr-2" title="Add">
+                                    @if(session('activeRole') == 'Admin' || session('activeRole') == 'Bendahara')
+                                    <a href="/add-pengeluaran" class="btn btn-warning mr-2" title="Add">
                                         <i class="fa fa-plus"></i>
                                     </a>
-                                    @endhasrole
+                                    @endif
                                     
-                                 @hasrole('Admin|Bendahara|Reader') 
+                                    @if(session('activeRole') == 'Admin' || session('activeRole') == 'Bendahara' || session('activeRole') == 'Reader')
                                     <form method="GET" action="{{ route('export.pengeluaran.pdf') }}" id="export-pdf-form" class="mr-2">
                                         <input type="hidden" name="year" id="export-year" value="{{ old('year') }}" />
                                         <input type="hidden" name="start_date" id="export-start-date" value="" />
@@ -59,12 +59,13 @@
                                         <input type="hidden" name="end_date" id="export-end-date-excel" value="" />
                                         <button type="submit" title="Export Excel" class="btn btn-success"><i class="fa fa-file-excel"></i></button>
                                     </form>
-                                    @endhasrole
-                                    @hasrole('Admin|Bendahara')
+                                    @endif
+
+                                    @if(session('activeRole') == 'Admin' || session('activeRole') == 'Bendahara')
                                     <button class="btn btn-primary" data-toggle="modal" data-target="#importModal" title="Import Data">
                                         <i class="fa fa-file-import"></i> 
                                     </button>
-                                    @endhasrole
+                                    @endif
                                 </div>
                             </div>
                         </div>

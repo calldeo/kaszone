@@ -80,7 +80,7 @@ Route::group(['middleware' => ['auth','permission:Bendahara']], function (){
     Route::post('/importbendahara', [BendaharaController::class, 'userImportExcel'])->name('import-bendahara');
     route::get('/user',[BendaharaController::class,'bendahara'])->name('bendahara');
     Route::delete('/user/{id}/destroy', [BendaharaController::class, 'destroy'])->name('user.destroy');
-    route::get('/add',[BendaharaController::class,'create'])->name('add_user');
+    route::get('/add-user',[BendaharaController::class,'create'])->name('add_user');
     Route::post('/user/store',[BendaharaController::class,'store']);
     Route::get('/user/{id}/edit  ',[BendaharaController::class,'edit']);
     Route::put('/guruu/{id}',[BendaharaController::class,'update']);
@@ -94,7 +94,7 @@ Route::post('/switch-role', [BendaharaController::class, 'switchRole'])->name('s
 Route::group(['middleware' => ['auth','permission:Kategori']], function (){
 
     Route::get('/kategori', [CategoryController::class, 'index']);
-    route::get('/add',[CategoryController::class,'add_kategori'])->name('add_kategori');
+    route::get('/add-kategori',[CategoryController::class,'create'])->name('add_kategori');
     Route::post('/kategori/store',[CategoryController::class,'store']);
     Route::delete('/kategori/{id}/destroy', [CategoryController::class,'destroy'])->name('kategori.destroy');
     Route::get('/kategori/{id}/edit_kategori', [CategoryController::class, 'edit'])->name('kategori.edit');
@@ -130,7 +130,7 @@ Route::group(['middleware' => ['auth','permission:Data Pemasukan']], function ()
 Route::group(['middleware' => ['auth','permission:Data Pengeluaran']], function (){
 
     route::get('/pengeluaran',[PengeluaranController::class,'index'])->name('index');
-    Route::get('/add_pengeluaran', [PengeluaranController::class, 'create']);
+    Route::get('/add-pengeluaran', [PengeluaranController::class, 'create']);
     Route::post('/pengeluaran/store', [PengeluaranController::class, 'store'])->name('pengeluaran.store');
     Route::get('/pengeluaran/edit/{id}', [PengeluaranController::class, 'edit'])->name('pengeluaran.edit');
     Route::put('/pengeluaran/{id}', [PengeluaranController::class, 'update'])->name('pengeluaran.update');

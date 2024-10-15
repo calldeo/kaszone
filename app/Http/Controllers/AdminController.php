@@ -136,7 +136,7 @@ class AdminController extends Controller
                     $viewButton = '<button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/pemasukan/' . $row->id_data . '/detail"><i class="fa fa-eye"></i></button>';
                     $deleteButton = '';
 
-                    if ($user->hasRole('Admin') || $user->hasRole('Bendahara')) {
+                    if (session('activeRole') == 'Admin' || session('activeRole') == 'Bendahara') {
                         $editButton = '<a href="/pemasukan/' . $row->id_data . '/edit" class="btn btn-warning btn-xs mr-1"><i class="fas fa-edit"></i></i></a>';
                         $deleteButton = '<form action="/pemasukan/' . $row->id_data . '/destroy" method="POST" style="display:inline;">' .
                             csrf_field() .
@@ -144,6 +144,7 @@ class AdminController extends Controller
                             '<button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>' .
                             '</form>';
                     }
+                    
 
                     return '<div class="d-flex align-items-center">' . $editButton . $viewButton . $deleteButton . '</div>';
                 })
@@ -259,7 +260,7 @@ class AdminController extends Controller
                         </a>';
 
 
-                    if (auth()->user()->hasRole(['Admin', 'Bendahara'])) {
+                    if (session('activeRole') == 'Admin' || session('activeRole') == 'Bendahara') {
                         $buttons .= '
                         <a href="' . route('pengeluaran.deleteAll', $row->id) . '" class="btn btn-danger btn-xs" onclick="return confirm(\'Apakah Anda yakin ingin menghapus semua item ini?\')">
                             <i class="fas fa-dumpster"></i>
