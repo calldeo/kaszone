@@ -22,10 +22,10 @@ class CategoryController extends Controller
         return view('kategori.kategori', compact('categories'));
     }
 
-    public function add_kategori()
+    public function create()
     {
         
-        return view('kategori.add_kategori');
+        return view('kategori.add');
     }
 
     public function store(Request $request)
@@ -83,7 +83,7 @@ class CategoryController extends Controller
             return redirect('/kategori')->with('error', 'Kategori tidak ditemukan.');
         }
 
-        return view('kategori.edit_kategori', compact('category'));
+        return view('kategori.edit', compact('category'));
     }
 
     public function update(Request $request, $id)
@@ -164,17 +164,17 @@ class CategoryController extends Controller
             return redirect('/kategori')->with('error', 'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage());
         }
     }
-    public function cetaklaporan()
+    public function exportkategori()
     {
         
 
         $category = Category::all();
-        $pdf = PDF::loadview('halaman.cetaklaporan', compact('category'));
+        $pdf = PDF::loadview('kategori.export-kategori', compact('category'));
         $pdf->setPaper('A4', 'potrait');
         return $pdf->stream('category.pdf');
 
 
-        return view('kategori.cetaklaporan', compact('category'));
+        return view('kategori.export-kategori', compact('category'));
     }
 
     

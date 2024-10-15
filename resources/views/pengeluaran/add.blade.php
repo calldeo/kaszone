@@ -211,10 +211,10 @@
 
     if (value) {
         const formattedValue = parseInt(value).toLocaleString('id-ID'); 
-        input.value = 'Rp ' + formattedValue; 
+        input.value = 'Rp' + formattedValue; 
         hiddenInput.value = value;
     } else {
-        input.value = 'Rp 0';
+        input.value = 'Rp0';
         hiddenInput.value = ''; 
     }
 }
@@ -226,10 +226,10 @@ function formatInputDll(event) {
 
     if (value) {
         const formattedValue = parseInt(value).toLocaleString('id-ID'); 
-        input.value = 'Rp ' + formattedValue; 
+        input.value = 'Rp' + formattedValue; 
         hiddenInput.value = value; 
     } else {
-        input.value = 'Rp 0';
+        input.value = 'Rp0';
         hiddenInput.value = '';
     }
 }
@@ -246,7 +246,7 @@ function calculateTotal(event) {
 
     const total = jumlahSatuan * nominal + dll; 
 
-    const formattedTotal = 'Rp ' + total.toLocaleString('id-ID'); 
+    const formattedTotal = 'Rp' + total.toLocaleString('id-ID'); 
 
     container.querySelector('[name="jumlah[]"]').value = formattedTotal; 
     container.querySelector('[name="jumlah_hidden[]"]').value = total; 
@@ -260,7 +260,7 @@ function updateGrandTotal() {
         grandTotal += parseInt(input.value) || 0; 
     });
 
-    const formattedGrandTotal = 'Rp ' + grandTotal.toLocaleString('id-ID'); 
+    const formattedGrandTotal = 'Rp' + grandTotal.toLocaleString('id-ID'); 
     document.getElementById('grand-total').textContent = formattedGrandTotal; 
 }
 
@@ -413,7 +413,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         getCategories(function(categories) {
             const newDropdown = document.querySelector('#dynamic-fields-container .dynamic-field:last-child select[name="category_id[]"]');
-            newDropdown.innerHTML = '<option value="">Select Category</option>';
+            newDropdown.innerHTML = '<option value="">~PILIH KATEGORI~</option>';
             categories.forEach(function(item) {
                 newDropdown.innerHTML += `<option value="${item.id}">${item.name}</option>`;
             });

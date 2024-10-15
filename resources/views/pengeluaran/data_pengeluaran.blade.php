@@ -155,11 +155,14 @@
 
 
     <input type="hidden" id="table-url-pengeluaran" value="{{ route('production') }}">
+
+    
 <script>
     var filterData = {
         year: null,
         start_created_at: null,
-        end_created_at: null
+        end_created_at: null,
+        total_data: true
     };
 $(document).ready(function() {
     $('.input-daterange-datepicker').prop('disabled', true);
@@ -226,49 +229,57 @@ $(document).ready(function() {
     pengeluaranTables(filterData);
 });
 
-
-    function pengeluaranTables(filter) {
-        $('#pengeluaranTables').DataTable({
-            processing: true,
-            serverSide: true,
-            destroy: true,
-            language: {
-                paginate: {
-                    next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
-                    previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>'
-                }
-            },
-            ajax: {
-                url: $('#table-url-pengeluaran').val(),
-                data: function(d) {
-                    d.year = filter.year;
-                    d.start_created_at = filter.start_created_at;
-                    d.end_created_at = filter.end_created_at;
-                }
-            },
-            columns: [
-                { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-                { data: 'name', name: 'name' },
-                { data: 'description', name: 'description' },
-                { data: 'category', name: 'category' },
-                { data: 'jumlah', name: 'jumlah' },
-                { data: 'tanggal', name: 'tanggal' },
-                { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
-            ],
-            drawCallback: function(settings) {
-                var api = this.api();
-                var totalJumlah = 0;
-
-                api.rows().every(function(rowIdx, tableLoop, rowLoop) {
-                    var data = this.data();
-                    var jumlah = parseFloat(data.jumlah.replace(/Rp/g, '').replace(/\./g, '').replace(/,/g, '').trim()) || 0;
-                    totalJumlah += jumlah;
-                });
-
-                $('#total-jumlah').html('Rp' + totalJumlah.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }));
+function pengeluaranTables(filter) {
+    $('#pengeluaranTables').DataTable({
+        processing: true,
+        serverSide: true,
+        destroy: true,
+        language: {
+            paginate: {
+                next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+                previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>'
             }
-        });
-    }
+        },
+        ajax: {
+            url: $('#table-url-pengeluaran').val(),
+            data: function(d) {
+                d.year = filter.year;
+                d.start_created_at = filter.start_created_at;
+                d.end_created_at = filter.end_created_at;
+            }
+        },
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            { data: 'name', name: 'name' },
+            { data: 'description', name: 'description' },
+            { data: 'category', name: 'category' },
+            { data: 'jumlah', name: 'jumlah' },
+            { data: 'tanggal', name: 'tanggal' },
+            { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
+        ],
+        footerCallback: function(row, data, start, end, display) {
+            filter.total_data = true;
+            totalPengeluaran(filter);
+        }
+    });
+}
+
+function totalPengeluaran(filter){
+    $.ajax({
+        url: $('#table-url-pengeluaran').val(),
+        method: 'GET',
+        data: filter,
+        success: function(data) {
+            console.log(data);
+            var jumlah = data.replace(/Rp/g, '').replace(/\./g, '').trim();
+            $('#total-jumlah').html('Rp' + Number(jumlah).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }));
+        },
+        error: function(xhr, error, thrown) {
+            console.error('AJAX Error:', xhr.responseText);
+        }
+    });
+}
+</script>
 
 
 

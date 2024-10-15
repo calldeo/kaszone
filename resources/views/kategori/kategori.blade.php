@@ -40,10 +40,10 @@
                             <h4 class="card-title">Data Kategori</h4>
                             <div class="text-right">
                     
-                           <a href="/add_kategori" class="btn btn-warning ml-0" title="Add">
+                           <a href="/add" class="btn btn-warning ml-0" title="Add">
                         <i class="fa fa-plus"></i>
                     </a>
-                    <a href="/cetaklaporan" target="blank" class="btn btn-info ml-2" title="Print Report">
+                    <a href="/export-kategori" target="blank" class="btn btn-info ml-2" title="Print Report">
                                     <i class="fa fa-print"></i> 
                                </a>
                       <button type="button" class="btn btn-success ml-2" title="Import" data-toggle="modal" data-target="#importModal">

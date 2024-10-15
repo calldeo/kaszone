@@ -127,7 +127,7 @@ class AdminController extends Controller
 
 
 
-    public function income(Request $request)
+      public function income(Request $request)
     {
         if ($request->ajax()) {
             $startDate = $request->input('start_created_at');
@@ -145,6 +145,7 @@ class AdminController extends Controller
             }
             $totalJumlah = $pemasukan->sum('jumlah');
             if ($request->input('total_data') === 'true') {
+                $totalJumlah = 'Rp' . number_format($totalJumlah, 0, ',', '.');
                 return $totalJumlah;
             }
 
@@ -177,10 +178,10 @@ class AdminController extends Controller
                     return '<div class="d-flex align-items-center">' . $editButton . $viewButton . $deleteButton . '</div>';
                 })
                 ->rawColumns(['opsi'])
-                ->with(['total_jumlah' => 'Rp' . number_format($totalJumlah, 2, ',', '.')])
                 ->make(true);
         }
     }
+
     public function production(Request $request)
     {
         if ($request->ajax()) {
@@ -197,7 +198,14 @@ class AdminController extends Controller
             if ($startDate != null && $endDate != null) {
                 $pengeluaran = $pengeluaran->whereBetween('tanggal', [$startDate, $endDate]);
             }
-
+            
+            $totalJumlah = $pengeluaran->withSum('pengeluaran', 'jumlah')->get()->sum('pengeluaran_sum_jumlah');
+            
+            if ($request->input('total_data') === 'true') {
+                $totalJumlah = 'Rp' . number_format($totalJumlah, 0, ',', '.');
+                return $totalJumlah;
+            }
+            
             if ($request->input('search.value') != null) {
                 $pengeluaran = $pengeluaran->whereHas('pengeluaran', function ($query) use ($request) {
                     $query->where('name', 'like', '%' . $request->input('search.value') . '%')
@@ -208,7 +216,6 @@ class AdminController extends Controller
                         ->orWhere('dll', 'like', '%' . $request->input('search.value') . '%');
                 });
             }
-
 
             return DataTables::of($pengeluaran)
                 ->addIndexColumn()
@@ -263,10 +270,7 @@ class AdminController extends Controller
                     return $dll ?: 'Tidak ada data tambahan';
                 })
                 ->addColumn('jumlah', function ($row) {
-                    $jumlah = 0;
-                    foreach ($row->pengeluaran as $val) {
-                        $jumlah += $val->jumlah;
-                    }
+                    $jumlah = $row->pengeluaran->sum('jumlah');
                     return 'Rp' . number_format($jumlah, 0, ',', '.') ?: 'Tidak ada jumlah';
                 })
                 ->addColumn('category', function ($row) {
@@ -305,7 +309,6 @@ class AdminController extends Controller
 
 
 
-
     public function roles(Request $request)
     {
         if ($request->ajax()) {
@@ -316,7 +319,7 @@ class AdminController extends Controller
                 ->addColumn('opsi', function ($row) {
                     return '
                     <div class="d-flex align-items-center">
-                        <form action="/role/' . $row->id . '/edit_role" method="GET" class="mr-1">
+                        <form action="/role/' . $row->id . '/edit" method="GET" class="mr-1">
                             <button type="submit" class="btn btn-warning btn-xs"><i class="fa fa-edit"></i></button>
                         </form>
 

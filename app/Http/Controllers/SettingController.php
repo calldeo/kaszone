@@ -12,56 +12,43 @@ use Spatie\Permission\Models\Permission;
 
 class SettingController extends Controller
 {
-    //
      public function role(Request $request)
     {
-        
-        // Meneruskan data ke tampilan
-        return view('halaman.role');
+        return view('role.role');
     }
-
-
-  
 
      public function edit($id)
     {
          $role = Role::findOrFail($id);
-    $permissions = Permission::all(); // Ambil semua permissions
-    $rolePermissions = $role->permissions->pluck('id')->toArray(); // Ambil ID permissions yang terkait dengan role
+    $permissions = Permission::all();
+    $rolePermissions = $role->permissions->pluck('id')->toArray();
 
-    return view('edit.edit_role', compact('role', 'permissions', 'rolePermissions'));
+    return view('role.edit', compact('role', 'permissions', 'rolePermissions'));
     }
-
-
     
   public function update(Request $request, $id)
 {
     $role = Role::findOrFail($id);
 
-    // Validasi input
     $request->validate([
         'name' => ['required', 'min:3', 'max:30'],
         'guard_name' => ['required', 'min:3', 'max:30'],
-        'permissions' => ['required', 'array'], // Pastikan permissions adalah array
+        'permissions' => ['required', 'array'],
     ]);
 
-    // Update data role
     $role->update([
         'name' => $request->name,
         'guard_name' => $request->guard_name,
     ]);
 
-    // Sinkronisasi permissions dengan role
     $role->permissions()->sync($request->permissions);
 
     return redirect('/role')->with('update_success', 'Role dan permissions berhasil diupdate');
 }
 
-
  public function create()
     {
-       
-        return view('tambah.add_role');
+       return view('role.add');
     }
 
     public function store(Request $request)
@@ -73,26 +60,17 @@ class SettingController extends Controller
 
      DB::beginTransaction();
      try {
-        //code... 
         $role = new Role();
         $role->name = $request->name;
         $role->guard_name = $request->guard_name;
        
-
-        
-        // dd($pemasukan);
         $role->save();
         DB::commit();
      } catch (\Throwable $th) {
         DB::rollback();
         return redirect('/role')->with('success', 'Role gagal ditambahkan!' . $th->getMessage());
-
-        //throw $th;
      }
         return redirect('/role')->with('success', 'Role berhasil ditambahkan!');
-       
-        // Pemasukan::create($request->all());
-
     }
 
 
@@ -104,11 +82,9 @@ class SettingController extends Controller
         
         $saldo = $totalPemasukan - $totalPengeluaran;
 
-        // Ambil nilai minimal saldo dari SettingSaldo
         $minimalSaldo = SettingSaldo::first()->saldo ?? 0;
 
-        // Passing data ke view
-        return view('halaman.saldo', compact('totalPemasukan', 'totalPengeluaran', 'saldo', 'minimalSaldo'));
+        return view('saldo.saldo', compact('totalPemasukan', 'totalPengeluaran', 'saldo', 'minimalSaldo'));
     }
 
 public function editMinimalSaldo()
@@ -120,7 +96,7 @@ public function editMinimalSaldo()
     $totalPengeluaran = Pengeluaran::sum('jumlah');
     $saldo = $totalPemasukan - $totalPengeluaran;
     
-    return view('edit.edit_saldo', compact('minimalSaldo', 'saldo'));
+    return view('saldo.edit_saldo', compact('minimalSaldo', 'saldo'));
 }
 
 public function updateMinimalSaldo(Request $request)

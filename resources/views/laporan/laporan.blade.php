@@ -254,7 +254,6 @@
             }
         });
     }
-
     function totalPemasukan(filter){
         $.ajax({
             url: $('#table-url-pemasukan').val(),
@@ -263,7 +262,23 @@
             success: function(data) {
                 console.log(data);
                 var jumlah = data.replace(/Rp/g, '').replace(/\./g, '').trim();
-                $('#total-pemasukan').html('Rp' + jumlah.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }));
+                $('#total-pemasukan').html('Rp' + Number(jumlah).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }));
+            },
+            error: function(xhr, error, thrown) {
+                console.error('AJAX Error:', xhr.responseText);
+            }
+        });
+    }
+
+    function totalPengeluaran(filter){
+        $.ajax({
+            url: $('#table-url-pengeluaran').val(),
+            method: 'GET',
+            data: filter,
+            success: function(data) {
+                console.log(data);
+                var jumlah = data.replace(/Rp/g, '').replace(/\./g, '').trim();
+                $('#total-pengeluaran').html('Rp' + Number(jumlah).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }));
             },
             error: function(xhr, error, thrown) {
                 console.error('AJAX Error:', xhr.responseText);
@@ -298,17 +313,13 @@
                 { data: 'jumlah' },
                 { data: 'tanggal' }
             ],
-            footerCallback: function(row, data, start, end, display) {
-                var total = 0;
-                data.forEach(function(item) {
-                    total += parseFloat(item.jumlah.replace(/Rp/g, '').replace(/\./g, '').trim()) || 0;
-                });
-                $('#total-pengeluaran').html('Rp' + total.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 }));
+                footerCallback: function(row, data, start, end, display) {
+                 filter.total_data = true
+                totalPengeluaran(filter)
             }
         });
     }
 </script>
-
 
 </body>
 </html>

@@ -177,10 +177,10 @@
             });
 
             // Format total jumlah ke format Rupiah dengan dua desimal (,00)
-            var formattedTotal = totalJumlah.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            var formattedTotal = totalJumlah.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 
             // Tampilkan total dengan format Rupiah di elemen '#total-pemasukan'
-            $('#total-pemasukan').html('Rp ' + formattedTotal);
+            $('#total-pemasukan').html('Rp' + formattedTotal);
         }
     });
 }

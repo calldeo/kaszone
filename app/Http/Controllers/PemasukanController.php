@@ -30,13 +30,13 @@ class PemasukanController extends Controller
 
 
 
-        return view('pemasukan.datapemasukan', compact('pemasukan', 'year'));
+        return view('pemasukan.data-pemasukan', compact('pemasukan', 'year'));
     }
 
     public function create()
     {
 
-        return view('pemasukan.add_pemasukan');
+        return view('pemasukan.add');
     }
 
     public function store(Request $request)
@@ -95,7 +95,7 @@ class PemasukanController extends Controller
         $pemasukan = Pemasukan::findOrFail($id_data);
         $categories = Category::where('jenis_kategori', 'pemasukan')->get();
 
-        return view('pemasukan.edit_pemasukan', compact('id_data', 'pemasukan', 'categories'));
+        return view('pemasukan.edit', compact('id_data', 'pemasukan', 'categories'));
     }
 
     public function update(Request $request, $id_data)

@@ -11,10 +11,7 @@ class UserProfileController extends Controller
 {
     public function edit()
     {
-        // Mendapatkan data pengguna yang sedang login
         $user = auth()->user();
-
-        // Menampilkan view edit profil dengan data pengguna
         return view('profile.edit', compact('user'));
     }
 
@@ -22,7 +19,6 @@ class UserProfileController extends Controller
 {
     $user = auth()->user();
 
-    // Validasi input
     $request->validate([
         'name' => 'required|string|max:255',
         'email' => 'required|email|max:255',
@@ -31,43 +27,33 @@ class UserProfileController extends Controller
         'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
     ]);
 
-    DB::beginTransaction(); // Memulai transaksi
+    DB::beginTransaction();
     try {
-        // Update data user
         $user->name = $request->name;
         $user->email = $request->email;
         $user->alamat = $request->alamat;
 
-        // Jika ada file foto_profil yang diunggah
         if ($request->hasFile('foto_profil')) {
-            // Hapus foto profil lama jika ada
             if ($user->poto) {
                 Storage::delete($user->poto);
             }
 
-            // Simpan foto profil baru
             $path = $request->file('foto_profil')->store('foto_profil', 'public');
             $user->poto = $path;
         }
 
-        // Update password jika diisi
         if ($request->filled('password')) {
             $user->password = bcrypt($request->password);
         }
 
-        // Simpan perubahan
         $user->save();
 
-        // Commit transaksi jika tidak ada kesalahan
         DB::commit();
 
-        // Redirect dengan pesan sukses
         return redirect()->route('profile.edit')->with('success', 'Profil Berhasil di update.');
     } catch (\Throwable $th) {
-        // Rollback transaksi jika terjadi kesalahan
         DB::rollback();
 
-        // Redirect dengan pesan gagal
         return redirect()->route('profile.edit')->with('error', 'Profil gagal di update ' . $th->getMessage());
     }
 }

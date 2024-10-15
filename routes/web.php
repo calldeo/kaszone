@@ -94,13 +94,13 @@ Route::post('/switch-role', [BendaharaController::class, 'switchRole'])->name('s
 Route::group(['middleware' => ['auth','permission:Kategori']], function (){
 
     Route::get('/kategori', [CategoryController::class, 'index']);
-    route::get('/add_kategori',[CategoryController::class,'add_kategori'])->name('add_kategori');
+    route::get('/add',[CategoryController::class,'add_kategori'])->name('add_kategori');
     Route::post('/kategori/store',[CategoryController::class,'store']);
     Route::delete('/kategori/{id}/destroy', [CategoryController::class,'destroy'])->name('kategori.destroy');
     Route::get('/kategori/{id}/edit_kategori', [CategoryController::class, 'edit'])->name('kategori.edit');
     Route::put('/kategori/{id}', [CategoryController::class, 'update'])->name('kategori.update');
     Route::post('/importkategori', [CategoryController::class, 'kategoriimportexcel'])->name('import-kategori');
-    Route::get('/cetaklaporan',[CategoryController::class,'cetaklaporan'])->name('cetaklaporan');
+    Route::get('/export-kategori',[CategoryController::class,'exportkategori'])->name('export-kategori');
     Route::get('/download-template-kategori', [CategoryController::class, 'downloadTemplateExcel'])->name('download-template-kategori');
     Route::get('/kategori/{id}/detail', [CategoryController::class, 'showDetail'])->name('kategori.showDetail');
 
@@ -109,7 +109,7 @@ Route::group(['middleware' => ['auth','permission:Kategori']], function (){
 Route::group(['middleware' => ['auth','permission:Data Pemasukan']], function (){
 
     route::get('/pemasukan',[PemasukanController::class,'index'])->name('index');
-    Route::get('/add', [PemasukanController::class, 'create']);
+    Route::get('/add-pemasukan', [PemasukanController::class, 'create']);
     Route::post('/pemasukan/store', [PemasukanController::class, 'store']);
     Route::delete('/pemasukan/{id}/destroy', [PemasukanController::class, 'destroy'])->name('pemasukan.destroy');
     Route::get('/pemasukan/{id_data}/edit', [PemasukanController::class, 'edit'])->name('pemasukan.edit');
@@ -164,8 +164,9 @@ Route::group(['middleware' => ['auth','permission:Setting']], function (){
     route::get('/setting-saldo',[SettingController::class,'saldo'])->name('saldo');
     Route::get('/edit-minimal-saldo', [SettingController::class, 'editMinimalSaldo'])->name('edit.minimal.saldo');
     Route::put('/update-minimal-saldo', [SettingController::class, 'updateMinimalSaldo'])->name('update.minimal.saldo');
-    Route::get('/role/{id}/edit_role  ',[SettingController::class,'edit']);
+
+    Route::get('/role/{id}/edit',[SettingController::class,'edit']);
     Route::put('/role/{id}',[SettingController::class,'update']);
-    Route::get('/add_role', [SettingController::class, 'create']);
+    Route::get('/add', [SettingController::class, 'create']);
     Route::post('/role/store', [SettingController::class, 'store']);
 });

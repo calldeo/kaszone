@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     @include('template.headerr')
@@ -17,7 +17,7 @@
                 </div>
                 <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">Table</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Tabel</a></li>
                         <li class="breadcrumb-item active"><a href="javascript:void(0)">Pemasukan</a></li>
                     </ol>
                 </div>
@@ -48,7 +48,7 @@
 
                                 <div class="d-flex align-items-center mt-4">
                                     @hasrole('Admin|Bendahara')
-                                    <a href="/add_pemasukan" class="btn btn-warning mr-2" title="Add">
+                                    <a href="/add_pemasukan" class="btn btn-warning mr-2" title="Tambah">
                                         <i class="fa fa-plus"></i>
                                     </a>
                                     @endhasrole
@@ -57,7 +57,7 @@
                                         <input type="hidden" name="year" id="export-year" value="{{ old('year') }}" />
                                         <input type="hidden" name="start_date" id="export-start-date" value="{{ old('start_date') }}" />
                                         <input type="hidden" name="end_date" id="export-end-date" value="{{ old('end_date') }}" />
-                                        <button type="submit" title="Export PDF" class="btn btn-info"><i class="fa fa-print"></i></button>
+                                        <button type="submit" title="Ekspor PDF" class="btn btn-info"><i class="fa fa-print"></i></button>
                                     </form>
                                     
                                     <form method="POST" action="{{ route('export.pemasukan.excel') }}" id="export-excel-form" class="mr-2">
@@ -65,12 +65,12 @@
                                         <input type="hidden" name="year" id="export-year-excel" value="{{ old('year') }}" />
                                         <input type="hidden" name="start_date" id="export-start-date-excel" value="{{ old('start_date') }}" />
                                         <input type="hidden" name="end_date" id="export-end-date-excel" value="{{ old('end_date') }}" />
-                                        <button type="submit" title="Export Excel" class="btn btn-success"><i class="fa fa-file-excel"></i></button>
+                                        <button type="submit" title="Ekspor Excel" class="btn btn-success"><i class="fa fa-file-excel"></i></button>
                                     </form>
                                     @endhasrole
 
                                     @hasrole('Admin|Bendahara')
-                                    <button type="button" class="btn btn-primary" title="Import Data" data-toggle="modal" data-target="#importModal">
+                                    <button type="button" class="btn btn-primary" title="Impor Data" data-toggle="modal" data-target="#importModal">
                                         <i class="fa fa-file-import"></i> 
                                     </button>
                                     @endhasrole
@@ -81,8 +81,8 @@
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="importModalLabel">Import Data Pemasukan</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <h5 class="modal-title" id="importModalLabel">Impor Data Pemasukan</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
@@ -94,11 +94,11 @@
                                                         <input type="file" class="dropify" id="file" name="file" required accept=".xls,.xlsx">
 
                                                     <div style="text-align: left;">
-                                                        <a href="{{ route('download.template.pemasukan') }}">Download Template Excel</a>
+                                                        <a href="{{ route('download.template.pemasukan') }}">Unduh Template Excel</a>
                                                     </div>
 
                                                     </div>
-                                                    <button type="submit" class="btn btn-primary">Import</button>
+                                                    <button type="submit" class="btn btn-primary">Impor</button>
                                                 </form>
                                             </div>
                                         </div>
@@ -116,14 +116,14 @@
                                     <polyline points="9 11 12 14 22 4"></polyline>
                                     <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
                                 </svg>
-                                <strong>Success!</strong> {{ session('success') }}
-                                <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span></button>
+                                <strong>Berhasil!</strong> {{ session('success') }}
+                                <button type="button" class="close h-100" data-dismiss="alert" aria-label="Tutup"><span><i class="mdi mdi-close"></i></span></button>
                             </div>
                             @endif
                             @if(session('error'))
                                 <div class="alert alert-danger alert-dismissible fade show">
-                                    <strong>Error!</strong> {{ session('error') }}
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span><i class="fa fa-times"></i></span></button>
+                                    <strong>Kesalahan!</strong> {{ session('error') }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Tutup"><span><i class="fa fa-times"></i></span></button>
                                 </div>
                             @endif
                             @if(session('update_success'))
@@ -132,8 +132,8 @@
                                     <polyline points="9 11 12 14 22 4"></polyline>
                                     <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
                                 </svg>
-                                <strong>Success!</strong> {{ session('update_success') }}
-                                <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span></button>
+                                <strong>Berhasil!</strong> {{ session('update_success') }}
+                                <button type="button" class="close h-100" data-dismiss="alert" aria-label="Tutup"><span><i class="mdi mdi-close"></i></span></button>
                             </div>
                             @endif
                             <div class="table-responsive">
@@ -152,7 +152,7 @@
                                 <tfoot>
                                     <tr>
                                         <td colspan="5" style="text-align: left; font-size: 1.25em; font-weight: bold;"><strong>Total Jumlah:</strong></td>
-                                        <td id="total-jumlah-value" style="text-align: left; font-size: 1.25em; font-weight: bold;">0</td>
+                                        <td id="total_jumlah" style="text-align: left; font-size: 1.25em; font-weight: bold;">0</td>
                                         <td></td>
                                     </tr>
                                 </tfoot>
@@ -211,7 +211,8 @@
         var filterData = {
             year: null,
             start_created_at: null,
-            end_created_at: null
+            end_created_at: null,
+            total_data: true
         };
 
         $(document).ready(function() {
@@ -270,15 +271,15 @@
                 reloadTable();
             });
 
-            $('#pemasukanTables').DataTable({
+            var pemasukanTable = $('#pemasukanTables').DataTable({
                 processing: true,
                 serverSide: true,
-                    language: {
-            paginate: {
-            next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
-            previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
-            }
-        },
+                language: {
+                    paginate: {
+                        next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+                        previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
+                    }
+                },
                 ajax: {
                     url: $('#table-url-pemasukan').val(),
                     method: 'GET',
@@ -300,25 +301,30 @@
                     { data: 'jumlah', name: 'jumlah' },
                     { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
                 ],
-   footerCallback: function(row, data, start, end, display) {
-    var totalJumlah = 0;
-    data.forEach(function(item) {
-        var jumlah = item.jumlah.replace(/Rp/g, '').replace(/\./g, '').trim();
-        totalJumlah += parseFloat(jumlah) || 0;
-    });
-    $('#total-jumlah-value').text('Rp' + totalJumlah.toLocaleString('id-ID'));
-}
-
-
+                drawCallback: function(settings) {
+                    totalPemasukan(filterData);
+                }
             });
+
+            function totalPemasukan(filter){
+                $.ajax({
+                    url: $('#table-url-pemasukan').val(),
+                    method: 'GET',
+                    data: {...filter, total_data: true},
+                    success: function(data) {
+                        $('#total_jumlah').html(data);
+                    },
+                    error: function(xhr, error, thrown) {
+                        console.error('AJAX Error:', xhr.responseText);
+                    }
+                });
+            }
+
+            function reloadTable() {
+                pemasukanTable.ajax.reload(null, false);
+            }
         });
-
-        function reloadTable() {
-            $('#pemasukanTables').DataTable().ajax.reload(null, false);
-        }
-
     </script>
-
 
     <script>
         $(document).ready(function() {
@@ -363,14 +369,13 @@
         });
     </script>
 
+    <script>
+        $(document).ready(function(){
+            $('.dropify').dropify();
 
-<script>
-    $(document).ready(function(){
-        $('.dropify').dropify();
-
-        $('.dropify-wrapper .dropify-message p').css('font-size', '20px');
-    });
-</script>
+            $('.dropify-wrapper .dropify-message p').css('font-size', '20px');
+        });
+    </script>
 
 
 
