@@ -61,10 +61,8 @@
                                     <div class="form-group">
                                         <label for="foto_profil">Foto Profil</label>
                                         
-                                        <!-- Menampilkan Foto Profil -->
                                         <div class="mb-3">
-                                            <!-- Menampilkan Logo atau Default Profile -->
-                                            <img id="preview-image" src="{{ auth()->user()->logo ? asset('storage/' . auth()->user()->logo) : asset('dash/images/usr.png') }}" alt="Logo Profil" class="square-image" width="150" height="150">
+                                               <img id="preview-image" src="{{ auth()->user()->poto ? asset('storage/' . auth()->user()->poto) : asset('dash/images/usr.png') }}" alt="Logo Profil" class="square-image" width="150" height="150">
                                         </div>
 
                                         <div class="file-upload-wrapper ml-0">
@@ -72,7 +70,6 @@
                                             <input type="file" id="foto_profil" name="foto_profil" onchange="displayFileName(); previewImage();">
                                             <div id="file-upload-info" class="file-upload-info">Tidak ada file yang dipilih</div>
                                         </div>
-                                        <!-- Keterangan -->
                                         <label class="text-label text-danger mt-3">* Jika tidak ada perubahan, tidak perlu diisi</label>
                                     </div>
 
@@ -156,6 +153,29 @@
 
     @include('template.scripts')
     <script>
+    function displayFileName() {
+        var input = document.getElementById('foto_profil');
+        var info = document.getElementById('file-upload-info');
+        info.textContent = input.files.length > 0 ? input.files[0].name : 'Tidak ada file yang dipilih';
+    }
+
+    function previewImage() {
+        var input = document.getElementById('foto_profil');
+        var preview = document.getElementById('preview-image');
+        var file = input.files[0];
+
+        if (file) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+            }
+
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
+  <script>
         function displayFileName() {
             var input = document.getElementById('foto_profil');
             var info = document.getElementById('file-upload-info');
@@ -167,20 +187,38 @@
             var preview = document.getElementById('preview-image');
             var file = input.files[0];
 
-            // Pastikan file terpilih
             if (file) {
                 var reader = new FileReader();
-
-                // Ketika file sudah dibaca
                 reader.onload = function(e) {
-                    // Set source dari img preview menjadi hasil pembacaan file
                     preview.src = e.target.result;
                 }
-
-                // Baca file sebagai Data URL
                 reader.readAsDataURL(file);
             }
         }
+
+        document.getElementById('profile-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            var formData = new FormData(this);
+            var previewImage = document.getElementById('preview-image');
+
+            fetch('{{ route("profile.update") }}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    previewImage.src = data.logo_url;
+                } else {
+                    alert('Gagal mengunggah gambar');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
     </script>
 </body>
 

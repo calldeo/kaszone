@@ -19,37 +19,7 @@ use Illuminate\Support\Facades\Hash;
 class AdminController extends Controller
 {
 
-    public function table(Request $request)
-    {
-        if ($request->ajax()) {
-            $admins = User::role('admin')
-                ->with('roles')
-                ->select(['id', 'name', 'email',  'kelamin', 'alamat'])
-                ->get();
 
-            return DataTables::of($admins)
-                ->addIndexColumn()
-                ->addColumn('roles', function ($row) {
-                    return $row->roles->pluck('name')->implode(', ');
-                })
-                ->addColumn('opsi', function ($row) {
-                    return '
-                    <div class="d-flex align-items-center">
-                        <form action="/admin/' . $row->id . '/edit_admin" method="GET" class="mr-1">
-                            <button type="submit" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i></button>
-                        </form>
-                        <form action="/admin/' . $row->id . '/destroy" method="POST">
-                            ' . csrf_field() . '
-                            ' . method_field('DELETE') . '
-                            <button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>
-                        </form>
-                    </div>
-                ';
-                })
-                ->rawColumns(['roles', 'opsi'])
-                ->make(true);
-        }
-    }
 
     public function users(Request $request)
     {

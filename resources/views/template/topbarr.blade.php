@@ -168,6 +168,11 @@
         <button type="button" id="bendaharaButton" onclick="switchRole('Bendahara')" class="dropdown-item btn btn-sm text-left {{ session('activeRole') === 'Bendahara' ? 'btn-primary text-white' : 'btn-secondary' }}">
             Ganti ke Bendahara
         </button>
+
+        <!-- Tombol untuk role Reader -->
+        <button type="button" id="readerButton" onclick="switchRole('Reader')" class="dropdown-item btn btn-sm text-left {{ session('activeRole') === 'Reader' ? 'btn-primary text-white' : 'btn-secondary' }}">
+            Ganti ke Reader
+        </button>
     </form>
 </div>
                 <script>
@@ -181,11 +186,22 @@
                 document.getElementById('adminButton').classList.add('btn-primary');
                 document.getElementById('bendaharaButton').classList.remove('btn-primary');
                 document.getElementById('bendaharaButton').classList.add('btn-secondary');
+                document.getElementById('readerButton').classList.remove('btn-primary');
+                document.getElementById('readerButton').classList.add('btn-secondary');
             } else if (role === 'Bendahara') {
                 document.getElementById('bendaharaButton').classList.remove('btn-secondary');
                 document.getElementById('bendaharaButton').classList.add('btn-primary');
                 document.getElementById('adminButton').classList.remove('btn-primary');
                 document.getElementById('adminButton').classList.add('btn-secondary');
+                document.getElementById('readerButton').classList.remove('btn-primary');
+                document.getElementById('readerButton').classList.add('btn-secondary');
+            } else if (role === 'Reader') {
+                document.getElementById('readerButton').classList.remove('btn-secondary');
+                document.getElementById('readerButton').classList.add('btn-primary');
+                document.getElementById('adminButton').classList.remove('btn-primary');
+                document.getElementById('adminButton').classList.add('btn-secondary');
+                document.getElementById('bendaharaButton').classList.remove('btn-primary');
+                document.getElementById('bendaharaButton').classList.add('btn-secondary');
             }
 
             // Submit the form
@@ -193,7 +209,6 @@
         }
     </script>
 @endif                 
-                               
                                 
                             
 
@@ -201,11 +216,11 @@
                     </ul>
                 </div>
             </nav>
-            <div class="sub-header">
+            {{-- <div class="sub-header">
                 <div class="d-flex align-items-center flex-wrap mr-auto">
                     <h5 class="dashboard_bar">Dashboard</h5>
                 </div>
                 
-            </div>
+            </div> --}}
         </div>
     </div>

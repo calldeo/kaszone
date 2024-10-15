@@ -15,7 +15,7 @@ class UserProfileController extends Controller
         return view('profile.edit', compact('user'));
     }
 
-   public function update(Request $request)
+public function update(Request $request)
 {
     $user = auth()->user();
 
@@ -34,8 +34,8 @@ class UserProfileController extends Controller
         $user->alamat = $request->alamat;
 
         if ($request->hasFile('foto_profil')) {
-            if ($user->poto) {
-                Storage::delete($user->poto);
+            if ($user->poto && Storage::disk('public')->exists($user->poto)) {
+                Storage::disk('public')->delete($user->poto);
             }
 
             $path = $request->file('foto_profil')->store('foto_profil', 'public');
@@ -50,12 +50,13 @@ class UserProfileController extends Controller
 
         DB::commit();
 
-        return redirect()->route('profile.edit')->with('success', 'Profil Berhasil di update.');
+        return redirect()->route('profile.edit')->with('success', 'Profil berhasil diperbarui.');
     } catch (\Throwable $th) {
         DB::rollback();
 
-        return redirect()->route('profile.edit')->with('error', 'Profil gagal di update ' . $th->getMessage());
+        return redirect()->route('profile.edit')->with('error', 'Profil gagal diperbarui: ' . $th->getMessage());
     }
 }
+
 
 }
