@@ -207,43 +207,45 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="{{ asset('main.js') }}"></script>
 
-    Share
-
-
-You said:
-<script>
+    <script>
         var filterData = {
             year: null,
             start_created_at: null,
             end_created_at: null,
             total_data: true
         };
-
+    
         $(document).ready(function() {
             $('.input-daterange-datepicker').prop('disabled', true);
-
+    
             $('.input-daterange-datepicker').daterangepicker({
                 opens: 'left',
                 locale: {
-                    format: 'YYYY/MM/DD'
-                }
+                    format: 'DD-MM-YYYY'
+                },
+                autoUpdateInput: false
             });
-
+    
+            var lastSelectedDates = {};
+    
             $('#filter-year').on('change', function() {
                 var selectedYear = $(this).val();
                 $('#export-year').val(selectedYear);
                 $('#export-year-excel').val(selectedYear);
-
+    
                 if (selectedYear !== "") {
                     $('.input-daterange-datepicker').prop('disabled', false);
                     filterData.year = selectedYear;
-
+    
+                    // Reset tanggal awal dan akhir untuk tahun yang dipilih
                     filterData.start_created_at = selectedYear + '-01-01';
                     filterData.end_created_at = selectedYear + '-12-31';
-
-                    $('.input-daterange-datepicker').data('daterangepicker').setStartDate(filterData.start_created_at);
-                    $('.input-daterange-datepicker').data('daterangepicker').setEndDate(filterData.end_created_at);
-                    
+    
+                    // Perbarui daterangepicker dengan tanggal baru
+                    $('.input-daterange-datepicker').data('daterangepicker').setStartDate(moment(filterData.start_created_at));
+                    $('.input-daterange-datepicker').data('daterangepicker').setEndDate(moment(filterData.end_created_at));
+                    $('.input-daterange-datepicker').val(moment(filterData.start_created_at).format('DD-MM-YYYY') + ' - ' + moment(filterData.end_created_at).format('DD-MM-YYYY'));
+    
                     $('#export-start-date').val(filterData.start_created_at);
                     $('#export-end-date').val(filterData.end_created_at);
                     $('#export-start-date-excel').val(filterData.start_created_at);
@@ -253,35 +255,46 @@ You said:
                     filterData.year = null;
                     filterData.start_created_at = null;
                     filterData.end_created_at = null;
-                    
+    
+                    $('.input-daterange-datepicker').val('');
+    
                     $('#export-start-date').val('');
                     $('#export-end-date').val('');
                     $('#export-start-date-excel').val('');
                     $('#export-end-date-excel').val('');
                 }
-
+    
                 reloadTable();
             });
-
+    
             $('.input-daterange-datepicker').on('apply.daterangepicker', function(ev, picker) {
-                filterData.start_created_at = picker.startDate.format('YYYY/MM/DD');
-                filterData.end_created_at = picker.endDate.format('YYYY/MM/DD');
-                
+                $(this).val(picker.startDate.format('DD-MM-YYYY') + ' - ' + picker.endDate.format('DD-MM-YYYY'));
+    
+                filterData.start_created_at = picker.startDate.format('YYYY-MM-DD');
+                filterData.end_created_at = picker.endDate.format('YYYY-MM-DD');
+    
                 $('#export-start-date').val(filterData.start_created_at);
                 $('#export-end-date').val(filterData.end_created_at);
                 $('#export-start-date-excel').val(filterData.start_created_at);
                 $('#export-end-date-excel').val(filterData.end_created_at);
-                
+    
+                // Simpan tanggal yang dipilih untuk tahun ini
+                lastSelectedDates[filterData.year] = {
+                    start: picker.startDate,
+                    end: picker.endDate
+                };
+    
                 reloadTable();
             });
-
+    
             var pemasukanTable = $('#pemasukanTables').DataTable({
                 processing: true,
                 serverSide: true,
+                destroy: true,
                 language: {
                     paginate: {
                         next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
-                        previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
+                        previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>'
                     }
                 },
                 ajax: {
@@ -309,7 +322,7 @@ You said:
                     totalPemasukan(filterData);
                 }
             });
-
+    
             function totalPemasukan(filter){
                 $.ajax({
                     url: $('#table-url-pemasukan').val(),
@@ -323,13 +336,14 @@ You said:
                     }
                 });
             }
-
+    
             function reloadTable() {
                 pemasukanTable.ajax.reload(null, false);
             }
         });
     </script>
-
+    
+    
 
     <script>
         $(document).ready(function() {
