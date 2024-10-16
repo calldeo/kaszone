@@ -208,123 +208,149 @@
     <script src="{{ asset('main.js') }}"></script>
 
     <script>
-        var filterData = {
-            year: null,
-            start_created_at: null,
-            end_created_at: null,
-            total_data: true
-        };
+    var filterData = {
+        year: new Date().getFullYear(), // Default ke tahun saat ini
+        start_created_at: moment().startOf('year').format('YYYY-MM-DD'), // Awal tahun
+        end_created_at: moment().endOf('year').format('YYYY-MM-DD'), // Akhir tahun
+        total_data: true
+    };
 
-        $(document).ready(function() {
-            $('.input-daterange-datepicker').prop('disabled', true);
+    $(document).ready(function() {
+        // Set konfigurasi daterangepicker dengan format DD/MM/YYYY
+        $('.input-daterange-datepicker').daterangepicker({
+            opens: 'left',
+            locale: {
+                format: 'DD/MM/YYYY' // Format tanggal menjadi hari/bulan/tahun
+            },
+            startDate: moment(filterData.start_created_at).format('DD/MM/YYYY'), // Awal tahun default
+            endDate: moment(filterData.end_created_at).format('DD/MM/YYYY'), // Akhir tahun default
+            autoUpdateInput: true // Izinkan pembaruan otomatis
+        });
 
-            $('.input-daterange-datepicker').daterangepicker({
-                opens: 'left',
-                locale: {
-                    format: 'YYYY-MM-DD'
-                }
-            });
+        // Inisialisasi input dengan tanggal default saat halaman dimuat
+        $('.input-daterange-datepicker').val(
+            moment(filterData.start_created_at).format('DD/MM/YYYY') + ' - ' +
+            moment(filterData.end_created_at).format('DD/MM/YYYY')
+        );
 
-            $('#filter-year').on('change', function() {
-                var selectedYear = $(this).val();
-                $('#export-year').val(selectedYear);
-                $('#export-year-excel').val(selectedYear);
+        $('#export-start-date').val(moment(filterData.start_created_at).format('DD/MM/YYYY'));
+        $('#export-end-date').val(moment(filterData.end_created_at).format('DD/MM/YYYY'));
+        $('#export-start-date-excel').val(moment(filterData.start_created_at).format('DD/MM/YYYY'));
+        $('#export-end-date-excel').val(moment(filterData.end_created_at).format('DD/MM/YYYY'));
 
-                if (selectedYear !== "") {
-                    $('.input-daterange-datepicker').prop('disabled', false);
-                    filterData.year = selectedYear;
+        // Jika tahun dipilih
+        $('#filter-year').on('change', function() {
+            var selectedYear = $(this).val();
+            $('#export-year').val(selectedYear);
+            $('#export-year-excel').val(selectedYear);
 
-                    filterData.start_created_at = selectedYear + '-01-01';
-                    filterData.end_created_at = selectedYear + '-12-31';
+            if (selectedYear !== "") {
+                $('.input-daterange-datepicker').prop('disabled', false);
+                filterData.year = selectedYear;
 
-                    $('.input-daterange-datepicker').data('daterangepicker').setStartDate(filterData.start_created_at);
-                    $('.input-daterange-datepicker').data('daterangepicker').setEndDate(filterData.end_created_at);
-                    
-                    $('#export-start-date').val(filterData.start_created_at);
-                    $('#export-end-date').val(filterData.end_created_at);
-                    $('#export-start-date-excel').val(filterData.start_created_at);
-                    $('#export-end-date-excel').val(filterData.end_created_at);
-                } else {
-                    $('.input-daterange-datepicker').prop('disabled', true);
-                    filterData.year = null;
-                    filterData.start_created_at = null;
-                    filterData.end_created_at = null;
-                    
-                    $('#export-start-date').val('');
-                    $('#export-end-date').val('');
-                    $('#export-start-date-excel').val('');
-                    $('#export-end-date-excel').val('');
-                }
+                filterData.start_created_at = selectedYear + '-01-01';
+                filterData.end_created_at = selectedYear + '-12-31';
 
-                reloadTable();
-            });
+                // Set tanggal sesuai tahun yang dipilih dalam format DD/MM/YYYY
+                $('.input-daterange-datepicker').data('daterangepicker').setStartDate(moment(filterData.start_created_at).format('DD/MM/YYYY'));
+                $('.input-daterange-datepicker').data('daterangepicker').setEndDate(moment(filterData.end_created_at).format('DD/MM/YYYY'));
 
-            $('.input-daterange-datepicker').on('apply.daterangepicker', function(ev, picker) {
-                filterData.start_created_at = picker.startDate.format('YYYY-MM-DD');
-                filterData.end_created_at = picker.endDate.format('YYYY-MM-DD');
-                
-                $('#export-start-date').val(filterData.start_created_at);
-                $('#export-end-date').val(filterData.end_created_at);
-                $('#export-start-date-excel').val(filterData.start_created_at);
-                $('#export-end-date-excel').val(filterData.end_created_at);
-                
-                reloadTable();
-            });
+                var formattedStartDate = moment(filterData.start_created_at).format('DD/MM/YYYY');
+                var formattedEndDate = moment(filterData.end_created_at).format('DD/MM/YYYY');
+                $('.input-daterange-datepicker').val(formattedStartDate + ' - ' + formattedEndDate);
 
-            var pemasukanTable = $('#pemasukanTables').DataTable({
-                processing: true,
-                serverSide: true,
-                language: {
-                    paginate: {
-                        next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
-                        previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
-                    }
-                },
-                ajax: {
-                    url: $('#table-url-pemasukan').val(),
-                    method: 'GET',
-                    data: function(d) {
-                        d.year = filterData.year;
-                        d.start_created_at = filterData.start_created_at;
-                        d.end_created_at = filterData.end_created_at;
-                    },
-                    error: function(xhr, error, thrown) {
-                        console.error('AJAX Error:', xhr.responseText);
-                    }
-                },
-                columns: [
-                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-                    { data: 'name', name: 'name' },
-                    { data: 'description', name: 'description' },
-                    { data: 'category', name: 'category' },
-                    { data: 'date', name: 'date' },
-                    { data: 'jumlah', name: 'jumlah' },
-                    { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
-                ],
-                drawCallback: function(settings) {
-                    totalPemasukan(filterData);
-                }
-            });
+                $('#export-start-date').val(formattedStartDate);
+                $('#export-end-date').val(formattedEndDate);
+                $('#export-start-date-excel').val(formattedStartDate);
+                $('#export-end-date-excel').val(formattedEndDate);
+            } else {
+                // Jika tahun tidak dipilih
+                $('.input-daterange-datepicker').prop('disabled', true);
+                filterData.year = null;
+                filterData.start_created_at = null;
+                filterData.end_created_at = null;
 
-            function totalPemasukan(filter){
-                $.ajax({
-                    url: $('#table-url-pemasukan').val(),
-                    method: 'GET',
-                    data: {...filter, total_data: true},
-                    success: function(data) {
-                        $('#total_jumlah').html(data);
-                    },
-                    error: function(xhr, error, thrown) {
-                        console.error('AJAX Error:', xhr.responseText);
-                    }
-                });
+                $('.input-daterange-datepicker').val('');
+                $('#export-start-date').val('');
+                $('#export-end-date').val('');
+                $('#export-start-date-excel').val('');
+                $('#export-end-date-excel').val('');
             }
 
-            function reloadTable() {
-                pemasukanTable.ajax.reload(null, false);
+            reloadTable(); // Memuat ulang tabel dengan filter baru
+        });
+
+        // Event handler saat pengguna memilih tanggal pada datepicker
+        $('.input-daterange-datepicker').on('apply.daterangepicker', function(ev, picker) {
+            filterData.start_created_at = picker.startDate.format('YYYY-MM-DD');
+            filterData.end_created_at = picker.endDate.format('YYYY-MM-DD');
+
+            $('#export-start-date').val(picker.startDate.format('DD/MM/YYYY')); // Format DD/MM/YYYY
+            $('#export-end-date').val(picker.endDate.format('DD/MM/YYYY')); // Format DD/MM/YYYY
+            $('#export-start-date-excel').val(picker.startDate.format('DD/MM/YYYY')); // Format DD/MM/YYYY
+            $('#export-end-date-excel').val(picker.endDate.format('DD/MM/YYYY')); // Format DD/MM/YYYY
+
+            reloadTable(); // Memuat ulang tabel setelah memilih tanggal
+        });
+
+        // Inisialisasi DataTable untuk memuat data pemasukan
+        var pemasukanTable = $('#pemasukanTables').DataTable({
+            processing: true,
+            serverSide: true,
+            language: {
+                paginate: {
+                    next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+                    previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
+                }
+            },
+            ajax: {
+                url: $('#table-url-pemasukan').val(),
+                method: 'GET',
+                data: function(d) {
+                    d.year = filterData.year;
+                    d.start_created_at = filterData.start_created_at;
+                    d.end_created_at = filterData.end_created_at;
+                },
+                error: function(xhr, error, thrown) {
+                    console.error('AJAX Error:', xhr.responseText);
+                }
+            },
+            columns: [
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                { data: 'name', name: 'name' },
+                { data: 'description', name: 'description' },
+                { data: 'category', name: 'category' },
+                { data: 'date', name: 'date' },
+                { data: 'jumlah', name: 'jumlah' },
+                { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
+            ],
+            drawCallback: function(settings) {
+                totalPemasukan(filterData);
             }
         });
-    </script>
+
+        // Fungsi untuk mengambil total pemasukan
+        function totalPemasukan(filter){
+            $.ajax({
+                url: $('#table-url-pemasukan').val(),
+                method: 'GET',
+                data: {...filter, total_data: true},
+                success: function(data) {
+                    $('#total_jumlah').html(data);
+                },
+                error: function(xhr, error, thrown) {
+                    console.error('AJAX Error:', xhr.responseText);
+                }
+            });
+        }
+
+        // Fungsi untuk memuat ulang tabel
+        function reloadTable() {
+            pemasukanTable.ajax.reload(null, false);
+        }
+    });
+</script>
+
 
     <script>
         $(document).ready(function() {
