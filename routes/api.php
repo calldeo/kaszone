@@ -45,6 +45,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 
 
+
+    
       // User Route
     Route::prefix('user')->group(function () {
         Route::get('/', [UserController::class, 'dashboard']);
@@ -55,9 +57,9 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::put('/update/{id}', [UserController::class, 'update']);
         Route::delete('/destroy/{id}', [UserController::class, 'destroy']);
         Route::get('/profile', [UserController::class, 'profile']);
-        Route::get('/profile/update', [UserController::class, 'updateProfile']);
         Route::get('/detail/{id}', [UserController::class, 'showDetail']);
-
+        Route::post('/update-profile', [UserController::class, 'updateProfile']);
+        Route::post('/update-password', [UserController::class, 'updatePassword']);
 
 
     });
@@ -72,8 +74,9 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::put('/update/{id}', [CategoryController::class, 'update']);
         Route::delete('/destroy/{id}', [CategoryController::class, 'destroy']);
         Route::get('/detail/{id}', [CategoryController::class, 'showDetail']);
-        Route::post('/category/import', [CategoryController::class, 'importExcel']);
-
+        Route::post('/import', [CategoryController::class, 'kategoriImportExcel']);
+        Route::get('/export', [CategoryController::class, 'exportKategori']);
+        Route::get('/template', [CategoryController::class, 'downloadTemplateExcel']);
 
     });
 
@@ -87,11 +90,10 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::put('/update/{id}', [PemasukanController::class, 'update']);
         Route::delete('/destroy/{id}', [PemasukanController::class, 'destroy']);
         Route::get('/detail/{id}', [PemasukanController::class, 'showDetail']);
-        Route::post('/pemasukan/import', [PemasukanController::class, 'importExcel']);
-        Route::get('/pemasukan/template', [PemasukanController::class, 'downloadTemplate']);
-        Route::get('/pemasukan/cetak', [PemasukanController::class, 'cetakPemasukan']);
-        Route::get('/export-pengeluaran', [PengeluaranController::class, 'exportPengeluaran']);
-
+        Route::post('/import', [PemasukanController::class, 'pemasukanImportExcel']);
+        Route::get('/export/pdf', [PemasukanController::class, 'exportPemasukanPDF']);
+        Route::post('/export/excel', [PemasukanController::class, 'exportPemasukanExcel']);
+        Route::get('/template', [PemasukanController::class, 'downloadTemplate']);
 
 
     });
@@ -104,11 +106,13 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/show/{id}', [PengeluaranController::class, 'show']);
         Route::put('/update/{id}', [PengeluaranController::class, 'update']); 
         Route::delete('/destroy/{id}', [PengeluaranController::class, 'destroy']);
-        Route::get('/detail/{id}', [PengeluaranController::class, 'showDetail']);
         Route::delete('/pengeluaran/{id}', [PengeluaranController::class, 'delete']); 
         Route::delete('/pengeluaran/parent/{id}', [PengeluaranController::class, 'deleteAll']);
-
-
+        Route::get('/export/pdf', [PengeluaranController::class, 'exportPengeluaranPDF']);
+        Route::post('/export/excel', [PengeluaranController::class, 'exportPengeluaranExcel']);
+        Route::get('/detail/{id}', [PengeluaranController::class, 'showDetail']);
+        Route::post('/import', [PengeluaranController::class, 'importPengeluaran']);
+        Route::get('/template', [PengeluaranController::class, 'downloadTemplateAPI']);
 
 
     });

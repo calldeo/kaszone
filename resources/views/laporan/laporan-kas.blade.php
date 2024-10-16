@@ -1,30 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
+
 <head>
     @include('template.headerr')
-    <title>PityCash | {{ auth()->user()->level }} | Laporan</title>
+    <title>PityCash | {{ auth()->user()->level }} | Pemasukan</title>
 </head>
 <body>
-
     @include('template.topbarr')
     @include('template.sidebarr')
 
     <div class="content-body" style="margin-top: -60px;"> <!-- Atur margin-top untuk menggeser konten ke atas -->
-        <div class="container-fluid">
-            <div class="row page-titles mx-0">
-                <div class="col-sm-6 p-md-0">
-                  
+    <div class="container-fluid">
+        <div class="row page-titles mx-0">
+            <div class="col-sm-6 p-md-0">
+                
+                </div>
+                <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Tabel</a></li>
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Pemasukan</a></li>
+                    </ol>
                 </div>
             </div>
 
-            <!-- Filter Section -->
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="card">
-                   <div class="card-header">
+                    <div class="card" style="margin-top: -30px;">
+                        <div class="card-header">
                             <h4 class="card-title">Data Pemasukan</h4>
+
                             <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex align-items-center"> <!-- Membungkus filter dalam d-flex -->
+                                <div class="d-flex align-items-center">
                                     <div class="example mr-3">
                                         <p class="mb-1">Filter Tahun</p>
                                         <select class="form-control" id="filter-year">
@@ -39,15 +45,43 @@
                                         <input class="form-control input-daterange-datepicker" type="text" name="daterange" placeholder="Masukkan Tanggal" disabled>
                                     </div>
                                 </div>
-                          
+
+                              
                             </div>
                         </div>
+
                         <div class="card-body">
+                            @if(session('success'))
+                            <div class="alert alert-success alert-dismissible fade show">
+                                <svg viewbox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                                    <polyline points="9 11 12 14 22 4"></polyline>
+                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                                </svg>
+                                <strong>Berhasil!</strong> {{ session('success') }}
+                                <button type="button" class="close h-100" data-dismiss="alert" aria-label="Tutup"><span><i class="mdi mdi-close"></i></span></button>
+                            </div>
+                            @endif
+                            @if(session('error'))
+                                <div class="alert alert-danger alert-dismissible fade show">
+                                    <strong>Kesalahan!</strong> {{ session('error') }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Tutup"><span><i class="fa fa-times"></i></span></button>
+                                </div>
+                            @endif
+                            @if(session('update_success'))
+                            <div class="alert alert-warning alert-dismissible fade show">
+                                <svg viewbox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                                    <polyline points="9 11 12 14 22 4"></polyline>
+                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                                </svg>
+                                <strong>Berhasil!</strong> {{ session('update_success') }}
+                                <button type="button" class="close h-100" data-dismiss="alert" aria-label="Tutup"><span><i class="mdi mdi-close"></i></span></button>
+                            </div>
+                            @endif
                             <div class="table-responsive">
                                 <table id="pemasukanTables" class="table table-responsive-md">
                                     <thead>
                                         <tr>
-                                            <th><strong>No</strong></th>
+                                            <th style="width:50px;"><strong>No</strong></th>
                                             <th><strong>Nama</strong></th>
                                             <th><strong>Deskripsi</strong></th>
                                             <th><strong>Kategori</strong></th>
@@ -55,138 +89,249 @@
                                             <th><strong>Jumlah(Rp)</strong></th>
                                         </tr>
                                     </thead>
-                                    <tfoot>
-            <tr>
-                <th colspan="5"style="text-align: left; font-size: 1.25em; font-weight: bold;"><strong>Total Jumlah:</strong></th>
-                <th id="total-pemasukan" style="text-align: left; font-size: 1.25em; font-weight: bold;">0</th>
-            </tr>
-        </tfoot>
-
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="5" style="text-align: left; font-size: 1.25em; font-weight: bold;"><strong>Total Jumlah:</strong></td>
+                                        <td id="total_jumlah" style="text-align: left; font-size: 1.25em; font-weight: bold;">0</td>
+                                    </tr>
+                                </tfoot>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <!-- Pengeluaran Section -->
-            
+    <div class="modal fade" id="adminDetailModal" tabindex="-1" role="dialog" aria-labelledby="adminDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="adminDetailModalLabel">Detail Pemasukan</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>No:</strong><br />
+                            <strong>Nama:</strong><br />
+                            <strong>Deskripsi:</strong><br />
+                            <strong>Tanggal:</strong><br />
+                            <strong>Jumlah:</strong><br />
+                            <strong>Kategori:</strong><br />
+                        </div>
+                        <div class="col-sm-8">
+                            <div id="id_data"></div>
+                            <div id="name"></div>
+                            <div id="description"></div>
+                            <div id="date"></div>
+                            <div id="jumlah"></div>
+                            <div id="category"></div> 
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                </div>
+            </div>
         </div>
     </div>
 
     @include('template.scripts')
 
     <input type="hidden" id="table-url-pemasukan" value="{{ route('income') }}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="{{ asset('main.js') }}"></script>
 
     <script>
-       var filterData = {
+        var filterData = {
             year: null,
             start_created_at: null,
-            end_created_at: null
+            end_created_at: null,
+            total_data: true
         };
-
+    
         $(document).ready(function() {
-            // Disable date picker at the start
             $('.input-daterange-datepicker').prop('disabled', true);
-
-            // Initialize daterangepicker
+    
             $('.input-daterange-datepicker').daterangepicker({
                 opens: 'left',
-                locale: { 
-                    format: 'YYYY-MM-DD'
+                locale: {
+                    format: 'DD-MM-YYYY'
                 },
-                autoUpdateInput: false // Prevent auto-filling on initialization
+                autoUpdateInput: false
             });
-
-            // Event handler for year filter
+    
+            var lastSelectedDates = {};
+    
             $('#filter-year').on('change', function() {
                 var selectedYear = $(this).val();
+                $('#export-year').val(selectedYear);
+                $('#export-year-excel').val(selectedYear);
+    
                 if (selectedYear !== "") {
                     $('.input-daterange-datepicker').prop('disabled', false);
                     filterData.year = selectedYear;
-
-                    // Set default start and end date for the selected year
-                    filterData.start_created_at = selectedYear + '-01-01';
-                    filterData.end_created_at = selectedYear + '-12-31';
-
-                    // Update daterangepicker dates
-                    $('.input-daterange-datepicker').data('daterangepicker').setStartDate(filterData.start_created_at);
-                    $('.input-daterange-datepicker').data('daterangepicker').setEndDate(filterData.end_created_at);
-
-                    // Reload the tables
-                    pemasukanTables(filterData);
-                 
+    
+                    // Atur tanggal awal dan akhir berdasarkan tahun yang dipilih
+                    var startDate = moment(selectedYear + '-01-01');
+                    var endDate = moment(selectedYear + '-12-31');
+    
+                    filterData.start_created_at = startDate.format('YYYY-MM-DD');
+                    filterData.end_created_at = endDate.format('YYYY-MM-DD');
+    
+                    // Reset tanggal ke input daterangepicker
+                    $('.input-daterange-datepicker').data('daterangepicker').setStartDate(startDate);
+                    $('.input-daterange-datepicker').data('daterangepicker').setEndDate(endDate);
+                    $('.input-daterange-datepicker').val(startDate.format('DD-MM-YYYY') + ' - ' + endDate.format('DD-MM-YYYY'));
+    
+                    $('#export-start-date').val(filterData.start_created_at);
+                    $('#export-end-date').val(filterData.end_created_at);
+                    $('#export-start-date-excel').val(filterData.start_created_at);
+                    $('#export-end-date-excel').val(filterData.end_created_at);
                 } else {
                     $('.input-daterange-datepicker').prop('disabled', true);
+                    filterData.year = null;
+                    filterData.start_created_at = null;
+                    filterData.end_created_at = null;
+                    
+                    $('.input-daterange-datepicker').val('');
+    
+                    $('#export-start-date').val('');
+                    $('#export-end-date').val('');
+                    $('#export-start-date-excel').val('');
+                    $('#export-end-date-excel').val('');
                 }
+    
+                reloadTable();
             });
-
-            // Update input after selecting date range
+    
             $('.input-daterange-datepicker').on('apply.daterangepicker', function(ev, picker) {
-                // Update input value
-                $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
-
-                // Update filter data
+                $(this).val(picker.startDate.format('DD-MM-YYYY') + ' - ' + picker.endDate.format('DD-MM-YYYY'));
+    
                 filterData.start_created_at = picker.startDate.format('YYYY-MM-DD');
                 filterData.end_created_at = picker.endDate.format('YYYY-MM-DD');
-
-                // Reload the tables
-                pemasukanTables(filterData);
-           
+                
+                $('#export-start-date').val(filterData.start_created_at);
+                $('#export-end-date').val(filterData.end_created_at);
+                $('#export-start-date-excel').val(filterData.start_created_at);
+                $('#export-end-date-excel').val(filterData.end_created_at);
+    
+                reloadTable();
             });
-
-            // Load tables on page load
-            pemasukanTables(filterData);
-         
-        });
-
-        function pemasukanTables(filter) {
-            $('#pemasukanTables').DataTable({
+    
+            var pemasukanTable = $('#pemasukanTables').DataTable({
                 processing: true,
                 serverSide: true,
                 destroy: true,
-                         language: {
-            paginate: {
-            next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
-            previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
-            }
-        },
+                language: {
+                    paginate: {
+                        next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+                        previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
+                    }
+                },
                 ajax: {
                     url: $('#table-url-pemasukan').val(),
+                    method: 'GET',
                     data: function(d) {
-                        d.year = filter.year;
-                        d.start_created_at = filter.start_created_at;
-                        d.end_created_at = filter.end_created_at;
+                        d.year = filterData.year;
+                        d.start_created_at = filterData.start_created_at;
+                        d.end_created_at = filterData.end_created_at;
+                    },
+                    error: function(xhr, error, thrown) {
+                        console.error('AJAX Error:', xhr.responseText);
                     }
                 },
                 columns: [
-                    { data: 'DT_RowIndex', orderable: false, searchable: false },
-                    { data: 'name' },
-                    { data: 'description' },
-                    { data: 'category' },
-                    { data: 'date' },
-                    { data: 'jumlah' }
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                    { data: 'name', name: 'name' },
+                    { data: 'description', name: 'description' },
+                    { data: 'category', name: 'category' },
+                    { data: 'date', name: 'date' },
+                    { data: 'jumlah', name: 'jumlah' }
                 ],
-                footerCallback: function(row, data, start, end, display) {
-            var totalJumlah = 0;
-
-            data.forEach(function(item) {
-                // Hapus 'Rp' dan ganti '.' dengan kosong agar bisa diparsing
-                var jumlah = item.jumlah.replace(/Rp/g, '').replace(/\./g, '').trim();
-                totalJumlah += parseFloat(jumlah) || 0;
+                drawCallback: function(settings) {
+                    totalPemasukan(filterData);
+                }
             });
+    
+            function totalPemasukan(filter){
+                $.ajax({
+                    url: $('#table-url-pemasukan').val(),
+                    method: 'GET',
+                    data: {...filter, total_data: true},
+                    success: function(data) {
+                        $('#total_jumlah').html(data);
+                    },
+                    error: function(xhr, error, thrown) {
+                        console.error('AJAX Error:', xhr.responseText);
+                    }
+                });
+            }
+    
+            function reloadTable() {
+                pemasukanTable.ajax.reload(null, false);
+            }
+        });
+    </script>
+    
 
-            // Format total jumlah ke format Rupiah dengan dua desimal (,00)
-            var formattedTotal = totalJumlah.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    <script>
+        $(document).ready(function() {
+            $('#kategoriTable').DataTable();
+            
+            $('#adminDetailModal').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget);
+                var url = button.data('url');
+                
+                var modal = $(this);
+                
+                modal.find('#id_data').text('');
+                modal.find('#name').text('');
+                modal.find('#description').text('');
+                modal.find('#date').text('');
+                modal.find('#jumlah').text('');
+                modal.find('#category').text(''); 
 
-            // Tampilkan total dengan format Rupiah di elemen '#total-pemasukan'
-            $('#total-pemasukan').html('Rp' + formattedTotal);
-        }
-    });
-}
+                
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    success: function(data) {
+                        modal.find('#id_data').text(data.id_data || 'N/A');
+                        modal.find('#name').text(data.name || 'N/A');
+                        modal.find('#description').text(data.description || 'N/A');
+                        var date = new Date(data.date);
+                        var formattedDate = date.getDate().toString().padStart(2, '0') + '-' +
+                                            (date.getMonth() + 1).toString().padStart(2, '0') + '-' +
+                                            date.getFullYear();
+                        modal.find('#date').text(formattedDate || 'N/A');
+                        var formattedJumlah = 'Rp' + parseFloat(data.jumlah || 0).toLocaleString('id-ID');
+                        modal.find('#jumlah').text(formattedJumlah);
+                        modal.find('#category').text(data.category_name || 'N/A');
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(xhr.responseText);
+                        modal.find('.modal-body').html('Terjadi kesalahan saat memuat detail');
+                    }
+                });
+            });
+        });
+    </script>
 
-</script>
+    <script>
+        $(document).ready(function(){
+            $('.dropify').dropify();
+
+            $('.dropify-wrapper .dropify-message p').css('font-size', '20px');
+        });
+    </script>
+
 
 
 </body>
+
 </html>

@@ -6,40 +6,49 @@
     <title>Laporan Pengeluaran</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
+            font-family: 'Times New Roman', Times, serif;
+            line-height: 1.4;
             color: #333;
             margin: 0;
-            padding: 20px;
+            padding: 10px;
+            font-size: 10px;
         }
         h2, h3 {
             color: #2c3e50;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            font-size: 14px;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         table, th, td {
             border: 1px solid #ddd;
         }
         th, td {
-            padding: 12px;
-            text-align: left;
+            padding: 8px;
+            font-size: 11px;
         }
         th {
             background-color: #3498db;
             color: white;
             font-weight: bold;
+            text-align: center;
+        }
+        td {
+            text-align: left;
+        }
+        td.currency {
+            text-align: right;
+        }
+        td.jumlah-item, td.date {
+            text-align: center;
         }
         tr:nth-child(even) {
             background-color: #f8f9fa;
-        }
-        tr:hover {
-            background-color: #e9ecef;
         }
         .total-row {
             background-color: #e9ecef;
@@ -47,16 +56,6 @@
         }
         .total-row td {
             border-top: 2px solid #3498db;
-        }
-        .jumlah-item {
-            font-size: 0.95em;
-            text-align: center;
-        }
-        .currency {
-            text-align: right;
-        }
-        .date {
-            text-align: center;
         }
     </style>
 </head>
@@ -67,13 +66,13 @@
     <table>
         <thead>
             <tr>
-                <th>No</th>
-                <th>Nama</th>
-                <th>Kategori</th>
-                <th>Jumlah Item</th>
-                <th>Harga</th>
-                <th>Total</th>
-                <th>Tanggal</th>
+                <th style="width: 5%;">No</th>
+                <th style="width: 20%;">Nama</th>
+                <th style="width: 15%;">Kategori</th>
+                <th style="width: 10%;">Jumlah Satuan</th>
+                <th style="width: 15%;">Nominal</th>
+                <th style="width: 15%;">Jumlah</th>
+                <th style="width: 20%;">Tanggal</th>
             </tr>
         </thead>
         <tbody>
@@ -92,7 +91,8 @@
         <tfoot>
             <tr class="total-row">
                 <td colspan="5" style="text-align: right;">Total Pengeluaran:</td>
-                <td class="currency" colspan="2">Rp{{ number_format($totalPengeluaran, 0, ',', '.') }}</td>
+                <td class="currency">Rp{{ number_format($totalPengeluaran, 0, ',', '.') }}</td>
+                <td></td>
             </tr>
         </tfoot>
     </table>

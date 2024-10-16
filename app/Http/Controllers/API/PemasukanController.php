@@ -1,19 +1,22 @@
 <?php
 
 namespace App\Http\Controllers\API;
-use App\Http\Controllers\Controller;
+use PDF;
 use App\Models\Category;
 use App\Models\Pemasukan;
 use App\Models\Pengeluaran;
 use Illuminate\Http\Request;
 use App\Imports\KategoriImport;
+use App\Exports\PemasukanExport;
 use App\Exports\CategoriesExport;
 use App\Imports\CategoriesImport;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Illuminate\Support\Facades\Storage; // Impor Hash
-
 
 class PemasukanController extends Controller
 {
@@ -219,102 +222,6 @@ class PemasukanController extends Controller
             ], 404);
         }
     }
-     public function importExcel(Request $request)
-    {
-        // Mulai transaksi database
-        DB::beginTransaction();
-
-        try {
-            // Hapus semua data lama dari tabel Pemasukan
-            Pemasukan::query()->delete();
-
-            // Validasi file input
-            $request->validate([
-                'file' => 'required|file|mimes:xlsx,xls,csv',
-            ]);
-
-            // Pindahkan file ke folder DataPemasukan
-            $file = $request->file('file');
-            $namafile = $file->getClientOriginalName();
-            $file->move(public_path('DataPemasukan'), $namafile);
-
-            // Impor data dari file Excel
-            Excel::import(new PemasukanImport, public_path('DataPemasukan/' . $namafile));
-
-            // Commit transaksi jika semua operasi berhasil
-            DB::commit();
-
-            // Hapus file setelah impor selesai
-            Storage::delete('DataPemasukan/' . $namafile);
-
-            return response()->json([
-                'status' => 200,
-                'message' => 'Data Berhasil Ditambahkan'
-            ], 200);
-        } catch (\Exception $e) {
-            // Rollback transaksi jika terjadi kesalahan
-            DB::rollBack();
-
-            // Log error jika diperlukan
-            \Log::error('Import Pemasukan failed: ' . $e->getMessage());
-
-            return response()->json([
-                'status' => 500,
-                'message' => 'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
-      public function downloadTemplate()
-    {
-        // Path ke template Excel untuk pemasukan
-        $pathToFile = public_path('templates/template_pemasukan.xlsx');
-
-        return response()->download($pathToFile);
-    }
-
-
-     public function cetakPemasukan()
-    {
-        try {
-            $pemasukan = Pemasukan::all();
-            $pdf = Pdf::loadView('halaman.cetak-pemasukan', compact('pemasukan'));
-            $pdf->setPaper('A4', 'potrait');
-
-            // Mengirim file PDF dengan status 200
-            return response()->stream(
-                function () use ($pdf) {
-                    echo $pdf->output();
-                },
-                200, // Status 200 OK
-                [
-                    'Content-Type' => 'application/pdf',
-                    'Content-Disposition' => 'attachment; filename="pemasukan.pdf"',
-                ]
-            );
-        } catch (Exception $e) {
-            // Jika terjadi kesalahan
-            return response()->json([
-                'status' => 500,
-                'message' => 'Terjadi kesalahan saat membuat PDF: ' . $e->getMessage(),
-            ], 500);
-        }
-    }
-
-     public function exportPengeluaran()
-    {
-        try {
-            // Mengunduh file Excel dengan nama pengeluaran.xlsx
-            return Excel::download(new PengeluaranExport, 'pengeluaran.xlsx');
-        } catch (\Exception $e) {
-            // Jika terjadi kesalahan
-            return response()->json([
-                'status' => 500,
-                'message' => 'Terjadi kesalahan saat mengekspor data: ' . $e->getMessage(),
-            ], 500);
-        }
-    }
-
 
     
     public function saldo()
@@ -343,5 +250,171 @@ class PemasukanController extends Controller
         }
       
         
+    }
+    public function pemasukanImportExcel(Request $request)
+    {
+        DB::beginTransaction();
+
+        try {
+            $request->validate([
+                'file' => 'required|file|mimes:xlsx,xls,csv|max:2048',
+            ]);
+
+            $file = $request->file('file');
+            $namafile = $file->getClientOriginalName();
+            $file->move(public_path('DataPemasukan'), $namafile);
+
+            Excel::import(new PemasukanImport, public_path('DataPemasukan/' . $namafile), null, \Maatwebsite\Excel\Excel::XLSX, [
+                'startRow' => 2,
+                'onlySheets' => [0]
+            ]);
+
+            DB::commit();
+
+            @unlink(public_path('DataPemasukan/' . $namafile));
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Data Berhasil Ditambahkan'
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            \Log::error('Import Pemasukan failed: ' . $e->getMessage());
+
+            return response()->json([
+                'status' => 500,
+                'message' => 'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function downloadTemplate()
+    {
+        try {
+            $spreadsheet = new Spreadsheet();
+
+            $incomeSheet = $spreadsheet->getActiveSheet();
+            $incomeSheet->setTitle('Pemasukan');
+
+            $incomeSheet->setCellValue('A1', 'Nama');
+            $incomeSheet->setCellValue('B1', 'Deskripsi');
+            $incomeSheet->setCellValue('C1', 'Tanggal');
+            $incomeSheet->setCellValue('D1', 'Jumlah');
+            $incomeSheet->setCellValue('E1', 'Kode Kategori');
+
+            $categorySheet = $spreadsheet->createSheet();
+            $categorySheet->setTitle('Kategori Pemasukan');
+
+            $categorySheet->setCellValue('A1', 'Kode Kategori');
+            $categorySheet->setCellValue('B1', 'Nama Kategori');
+
+            $categories = Category::where('jenis_kategori', '1')->get();
+
+            $row = 2;
+            foreach ($categories as $category) {
+                $categorySheet->setCellValue('A' . $row, $category->id);
+                $categorySheet->setCellValue('B' . $row, $category->name);
+                $row++;
+            }
+
+            $writer = new Xlsx($spreadsheet);
+            $fileName = 'template_pemasukan.xlsx';
+
+            $filePath = storage_path('app/public/' . $fileName);
+            $writer->save($filePath);
+
+            return response()->download($filePath, $fileName)->deleteFileAfterSend(true);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'Gagal mengunduh template: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function exportPemasukanPDF(Request $request)
+    {
+        try {
+            $year = $request->input('year');
+            $startDate = $request->input('start_date');
+            $endDate = $request->input('end_date');
+
+            $query = Pemasukan::query();
+
+            if ($year) {
+                $query->whereYear('date', $year);
+            }
+
+            if ($startDate && $endDate) {
+                $query->whereBetween('date', [$startDate, $endDate]);
+            }
+
+            $pemasukan = $query->get();
+
+            $pdf = PDF::loadView('pemasukan.pdf', compact('pemasukan', 'year', 'startDate', 'endDate'));
+
+            $pdf->setPaper('A4', 'portrait');
+
+            if ($startDate && $endDate) {
+                $filename = "pemasukan_{$startDate}sampai{$endDate}.pdf";
+            } elseif ($year) {
+                $filename = "pemasukan_tahun_{$year}.pdf";
+            } else {
+                $filename = "pemasukan_seluruh.pdf";
+            }
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'PDF berhasil dibuat',
+                'data' => base64_encode($pdf->output())
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'Gagal membuat PDF: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function exportPemasukanExcel(Request $request)
+    {
+        try {
+            $year = $request->input('year');
+            $startDate = $request->input('start_date');
+            $endDate = $request->input('end_date');
+
+            $query = Pemasukan::query();
+
+            if ($year) {
+                $query->whereYear('date', $year);
+            }
+
+            if ($startDate && $endDate) {
+                $query->whereBetween('date', [$startDate, $endDate]);
+            }
+
+            $pemasukan = $query->get();
+
+            if ($startDate && $endDate) {
+                $filename = "pemasukan_{$startDate}sampai{$endDate}.xlsx";
+            } elseif ($year) {
+                $filename = "pemasukan_tahun_{$year}.xlsx";
+            } else {
+                $filename = "pemasukan_seluruh.xlsx";
+            }
+
+            $export = new PemasukanExport($pemasukan, $year, $startDate, $endDate);
+            return response()->json([
+                'status' => 200,
+                'message' => 'Excel berhasil dibuat',
+                'data' => base64_encode(Excel::raw($export, \Maatwebsite\Excel\Excel::XLSX))
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'Gagal membuat Excel: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

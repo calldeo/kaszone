@@ -1,18 +1,22 @@
 <?php
 
 namespace App\Http\Controllers\API;
-use App\Http\Controllers\Controller;
+use PDF;
 use App\Models\Category;
 use App\Models\Pengeluaran;
 use Illuminate\Http\Request;
+use App\Exports\TemplateExport;
 use App\Imports\KategoriImport;
 use App\Exports\CategoriesExport;
 use App\Imports\CategoriesImport;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
-use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\Storage; // Impor Hash
 use App\Models\ParentPengeluaran;
+use App\Exports\PengeluaranExport;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage; // Impor Hash
+
 
 class PengeluaranController extends Controller
 {
@@ -254,25 +258,235 @@ public function deleteAll($id)
         'error' => 'Data tidak ditemukan.'
     ], 404);
 }
+public function exportPengeluaranPDF(Request $request)
+{
+    try {
+        $year = $request->input('year');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
 
-     public function showDetail($id)
-    {
-        // Mencari kategori berdasarkan ID
-        $pengeluaran = Pengeluaran::find($id);
+        $query = Pengeluaran::query()->with('category', 'parentPengeluaran');
 
-        // Jika kategori ditemukan, kembalikan data kategori
-        if ($pengeluaran) {
-            return response()->json([
-                'status' => 200,
-                'message' => 'Sukses mengambil data pengeluaran',
-                'data' => $pengeluaran,
-            ], 200);
-        } else {
-            // Jika kategori tidak ditemukan, kembalikan pesan error
-            return response()->json([
-                'status' => 404,
-                'message' => 'pengeluaran tidak ditemukan.',
-            ], 404);
+        if ($year) {
+            $query->whereHas('parentPengeluaran', function ($q) use ($year) {
+                $q->whereYear('tanggal', $year);
+            });
         }
+
+        if ($startDate && $endDate) {
+            $query->whereHas('parentPengeluaran', function ($q) use ($startDate, $endDate) {
+                $q->whereBetween('tanggal', [$startDate, $endDate]);
+            });
+        }
+
+        $pengeluaran = $query->get();
+
+        $totalPengeluaran = $pengeluaran->sum('jumlah');
+
+        $pdf = PDF::loadView('pengeluaran.pdf', compact('pengeluaran', 'totalPengeluaran', 'year', 'startDate', 'endDate'));
+
+        $pdf->setPaper('A4', 'portrait');
+
+        if ($startDate && $endDate) {
+            $startDateFormatted = date('d-m-Y', strtotime($startDate));
+            $endDateFormatted = date('d-m-Y', strtotime($endDate));
+            $filename = "pengeluaran_{$startDateFormatted}_sampai_{$endDateFormatted}.pdf";
+        } elseif ($year) {
+            $filename = "pengeluaran_tahun_{$year}.pdf";
+        } else {
+            $filename = "pengeluaran_seluruh.pdf";
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'PDF berhasil dibuat',
+            'data' => base64_encode($pdf->output())
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 500,
+            'message' => 'Gagal membuat PDF: ' . $e->getMessage()
+        ], 500);
     }
+}
+
+public function exportPengeluaranExcel(Request $request)
+{
+    try {
+        $year = $request->input('year');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        $query = Pengeluaran::query()->with('category', 'parentPengeluaran');
+
+        if ($year) {
+            $query->whereHas('parentPengeluaran', function ($q) use ($year) {
+                $q->whereYear('tanggal', $year);
+            });
+        }
+
+        if ($startDate && $endDate) {
+            $query->whereHas('parentPengeluaran', function ($q) use ($startDate, $endDate) {
+                $q->whereBetween('tanggal', [$startDate, $endDate]);
+            });
+        }
+
+        $pengeluaran = $query->get();
+
+        if ($startDate && $endDate) {
+            $startDateFormatted = date('d-m-Y', strtotime($startDate));
+            $endDateFormatted = date('d-m-Y', strtotime($endDate));
+            $filename = "laporan_pengeluaran_{$startDateFormatted}_sampai_{$endDateFormatted}.xlsx";
+        } elseif ($year) {
+            $filename = "laporan_pengeluaran_tahun_{$year}.xlsx";
+        } else {
+            $filename = "laporan_pengeluaran_seluruh.xlsx";
+        }
+
+        $export = new PengeluaranExport($pengeluaran, $year, $startDate, $endDate);
+        $excelFile = Excel::raw($export, \Maatwebsite\Excel\Excel::XLSX);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Excel berhasil dibuat',
+            'data' => base64_encode($excelFile),
+            'filename' => $filename
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 500,
+            'message' => 'Gagal membuat Excel: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
+
+public function showDetail($id)
+{
+    try {
+        $parentPengeluaran = ParentPengeluaran::with('pengeluaran.category')->findOrFail($id);
+        
+        return response()->json([
+            'status' => 200,
+            'message' => 'Detail pengeluaran berhasil diambil',
+            'data' => $parentPengeluaran
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 500,
+            'message' => 'Gagal mengambil detail pengeluaran: ' . $e->getMessage()
+        ], 500);
+    }
+}
+public function importPengeluaran(Request $request)
+{
+    $request->validate([
+        'file' => 'required',
+        'file.*' => 'mimes:xls,xlsx|max:2048',
+    ]);
+
+    DB::beginTransaction(); 
+
+    try {
+        if ($request->hasFile('file')) {
+            foreach ($request->file('file') as $file) {
+                $spreadsheet = IOFactory::load($file);
+                $sheetNames = $spreadsheet->getSheetNames();
+
+                foreach ($sheetNames as $sheetIndex => $sheetName) {
+                   
+                    try {
+                        $tanggal = \Carbon\Carbon::createFromFormat('d-m-Y', $sheetName);
+                    } catch (\Exception $e) {
+                        Log::error('Format tanggal tidak valid: ' . $sheetName);
+                        continue; 
+                    }
+
+                    Log::alert('Mengimpor dari sheet: ' . $sheetName);
+                    
+                    $parentPengeluaran = new ParentPengeluaran();
+                    $parentPengeluaran->tanggal = $tanggal; 
+                    $parentPengeluaran->save();
+
+                    $sheet = $spreadsheet->getSheet($sheetIndex);
+                    $highestRow = $sheet->getHighestRow();
+                    $highestColumn = $sheet->getHighestColumn();
+
+                    for ($row = 2; $row <= $highestRow; $row++) {
+                        $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE);
+
+                        Log::alert('Row ' . $row . ' Data: ' . json_encode($rowData));
+
+                        if (empty($rowData[0][0])) {
+                            Log::warning('Row ' . $row . ' is empty or invalid, skipping.');
+                            continue; 
+                        }
+
+                        $pengeluaran = new Pengeluaran();
+                        $pengeluaran->name = $rowData[0][0]; 
+                        $pengeluaran->description = $rowData[0][1] ?? null;
+                        $pengeluaran->jumlah_satuan = $rowData[0][2] ?? 0; 
+                        $pengeluaran->nominal = $rowData[0][3] ?? 0; 
+                        $pengeluaran->dll = $rowData[0][4] ?? 0; 
+                        
+                        $pengeluaran->jumlah = ($pengeluaran->jumlah_satuan * $pengeluaran->nominal) + $pengeluaran->dll;
+
+                        $pengeluaran->id = $rowData[0][5] ?? null;
+                        $pengeluaran->id_parent = $parentPengeluaran->id;
+
+                        $pengeluaran->save();
+
+                        Log::alert('Data row ' . $row . ' disimpan: ' . json_encode($pengeluaran));
+                    }
+                }
+            }
+        }
+
+        DB::commit(); 
+        return response()->json([
+            'status' => 200,
+            'message' => 'Data pengeluaran berhasil diimpor!'
+        ], 200);
+    } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e) {
+        DB::rollBack();
+        Log::error('Import failed: ' . $e->getMessage()); 
+        return response()->json([
+            'status' => 500,
+            'message' => 'Terjadi kesalahan saat membaca file: ' . $e->getMessage()
+        ], 500);
+    } catch (\Exception $e) {
+        DB::rollBack();
+        Log::error('Import failed: ' . $e->getMessage()); 
+        return response()->json([
+            'status' => 500,
+            'message' => 'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
+public function downloadTemplateAPI()
+{
+    try {
+        $file = Excel::download(new TemplateExport(), 'template_pengeluaran.xlsx')->getFile();
+        $content = file_get_contents($file);
+        $base64 = base64_encode($content);
+        
+        return response()->json([
+            'status' => 200,
+            'message' => 'Template berhasil diunduh',
+            'data' => [
+                'filename' => 'template_pengeluaran.xlsx',
+                'content' => $base64
+            ]
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 500,
+            'message' => 'Terjadi kesalahan saat mengunduh template: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
+
+
 }

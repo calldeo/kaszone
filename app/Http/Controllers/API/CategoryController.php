@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage; // Impor Hash
+use PDF;
 
 
 class CategoryController extends Controller
@@ -216,48 +217,101 @@ class CategoryController extends Controller
         }
     }
 
-     public function importExcel(Request $request)
+    public function kategoriImportExcel(Request $request)
     {
-        // Mulai transaksi database
         DB::beginTransaction();
 
         try {
-            // Hapus semua data lama dari tabel Category
-            Category::query()->delete();
-
-            // Validasi file input
             $request->validate([
-                'file' => 'required|file|mimes:xlsx,xls,csv',
+                'file' => 'required|file|mimes:xlsx,xls,csv|max:2048',
             ]);
 
-            // Pindahkan file ke folder DataKategori
             $file = $request->file('file');
-            $namafile = $file->getClientOriginalName();
-            $file->move(public_path('DataKategori'), $namafile);
+            $namaFile = $file->getClientOriginalName();
+            $file->move(public_path('DataKategori'), $namaFile);
 
-            // Impor data dari file Excel
-            Excel::import(new KategoriImport, public_path('DataKategori/' . $namafile));
+            Excel::import(new KategoriImport, public_path('DataKategori/' . $namaFile), null, \Maatwebsite\Excel\Excel::XLSX, [
+                'startRow' => 2,
+                'onlySheets' => [0]
+            ]);
 
-            // Commit transaksi jika semua operasi berhasil
             DB::commit();
 
-            // Hapus file setelah impor selesai
-            Storage::delete('DataKategori/' . $namafile);
+            @unlink(public_path('DataKategori/' . $namaFile));
 
             return response()->json([
                 'status' => 200,
-                'message' => 'Data Berhasil Ditambahkan'
+                'message' => 'Data berhasil diimpor',
             ], 200);
         } catch (\Exception $e) {
-            // Rollback transaksi jika terjadi kesalahan
             DB::rollBack();
 
-            // Log error jika diperlukan
-            \Log::error('Import kategori failed: ' . $e->getMessage());
+            \Log::error('Import kategori gagal: ' . $e->getMessage());
 
             return response()->json([
                 'status' => 500,
-                'message' => 'Terjadi kesalahan saat mengimpor data'
+                'message' => 'Terjadi kesalahan saat mengimpor data',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function exportKategori()
+    {
+        try {
+            $category = Category::all();
+            $pdf = PDF::loadview('kategori.export-kategori', compact('category'));
+            $pdf->setPaper('A4', 'portrait');
+            
+            $filename = 'kategori_' . date('YmdHis') . '.pdf';
+            $content = $pdf->output();
+            
+            return response()->json([
+                'status' => 200,
+                'message' => 'Berhasil mengekspor data kategori',
+                'data' => base64_encode($content),
+                'filename' => $filename
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'Gagal mengekspor data kategori',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function downloadTemplateExcel()
+    {
+        try {
+            $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+            
+            $sheet = $spreadsheet->getActiveSheet();
+            $sheet->setTitle('Data Kategori');
+            $sheet->setCellValue('A1', 'Nama');
+            $sheet->setCellValue('B1', 'Jenis Kategori');
+            $sheet->setCellValue('C1', 'Deskripsi');
+            
+            $sheet2 = $spreadsheet->createSheet();
+            $sheet2->setTitle('Jenis Kategori');
+            $sheet2->setCellValue('A1', 'Kode');
+            $sheet2->setCellValue('B1', 'Jenis Kategori');
+            $sheet2->setCellValue('A2', '1');
+            $sheet2->setCellValue('B2', 'Pemasukan');
+            $sheet2->setCellValue('A3', '2');
+            $sheet2->setCellValue('B3', 'Pengeluaran');
+            
+            $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+            $filename = 'template-category.xlsx';
+            $filePath = storage_path('app/public/' . $filename);
+            $writer->save($filePath);
+            
+            return response()->download($filePath, $filename)->deleteFileAfterSend(true);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'Gagal mengunduh template Excel',
+                'error' => $e->getMessage(),
             ], 500);
         }
     }

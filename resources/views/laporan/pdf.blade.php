@@ -4,44 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laporan PDF</title>
-    <style>
+      <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: 'Times New Roman', Times, serif;
+            line-height: 1.4;
+            color: #333;
+            margin: 0;
+            padding: 10px;
+            font-size: 10px;
+        }
+        h2, h3 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 14px;
         }
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         table, th, td {
-            border: 1px solid black;
+            border: 1px solid #ddd;
         }
         th, td {
             padding: 8px;
-            text-align: left;
+            font-size: 12px;
         }
         th {
-            background-color: #f2f2f2;
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        td {
+            text-align: left;
+        }
+        td.currency {
+            text-align: right;
+        }
+        td.jumlah-item, td.date {
+            text-align: center;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        .total-row {
+            background-color: #e9ecef;
+            font-weight: bold;
+        }
+        .total-row td {
+            border-top: 2px solid #3498db;
         }
         .page-break {
-            page-break-before: always;
-            margin: 20px 0;
-        }
-        h4 {
-            margin: 10px 0;
-        }
-        .selisih {
-            margin-top: 20px;
-            text-align: right;
-            font-weight: bold;
+            page-break-after: always;
         }
     </style>
 </head>
 <body>
-    <h2 style="text-align: center;">Laporan Keuangan Tahun {{ $year }}</h2>
+    <h1 style="text-align: center;">Laporan Keuangan Tahun {{ $year }}</h1>
 
-    <h3>Pemasukan</h3>
+    <h2>Pemasukan</h2>
     <table>
         <thead>
             <tr>
@@ -75,7 +99,7 @@
 
     <div class="page-break"></div>
 
-    <h3>Pengeluaran</h3>
+    <h2>Pengeluaran</h2>
     <table>
         <thead>
             <tr>
@@ -85,7 +109,7 @@
                 <th>Jumlah Item</th>
                 <th>Harga (Rp)</th>
                 <th>Lain-lain (Rp)</th>
-                <th>Total (Rp)</th>
+                <th>Jumlah (Rp)</th>
                 <th>Tanggal</th>
             </tr>
         </thead>
@@ -111,7 +135,7 @@
         </tfoot>
     </table>
 
-    <div class="selisih">
+    <div class="selisih" style="font-size: 13px; font-weight: bold; margin-top: 20px;">
         Selisih Antara Pemasukan dan Pengeluaran: Rp{{ number_format($selisih, 0, ',', '.') }}
     </div>
 </body>
