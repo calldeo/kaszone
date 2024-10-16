@@ -167,7 +167,8 @@
         };
     $(document).ready(function() {
         $('.input-daterange-datepicker').prop('disabled', true);
-    
+        $('.input-daterange-datepicker').val('');
+        
         $('.input-daterange-datepicker').daterangepicker({
             opens: 'left',
             locale: { 

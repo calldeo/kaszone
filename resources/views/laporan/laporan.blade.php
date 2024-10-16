@@ -139,6 +139,7 @@
         $('.input-daterange-datepicker').prop('disabled', true);
 
         // Initialize daterangepicker
+        $('.input-daterange-datepicker').val('');
         $('.input-daterange-datepicker').daterangepicker({
             opens: 'left',
             locale: {

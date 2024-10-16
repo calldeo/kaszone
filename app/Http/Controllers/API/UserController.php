@@ -256,70 +256,6 @@ class UserController extends Controller
             ],
         ], 200);
     }
-
- public function updateProfile(Request $request)
-    {
-        // Validasi data yang diterima
-        $validator = Validator::make($request->all(), [
-             'name' => 'required|string|max:255',
-        'email' => 'required|email|max:255',
-        'alamat' => 'required|string|max:255',
-        'password' => 'nullable|string|min:8',
-        'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            // Tambahkan aturan validasi lain sesuai kebutuhan
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 422,
-                'message' => $validator->errors(),
-            ], 422);
-        }
-
-        DB::beginTransaction();
-        try {
-            $user->name = $request->name;
-        $user->email = $request->email;
-        $user->alamat = $request->alamat;
-
-        // Jika ada file foto_profil yang diunggah
-        if ($request->hasFile('foto_profil')) {
-            // Hapus foto profil lama jika ada
-            if ($user->poto) {
-                Storage::delete($user->poto);
-            }
-
-            // Simpan foto profil baru
-            $path = $request->file('foto_profil')->store('foto_profil', 'public');
-            $user->poto = $path;
-        }
-
-        // Update password jika diisi
-        if ($request->filled('password')) {
-            $user->password = bcrypt($request->password);
-        }
-
-        // Simpan perubahan
-        $user->save();
-
-        // Commit transaksi jika tidak ada kesalahan
-        DB::commit();
-
-
-            return response()->json([
-                'status' => 201,
-                'message' => 'Berhasil mengupdate data pengguna ' . $user->name,
-                'data' => ['user' => $user],
-            ], 201);
-        } catch (\Exception $e) {
-            DB::rollback();
-            return response()->json([
-                'status' => 500,
-                'message' => 'Gagal mengupdate data pengguna',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
-    }
     
 
      public function showDetail($id)
@@ -342,4 +278,118 @@ class UserController extends Controller
             ], 404);
         }
     }
+
+
+public function updateProfile(Request $request)
+{
+    $user = auth()->user();
+
+    $validator = Validator::make($request->all(), [
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|max:255',
+        'alamat' => 'required|string|max:255',
+        'password' => 'nullable|string|min:8',
+        'kelamin' => 'nullable',
+        'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => 422,
+            'message' => 'Validasi gagal',
+            'errors' => $validator->errors(),
+        ], 422);
+    }
+
+    DB::beginTransaction();
+    try {
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->alamat = $request->alamat;
+   
+    
+
+        if ($request->hasFile('foto_profil')) {
+            if ($user->poto && Storage::disk('public')->exists($user->poto)) {
+                Storage::disk('public')->delete($user->poto);
+            }
+
+            $path = $request->file('foto_profil')->store('foto_profil', 'public');
+            $user->poto = $path;
+        }
+
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+        DB::commit();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Profil berhasil diperbarui.',
+            'data' => $user,
+        ], 200);
+    } catch (\Throwable $th) {
+        DB::rollback();
+
+        return response()->json([
+            'status' => 500,
+            'message' => 'Profil gagal diperbarui',
+            'error' => $th->getMessage(),
+        ], 500);
+    }
+}
+
+
+
+public function updatePassword(Request $request)
+{
+    $user = auth()->user();
+
+    $validator = Validator::make($request->all(), [
+        'current_password' => 'required|string',
+        'new_password' => 'required|string|min:8',
+        'new_password_confirmation' => 'required|string|same:new_password',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => 422,
+            'message' => 'Validasi gagal',
+            'errors' => $validator->errors(),
+        ], 422);
+    }
+
+    if (!Hash::check($request->current_password, $user->password)) {
+        return response()->json([
+            'status' => 400,
+            'message' => 'Password saat ini tidak cocok',
+        ], 400);
+    }
+
+    DB::beginTransaction();
+    try {
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        DB::commit();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Password berhasil diperbarui.',
+        ], 200);
+    } catch (\Throwable $th) {
+        DB::rollback();
+
+        return response()->json([
+            'status' => 500,
+            'message' => 'Password gagal diperbarui',
+            'error' => $th->getMessage(),
+        ], 500);
+    }
+}
+
+
 }
