@@ -216,7 +216,6 @@ class CategoryController extends Controller
             ], 404);
         }
     }
-
     public function kategoriImportExcel(Request $request)
     {
         DB::beginTransaction();
@@ -230,10 +229,31 @@ class CategoryController extends Controller
             $namaFile = $file->getClientOriginalName();
             $file->move(public_path('DataKategori'), $namaFile);
 
-            Excel::import(new KategoriImport, public_path('DataKategori/' . $namaFile), null, \Maatwebsite\Excel\Excel::XLSX, [
+            $import = new KategoriImport;
+            Excel::import($import, public_path('DataKategori/' . $namaFile), null, \Maatwebsite\Excel\Excel::XLSX, [
                 'startRow' => 2,
                 'onlySheets' => [0]
             ]);
+
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+            $spreadsheet = $reader->load(public_path('DataKategori/' . $namaFile));
+            $worksheet = $spreadsheet->getActiveSheet();
+            $fileContent = [];
+
+            $headers = [];
+            foreach ($worksheet->getRowIterator() as $index => $row) {
+                $rowData = [];
+                foreach ($row->getCellIterator() as $cellIndex => $cell) {
+                    if ($index === 1) {
+                        $headers[$cellIndex] = $cell->getValue();
+                    } else {
+                        $rowData[$headers[$cellIndex]] = $cell->getValue();
+                    }
+                }
+                if ($index !== 1) {
+                    $fileContent[] = $rowData;
+                }
+            }
 
             DB::commit();
 
@@ -242,6 +262,7 @@ class CategoryController extends Controller
             return response()->json([
                 'status' => 200,
                 'message' => 'Data berhasil diimpor',
+                'data' => $fileContent
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();

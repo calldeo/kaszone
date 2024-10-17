@@ -10,7 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash; // Impor Hash
+use Illuminate\Support\Facades\Hash; 
+use Illuminate\Support\Facades\Storage;
 
 
 class UserController extends Controller
