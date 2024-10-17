@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Illuminate\Support\Facades\Storage; // Impor Hash
-
+use App\Imports\PemasukanImport;
 class PemasukanController extends Controller
 {
     public function getAllIncome()
@@ -263,19 +263,47 @@ class PemasukanController extends Controller
             $file = $request->file('file');
             $namafile = $file->getClientOriginalName();
             $file->move(public_path('DataPemasukan'), $namafile);
+            
+            // Perbaikan: Import kelas PemasukanImport
+            $import = new PemasukanImport;
 
-            Excel::import(new PemasukanImport, public_path('DataPemasukan/' . $namafile), null, \Maatwebsite\Excel\Excel::XLSX, [
+            Excel::import($import, public_path('DataPemasukan/' . $namafile), null, \Maatwebsite\Excel\Excel::XLSX, [
                 'startRow' => 2,
                 'onlySheets' => [0]
             ]);
+
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+            $spreadsheet = $reader->load(public_path('DataPemasukan/' . $namafile));
+            $worksheet = $spreadsheet->getActiveSheet();
+            $fileContent = [];
+
+            $headers = [];
+            foreach ($worksheet->getRowIterator() as $index => $row) {
+                $rowData = [];
+                foreach ($row->getCellIterator() as $cellIndex => $cell) {
+                    if ($index === 1) {
+                        $headers[$cellIndex] = $cell->getValue();
+                    } else {
+                        $rowData[$headers[$cellIndex]] = $cell->getValue();
+                    }
+                }
+                if ($index !== 1) {
+                    $fileContent[] = $rowData;
+                }
+            }
 
             DB::commit();
 
             @unlink(public_path('DataPemasukan/' . $namafile));
 
+            $fileContent = array_filter($fileContent, function($row) {
+                return !empty($row['Nama']);
+            });
+
             return response()->json([
                 'status' => 200,
-                'message' => 'Data Berhasil Ditambahkan'
+                'message' => 'Data Berhasil Ditambahkan',
+                'data' => array_values($fileContent)
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
