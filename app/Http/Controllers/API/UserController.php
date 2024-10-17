@@ -392,5 +392,39 @@ public function updatePassword(Request $request)
     }
 }
 
+public function showProfilePicture()
+{
+    $user = auth()->user();
+
+    if (!$user->poto) {
+        return response()->json([
+            'status' => 404,
+            'message' => 'Foto profil tidak ditemukan',
+        ], 404);
+    }
+
+    try {
+        $path = Storage::disk('public')->path($user->poto);
+        
+        if (!file_exists($path)) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'File foto profil tidak ditemukan',
+            ], 404);
+        }
+
+        $file = file_get_contents($path);
+        $type = mime_content_type($path);
+
+        return response($file)->header('Content-Type', $type);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 500,
+            'message' => 'Gagal menampilkan foto profil',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+
 
 }

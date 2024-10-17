@@ -287,12 +287,9 @@ class CategoryController extends Controller
             $filename = 'kategori_' . date('YmdHis') . '.pdf';
             $content = $pdf->output();
             
-            return response()->json([
-                'status' => 200,
-                'message' => 'Berhasil mengekspor data kategori',
-                'data' => base64_encode($content),
-                'filename' => $filename
-            ], 200);
+            return response($content)
+                ->header('Content-Type', 'application/pdf')
+                ->header('Content-Disposition', 'inline; filename="' . $filename . '"');
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 500,

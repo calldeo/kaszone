@@ -60,6 +60,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/detail/{id}', [UserController::class, 'showDetail']);
         Route::post('/update-profile', [UserController::class, 'updateProfile']);
         Route::post('/update-password', [UserController::class, 'updatePassword']);
+        Route::get('/profile-picture', [UserController::class, 'showProfilePicture']);
 
 
     });
