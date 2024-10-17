@@ -208,7 +208,7 @@ class PemasukanController extends Controller
         
         $incomeSheet->setCellValue('A1', 'Nama');
         $incomeSheet->setCellValue('B1', 'Deskripsi');
-        $incomeSheet->setCellValue('C1', 'Tanggal');
+        $incomeSheet->setCellValue('C1', 'Tanggal(DD-MM-YYYY)');
         $incomeSheet->setCellValue('D1', 'Jumlah');
         $incomeSheet->setCellValue('E1', 'Kode Kategori');
 
