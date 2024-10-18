@@ -466,14 +466,9 @@ public function downloadTemplateAPI()
         $content = file_get_contents($file);
         $base64 = base64_encode($content);
         
-        return response()->json([
-            'status' => 200,
-            'message' => 'Template berhasil diunduh',
-            'data' => [
-                'filename' => 'template_pengeluaran.xlsx',
-                'content' => $base64
-            ]
-        ], 200);
+        return response($content)
+            ->header('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            ->header('Content-Disposition', 'attachment; filename="template_pengeluaran.xlsx"');
     } catch (\Exception $e) {
         return response()->json([
             'status' => 500,
