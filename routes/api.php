@@ -114,6 +114,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/detail/{id}', [PengeluaranController::class, 'showDetail']);
         Route::post('/import', [PengeluaranController::class, 'importPengeluaran']);
         Route::get('/template', [PengeluaranController::class, 'downloadTemplateAPI']);
+        Route::get('/image/{id}', [PengeluaranController::class, 'showImage']);
 
 
     });

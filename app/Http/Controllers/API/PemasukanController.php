@@ -392,11 +392,11 @@ class PemasukanController extends Controller
                 $filename = "pemasukan_seluruh.pdf";
             }
 
-            return response()->json([
-                'status' => 200,
-                'message' => 'PDF berhasil dibuat',
-                'data' => base64_encode($pdf->output())
-            ], 200);
+            $content = $pdf->output();
+
+            return response($content)
+                ->header('Content-Type', 'application/pdf')
+                ->header('Content-Disposition', 'inline; filename="' . $filename . '"');
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 500,
@@ -433,11 +433,7 @@ class PemasukanController extends Controller
             }
 
             $export = new PemasukanExport($pemasukan, $year, $startDate, $endDate);
-            return response()->json([
-                'status' => 200,
-                'message' => 'Excel berhasil dibuat',
-                'data' => base64_encode(Excel::raw($export, \Maatwebsite\Excel\Excel::XLSX))
-            ], 200);
+            return Excel::download($export, $filename);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 500,

@@ -14,6 +14,7 @@ use App\Exports\PengeluaranExport;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage; // Impor Hash
 
@@ -258,6 +259,7 @@ public function deleteAll($id)
         'error' => 'Data tidak ditemukan.'
     ], 404);
 }
+
 public function exportPengeluaranPDF(Request $request)
 {
     try {
@@ -297,11 +299,11 @@ public function exportPengeluaranPDF(Request $request)
             $filename = "pengeluaran_seluruh.pdf";
         }
 
-        return response()->json([
-            'status' => 200,
-            'message' => 'PDF berhasil dibuat',
-            'data' => base64_encode($pdf->output())
-        ], 200);
+        $content = $pdf->output();
+
+        return response($content)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="' . $filename . '"');
     } catch (\Exception $e) {
         return response()->json([
             'status' => 500,
@@ -309,7 +311,6 @@ public function exportPengeluaranPDF(Request $request)
         ], 500);
     }
 }
-
 public function exportPengeluaranExcel(Request $request)
 {
     try {
@@ -343,22 +344,16 @@ public function exportPengeluaranExcel(Request $request)
             $filename = "laporan_pengeluaran_seluruh.xlsx";
         }
 
-        $export = new PengeluaranExport($pengeluaran, $year, $startDate, $endDate);
-        $excelFile = Excel::raw($export, \Maatwebsite\Excel\Excel::XLSX);
-
-        return response()->json([
-            'status' => 200,
-            'message' => 'Excel berhasil dibuat',
-            'data' => base64_encode($excelFile),
-            'filename' => $filename
-        ], 200);
+        return Excel::download(new PengeluaranExport($pengeluaran, $year, $startDate, $endDate), $filename);
     } catch (\Exception $e) {
         return response()->json([
             'status' => 500,
-            'message' => 'Gagal membuat Excel: ' . $e->getMessage()
+            'message' => 'Gagal mengekspor data pengeluaran: ' . $e->getMessage()
         ], 500);
     }
 }
+
+
 
 
 public function showDetail($id)
@@ -487,6 +482,37 @@ public function downloadTemplateAPI()
     }
 }
 
-
+public function showImage($id)
+{
+    try {
+        $pengeluaran = Pengeluaran::findOrFail($id);
+        
+        if (!$pengeluaran->image) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Gambar tidak ditemukan'
+            ], 404);
+        }
+        
+        $path = storage_path('app/public/' . $pengeluaran->image);
+        
+        if (!file_exists($path)) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'File gambar tidak ditemukan'
+            ], 404);
+        }
+        
+        $file = file_get_contents($path);
+        $type = mime_content_type($path);
+        
+        return response($file)->header('Content-Type', $type);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 500,
+            'message' => 'Terjadi kesalahan saat menampilkan gambar: ' . $e->getMessage()
+        ], 500);
+    }
+}
 
 }
