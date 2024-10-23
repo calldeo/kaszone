@@ -4,27 +4,59 @@
 <head>
     @include('template.headerr')
     <title>PityCash | {{auth()->user()->level}} | Saldo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7fa;
+        }
         .card {
             border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: none;
         }
         .card-header {
-            background-color: #f8f9fa;
-            border-bottom: 1px solid #e9ecef;
+            background: linear-gradient(45deg, #EB8153, #EB8153);
+            color: white;
+            border-radius: 15px 15px 0 0;
+            padding: 20px;
+        }
+        .form-control {
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            padding: 12px;
+            font-family: 'Poppins', sans-serif;
+        }
+        .btn {
+            border-radius: 10px;
+            padding: 12px 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+        .btn-primary {
+            background-color: #EB8153;
+            border-color: #EB8153;
+        }
+        .btn-primary:hover {
+            background-color: #FF9A85;
+            border-color: #FF9A85;
+        }
+        .btn-danger {
+            background-color: #FF6B6B;
+            border-color: #FF6B6B;
+        }
+        .btn-danger:hover {
+            background-color: #FF8E8E;
+            border-color: #FF8E8E;
         }
         .table-responsive {
             border-radius: 10px;
             overflow: hidden;
         }
-        .table {
-            margin-bottom: 0;
-        }
         .table th, .table td {
             vertical-align: middle;
-        }
-        .btn-sm {
-            border-radius: 20px;
         }
     </style>
 </head>
@@ -39,7 +71,7 @@
             <div class="row justify-content-center">
                 <div class="col-lg-10">
                     <div class="card">
-                        <div class="card-header bg-primary text-white">
+                        <div class="card-header">
                             <h4 class="card-title mb-0 text-white">Informasi Saldo</h4>
                         </div>
                         <div class="card-body">
@@ -94,11 +126,13 @@
         </div>
     </div>
 
-    <footer class="footer mt-auto py-3 bg-white">
-        <div class="container text-center">
-            <span class="text-muted">Copyright © Designed &amp; Developed by <a href="/home" target="_blank">SYNC</a> 2024</span>
+    <div class="footer mt-5">
+        <div class="container">
+            <div class="text-center">
+                <p class="mb-0">&copy; {{ date('Y') }} SYNC. Hak Cipta Dilindungi.</p>
+            </div>
         </div>
-    </footer>
+    </div>
 
     @include('template.scripts')
 

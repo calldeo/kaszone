@@ -72,7 +72,7 @@
                 <div class="col-lg-8">
                     <div class="card animate__animated animate__fadeIn">
                         <div class="card-header">
-                            <h4 class="card-title mb-0">Edit Data User</h4>
+                            <h4 class="card-title mb-0 text-white">Edit Data User</h4>
                         </div>
                         <div class="card-body">
                             <div class="basic-form">
@@ -158,8 +158,8 @@
                                         @enderror
                                     </div>
                                     <div class="form-group mt-4 text-right">
-                                        <a href="/user" class="btn btn-danger btn-cancel mr-2"><i class="fas fa-times mr-1"></i> Batal</a>
-                                        <button type="submit" class="btn btn-primary btn-submit"><i class="fas fa-save mr-1"></i> Perbarui</button>
+                                        <a href="/user" class="btn btn-danger btn-cancel mr-2"><i class="fas fa-times mr-1"></i> Cancel</a>
+                                        <button type="submit" class="btn btn-primary btn-submit"><i class="fas fa-save mr-1"></i> Update</button>
                                     </div>
                                 </form>
                             </div>

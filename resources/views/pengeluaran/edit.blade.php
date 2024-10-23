@@ -141,16 +141,15 @@
                                             </div>
                                         </div>
 
-                                        <div class="row">
+                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="image_{{ $key }}">Gambar</label>
-                                                    <input type="file" id="image_{{ $key }}" name="image[]" class="form-control">
-                                                    <img src="{{ $pengeluaran->image ? asset('storage/' . $pengeluaran->image) : asset('dash/images/cash.png') }}" alt="Gambar" class="img-thumbnail mt-2">
+                                                    <input type="file" id="image_{{ $key }}" name="image[]" class="form-control" onchange="previewImage(this, '{{ $key }}');">
+                                                    <img id="preview-image-{{ $key }}" src="{{ $pengeluaran->image ? asset('storage/' . $pengeluaran->image) : asset('dash/images/cash.png') }}" alt="Gambar" class="img-thumbnail mt-2" width="150" height="150">
                                                 </div>
                                             </div>
                                         </div>
-                                        
                                         @if($parentPengeluaran->pengeluaran->count() > 1)
                                             <div class="row mt-3">
                                                 <div class="col-md-12">
@@ -167,16 +166,19 @@
                     </div>
 
                     <div id="pengeluaran-container"></div>
-
                     <div class="mt-3 text-right">
                         <button type="button" class="btn btn-info rounded" id="add-pengeluaran">
-                            <i class="fas fa-plus"></i> Tambah Pengeluaran
+                            <i class="fas fa-plus-circle"></i> Tambah Pengeluaran
                         </button>
                     </div>
 
-                  <div class="mt-4">
-                        <button type="button" class="btn btn-danger" onclick="window.location.href='/pengeluaran'">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                    <div class="mt-4">
+                        <button type="button" class="btn btn-danger" onclick="window.location.href='/pengeluaran'">
+                            <i class="fas fa-times-circle"></i> Batal
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Simpan
+                        </button>
                     </div>
                 </form>
 
@@ -362,12 +364,12 @@ $('form').on('submit', function() {
                                 </div>
                             </div>
                         </div>
-
-                        <div class="row">
+<div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="image_${pengeluaranCount}">Gambar</label>
-                                    <input type="file" id="image_${pengeluaranCount}" name="image[]" class="form-control">
+                                    <input type="file" id="image_${pengeluaranCount}" name="image[]" class="form-control" onchange="previewImage(this, ${pengeluaranCount});">
+                                    <img id="preview-image-${pengeluaranCount}" src="{{ asset('dash/images/cash.png') }}" alt="Gambar" class="img-thumbnail mt-2" width="150" height="150">
                                 </div>
                             </div>
                         </div>
@@ -398,6 +400,17 @@ $('form').on('submit', function() {
 
 
 </script>
-
+<script>
+    function previewImage(input, key) {
+        var file = input.files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('preview-image-' + key).src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
 </body>
 </html>

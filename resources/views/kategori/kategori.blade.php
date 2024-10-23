@@ -157,6 +157,36 @@
         .action-buttons .btn:hover {
             transform: translateY(-2px);
         }
+        .btn-export {
+            color: #f3f5f3;
+            background-color: transparent;
+            border: 2px solid #fdfdfd;
+            border-radius: 30px;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+        }
+        .btn-export:hover, .btn-export:active, .btn-export:focus {
+            color: #fff;
+            background-color: #d74709;
+            border-color: #f7f8f7;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+        .btn-import {
+            color: #f3f5f3;
+            background-color: transparent;
+            border: 2px solid #fdfdfd;
+            border-radius: 30px;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+        }
+        .btn-import:hover, .btn-import:active, .btn-import:focus {
+            color: #fff;
+            background-color: #d74709;
+            border-color: #ffffff;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+        }
     </style>
 </head>
 
@@ -168,10 +198,10 @@
     <div class="content-body animate__animated animate__fadeIn" style="margin-top: -100px;">
         <div class="container-fluid py-5">
             <div class="row mb-4">
-                <div class="col-12">
+                <div class="col-12 text-right">
                     <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb bg-transparent p-0">
-                            <li class="breadcrumb-item"><a href="javascript:void(0)" class="text-primary">Dashboard</a></li>
+                        <ol class="breadcrumb bg-transparent p-0 justify-content-end">
+                            <li class="breadcrumb-item"><a href="javascript:void(0)" class="text-primary">Tabel</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Kategori</li>
                         </ol>
                     </nav>
@@ -187,10 +217,10 @@
                                 <a href="/add-kategori" class="btn btn-outline-success animate__animated animate__bounceIn" title="Tambah">
                                     <i class="fas fa-plus mr-2"></i> Tambah Kategori
                                 </a>
-                                <a href="/export-kategori" target="_blank" class="btn btn-outline-success animate__animated animate__bounceIn" title="Cetak">
+                                <a href="/export-kategori" target="_blank" class="btn btn-export animate__animated animate__bounceIn" title="Cetak">
                                     <i class="fas fa-print mr-2"></i> Cetak
                                 </a>
-                                <button type="button" class="btn btn-outline-success animate__animated animate__bounceIn" title="Import" data-toggle="modal" data-target="#importModal">
+                                <button type="button" class="btn btn-import animate__animated animate__bounceIn" title="Import" data-toggle="modal" data-target="#importModal">
                                     <i class="fas fa-upload mr-2"></i> Import
                                 </button>
                             </div>

@@ -182,12 +182,19 @@
                                 </div>
 
                                 <div class="text-right mt-4">
-                                    <button type="button" class="btn btn-info" id="add-more-fields">Add Pengeluaran</button>
+                                    <button type="button" class="btn btn-info" id="add-more-fields">
+                                        <i class="fas fa-plus-circle"></i> Add Pengeluaran
+                                    </button>
                                 </div>
 
-                                <div class="form-group text-right mt-5">
-                                    <button type="button" class="btn btn-danger btn-cancel" onclick="window.location.href='/pengeluaran'">Cancel</button>
-                                    <button type="submit" class="btn btn-primary btn-submit">Submit</button>
+                                <div class="form-group text-left mt-5">
+                                    <button type="button" class="btn btn-danger btn-cancel" onclick="window.location.href='/pengeluaran'">
+                                        <i class="fas fa-times-circle"></i> Cancel
+                                    </button>
+                                    <button type="submit" class="btn btn-primary btn-submit">
+                                        <i class="fas fa-save"></i> Submit
+                                    </button>
+                                </div>
                                 </div>
                             </form>
                         </div>

@@ -72,7 +72,7 @@
                 <div class="col-lg-10">
                     <div class="card animate__animated animate__fadeIn">
                         <div class="card-header">
-                            <h4 class="card-title mb-0">Tambah Data Pengguna</h4>
+                            <h4 class="card-title mb-0 text-white">Tambah Data Pengguna</h4>
                         </div>
                         <div class="card-body">
                             @if(session('error'))
@@ -178,8 +178,8 @@
                                 </div>
                                 
                                 <div class="form-group text-right">
-                                    <button type="button" class="btn btn-danger" onclick="redirectToAdmin()"><i class="fas fa-times mr-2"></i>Batal</button>
-                                    <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-2"></i>Simpan</button>
+                                    <button type="button" class="btn btn-danger" onclick="redirectToAdmin()"><i class="fas fa-times mr-2"></i>Cancel</button>
+                                    <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-2"></i>Submit</button>
                                 </div>
                             </form>
                         </div>

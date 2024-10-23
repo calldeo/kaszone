@@ -168,10 +168,10 @@
     <div class="content-body animate__animated animate__fadeIn" style="margin-top: -100px;">
         <div class="container-fluid py-5">
             <div class="row mb-4">
-                <div class="col-12">
+                <div class="col-12 text-right">
                     <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb bg-transparent p-0">
-                            <li class="breadcrumb-item"><a href="javascript:void(0)" class="text-primary">Dashboard</a></li>
+                        <ol class="breadcrumb bg-transparent p-0 justify-content-end">
+                            <li class="breadcrumb-item"><a href="javascript:void(0)" class="text-primary">Tabel</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Pengguna</li>
                         </ol>
                     </nav>

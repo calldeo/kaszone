@@ -227,7 +227,7 @@
                                         <input type="hidden" name="year" id="export-year-excel" value="{{ old('year') }}" />
                                         <input type="hidden" name="start_date" id="export-start-date-excel" value="" />
                                         <input type="hidden" name="end_date" id="export-end-date-excel" value="" />
-                                        <button type="submit" title="Ekspor Excel" class="btn btn-outline-info animate__animated animate__bounceIn" style="border-color: white;"><i class="fa fa-file-excel" style="color: white;"></i></button>
+                                        <button type="submit" title="Ekspor Excel" class="btn btn-outline-informasi animate__animated animate__bounceIn" style="border-color: white;"><i class="fa fa-file-excel" style="color: white;"></i></button>
                                     </form>
                                     @endif
 
@@ -489,12 +489,35 @@
                 text: "Data yang dihapus tidak dapat dikembalikan!",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, hapus!',
-                cancelButtonText: 'Batal'
+                confirmButtonColor: '#EB8153',
+                cancelButtonColor: '#6e7d88',
+                confirmButtonText: '<i class="fas fa-trash-alt"></i> Ya, Hapus!',
+                cancelButtonText: '<i class="fas fa-times"></i> Batal',
+                background: '#f8f9fa',
+                borderRadius: '15px',
+                customClass: {
+                        title: 'text-danger font-weight-bold',
+                        content: 'text-muted',
+                        confirmButton: 'btn btn-danger btn-lg px-4 py-2',
+                    cancelButton: 'btn btn-secondary btn-lg px-4 py-2 ml-2'
+                },
+                showClass: {
+                    popup: 'animate__animated animate__fadeInDown'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp'
+                }
             }).then((result) => {
                 if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Menghapus...',
+                        html: 'Mohon tunggu sebentar.',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        willOpen: () => {
+                            Swal.showLoading();
+                        },
+                    });
                     window.location.href = url;
                 }
             });

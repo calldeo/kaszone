@@ -210,9 +210,10 @@
                                 <div class="d-flex align-items-center mt-4">
                                     @if(session('activeRole') == 'Admin' || session('activeRole') == 'Bendahara' || session('activeRole') == 'Reader')
                                     <form method="GET" action="{{ route('export.laporan') }}" id="export-pdf-form" class="mr-2">
-                                        <input type="hidden" name="year" id="export-year" value="{{ old('year') }}" />
-                                        <input type="hidden" name="start_date" id="export-start-date" value="" />
-                                        <input type="hidden" name="end_date" id="export-end-date" value="" />
+                                        @csrf
+                                        <input type="hidden" name="year" id="export-year-pdf" value="{{ old('year') }}" />
+                                        <input type="hidden" name="start_date" id="export-start-date-pdf" value="" />
+                                        <input type="hidden" name="end_date" id="export-end-date-pdf" value="" />
                                         <button type="submit" title="Ekspor PDF" class="btn btn-outline-info animate__animated animate__bounceIn" style="border-color: white;"><i class="fa fa-print" style="color: white;"></i></button>
                                     </form>
                                     
@@ -221,7 +222,7 @@
                                         <input type="hidden" name="year" id="export-year-excel" value="{{ old('year') }}" />
                                         <input type="hidden" name="start_date" id="export-start-date-excel" value="" />
                                         <input type="hidden" name="end_date" id="export-end-date-excel" value="" />
-                                        <button type="submit" title="Ekspor Excel" class="btn btn-outline-info animate__animated animate__bounceIn" style="border-color: white;"><i class="fa fa-file-excel" style="color: white;"></i></button>
+                                        <button type="submit" title="Ekspor Excel" class="btn btn-outline-informasi animate__animated animate__bounceIn" style="border-color: white;"><i class="fa fa-file-excel" style="color: white;"></i></button>
                                     </form>
                                     @endif
                                 </div>
