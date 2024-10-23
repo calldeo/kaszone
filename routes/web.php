@@ -54,6 +54,7 @@ Route::put('/profile/update', [UserProfileController::class, 'update'])->name('p
 
 Route::group(['middleware' => ['auth', 'permission:Home']], function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::get('/get-financial-data-yearly', [HomeController::class, 'getFinancialDataYearly'])->name('get.financial.data.yearly');
 });
 
 

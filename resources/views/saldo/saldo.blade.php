@@ -1,74 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     @include('template.headerr')
     <title>PityCash | {{auth()->user()->level}} | Saldo</title>
-    
+    <style>
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .table-responsive {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .table {
+            margin-bottom: 0;
+        }
+        .table th, .table td {
+            vertical-align: middle;
+        }
+        .btn-sm {
+            border-radius: 20px;
+        }
+    </style>
 </head>
 
-<body>
+<body class="bg-light">
 
-    <!-- Preloader start -->
     @include('template.topbarr')
-    <!-- Header end -->
-
-    <!-- Sidebar start -->
     @include('template.sidebarr')
-    <!-- Sidebar end -->
 
-    <!-- Content body start -->
-    <div class="content-body" style="margin-top: -60px;"> <!-- Atur margin-top untuk menggeser konten ke atas -->
-        <div class="container-fluid">
-            <div class="row page-titles mx-0">
-                <div class="col-sm-6 p-md-0">
-                    
-                </div>
-                <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
-                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Saldo</a></li>
-                    </ol>
-                </div>
-            </div>
-            <!-- row -->
-
-            <div class="row">
-                <div class="col-lg-12">
+    <div class="content-body">
+        <div class="container-fluid py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
                     <div class="card">
-                        <div class="card-header">
-                            <h4 class="card-title">Informasi Saldo</h4>
+                        <div class="card-header bg-primary text-white">
+                            <h4 class="card-title mb-0 text-white">Informasi Saldo</h4>
                         </div>
                         <div class="card-body">
-                               @if(session('success'))
-                            <div class="alert alert-success alert-dismissible fade show">
-                                <svg viewbox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
-                                    <polyline points="9 11 12 14 22 4"></polyline>
-                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-                                </svg>
-                                <strong>Success!</strong> {{ session('success') }}
-                                <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span></button>
-                            </div>
+                            @if(session('success'))
+                                <div class="alert alert-success alert-dismissible fade show">
+                                    <i class="fas fa-check-circle mr-2"></i>
+                                    {{ session('success') }}
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                </div>
                             @endif
                             @if(session('error'))
                                 <div class="alert alert-danger alert-dismissible fade show">
-                                    <strong>Error!</strong> {{ session('error') }}
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span><i class="fa fa-times"></i></span></button>
+                                    <i class="fas fa-exclamation-circle mr-2"></i>
+                                    {{ session('error') }}
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
                                 </div>
                             @endif
                             @if(session('update_success'))
-                            <div class="alert alert-warning alert-dismissible fade show">
-                                <svg viewbox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
-                                    <polyline points="9 11 12 14 22 4"></polyline>
-                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-                                </svg>
-                                <strong>Success!</strong> {{ session('update_success') }}
-                                <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span></button>
-                            </div>
+                                <div class="alert alert-warning alert-dismissible fade show">
+                                    <i class="fas fa-info-circle mr-2"></i>
+                                    {{ session('update_success') }}
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                </div>
                             @endif
+                            
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped">
-                                    <thead>
+                                <table class="table table-hover">
+                                    <thead class="thead-light">
                                         <tr>
                                             <th>Saldo Saat Ini</th>
                                             <th>Minimal Saldo</th>
@@ -77,11 +76,11 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>Rp{{ number_format($saldo, 0, ',', '.') }}</td>
-                                            <td>Rp{{ number_format($minimalSaldo, 0, ',', '.') }}</td>
+                                            <td class="font-weight-bold text-success">Rp{{ number_format($saldo, 0, ',', '.') }}</td>
+                                            <td class="font-weight-bold text-danger">Rp{{ number_format($minimalSaldo, 0, ',', '.') }}</td>
                                             <td>
                                                 <a href="{{ route('edit.minimal.saldo') }}" class="btn btn-primary btn-sm">
-                                                    <i class="fa fa-edit"></i> 
+                                                    <i class="fa fa-edit"></i> Edit
                                                 </a>
                                             </td>
                                         </tr>
@@ -94,20 +93,13 @@
             </div>
         </div>
     </div>
-    <!-- Content body end -->
 
-    <!-- Footer start -->
-    <div class="footer">
-        <div class="copyright">
-            <p>Copyright © Designed &amp; Developed by <a href="/home" target="_blank">SYNC</a> 2024</p>
+    <footer class="footer mt-auto py-3 bg-white">
+        <div class="container text-center">
+            <span class="text-muted">Copyright © Designed &amp; Developed by <a href="/home" target="_blank">SYNC</a> 2024</span>
         </div>
-    </div>
-    <!-- Footer end -->
+    </footer>
 
-    <!-- Main wrapper end -->
-
-    <!-- Scripts -->
-    <!-- Required vendors -->
     @include('template.scripts')
 
 </body>

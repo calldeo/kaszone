@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
@@ -11,8 +12,9 @@ class UserProfileController extends Controller
 {
     public function edit()
     {
+        $roles = Role::all();
         $user = auth()->user();
-        return view('profile.edit', compact('user'));
+        return view('profile.edit', compact('user', 'roles'));
     }
 
 public function update(Request $request)

@@ -3,52 +3,283 @@
 
 <head>
     @include('template.headerr')
-    <title>PityCash | {{auth()->user()->level}} | kategori</title>
+    <title>PityCash | {{auth()->user()->level}} | Kategori</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
     
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+        }
+        .card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s ease;
+            overflow: hidden;
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+        }
+        .card:hover {
+            transform: translateY(-10px) rotate(2deg);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        .card-header {
+            background: linear-gradient(45deg, #EB8153 , #EB8153);
+            color: white;
+            border-bottom: none;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+            animation: gradientBG 10s ease infinite;
+        }
+        @keyframes gradientBG {
+            0% {background-position: 0% 50%;}
+            50% {background-position: 100% 50%;}
+            100% {background-position: 0% 50%;}
+        }
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            transform: rotate(45deg);
+            animation: shimmer 3s linear infinite;
+        }
+        @keyframes shimmer {
+            0% {transform: translateX(-50%) rotate(45deg);}
+            100% {transform: translateX(50%) rotate(45deg);}
+        }
+        .btn-outline-success {
+            color: #f3f5f3;
+            background-color: transparent;
+            border: 2px solid #fdfdfd;
+            border-radius: 30px;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+        }
+        .btn-outline-success:hover {
+            color: #fff;
+            background-color: #d74709;
+            border-color: #f9f9fa;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(9, 16, 87, 0.4);
+        }
+        .table {
+            border-collapse: separate;
+            border-spacing: 0 15px;
+            background-color: transparent;
+        }
+        .table thead th {
+            background-color: #fcfcfc;
+            color: white;
+            border: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .table tbody tr {
+            background-color: #ffffff;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        .table tbody tr:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .table tbody td {
+            border: none;
+            padding: 20px;
+            vertical-align: middle;
+        }
+        .table tbody td:first-child {
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+        }
+        .table tbody td:last-child {
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+        .alert {
+            border-radius: 15px;
+            border: none;
+            padding: 15px 20px;
+            animation: fadeInDown 0.5s ease-out;
+        }
+        @keyframes fadeInDown {
+            from {opacity: 0; transform: translateY(-20px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+        .modal-content {
+            border-radius: 20px;
+            border: none;
+            overflow: hidden;
+            animation: zoomIn 0.3s ease-out;
+        }
+        @keyframes zoomIn {
+            from {opacity: 0; transform: scale(0.9);}
+            to {opacity: 1; transform: scale(1);}
+        }
+        .modal-header {
+            background: linear-gradient(45deg, #EB8153, #EB8153);
+            color: white;
+            border-bottom: none;
+            padding: 20px 30px;
+        }
+        .breadcrumb {
+            background-color: transparent;
+            padding: 0;
+        }
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: "›";
+            font-size: 1.4em;
+            vertical-align: middle;
+            color: #3a7bd5;
+        }
+        .animate__animated {
+            animation-duration: 0.8s;
+        }
+        .action-buttons .btn {
+            padding: 5px 10px;
+            margin: 2px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+        .action-buttons .btn:hover {
+            transform: translateY(-2px);
+        }
+    </style>
 </head>
 
-<body>
-
+<body class="bg-light">
 
     @include('template.topbarr')
-
     @include('template.sidebarr')
-   
 
-    
-    <div class="content-body" style="margin-top: -60px;"> <!-- Atur margin-top untuk menggeser konten ke atas -->
-        <div class="container-fluid">
-            <div class="row page-titles mx-0">
-                <div class="col-sm-6 p-md-0">
-                
-                </div>
-                <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">Table</a></li>
-                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Kategori</a></li>
-                    </ol>
+    <div class="content-body animate__animated animate__fadeIn" style="margin-top: -100px;">
+        <div class="container-fluid py-5">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb bg-transparent p-0">
+                            <li class="breadcrumb-item"><a href="javascript:void(0)" class="text-primary">Dashboard</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Kategori</li>
+                        </ol>
+                    </nav>
                 </div>
             </div>
-           
 
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="card-title">Data Kategori</h4>
-                            <div class="text-right">
-                    
-                           <a href="/add-kategori" class="btn btn-warning ml-0" title="Add">
-                        <i class="fa fa-plus"></i>
-                    </a>
-                    <a href="/export-kategori" target="blank" class="btn btn-info ml-2" title="Print Report">
-                                    <i class="fa fa-print"></i> 
-                               </a>
-                      <button type="button" class="btn btn-success ml-2" title="Import" data-toggle="modal" data-target="#importModal">
-            <i class="fa fa-upload"></i> 
-        </button>
-        
-        <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+                    <div class="card animate__animated animate__fadeInUp">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h4 class="card-title mb-0 text-white">Data Kategori</h4>
+                            <div>
+                                <a href="/add-kategori" class="btn btn-outline-success animate__animated animate__bounceIn" title="Tambah">
+                                    <i class="fas fa-plus mr-2"></i> Tambah Kategori
+                                </a>
+                                <a href="/export-kategori" target="_blank" class="btn btn-outline-success animate__animated animate__bounceIn" title="Cetak">
+                                    <i class="fas fa-print mr-2"></i> Cetak
+                                </a>
+                                <button type="button" class="btn btn-outline-success animate__animated animate__bounceIn" title="Import" data-toggle="modal" data-target="#importModal">
+                                    <i class="fas fa-upload mr-2"></i> Import
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            @if(session('success'))
+                            <div class="alert alert-success alert-dismissible fade show animate__animated animate__bounceIn">
+                                <i class="fas fa-check-circle mr-2"></i>
+                                <strong>Berhasil!</strong> {{ session('success') }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            @endif
+                            @if(session('error'))
+                            <div class="alert alert-danger alert-dismissible fade show animate__animated animate__bounceIn">
+                                <i class="fas fa-exclamation-circle mr-2"></i>
+                                <strong>Gagal!</strong> {{ session('error') }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            @endif
+                          
+                            <div class="table-responsive">
+                                <table id="kategoriTable" class="table table-hover animate__animated animate__fadeIn">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Nama Kategori</th>
+                                            <th>Jenis Kategori</th>
+                                            <th>Deskripsi</th>
+                                            <th>Opsi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Data akan diisi oleh DataTables -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer mt-auto py-3 bg-white shadow-sm animate__animated animate__fadeInUp">
+        <div class="container text-center">
+            <span class="text-muted">Hak Cipta © Dirancang &amp; Dikembangkan oleh <a href="/home" target="_blank" class="text-primary">SYNC</a> 2024</span>
+        </div>
+    </footer>
+
+    @include('template.scripts')
+    <input type="hidden" id="table-url" value="{{ route('kategoris') }}">
+    <script src="{{ asset('main.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <div class="modal fade" id="adminDetailModal" tabindex="-1" role="dialog" aria-labelledby="adminDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="adminDetailModalLabel">Detail Kategori</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-4 font-weight-bold">
+                            No:<br />
+                            Nama:<br />
+                            Deskripsi:<br />
+                        </div>
+                        <div class="col-sm-8">
+                            <div id="id"></div>
+                            <div id="name"></div>
+                            <div id="description"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-merah" data-dismiss="modal" style="background-color: red; color: white;">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+  
+  <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -78,175 +309,79 @@
                 </div>
             </div>
         </div>
-        
-        
-        
-                   
-                </div>
-
-                        </div>
-
-                        <div class="card-body">
-                            @if(session('success'))
-                            <div class="alert alert-success alert-dismissible fade show">
-                                <svg viewbox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
-                                    <polyline points="9 11 12 14 22 4"></polyline>
-                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-                                </svg>
-                                <strong>Success!</strong> {{ session('success') }}
-                                <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span></button>
-                            </div>
-                            @endif
-                            @if(session('error'))
-                                <div class="alert alert-danger alert-dismissible fade show">
-                                    <strong>Error!</strong> {{ session('error') }}
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span><i class="fa fa-times"></i></span></button>
-                                </div>
-                            @endif
-                            @if(session('update_success'))
-                            <div class="alert alert-warning alert-dismissible fade show">
-                                <svg viewbox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
-                                    <polyline points="9 11 12 14 22 4"></polyline>
-                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-                                </svg>
-                                <strong>Success!</strong> {{ session('update_success') }}
-                                <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span></button>
-                            </div>
-                            @endif
-                            
-                            <div class="table-responsive">
-                                <table id="kategoriTable" class="table table-responsive-md">
-                                    <thead>
-                                        <tr>
-                                             <th style="width:50px;">
-                                                <strong>No</strong>
-                                            </th>
-                                            <th><strong>Nama Kategori</strong></th>
-                                            <th><strong>Jenis Kategori</strong></th>
-                                            <th><strong>Deskripsi</strong></th>
-                                            <th><strong>Opsi</strong></th>
-                                        </tr>
-                                    </thead>
-                                 
-                                </table>
-                            </div>
-                        </div>
-                               <div class="d-flex justify-content-end">
-                    
-                </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="footer">
-        <div class="copyright">
-            <p>Copyright © Designed &amp; Developed by <a href="/home" target="_blank">SYNC</a> 2024</p>
-        </div>
-    </div>
-
-    @include('template.scripts')
-    
-
-  
-
-    
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <script>
         $(document).ready(function() {
-            $('.delete-btn').click(function() {
-                var id = $(this).data('id');
+            $('#adminDetailModal').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget);
+                var url = button.data('url');
                 
+                var modal = $(this);
+                
+                modal.find('#id').text('');
+                modal.find('#name').text('');
+                modal.find('#description').text('');
+                
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    success: function(data) {
+                        modal.find('#id').text(data.id || 'N/A').addClass('animate__animated animate__fadeInRight');
+                        modal.find('#name').text(data.name || 'N/A').addClass('animate__animated animate__fadeInRight').css('animation-delay', '0.1s');
+                        modal.find('#description').text(data.description || 'N/A').addClass('animate__animated animate__fadeInRight').css('animation-delay', '0.2s');
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(xhr.responseText);
+                        modal.find('.modal-body').html('Terjadi kesalahan saat memuat detail').addClass('animate__animated animate__shakeX');
+                    }
+                });
+            });
+
+            // Tambahkan konfirmasi untuk menghapus data
+            $(document).on('click', '.btn-danger', function(e) {
+                e.preventDefault();
+                var form = $(this).closest('form');
                 Swal.fire({
-                    title: 'Apakah anda yakin hapus data ini?',
-                    text: "Data akan dihapus secara permanen",
+                    title: 'Apakah Anda yakin ingin menghapus?',
+                    text: "Data yang dihapus tidak dapat dikembalikan!",
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Iya, hapus data!'
+                    confirmButtonColor: '#EB8153',
+                    cancelButtonColor: '#6e7d88',
+                    confirmButtonText: '<i class="fas fa-trash-alt"></i> Ya, Hapus!',
+                    cancelButtonText: '<i class="fas fa-times"></i> Batal',
+                    background: '#f8f9fa',
+                    borderRadius: '15px',
+                    customClass: {
+                        title: 'text-danger font-weight-bold',
+                        content: 'text-muted',
+                        confirmButton: 'btn btn-danger btn-lg px-4 py-2',
+                        cancelButton: 'btn btn-secondary btn-lg px-4 py-2 ml-2'
+                    },
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__fadeOutUp'
+                    }
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        
-                        $('#deleteForm_' + id).submit();
-                        
-                        Swal.fire(
-                            'Data dihapus!',
-                            'Data berhasil dihapus',
-                            'success'
-                        )
+                        Swal.fire({
+                            title: 'Menghapus...',
+                            html: 'Mohon tunggu sebentar.',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            willOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
+                        form.submit();
                     }
                 });
             });
         });
     </script>
-
-<input type="hidden" id="table-url" value="{{ route('kategoris') }}">
-<script src="{{ asset('main.js') }}"></script>
-
-<script>
-
-$(document).ready(function() {
-    $('#adminDetailModal').on('show.bs.modal', function(event) {
-        var button = $(event.relatedTarget); 
-        var url = button.data('url'); 
-        var modal = $(this);
-        $.ajax({
-            url: url,
-            method: 'GET',
-            success: function(data) {
-                modal.find('#id').text(data.id);
-                modal.find('#name').text(data.name);
-                modal.find('#description').text(data.description);
-            },
-            error: function(xhr, status, error) {
-                console.log(xhr.responseText); 
-                modal.find('.modal-body').html('Terjadi kesalahan saat memuat detail');
-            }
-        });
-    });
-});
-
-
-    </script>
-    
-    
-
-
-<div class="modal fade" id="adminDetailModal" tabindex="-1" role="dialog" aria-labelledby="adminDetailModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="adminDetailModalLabel">Detail Kategori</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-4">
-                        <strong>No:</strong><br />
-                        <strong>Nama:</strong><br />
-                        <strong>Deskripsi:</strong><br />
-                    </div>
-                    <div class="col-sm-8">
-                        <div id="id"></div>
-                        <div id="name"></div>
-                        <div id="description"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<script>
+    <script>
     $(document).ready(function(){
         
         $('.dropify').dropify();
@@ -254,8 +389,6 @@ $(document).ready(function() {
         $('.dropify-wrapper .dropify-message p').css('font-size', '20px'); 
     });
 </script>
-
-
 </body>
 
 </html>

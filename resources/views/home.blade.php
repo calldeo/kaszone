@@ -5,6 +5,7 @@
     @include('template.headerr')
     <title>PityCash | Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css">
     <style>
         .card {
             border-radius: 15px;
@@ -68,9 +69,7 @@
                 </div>
             </div>
 
-            <!-- Card untuk Menampilkan Data Keuangan -->
             <div class="row">
-                <!-- Card Total Pemasukan -->
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="card">
                         <div class="card-body">
@@ -87,7 +86,6 @@
                     </div>
                 </div>
 
-                <!-- Card Total Pengeluaran -->
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="card">
                         <div class="card-body">
@@ -104,7 +102,6 @@
                     </div>
                 </div>
 
-                <!-- Card Saldo -->
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="card">
                         <div class="card-body">
@@ -121,14 +118,16 @@
                     </div>
                 </div>
             </div>
-            <!-- End of Card Section -->
 
-            <!-- Grafik Total Pemasukan vs Pengeluaran -->
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Grafik Pemasukan & Pengeluaran</h5>
+                            <div class="mb-3">
+                                <select id="yearSelect" class="form-control">
+                                </select>
+                            </div>
                             <canvas id="financialChart"></canvas>
                         </div>
                     </div>
@@ -146,61 +145,98 @@
 
     @include('template.scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 
-    <script>
-        const ctx = document.getElementById('financialChart').getContext('2d');
-        const financialChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Total Pemasukan', 'Total Pengeluaran'],
-                datasets: [{
-                    label: 'Jumlah (Rp)',
-                    data: [{{ $totalPemasukan }}, {{ $totalPengeluaran }}],
-                    backgroundColor: [
-                        'rgba(54, 162, 235, 0.6)',
-                        'rgba(255, 99, 132, 0.6)'
-                    ],
-                    borderColor: [
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 99, 132, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value, index, values) {
-                                return 'Rp ' + value.toLocaleString('id-ID');
-                            }
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                if (context.parsed.y !== null) {
-                                    label += new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(context.parsed.y);
-                                }
-                                return label;
-                            }
-                        }
-                    }
+   <script>
+    let financialChart;
+
+    $(function() {
+        const currentYear = new Date().getFullYear();
+        const select = document.getElementById('yearSelect');
+        for (let year = currentYear; year >= 2020; year--) {
+            let option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            select.appendChild(option);
+        }
+
+        $('#yearSelect').change(function() {
+            updateChart($(this).val());
+        });
+
+        updateChart(currentYear);
+    });
+
+    function updateChart(year) {
+        $.ajax({
+            url: '{{ route("get.financial.data.yearly") }}',
+            method: 'GET',
+            data: { year: year },
+            success: function(response) {
+                if (financialChart) {
+                    financialChart.destroy();
                 }
+
+                const ctx = document.getElementById('financialChart').getContext('2d');
+                financialChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
+                        datasets: [
+                            {
+                                label: 'Pemasukan (Rp)',
+                                data: response.pemasukanBulanan,
+                                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Pengeluaran (Rp)',
+                                data: response.pengeluaranBulanan,
+                                backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return 'Rp ' + value.toLocaleString('id-ID');
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.y !== null) {
+                                            label += new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(context.parsed.y);
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            },
+            error: function(error) {
+                console.error('Error fetching data:', error);
             }
         });
-    </script>
+    }
+</script>
+
 
 </body>
 

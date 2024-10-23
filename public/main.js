@@ -1,21 +1,31 @@
     $(document).ready(function(){
             $('#bendaharaTable').DataTable({
             ordering: true,
-            serverSide: true,  // Menunjukkan bahwa data diambil dari server
-            processing: true,  // Menunjukkan bahwa ada proses loading data
+            serverSide: true,
+            processing: true,
+            responsive: true,
             language: {
+                processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Memuat...</span>',
                 paginate: {
-                next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
-                previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
-                }
+                    next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+                    previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
+                },
+                zeroRecords: 'Tidak ada data yang ditemukan',
+                info: 'Menampilkan _START_ sampai _END_ dari _TOTAL_ entri',
+                infoEmpty: 'Menampilkan 0 sampai 0 dari 0 entri',
+                infoFiltered: '(difilter dari _MAX_ total entri)'
             },
             ajax: {
-                url: $('#table-url').val(),  // Mengambil URL dari elemen input tersembunyi
-                type: 'GET',  // Metode pengambilan data
-                dataType: 'json',  // Jenis data yang diharapkan dari server
-                error: function(jqXHR, textStatus, errorThrown) {  // Menangani error dari permintaan AJAX
+                url: $('#table-url').val(),
+                type: 'GET',
+                dataType: 'json',
+                error: function(jqXHR, textStatus, errorThrown) {
                     console.error('AJAX error:', textStatus, errorThrown);
-                    alert('Terjadi kesalahan saat memuat data. Silakan coba lagi nanti.');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Terjadi kesalahan saat memuat data. Silakan coba lagi nanti.'
+                    });
                 }
             },
             columns: [
@@ -28,10 +38,17 @@
                 { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
             ],
             columnDefs: [
-                // Contoh untuk menambahkan pengaturan kolom tambahan jika diperlukan
+                {
+                    targets: '_all',
+                    className: 'text-center'
+                }
             ],
-            
-        
+            dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
+                 '<"row"<"col-sm-12"tr>>' +
+                 '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
         });
 
 
@@ -75,114 +92,157 @@
         function pemasukanTable(filterData){
             tablePemasukan = $('#pemasukanTable').DataTable({
                 ordering: true,
-                destroy: true,
-                serverSide: true,  // Menunjukkan bahwa data diambil dari server
-                processing: true,  // Menunjukkan bahwa ada proses loading data
+                serverSide: true,
+                processing: true,
+                responsive: true,
                 language: {
+                    processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Memuat...</span>',
                     paginate: {
-                    next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
-                    previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
-                    }
+                        next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+                        previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
+                    },
+                    zeroRecords: 'Tidak ada data yang ditemukan',
+                    info: 'Menampilkan _START_ sampai _END_ dari _TOTAL_ entri',
+                    infoEmpty: 'Menampilkan 0 sampai 0 dari 0 entri',
+                    infoFiltered: '(difilter dari _MAX_ total entri)'
                 },
                 ajax: {
-                    url: $('#table-url').val(),  // Mengambil URL dari elemen input tersembunyi
-                    type: 'GET',  // Metode pengambilan data
-                    dataType: 'json',  // Jenis data yang diharapkan dari server
-                    error: function(jqXHR, textStatus, errorThrown) {  // Menangani error dari permintaan AJAX
+                    url: $('#table-url').val(),
+                    type: 'GET',
+                    dataType: 'json',
+                    data: filterData,
+                    error: function(jqXHR, textStatus, errorThrown) {
                         console.error('AJAX error:', textStatus, errorThrown);
-                        alert('Terjadi kesalahan saat memuat data. Silakan coba lagi nanti.');
-                    },
-                    data: filterData
-                    
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Terjadi kesalahan saat memuat data. Silakan coba lagi nanti.'
+                        });
+                    }
                 },
                 columns: [
-                    { data: 'DT_RowIndex', name: 'DT_RowIndex', width: '10px', orderable: false, searchable: false },
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', width: '50px', orderable: false, searchable: false },
                     { data: 'name', name: 'name' },
                     { data: 'description', name: 'description' },
-                    { data: 'category', name: 'category' }, // Pastikan ini sesuai dengan addColumn di server
+                    { data: 'category', name: 'category' },
                     { data: 'date', name: 'date' },
                     { data: 'jumlah', name: 'jumlah' },
                     { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
                 ],
-            columnDefs: [
-                                {
-                                "targets": "_all",
-                                "defaultContent": '<div className="align-middle text-center">-</div>'
-                                },
-            ]
-                
-                });
+                columnDefs: [
+                    {
+                        targets: '_all',
+                        className: 'text-center'
+                    }
+                ],
+                dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
+                     '<"row"<"col-sm-12"tr>>' +
+                     '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+            });
         }
         
 
 
-
         $('#kategoriTable').DataTable({
             ordering: true,
-            serverSide: true,  // Indicates that data is fetched from the server
-            processing: true,  // Indicates that there is loading data processing
+            serverSide: true,
+            processing: true,
+            responsive: true,
             language: {
+                processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Memuat...</span>',
                 paginate: {
-                next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
-                previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
-                }
+                    next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+                    previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
+                },
+                zeroRecords: 'Tidak ada data yang ditemukan',
+                info: 'Menampilkan _START_ sampai _END_ dari _TOTAL_ entri',
+                infoEmpty: 'Menampilkan 0 sampai 0 dari 0 entri',
+                infoFiltered: '(difilter dari _MAX_ total entri)'
             },
             ajax: {
-                url: $('#table-url').val(),  // Fetch URL from hidden input element
-                type: 'GET',  // Method to fetch data
-                dataType: 'json',  // Expected data type from server
-                error: function(jqXHR, textStatus, errorThrown) {  // Handle AJAX errors
+                url: $('#table-url').val(),
+                type: 'GET',
+                dataType: 'json',
+                error: function(jqXHR, textStatus, errorThrown) {
                     console.error('AJAX error:', textStatus, errorThrown);
-                    alert('Terjadi kesalahan saat memuat data. Silakan coba lagi nanti.');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Terjadi kesalahan saat memuat data. Silakan coba lagi nanti.'
+                    });
                 }
             },
             columns: [
-                { data: 'DT_RowIndex', name: 'DT_RowIndex', width: '10px', orderable: false, searchable: false },
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', width: '50px', orderable: false, searchable: false },
                 { data: 'name', name: 'name' },
                 { data: 'jenis_kategori', name: 'jenis_kategori' },
                 { data: 'description', name: 'description' },
                 { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
             ],
             columnDefs: [
-                // Example for additional column settings if needed
+                {
+                    targets: '_all',
+                    className: 'text-center'
+                }
             ],
-            
-            
-        
+            dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
+                 '<"row"<"col-sm-12"tr>>' +
+                 '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
         });
 
             $('#roleTable').DataTable({
             ordering: true,
-            serverSide: true,  // Menunjukkan bahwa data diambil dari server
-            processing: true,  // Menunjukkan bahwa ada proses loading data
+            serverSide: true,
+            processing: true,
+            responsive: true,
             language: {
+                processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Memuat...</span>',
                 paginate: {
-                next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
-                previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
-                }
+                    next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+                    previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
+                },
+                zeroRecords: 'Tidak ada data yang ditemukan',
+                info: 'Menampilkan _START_ sampai _END_ dari _TOTAL_ entri',
+                infoEmpty: 'Menampilkan 0 sampai 0 dari 0 entri',
+                infoFiltered: '(difilter dari _MAX_ total entri)'
             },
             ajax: {
-                url: $('#table-url').val(),  // Mengambil URL dari elemen input tersembunyi
-                type: 'GET',  // Metode pengambilan data
-                dataType: 'json',  // Jenis data yang diharapkan dari server
-                error: function(jqXHR, textStatus, errorThrown) {  // Menangani error dari permintaan AJAX
+                url: $('#table-url').val(),
+                type: 'GET',
+                dataType: 'json',
+                error: function(jqXHR, textStatus, errorThrown) {
                     console.error('AJAX error:', textStatus, errorThrown);
-                    alert('Terjadi kesalahan saat memuat data. Silakan coba lagi nanti.');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Terjadi kesalahan saat memuat data. Silakan coba lagi nanti.'
+                    });
                 }
             },
             columns: [
-                { data: 'DT_RowIndex', name: 'DT_RowIndex', width: '10px', orderable: false, searchable: false },
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', width: '50px', orderable: false, searchable: false },
                 { data: 'name', name: 'name' },
                 { data: 'guard_name', name: 'guard_name' },
-
-
                 { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
             ],
             columnDefs: [
-                // Contoh untuk menambahkan pengaturan kolom tambahan jika diperlukan
+                {
+                    targets: '_all',
+                    className: 'text-center'
+                }
             ],
-            
-        
+            dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
+                 '<"row"<"col-sm-12"tr>>' +
+                 '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
         });
 
         

@@ -21,179 +21,181 @@
                 <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="javascript:void(0)">Form</a></li>
-                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Add Pemasukan</a></li>
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Add Pengeluaran</a></li>
                     </ol>
                 </div>
             </div>
 
-             @if(session('success'))
-                            <div class="alert alert-success alert-dismissible fade show">
-                                <svg viewbox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
-                                    <polyline points="9 11 12 14 22 4"></polyline>
-                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-                                </svg>
-                                <strong>Success!</strong> {{ session('success') }}
-                                <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span></button>
-                            </div>
-                            @endif
-                            @if(session('error'))
-                                <div class="alert alert-danger alert-dismissible fade show">
-                                    <strong>Error!</strong> {{ session('error') }}
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span><i class="fa fa-times"></i></span></button>
-                                </div>
-                            @endif
-                            @if(session('update_success'))
-                            <div class="alert alert-warning alert-dismissible fade show">
-                                <svg viewbox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
-                                    <polyline points="9 11 12 14 22 4"></polyline>
-                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-                                </svg>
-                                <strong>Success!</strong> {{ session('update_success') }}
-                                <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span></button>
-                            </div>
-                            @endif
-
-<div class="row">
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h4 class="card-title">Add Data Pengeluaran</h4>
-
-             
+            @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show">
+                <svg viewbox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <polyline points="9 11 12 14 22 4"></polyline>
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                </svg>
+                <strong>Success!</strong> {{ session('success') }}
+                <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span></button>
             </div>
+            @endif
+            @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show">
+                <strong>Error!</strong> {{ session('error') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span><i class="fa fa-times"></i></span></button>
+            </div>
+            @endif
+            @if(session('update_success'))
+            <div class="alert alert-warning alert-dismissible fade show">
+                <svg viewbox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <polyline points="9 11 12 14 22 4"></polyline>
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                </svg>
+                <strong>Success!</strong> {{ session('update_success') }}
+                <button type="button" class="close h-100" data-dismiss="alert" aria-label="Close"><span><i class="mdi mdi-close"></i></span></button>
+            </div>
+            @endif
 
-            <div class="card-body">
-                <form class="form-valide-with-icon" action="/pengeluaran/store" method="post" enctype="multipart/form-data">
-                    @csrf
-                <div class="form-group mb-2 d-flex align-items-center">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Add Data Pengeluaran</h4>
                         </div>
-                        <input type="date" class="form-control" name="tanggal" value="{{ old('tanggal') }}" required>
+                        <div class="card-body">
+                            <form class="form-valide-with-icon" action="/pengeluaran/store" method="post" enctype="multipart/form-data">
+                                @csrf
+                                <div class="form-group">
+                                    <label class="text-label">Tanggal *</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                        <input type="date" class="form-control" name="tanggal" value="{{ old('tanggal') }}" required>
+                                    </div>
+                                    @error('tanggal')
+                                    <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <div id="dynamic-fields-container">
+                                    <div class="dynamic-field">
+                                        <div class="form-group">
+                                            <label class="text-label">Nama Pengeluaran *</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                                </div>
+                                                <input type="text" class="form-control" name="name[]" placeholder="Enter name.." value="{{ old('name') }}" required>
+                                            </div>
+                                            @error('name')
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="text-label">Deskripsi</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fas fa-book"></i></span>
+                                                </div>
+                                                <textarea class="form-control" name="description[]" placeholder="Enter description..">{{ old('description') }}</textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group col-md-4">
+                                                <label class="text-label">Nominal *</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                                    </div>
+                                                    <input type="text" class="form-control nominal" name="nominal[]" placeholder="Enter amount.." required oninput="formatInputNominal(event); calculateTotal(event);">
+                                                    <input type="hidden" name="nominal_hidden[]">
+                                                </div>
+                                                @error('nominal')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                <label class="text-label">Jumlah Satuan *</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
+                                                    </div>
+                                                    <input type="number" step="0.01" class="form-control" name="jumlah_satuan[]" placeholder="Enter amount.." value="{{ old('jumlah_satuan') }}" required oninput="calculateTotal(event);">
+                                                </div>
+                                                @error('jumlah_satuan')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                <label class="text-label">Dll *</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                                    </div>
+                                                    <input type="text" class="form-control dll" name="dll[]" placeholder="Enter amount.." required oninput="formatInputDll(event); calculateTotal(event);">
+                                                    <input type="hidden" name="dll_hidden[]">
+                                                </div>
+                                                @error('dll')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="text-label">Jumlah *</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                                </div>
+                                                <input type="text" class="form-control jumlah" name="jumlah[]" placeholder="Masukkan jumlah.." value="{{ old('jumlah') }}" required readonly>
+                                                <input type="hidden" name="jumlah_hidden[]">
+                                            </div>
+                                            @error('jumlah')
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="text-label">Kategori *</label>
+                                            <select class="select2-with-label-single js-states form-control" name="category_id[]" required>
+                                                <option value="">PILIH KATEGORI</option>
+                                            </select>
+                                            @error('category_id')
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="image">Foto Bukti Pengeluaran</label>
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="image" name="image[]" accept="image/*" onchange="updateImagePreview(event, 'profile-image')">
+                                                <label class="custom-file-label" for="image">Choose file</label>
+                                            </div>
+                                            <div class="mt-3">
+                                                <img id="profile-image" src="{{ asset('dash/images/cash.png') }}" alt="Gambar Bukti Pengeluaran" class="img-fluid" style="max-width: 150px; max-height: 150px;">
+                                            </div>
+                                            {{-- <small class="form-text text-muted">* Jika tidak ada perubahan, tidak perlu diisi</small> --}}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="text-right mt-4">
+                                    <button type="button" class="btn btn-info" id="add-more-fields">Add Pengeluaran</button>
+                                </div>
+
+                                <div class="form-group text-right mt-5">
+                                    <button type="button" class="btn btn-danger btn-cancel" onclick="window.location.href='/pengeluaran'">Cancel</button>
+                                    <button type="submit" class="btn btn-primary btn-submit">Submit</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    @error('tanggal')
-                    <span class="mt-2 text-danger">{{ $message }}</span>
-                    @enderror
                 </div>
-                    <div id="dynamic-fields-container">
-                        <div class="dynamic-field">
-                            <div class="form-group">
-                                <label class="text-label">Nama Pengeluaran *</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fa fa-user"></i></span>
-                                    </div>
-                                    <input type="text" class="form-control" name="name[]" placeholder="Enter name.." value="{{ old('name') }}" required>
-                                </div>
-                                @error('name')
-                                <span class="mt-2 text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label class="text-label">Deskripsi</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-book"></i></span>
-                                    </div>
-                                    <textarea class="form-control" name="description[]" placeholder="Enter description..">{{ old('description') }}</textarea>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="text-label">Nominal *</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                                    </div>
-                                    <input type="text" class="form-control nominal" id="nominal" name="nominal[]" placeholder="Enter amount.." required oninput="formatInputNominal(event); calculateTotal(event);">
-                                    <input type="hidden" name="nominal_hidden[]" id="nominal_value">
-                                </div>
-                                @error('nominal')
-                                <span class="mt-2 text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label class="text-label">Jumlah Satuan *</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                                    </div>
-                                    <input type="number" step="0.01" class="form-control" id="jumlah_satuan" name="jumlah_satuan[]" placeholder="Enter amount.." value="{{ old('jumlah_satuan') }}" required oninput="calculateTotal(event);">
-                                </div>
-                                @error('jumlah_satuan')
-                                <span class="mt-2 text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label class="text-label">Dll *</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                                    </div>
-                                    <input type="text" class="form-control dll" id="dll" name="dll[]" placeholder="Enter amount.." required oninput="formatInputDll(event); calculateTotal(event);">
-                                    <input type="hidden" name="dll_hidden[]" id="dll_value">
-                                </div>
-                                @error('dll')
-                                <span class="mt-2 text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label class="text-label">Jumlah *</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                                    </div>
-                                    <input type="text" class="form-control jumlah" id="jumlah" name="jumlah[]" placeholder="Masukkan jumlah.." value="{{ old('jumlah') }}" required readonly>
-                                    <input type="hidden" id="jumlah_hidden" name="jumlah_hidden[]">
-                                </div>
-                                @error('jumlah')
-                                <span class="mt-2 text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label class="text-label">Kategori *</label>
-                                <select class="select2-with-label-single js-states form-control" id="category" name="category_id[]" required>
-                                    <option value="">PILIH KATEGORI</option>
-                                </select>
-                                @error('category_id')
-                                <span class="mt-2 text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label for="image">Foto Bukti Pengeluaran</label>
-                                <div class="mb-3">
-                                    <img id="profile-image" src="{{ asset('dash/images/cash.png') }}" alt="Gambar Bukti Pengeluaran" width="150" height="150">
-                                </div>
-                                <div class="file-upload-wrapper">
-                                    <label class="file-upload-label" for="image">Pilih file</label>
-                                    <input type="file" id="image" name="image[]" accept="image/*" onchange="updateImagePreview(event, 'profile-image')">
-                                    <div id="file-upload-info" class="file-upload-info">Tidak ada file yang dipilih</div>
-                                </div>
-                                <label class="text-label text-danger mt-3">* Jika tidak ada perubahan, tidak perlu diisi</label>
-                            </div>
-                        </div>
-
-                        <hr>
-                    </div>
-
-                    <div class="d-flex justify-content-end">
-                        <button type="button" class="btn btn-info" id="add-more-fields">Add Pengeluaran</button>
-                    </div>
-
-                    <button type="button" class="btn btn-danger btn-cancel" onclick="window.location.href='/pengeluaran'">Cancel</button>
-                    <button type="submit" class="btn btn-primary btn-submit">Submit</button>
-                </form>
             </div>
         </div>
     </div>
-</div>
 
     <div class="footer">
         <div class="copyright">
@@ -290,7 +292,7 @@ function updateImagePreview(event, imageId) {
     const input = event.target;
     const file = input.files[0];
     const image = document.getElementById(imageId);
-    const fileInfo = input.parentElement.querySelector('.file-upload-info');
+    const fileInfo = input.nextElementSibling;
 
     if (file) {
         const reader = new FileReader();
@@ -301,7 +303,7 @@ function updateImagePreview(event, imageId) {
         reader.readAsDataURL(file);
     } else {
         image.src = '{{ asset('dash/images/cash.png') }}';
-        fileInfo.textContent = 'Tidak ada file yang dipilih';
+        fileInfo.textContent = 'Choose file';
     }
 }
 
@@ -320,7 +322,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('add-more-fields').addEventListener('click', function() {
         const newFieldSet = `
-            <div class="dynamic-field">
+            <div class="dynamic-field mt-4">
                 <div class="form-group">
                     <label class="text-label">Nama Pengeluaran *</label>
                     <div class="input-group">
@@ -341,35 +343,37 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="text-label">Nominal *</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label class="text-label">Nominal *</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                            </div>
+                            <input type="text" class="form-control nominal${iterate}" name="nominal[]" placeholder="Enter amount.." required oninput="formatInputNominal(event); calculateTotal(event);">
+                            <input type="hidden" name="nominal_hidden[]">
                         </div>
-                        <input type="text" class="form-control nominal${iterate}" name="nominal[]" placeholder="Enter amount.." required oninput="formatInputNominal(event); calculateTotal(event);">
-                        <input type="hidden" name="nominal_hidden[]"> <!-- Input tersembunyi untuk nilai numerik -->
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label class="text-label">Jumlah Satuan *</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                    <div class="form-group col-md-4">
+                        <label class="text-label">Jumlah Satuan *</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
+                            </div>
+                            <input type="number" step="1" class="form-control jumlah_satuan" name="jumlah_satuan[]" placeholder="Enter amount.." required oninput="calculateTotal(event);">
                         </div>
-                        <input type="number" step="1" class="form-control jumlah_satuan" name="jumlah_satuan[]" placeholder="Enter amount.." required oninput="calculateTotal(event);">
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label class="text-label">Dll *</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                    <div class="form-group col-md-4">
+                        <label class="text-label">Dll *</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                            </div>
+                            <input type="text" class="form-control dll${iterate}" name="dll[]" placeholder="Enter amount.." required oninput="formatInputDll(event); calculateTotal(event);">
+                            <input type="hidden" name="dll_hidden[]">
                         </div>
-                        <input type="text" class="form-control dll${iterate}" name="dll[]" placeholder="Enter amount.." required oninput="formatInputDll(event); calculateTotal(event);">
-                        <input type="hidden" name="dll_hidden[]"> <!-- Input tersembunyi untuk nilai numerik -->
                     </div>
                 </div>
 
@@ -393,19 +397,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 <div class="form-group">
                     <label for="image${iterate}">Foto Bukti Pengeluaran</label>
-                    <div class="mb-3">
-                        <img id="profile-image${iterate}" src="{{ asset('dash/images/cash.png') }}" alt="Gambar Bukti Pengeluaran" width="150" height="150">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="image${iterate}" name="image[]" accept="image/*" onchange="updateImagePreview(event, 'profile-image${iterate}')">
+                        <label class="custom-file-label" for="image${iterate}">Choose file</label>
                     </div>
-                    <div class="file-upload-wrapper">
-                        <label class="file-upload-label" for="image${iterate}">Pilih file</label>
-                        <input type="file" id="image${iterate}" name="image[]" accept="image/*" onchange="updateImagePreview(event, 'profile-image${iterate}')">
-                        <div id="file-upload-info${iterate}" class="file-upload-info">Tidak ada file yang dipilih</div>
+                    <div class="mt-3">
+                        <img id="profile-image${iterate}" src="{{ asset('dash/images/cash.png') }}" alt="Gambar Bukti Pengeluaran" class="img-fluid" style="max-width: 150px; max-height: 150px;">
                     </div>
-                    <label class="text-label text-danger mt-3">* Jika tidak ada perubahan, tidak perlu diisi</label>
+                    {{-- <small class="form-text text-muted">* Jika tidak ada perubahan, tidak perlu diisi</small> --}}
                 </div>
 
                 <button type="button" class="btn btn-danger remove-field">Remove</button>
-                <hr>
             </div>
         `;
 
