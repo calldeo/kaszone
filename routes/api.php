@@ -1,15 +1,16 @@
 <?php
-use App\Http\Controllers\API\AuthController;
-use App\Http\Controllers\API\UserController;
-use App\Http\Controllers\API\CategoryController;
-use App\Http\Controllers\API\PemasukanController;
-use App\Http\Controllers\API\PengeluaranController;
-
-
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
+use App\Http\Controllers\API\AuthController;
+
+
+use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\SettingController;
+use App\Http\Controllers\API\CategoryController;
+use App\Http\Controllers\API\PemasukanController;
+use App\Http\Controllers\API\PengeluaranController;
 // use Auth; 
 
 /*
@@ -119,7 +120,9 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     });
 
-
+    Route::prefix('setting')->middleware('auth:api')->group(function(){
+    Route::post('/update-minimal-saldo', [SettingController::class, 'updateMinimalSaldo']);
+    });
 
 });
 
