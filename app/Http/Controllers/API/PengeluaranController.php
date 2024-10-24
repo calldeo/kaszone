@@ -12,6 +12,7 @@ use App\Imports\CategoriesImport;
 use App\Models\ParentPengeluaran;
 use App\Exports\PengeluaranExport;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -375,89 +376,89 @@ public function showDetail($id)
 }
 public function importPengeluaran(Request $request)
 {
+    Log::alert("Memulai proses import");
+
     $request->validate([
-        'file' => 'required',
-        'file.*' => 'mimes:xls,xlsx|max:2048',
+        'file' => 'required|mimes:xls,xlsx|max:2048',
     ]);
 
-    DB::beginTransaction(); 
+    DB::beginTransaction();
 
     try {
         if ($request->hasFile('file')) {
-            foreach ($request->file('file') as $file) {
-                $spreadsheet = IOFactory::load($file);
-                $sheetNames = $spreadsheet->getSheetNames();
+            $file = $request->file('file');
+            
+            $spreadsheet = IOFactory::load($file);
+            $sheetNames = $spreadsheet->getSheetNames();
 
-                foreach ($sheetNames as $sheetIndex => $sheetName) {
-                   
-                    try {
-                        $tanggal = \Carbon\Carbon::createFromFormat('d-m-Y', $sheetName);
-                    } catch (\Exception $e) {
-                        Log::error('Format tanggal tidak valid: ' . $sheetName);
-                        continue; 
+            foreach ($sheetNames as $sheetIndex => $sheetName) {
+                try {
+                    $tanggal = \Carbon\Carbon::createFromFormat('d-m-Y', $sheetName);
+                } catch (\Exception $e) {
+                    Log::error('Format tanggal tidak valid pada sheet: ' . $sheetName);
+                    continue; 
+                }
+
+                Log::alert('Mengimpor dari sheet: ' . $sheetName);
+
+                $parentPengeluaran = new ParentPengeluaran();
+                $parentPengeluaran->tanggal = $tanggal; 
+                $parentPengeluaran->save();
+
+                Log::alert($parentPengeluaran);
+
+                $sheet = $spreadsheet->getSheet($sheetIndex);
+                $highestRow = $sheet->getHighestRow();
+                $highestColumn = $sheet->getHighestColumn();
+
+                for ($row = 2; $row <= $highestRow; $row++) {
+                    $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE);
+
+                  
+                    if (empty($rowData[0][0])) {
+                        Log::warning('Baris ' . $row . ' kosong atau tidak valid, dilewati.');
+                        continue;
                     }
 
-                    Log::alert('Mengimpor dari sheet: ' . $sheetName);
-                    
-                    $parentPengeluaran = new ParentPengeluaran();
-                    $parentPengeluaran->tanggal = $tanggal; 
-                    $parentPengeluaran->save();
+                    $pengeluaran = new Pengeluaran();
+                    $pengeluaran->name = $rowData[0][0]; 
+                    $pengeluaran->description = $rowData[0][1] ?? null;
+                    $pengeluaran->jumlah_satuan = $rowData[0][2] ?? 0; 
+                    $pengeluaran->nominal = $rowData[0][3] ?? 0; 
+                    $pengeluaran->dll = $rowData[0][4] ?? 0;
+                    $pengeluaran->jumlah = ($pengeluaran->jumlah_satuan * $pengeluaran->nominal) + $pengeluaran->dll;
+                    $pengeluaran->id = $rowData[0][5] ?? null;
+                    $pengeluaran->id_parent = $parentPengeluaran->id;
 
-                    $sheet = $spreadsheet->getSheet($sheetIndex);
-                    $highestRow = $sheet->getHighestRow();
-                    $highestColumn = $sheet->getHighestColumn();
-
-                    for ($row = 2; $row <= $highestRow; $row++) {
-                        $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE);
-
-                        Log::alert('Row ' . $row . ' Data: ' . json_encode($rowData));
-
-                        if (empty($rowData[0][0])) {
-                            Log::warning('Row ' . $row . ' is empty or invalid, skipping.');
-                            continue; 
-                        }
-
-                        $pengeluaran = new Pengeluaran();
-                        $pengeluaran->name = $rowData[0][0]; 
-                        $pengeluaran->description = $rowData[0][1] ?? null;
-                        $pengeluaran->jumlah_satuan = $rowData[0][2] ?? 0; 
-                        $pengeluaran->nominal = $rowData[0][3] ?? 0; 
-                        $pengeluaran->dll = $rowData[0][4] ?? 0; 
-                        
-                        $pengeluaran->jumlah = ($pengeluaran->jumlah_satuan * $pengeluaran->nominal) + $pengeluaran->dll;
-
-                        $pengeluaran->id = $rowData[0][5] ?? null;
-                        $pengeluaran->id_parent = $parentPengeluaran->id;
-
-                        $pengeluaran->save();
-
-                        Log::alert('Data row ' . $row . ' disimpan: ' . json_encode($pengeluaran));
-                    }
+                    $pengeluaran->save();
+                    Log::alert($pengeluaran);
                 }
             }
         }
+        DB::commit();
 
-        DB::commit(); 
         return response()->json([
             'status' => 200,
-            'message' => 'Data pengeluaran berhasil diimpor!'
+            'message' => 'Data pengeluaran berhasil diimpor!',
+            'data'   => $pengeluaran
         ], 200);
     } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e) {
         DB::rollBack();
-        Log::error('Import failed: ' . $e->getMessage()); 
+        Log::error('Gagal mengimpor: ' . $e->getMessage());
         return response()->json([
             'status' => 500,
             'message' => 'Terjadi kesalahan saat membaca file: ' . $e->getMessage()
         ], 500);
     } catch (\Exception $e) {
         DB::rollBack();
-        Log::error('Import failed: ' . $e->getMessage()); 
+        Log::error('Gagal mengimpor: ' . $e->getMessage());
         return response()->json([
             'status' => 500,
             'message' => 'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage()
         ], 500);
     }
 }
+
 
 public function downloadTemplateAPI()
 {
