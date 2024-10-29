@@ -248,7 +248,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="adminDetailModalLabel">Detail Pengguna</h5>
+                    <h5 class="modal-title text-white" id="adminDetailModalLabel">Detail Pengguna</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -293,10 +293,11 @@
                     url: url,
                     method: 'GET',
                     success: function(data) {
-                        modal.find('#name').text(data.name || 'N/A').addClass('animate__animated animate__fadeInRight');
-                        modal.find('#email').text(data.email || 'N/A').addClass('animate__animated animate__fadeInRight').css('animation-delay', '0.1s');
-                        modal.find('#kelamin').text(data.kelamin || 'N/A').addClass('animate__animated animate__fadeInRight').css('animation-delay', '0.2s');
-                        modal.find('#alamat').text(data.alamat || 'N/A').addClass('animate__animated animate__fadeInRight').css('animation-delay', '0.3s');
+                        modal.find('#name').text(data.name || 'N/A');
+                        modal.find('#email').text(data.email || 'N/A');
+                        modal.find('#kelamin').text(data.kelamin || 'N/A');
+                        modal.find('#alamat').text(data.alamat || 'N/A');
+                        console.log('Data Detail:', data); // log saya ingin melihat datanya
                     },
                     error: function(xhr, status, error) {
                         console.log(xhr.responseText);

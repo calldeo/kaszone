@@ -299,7 +299,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="adminDetailModalLabel">Detail Pemasukan</h5>
+                    <h5 class="modal-title text-white" id="adminDetailModalLabel">Detail Pemasukan</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -510,13 +510,15 @@
                 modal.find('#name').text(data.name || 'N/A');
                 modal.find('#description').text(data.description || 'N/A');
                 var date = new Date(data.date);
-                var formattedDate = date.getDate().toString().padStart(2, '0') + '-' +
-                                  (date.getMonth() + 1).toString().padStart(2, '0') + '-' +
-                                  date.getFullYear();
+                var formattedDate = (date.getMonth() + 1).toString().padStart(2, '0') + '-' +
+                                    date.getDate().toString().padStart(2, '0') + '-' +
+                                    date.getFullYear();
                 modal.find('#date').text(formattedDate || 'N/A');
                 modal.find('#jumlah').text(data.jumlah ? 'Rp ' + parseFloat(data.jumlah.replace(/[^\d]/g, '')).toLocaleString('id-ID') : 'N/A');
                 modal.find('#category').text(data.category || 'N/A');
                 modal.modal('show');
+
+                console.log('Detail Data:', data);
             }
         });
     </script>

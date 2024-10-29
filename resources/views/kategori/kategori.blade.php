@@ -283,7 +283,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="adminDetailModalLabel">Detail Kategori</h5>
+                    <h5 class="modal-title text-white" id="adminDetailModalLabel">Detail Kategori</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -342,35 +342,23 @@
 
     <script>
         $(document).ready(function() {
+            // Handle modal show event
             $('#adminDetailModal').on('show.bs.modal', function(event) {
                 var button = $(event.relatedTarget);
                 var url = button.data('url');
-                
                 var modal = $(this);
                 
+                // Reset modal fields
                 modal.find('#id').text('');
                 modal.find('#name').text('');
                 modal.find('#description').text('');
-                
-                $.ajax({
-                    url: url,
-                    method: 'GET',
-                    success: function(data) {
-                        modal.find('#id').text(data.id || 'N/A').addClass('animate__animated animate__fadeInRight');
-                        modal.find('#name').text(data.name || 'N/A').addClass('animate__animated animate__fadeInRight').css('animation-delay', '0.1s');
-                        modal.find('#description').text(data.description || 'N/A').addClass('animate__animated animate__fadeInRight').css('animation-delay', '0.2s');
-                    },
-                    error: function(xhr, status, error) {
-                        console.log(xhr.responseText);
-                        modal.find('.modal-body').html('Terjadi kesalahan saat memuat detail').addClass('animate__animated animate__shakeX');
-                    }
-                });
             });
 
-            // Tambahkan konfirmasi untuk menghapus data
+            // Handle delete confirmation
             $(document).on('click', '.btn-danger', function(e) {
                 e.preventDefault();
                 var form = $(this).closest('form');
+                
                 Swal.fire({
                     title: 'Apakah Anda yakin ingin menghapus?',
                     text: "Data yang dihapus tidak dapat dikembalikan!",

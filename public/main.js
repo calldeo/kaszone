@@ -212,6 +212,7 @@
                             $('#id').text(response.id || 'N/A');
                             $('#name').text(response.name || 'N/A'); 
                             $('#description').text(response.description || 'N/A');
+                            console.log('Detail Data:', response); // Log detail data
                         },
                         error: function(xhr, status, error) {
                             console.error('Error:', error);
