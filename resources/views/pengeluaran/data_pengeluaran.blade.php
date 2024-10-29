@@ -91,6 +91,7 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
             border-radius: 10px;
             transition: all 0.3s ease;
+            cursor: pointer;
         }
         .table tbody tr:hover {
             transform: translateY(-5px);
@@ -444,6 +445,14 @@
                 ],
                 drawCallback: function(settings) {
                     totalPengeluaran(filterData);
+                }
+            });
+
+            // Add click event handler for table rows
+            $('#pengeluaranTables tbody').on('click', 'tr td:not(:last-child)', function() {
+                var data = pengeluaranTable.row($(this).closest('tr')).data();
+                if (data) {
+                    window.location.href = '/pengeluaran/' + data.id;
                 }
             });
     

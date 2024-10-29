@@ -40,9 +40,6 @@ class AdminController extends Controller
                         <form action="/user/' . $row->id . '/edit" method="GET" class="mr-1">
                             <button type="submit" class="btn btn-warning btn-xs"><i class="fas fa-edit"></i></button>
                         </form>
-                         <button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/user/' . $row->id . '/detail">
-                    <i class="fa fa-eye"></i>
-                    </button>
                         <form action="/user/' . $row->id . '/destroy" method="POST">
                             ' . csrf_field() . '
                             ' . method_field('DELETE') . '
@@ -75,10 +72,6 @@ class AdminController extends Controller
                                 <i class="fas fa-edit"></i>
                             </button>
                         </form>
-
-                        <button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/kategori/' . $row->id . '/detail">
-                            <i class="fa fa-eye"></i>
-                        </button>
 
                         <form action="/kategori/' . $row->id . '/destroy" method="POST">
                             ' . csrf_field() . '
@@ -133,7 +126,6 @@ class AdminController extends Controller
                 ->addColumn('opsi', function ($row) {
                     $user = auth()->user();
                     $editButton = '';
-                    $viewButton = '<button type="button" class="btn btn-info btn-xs mr-1" data-toggle="modal" data-target="#adminDetailModal" data-url="/pemasukan/' . $row->id_data . '/detail"><i class="fa fa-eye"></i></button>';
                     $deleteButton = '';
 
                     if (session('activeRole') == 'Admin' || session('activeRole') == 'Bendahara') {
@@ -145,8 +137,7 @@ class AdminController extends Controller
                             '</form>';
                     }
                     
-
-                    return '<div class="d-flex align-items-center">' . $editButton . $viewButton . $deleteButton . '</div>';
+                    return '<div class="d-flex align-items-center">' . $editButton . $deleteButton . '</div>';
                 })
                 ->rawColumns(['opsi'])
                 ->make(true);
@@ -252,13 +243,8 @@ class AdminController extends Controller
                     return $categories;
                 })
                 ->addColumn('opsi', function ($row) {
-
                     $buttons = '
-                    <div class="d-flex align-items-center">
-                        <a href="/pengeluaran/' . $row->id . '/detail" class="btn btn-info btn-xs mr-1">
-                            <i class="fas fa-eye"></i>
-                        </a>';
-
+                    <div class="d-flex align-items-center">';
 
                     if (session('activeRole') == 'Admin' || session('activeRole') == 'Bendahara') {
                         $buttons .= '

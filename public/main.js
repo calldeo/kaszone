@@ -39,8 +39,16 @@
             ],
             columnDefs: [
                 {
-                    targets: '_all',
-                    className: 'text-center'
+                    targets: '_all', 
+                    className: 'text-center',
+                    createdCell: function (td, cellData, rowData, row, col) {
+                        if (col < 6) { // Tidak termasuk kolom opsi
+                            $(td).css('cursor', 'pointer');
+                            $(td).attr('data-url', '/user/' + rowData.id + '/detail');
+                            $(td).attr('data-toggle', 'modal');
+                            $(td).attr('data-target', '#adminDetailModal');
+                        }
+                    }
                 }
             ],
             dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
@@ -193,10 +201,32 @@
                  '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
             buttons: [
                 'copy', 'csv', 'excel', 'pdf', 'print'
-            ]
+            ],
+            createdRow: function(row, data, dataIndex) {
+                $(row).find('td:not(:last-child)').css('cursor', 'pointer').on('click', function() {
+                    $('#adminDetailModal').modal('show');
+                    $.ajax({
+                        url: '/kategori/' + data.id + '/detail',
+                        method: 'GET',
+                        success: function(response) {
+                            $('#id').text(response.id || 'N/A');
+                            $('#name').text(response.name || 'N/A'); 
+                            $('#description').text(response.description || 'N/A');
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Terjadi kesalahan saat memuat detail'
+                            });
+                        }
+                    });
+                });
+            }
         });
 
-            $('#roleTable').DataTable({
+        $('#roleTable').DataTable({
             ordering: true,
             serverSide: true,
             processing: true,

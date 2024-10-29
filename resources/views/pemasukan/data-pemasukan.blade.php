@@ -91,6 +91,7 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
             border-radius: 10px;
             transition: all 0.3s ease;
+            cursor: pointer;
         }
         .table tbody tr:hover {
             transform: translateY(-5px);
@@ -477,6 +478,11 @@
                 ],
                 drawCallback: function(settings) {
                     totalPemasukan(filterData);
+                },
+                createdRow: function(row, data, dataIndex) {
+                    $(row).find('td:not(:last-child)').css('cursor', 'pointer').on('click', function() {
+                        showDetailModal(data);
+                    });
                 }
             });
     
@@ -498,49 +504,26 @@
                 pemasukanTable.ajax.reload(null, false);
             }
 
-          
+            function showDetailModal(data) {
+                var modal = $('#adminDetailModal');
+                modal.find('#id_data').text(data.DT_RowIndex || 'N/A');
+                modal.find('#name').text(data.name || 'N/A');
+                modal.find('#description').text(data.description || 'N/A');
+                var date = new Date(data.date);
+                var formattedDate = date.getDate().toString().padStart(2, '0') + '-' +
+                                  (date.getMonth() + 1).toString().padStart(2, '0') + '-' +
+                                  date.getFullYear();
+                modal.find('#date').text(formattedDate || 'N/A');
+                modal.find('#jumlah').text(data.jumlah ? 'Rp ' + parseFloat(data.jumlah.replace(/[^\d]/g, '')).toLocaleString('id-ID') : 'N/A');
+                modal.find('#category').text(data.category || 'N/A');
+                modal.modal('show');
+            }
         });
     </script>
     
     <script>
         $(document).ready(function() {
             $('#kategoriTable').DataTable();
-            
-            $('#adminDetailModal').on('show.bs.modal', function(event) {
-                var button = $(event.relatedTarget);
-                var url = button.data('url');
-                
-                var modal = $(this);
-                
-                modal.find('#id_data').text('');
-                modal.find('#name').text('');
-                modal.find('#description').text('');
-                modal.find('#date').text('');
-                modal.find('#jumlah').text('');
-                modal.find('#category').text(''); 
-
-                $.ajax({
-                    url: url,
-                    method: 'GET',
-                    success: function(data) {
-                        modal.find('#id_data').text(data.id_data || 'N/A');
-                        modal.find('#name').text(data.name || 'N/A');
-                        modal.find('#description').text(data.description || 'N/A');
-                        var date = new Date(data.date);
-                        var formattedDate = date.getDate().toString().padStart(2, '0') + '-' +
-                                            (date.getMonth() + 1).toString().padStart(2, '0') + '-' +
-                                            date.getFullYear();
-                        modal.find('#date').text(formattedDate || 'N/A');
-                        var formattedJumlah = 'Rp' + parseFloat(data.jumlah || 0).toLocaleString('id-ID');
-                        modal.find('#jumlah').text(formattedJumlah);
-                        modal.find('#category').text(data.category_name || 'N/A');
-                    },
-                    error: function(xhr, status, error) {
-                        console.log(xhr.responseText);
-                        modal.find('.modal-body').html('Terjadi kesalahan saat memuat detail');
-                    }
-                });
-            });
         });
     </script>
     <script>

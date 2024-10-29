@@ -336,10 +336,8 @@ public function update(Request $request, $id)
         return Excel::download(new PengeluaranExport($pengeluaran, $year, $startDate, $endDate), $filename);
     }
 
-  public function showDetail($id)
+  public function show($id)
     {
-
-
         $parentPengeluaran = ParentPengeluaran::with('pengeluaran.category')->findOrFail($id);
 
         return view('pengeluaran.detail', compact('parentPengeluaran'));
