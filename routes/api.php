@@ -106,7 +106,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/create', [PengeluaranController::class, 'create']);
         Route::post('/store', [PengeluaranController::class, 'store']);
         Route::get('/show/{id}', [PengeluaranController::class, 'show']);
-        Route::put('/update/{id}', [PengeluaranController::class, 'update']); 
+        Route::post('/update/{id}', [PengeluaranController::class, 'update']); 
         Route::delete('/destroy/{id}', [PengeluaranController::class, 'destroy']);
         Route::delete('/pengeluaran/{id}', [PengeluaranController::class, 'delete']); 
         Route::delete('/pengeluaran/parent/{id}', [PengeluaranController::class, 'deleteAll']);
@@ -121,6 +121,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
 
     Route::prefix('setting')->middleware('auth:api')->group(function(){
+    Route::get('/edit-minimal-saldo', [SettingController::class, 'editMinimalSaldo'])->name('edit.minimal.saldo');
     Route::post('/update-minimal-saldo', [SettingController::class, 'updateMinimalSaldo']);
     });
 

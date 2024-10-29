@@ -283,7 +283,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title text-white" id="adminDetailModalLabel">Detail Kategori</h5>
+                    <h5 class="modal-title text-white" id="adminDetailModalLabel" style="color: #fff">Detail Kategori</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -313,7 +313,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="importModalLabel">Import Data Katagori</h5>
+                        <h5 class="modal-title" id="importModalLabel" style="color: #fff">Import Data Katagori</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>

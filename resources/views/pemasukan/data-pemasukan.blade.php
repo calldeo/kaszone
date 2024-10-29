@@ -337,7 +337,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="importModalLabel">Impor Data Pemasukan</h5>
+                    <h5 class="modal-title" id="importModalLabel" style="color: #ffffff">Import Data Pemasukan</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -354,7 +354,7 @@
                         </div>
 
                         </div>
-                        <button type="submit" class="btn btn-primary">Impor</button>
+                        <button type="submit" class="btn btn-primary">Import</button>
                     </form>
                 </div>
             </div>

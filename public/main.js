@@ -10,10 +10,7 @@
                     next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
                 },
-                zeroRecords: 'Tidak ada data yang ditemukan',
-                info: 'Menampilkan _START_ sampai _END_ dari _TOTAL_ entri',
-                infoEmpty: 'Menampilkan 0 sampai 0 dari 0 entri',
-                infoFiltered: '(difilter dari _MAX_ total entri)'
+               
             },
             ajax: {
                 url: $('#table-url').val(),
@@ -109,10 +106,7 @@
                         next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
                         previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
                     },
-                    zeroRecords: 'Tidak ada data yang ditemukan',
-                    info: 'Menampilkan _START_ sampai _END_ dari _TOTAL_ entri',
-                    infoEmpty: 'Menampilkan 0 sampai 0 dari 0 entri',
-                    infoFiltered: '(difilter dari _MAX_ total entri)'
+                  
                 },
                 ajax: {
                     url: $('#table-url').val(),
@@ -165,10 +159,7 @@
                     next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
                 },
-                zeroRecords: 'Tidak ada data yang ditemukan',
-                info: 'Menampilkan _START_ sampai _END_ dari _TOTAL_ entri',
-                infoEmpty: 'Menampilkan 0 sampai 0 dari 0 entri',
-                infoFiltered: '(difilter dari _MAX_ total entri)'
+             
             },
             ajax: {
                 url: $('#table-url').val(),
@@ -238,10 +229,7 @@
                     next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
                 },
-                zeroRecords: 'Tidak ada data yang ditemukan',
-                info: 'Menampilkan _START_ sampai _END_ dari _TOTAL_ entri',
-                infoEmpty: 'Menampilkan 0 sampai 0 dari 0 entri',
-                infoFiltered: '(difilter dari _MAX_ total entri)'
+              
             },
             ajax: {
                 url: $('#table-url').val(),

@@ -170,6 +170,7 @@ class PengeluaranController extends Controller
         return view('pengeluaran.edit', compact('parentPengeluaran', 'categories'));
     }
 
+    
 public function update(Request $request, $id)
 {
     $request->validate([

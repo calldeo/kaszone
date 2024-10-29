@@ -40,7 +40,6 @@ class PengeluaranController extends Controller
         }
     }
 
-
 public function store(Request $request)
 {
     // Validasi input
@@ -52,10 +51,11 @@ public function store(Request $request)
         'dll.*' => 'required|numeric|min:0',
         'jumlah.*' => 'required|numeric|min:0',
         'id.*' => 'required|exists:categories,id',
-        'image.*' => 'nullable|mimes:jpg,jpeg,png|max:2048',
-        'tanggal.*' => 'required|date_format:Y-m-d'
+        'image.*' => 'nullable|mimes:jpg,jpeg,png|max:10240', // Max size of 10 MB
+        'tanggal.*' => 'required|date_format:Y-m-d',
     ]);
 
+    Log::info('Request Data:', $request->all());
     DB::beginTransaction();
 
     try {
@@ -76,14 +76,25 @@ public function store(Request $request)
             $pengeluaran->nominal = $request->input('nominal')[$i];
             $pengeluaran->dll = $request->input('dll')[$i];
             $pengeluaran->jumlah = $request->input('jumlah')[$i];
-            $pengeluaran->id = $request->input('id')[$i];
+            $pengeluaran->id = $request->input('category_id')[$i];
 
             $pengeluaran->id_parent = $parentPengeluaran->id;
 
             // Simpan gambar jika ada file yang diupload
             if ($request->hasFile("image.$i")) {
-                $path = $request->file("image.$i")->store('image', 'public');
-                $pengeluaran->image = $path;
+                // Validasi file gambar sebelum disimpan
+                $image = $request->file("image.$i");
+
+                // Periksa apakah file valid
+                if ($image->isValid()) {
+                    $path = $image->store('images', 'public'); // Pastikan Anda menyimpan di direktori yang benar
+                    $pengeluaran->image = $path; // Atur jalur gambar
+                } else {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'File gambar tidak valid.',
+                    ], 422);
+                }
             }
 
             $pengeluaran->save();
@@ -105,41 +116,25 @@ public function store(Request $request)
         DB::rollback();
         return response()->json([
             'status' => 'error',
-            'message' => 'Pengeluaran gagal ditambahkan! ' . $th->getMessage(),
+            'message' => 'Pengeluaran gagal ditambahkan! ' . $th->getMessage().' Line: '.$th->getLine(),
         ], 500);
     }
 }
 
 public function update(Request $request, $id)
 {
-   
-    $validator = Validator::make($request->all(), [
+    // return $request;
+    $request->validate([
         'tanggal' => 'required|date',
-        'name' => 'required|array',
-        'name.*' => 'required|string|max:255',
-        'description' => 'nullable|array',
+        'name.*' => 'required|string|max:255', 
         'description.*' => 'nullable|string|max:255',
-        'jumlah_satuan' => 'required|array',
         'jumlah_satuan.*' => 'required|numeric|min:0',
-        'nominal' => 'required|array',
         'nominal.*' => 'required|numeric|min:0',
-        'jumlah' => 'required|array',
         'jumlah.*' => 'required|numeric|min:0',
-        'dll' => 'nullable|array',
-        'dll.*' => 'nullable|numeric',
-        'id' => 'required|array',
-        'id.*' => 'required|exists:categories,id',
-        'image' => 'nullable|array',
-        'image.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'dll.*' => 'nullable|string|max:255',
+        'category_id.*' => 'required|exists:categories,id',
+        'image.*' => 'nullable|mimes:jpg,jpeg,png|max:10240', // Max size of 10 MB
     ]);
-
-    if ($validator->fails()) {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Validasi gagal',
-            'errors' => $validator->errors()
-        ], 422);
-    }
 
     $parentPengeluaran = ParentPengeluaran::with('pengeluaran')->find($id);
     if (!$parentPengeluaran) {
@@ -151,64 +146,64 @@ public function update(Request $request, $id)
 
     DB::beginTransaction();
     try {
-        
         $parentPengeluaran->tanggal = $request->tanggal;
         $parentPengeluaran->save();
-
-        $pengeluaranData = [];
 
         foreach ($request->name as $key => $name) {
             if (isset($parentPengeluaran->pengeluaran[$key])) {
                 $pengeluaran = $parentPengeluaran->pengeluaran[$key];
-            } else {
-                $pengeluaran = new Pengeluaran();
-                $pengeluaran->id_parent = $parentPengeluaran->id;
-            }
 
-            $pengeluaran->name = $name;
-            $pengeluaran->description = $request->description[$key] ?? null;
-            $pengeluaran->jumlah_satuan = $request->jumlah_satuan[$key] ?? 0;
-            $pengeluaran->nominal = $request->nominal[$key] ?? 0;
-            $pengeluaran->jumlah = $request->jumlah[$key] ?? 0;
-            $pengeluaran->dll = $request->dll[$key] ?? 0; 
-            $pengeluaran->id = $request->id[$key] ?? null;
+                $pengeluaran->name = $name;
+                $pengeluaran->description = $request->description[$key];
+                $pengeluaran->jumlah_satuan = $request->jumlah_satuan[$key];
+                $pengeluaran->nominal = $request->nominal[$key];
+                $pengeluaran->jumlah = $request->jumlah[$key];
+                $pengeluaran->dll = $request->dll[$key];
+                $pengeluaran->id = $request->category_id[$key];
 
-            if ($request->hasFile('image.' . $key)) {
-                if ($pengeluaran->image) {
-                    Storage::disk('public')->delete($pengeluaran->image);
+                if ($request->hasFile('image.' . $key)) {
+                    if ($pengeluaran->image) {
+                        \Storage::disk('public')->delete($pengeluaran->image);
+                    }
+                    $pengeluaran->image = $request->file('image.' . $key)->store('pengeluaran_images', 'public');
                 }
-                $pengeluaran->image = $request->file('image.' . $key)->store('pengeluaran_images', 'public');
+
+                $pengeluaran->save();
+            } else {
+                $pengeluaranBaru = new Pengeluaran();
+                $pengeluaranBaru->name = $name;
+                $pengeluaranBaru->description = $request->description[$key] ?? null;
+                $pengeluaranBaru->jumlah_satuan = $request->jumlah_satuan[$key];
+                $pengeluaranBaru->nominal = $request->nominal[$key];
+                $pengeluaranBaru->jumlah = $request->jumlah[$key];
+                $pengeluaranBaru->dll = $request->dll[$key] ?? null;
+                $pengeluaranBaru->id = $request->category_id[$key];
+
+                if ($request->hasFile('image.' . $key)) {
+                    $pengeluaranBaru->image = $request->file('image.' . $key)->store('pengeluaran_images', 'public');
+                }
+
+                $parentPengeluaran->pengeluaran()->save($pengeluaranBaru);
             }
-
-            $pengeluaran->save();
-
-            $pengeluaranData[] = $pengeluaran;
         }
-
-        
-        $existingIds = $parentPengeluaran->pengeluaran->pluck('id')->toArray();
-        $requestIds = collect($request->input('id'))->filter()->toArray();
-        $idsToDelete = array_diff($existingIds, $requestIds);
-        Pengeluaran::destroy($idsToDelete);
 
         DB::commit();
 
         return response()->json([
             'status' => 'success',
             'message' => 'Data berhasil diperbarui.',
-            'data' => [
-                'parent_pengeluaran' => $parentPengeluaran,
-                'pengeluaran' => $pengeluaranData
-            ]
+            'data' => $parentPengeluaran->load('pengeluaran')
         ], 200);
+
     } catch (\Exception $e) {
         DB::rollback();
         return response()->json([
-            'status' => 'error',
-            'message' => 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage() . $e->getLine(),
+            'status' => 'error', 
+            'message' => 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage() . ' Line: ' . $e->getLine(),
         ], 500);
     }
 }
+
 
 
  public function delete($id_data)
