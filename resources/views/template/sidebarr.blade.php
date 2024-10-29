@@ -88,7 +88,7 @@ use Illuminate\Support\Facades\Log;
             <li class="{{ request()->is('laporan*') || request()->is('laporan') ? 'mm-active active-no-child' : '' }}">
                 <a href="/laporan" aria-expanded="{{ request()->is('laporan*') || request()->is('laporan') ? 'true' : 'false' }}" class="{{ request()->is('pengeluaran*') || request()->is('laporan') ? 'mm-active' : '' }}">
                     <i class="bi bi-wallet2"></i>
-                    <span class="nav-text">Laporan Inflow & Ouflow</span>
+                    <span class="nav-text">Laporan Inflow &<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Outflow</span>
                 </a>
             </li>
             @endcan
