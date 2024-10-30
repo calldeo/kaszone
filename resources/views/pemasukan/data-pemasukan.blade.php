@@ -509,11 +509,8 @@
                 modal.find('#id_data').text(data.DT_RowIndex || 'N/A');
                 modal.find('#name').text(data.name || 'N/A');
                 modal.find('#description').text(data.description || 'N/A');
-                var date = new Date(data.date);
-                var formattedDate = (date.getMonth() + 1).toString().padStart(2, '0') + '-' +
-                                    date.getDate().toString().padStart(2, '0') + '-' +
-                                    date.getFullYear();
-                modal.find('#date').text(formattedDate || 'N/A');
+                // Data date sudah dalam format "29-10-2024", jadi tidak perlu dikonversi
+                modal.find('#date').text(data.date || 'N/A');
                 modal.find('#jumlah').text(data.jumlah ? 'Rp ' + parseFloat(data.jumlah.replace(/[^\d]/g, '')).toLocaleString('id-ID') : 'N/A');
                 modal.find('#category').text(data.category || 'N/A');
                 modal.modal('show');
