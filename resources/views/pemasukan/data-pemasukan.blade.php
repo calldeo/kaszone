@@ -276,14 +276,18 @@
                                             <th><strong>Kategori</strong></th>
                                             <th><strong>Tanggal</strong></th>
                                             <th><strong>Jumlah(Rp)</strong></th>
+                                            @if(session('activeRole') != 'Reader')
                                             <th><strong>Opsi</strong></th>
+                                            @endif
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
                                             <td colspan="5" style="text-align: left; font-size: 1.25em; font-weight: bold;"><strong>Total Jumlah:</strong></td>
                                             <td id="total_jumlah" style="text-align: left; font-size: 1.25em; font-weight: bold;">0</td>
+                                            @if(session('activeRole') != 'Reader')
                                             <td></td>
+                                            @endif
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -474,7 +478,9 @@
                     { data: 'category', name: 'category' },
                     { data: 'date', name: 'date' },
                     { data: 'jumlah', name: 'jumlah' },
+                    @if(session('activeRole') != 'Reader')
                     { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
+                    @endif
                 ],
                 drawCallback: function(settings) {
                     totalPemasukan(filterData);
