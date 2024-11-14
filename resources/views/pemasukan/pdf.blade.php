@@ -63,8 +63,14 @@
     </style>
 </head>
 <body>
-    <h1 style="text-align: center;">Laporan Keuangan Tahun {{ $year }}</h1>
-
+    <h1 style="text-align: center;">Laporan Keuangan 
+        @if($year) 
+            Tahun {{ $year }}
+        @endif
+    </h1>
+    @if($startDate && $endDate)
+    <p style="text-align: center;">Periode: {{ \Carbon\Carbon::parse($startDate)->isoFormat('D MMMM Y') }} - {{ \Carbon\Carbon::parse($endDate)->isoFormat('D MMMM Y') }}</p>
+    @endif
     <h2>Pemasukan</h2>
     <table>
         <thead>

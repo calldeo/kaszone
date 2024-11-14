@@ -125,4 +125,6 @@ class LaporanController extends Controller
 
         return Excel::download(new LaporanExport($pemasukan, $pengeluaran, $year, $startDate, $endDate), $filename);
     }
+
+    
 }
