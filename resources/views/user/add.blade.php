@@ -178,8 +178,8 @@
                                 </div>
                                 
                                 <div class="form-group text-right">
-                                    <button type="button" class="btn btn-danger" onclick="redirectToAdmin()"><i class="fas fa-times mr-2"></i>Cancel</button>
-                                    <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-2"></i>Submit</button>
+                                    <button type="button" class="btn btn-danger" onclick="redirectToAdmin()"><i class="fas fa-times mr-2"></i>Batal</button>
+                                    <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-2"></i>Simpan</button>
                                 </div>
                             </form>
                         </div>

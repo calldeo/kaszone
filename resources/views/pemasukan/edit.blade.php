@@ -133,7 +133,7 @@
                                     </div>
                                     <div class="form-group mt-4 text-right">
                                         <a href="/pemasukan" class="btn btn-danger btn-cancel mr-2"><i class="fas fa-times mr-1"></i> Batal</a>
-                                        <button type="submit" class="btn btn-primary btn-submit"><i class="fas fa-save mr-1"></i> Perbarui</button>
+                                        <button type="submit" class="btn btn-primary btn-submit"><i class="fas fa-save mr-1"></i> Simpan</button>
                                     </div>
                                 </form>
                             </div>

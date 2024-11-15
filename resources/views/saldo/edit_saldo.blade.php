@@ -92,10 +92,10 @@
                                 </div>
                                 <div class="text-right mt-4">
                                     <button type="button" class="btn btn-danger mr-2" onclick="window.location.href='{{ route('saldo') }}'">
-                                        <i class="fas fa-times mr-1"></i> Cancel
+                                        <i class="fas fa-times mr-1"></i> Batal
                                     </button>
                                     <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-save mr-1"></i> Update
+                                        <i class="fas fa-save mr-1"></i> Simpan
                                     </button>
                                 </div>
                             </form>

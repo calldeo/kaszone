@@ -3,7 +3,7 @@
 
 <head>
     @include('template.headerr')
-    <title>PityCash | {{ auth()->user()->level }} | Add Data Pemasukan</title>
+    <title>PityCash | {{ auth()->user()->level }} | Tambah Data Pemasukan</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -63,7 +63,7 @@
                 <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="javascript:void(0)">Form</a></li>
-                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Add Pemasukan</a></li>
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Tambah Data Pemasukan</a></li>
                     </ol>
                 </div>
             </div>
@@ -72,7 +72,7 @@
                 <div class="col-lg-8">
                     <div class="card animate__animated animate__fadeIn">
                         <div class="card-header">
-                            <h4 class="card-title mb-0 text-white">Add Data Pemasukan</h4>
+                            <h4 class="card-title mb-0 text-white">Tambah Data Pemasukan</h4>
                         </div>
                         <div class="card-body">
                             <div class="basic-form">
@@ -84,7 +84,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fa fa-user"></i></span>
                                             </div>
-                                            <input type="text" class="form-control" name="name" placeholder="Enter name.." value="{{ old('name') }}" required>
+                                            <input type="text" class="form-control" name="name" placeholder="Masukkan Nama.." value="{{ old('name') }}" required>
                                         </div>
                                         @error('name')
                                         <span class="mt-2 text-danger">{{ $message }}</span>
@@ -97,7 +97,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-book"></i></span>
                                             </div>
-                                            <textarea class="form-control" name="description" placeholder="Enter description..">{{ old('description') }}</textarea>
+                                            <textarea class="form-control" name="description" placeholder="Masukkan Deskripsi..">{{ old('description') }}</textarea>
                                         </div>
                                     </div>
                         
@@ -144,8 +144,8 @@
                                     </div>
                         
                                     <div class="form-group mt-4 text-right">
-                                        <button type="button" class="btn btn-danger btn-cancel mr-2" onclick="window.location.href='/pemasukan'"><i class="fas fa-times mr-1"></i> Cancel</button>
-                                        <button type="submit" class="btn btn-primary btn-submit"><i class="fas fa-save mr-1"></i> Submit</button>
+                                        <button type="button" class="btn btn-danger btn-cancel mr-2" onclick="window.location.href='/pemasukan'"><i class="fas fa-times mr-1"></i> Batal</button>
+                                        <button type="submit" class="btn btn-primary btn-submit"><i class="fas fa-save mr-1"></i> Simpan</button>
                                     </div>
                                 </form>
                             </div>

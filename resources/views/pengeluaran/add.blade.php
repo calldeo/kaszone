@@ -3,7 +3,7 @@
 
 <head>
     @include('template.headerr')
-    <title>PityCash | {{ auth()->user()->level }} | Add Pengeluaran</title>
+    <title>PityCash | {{ auth()->user()->level }} | Tambbah Pengeluaran</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 
@@ -21,7 +21,7 @@
                 <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="javascript:void(0)">Form</a></li>
-                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Add Pengeluaran</a></li>
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Tambah Pengeluaran</a></li>
                     </ol>
                 </div>
             </div>
@@ -57,7 +57,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title">Add Data Pengeluaran</h4>
+                            <h4 class="card-title">Tambah Data Pengeluaran</h4>
                         </div>
                         <div class="card-body">
                             <form class="form-valide-with-icon" action="/pengeluaran/store" method="post" enctype="multipart/form-data">
@@ -83,7 +83,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fa fa-user"></i></span>
                                                 </div>
-                                                <input type="text" class="form-control" name="name[]" placeholder="Enter name.." value="{{ old('name') }}" required>
+                                                <input type="text" class="form-control" name="name[]" placeholder="Masukkan Nama.." value="{{ old('name') }}" required>
                                             </div>
                                             @error('name')
                                             <span class="text-danger">{{ $message }}</span>
@@ -96,7 +96,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fas fa-book"></i></span>
                                                 </div>
-                                                <textarea class="form-control" name="description[]" placeholder="Enter description..">{{ old('description') }}</textarea>
+                                                <textarea class="form-control" name="description[]" placeholder="Masukkan Deskripsi..">{{ old('description') }}</textarea>
                                             </div>
                                         </div>
 
@@ -107,7 +107,7 @@
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
                                                     </div>
-                                                    <input type="text" class="form-control nominal" name="nominal[]" placeholder="Enter amount.." required oninput="formatInputNominal(event); calculateTotal(event);">
+                                                    <input type="text" class="form-control nominal" name="nominal[]" placeholder="Masukkan Nominal.." required oninput="formatInputNominal(event); calculateTotal(event);">
                                                     <input type="hidden" name="nominal_hidden[]">
                                                 </div>
                                                 @error('nominal')
@@ -121,7 +121,7 @@
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
                                                     </div>
-                                                    <input type="number" step="0.01" class="form-control" name="jumlah_satuan[]" placeholder="Enter amount.." value="{{ old('jumlah_satuan') }}" required oninput="calculateTotal(event);">
+                                                    <input type="number" step="0.01" class="form-control" name="jumlah_satuan[]" placeholder="Massukan Jumlah Satuan.." value="{{ old('jumlah_satuan') }}" required oninput="calculateTotal(event);">
                                                 </div>
                                                 @error('jumlah_satuan')
                                                 <span class="text-danger">{{ $message }}</span>
@@ -134,7 +134,7 @@
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
                                                     </div>
-                                                    <input type="text" class="form-control dll" name="dll[]" placeholder="Enter amount.." required oninput="formatInputDll(event); calculateTotal(event);">
+                                                    <input type="text" class="form-control dll" name="dll[]" placeholder="Masukkan Dll.." required oninput="formatInputDll(event); calculateTotal(event);">
                                                     <input type="hidden" name="dll_hidden[]">
                                                 </div>
                                                 @error('dll')
@@ -171,7 +171,7 @@
                                             <label for="image">Foto Bukti Pengeluaran</label>
                                             <div class="custom-file">
                                                 <input type="file" class="custom-file-input" id="image" name="image[]" accept="image/*" onchange="updateImagePreview(event, 'profile-image')">
-                                                <label class="custom-file-label" for="image">Choose file</label>
+                                                <label class="custom-file-label" for="image">Pilih file</label>
                                             </div>
                                             <div class="mt-3">
                                                 <img id="profile-image" src="{{ asset('dash/images/cash.png') }}" alt="Gambar Bukti Pengeluaran" class="img-fluid" style="max-width: 150px; max-height: 150px;">
@@ -183,16 +183,16 @@
 
                                 <div class="text-right mt-4">
                                     <button type="button" class="btn btn-info" id="add-more-fields">
-                                        <i class="fas fa-plus-circle"></i> Add Pengeluaran
+                                        <i class="fas fa-plus-circle"></i> Tambah Pengeluaran
                                     </button>
                                 </div>
 
                                 <div class="form-group text-left mt-5">
                                     <button type="button" class="btn btn-danger btn-cancel" onclick="window.location.href='/pengeluaran'">
-                                        <i class="fas fa-times-circle"></i> Cancel
+                                        <i class="fas fa-times-circle"></i> Batal
                                     </button>
                                     <button type="submit" class="btn btn-primary btn-submit">
-                                        <i class="fas fa-save"></i> Submit
+                                        <i class="fas fa-save"></i> Simpan
                                     </button>
                                 </div>
                                 </div>
@@ -414,7 +414,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     {{-- <small class="form-text text-muted">* Jika tidak ada perubahan, tidak perlu diisi</small> --}}
                 </div>
 
-                <button type="button" class="btn btn-danger remove-field">Remove</button>
+                <button type="button" class="btn btn-danger remove-field">Hapus</button>
             </div>
         `;
 
