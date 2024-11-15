@@ -16,7 +16,7 @@
     </style>
 </head>
 <body>
-    <h1>Laporan Pemasukan dan Pengeluaran {{ $year ? $year : 'Seluruh' }}</h1>
+    <h1 style="text-align: center;">Laporan Pemasukan dan Pengeluaran Seluruh</h1>
 
     <h2>Pemasukan</h2>
     <table>
@@ -77,12 +77,6 @@
                 <td>Rp{{ number_format($pgl->nominal, 0, ',', '.') }}</td>
                 <td>Rp{{ $pgl->dll }}</td>
                 <td>Rp{{ number_format($pgl->jumlah, 0, ',', '.') }}</td>
-                {{-- <td>
-                    @if($item->image) 
-                        <img src="{{ public_path('public/str/images/' . $item->image) }}" class="image" alt="Bukti Pembayaran">
-                    @else
-                        Tidak ada gambar
-                    @endif --}}
                 <td>{{ $pgl->parentPengeluaran ? \Carbon\Carbon::parse($pgl->parentPengeluaran->tanggal)->format('d-m-Y') : 'Tanggal tidak ditemukan' }}</td>
             </tr>
             @endforeach

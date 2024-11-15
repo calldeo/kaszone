@@ -1,5 +1,5 @@
 <?php
-
+    
 namespace App\Http\Controllers;
 
 use App\Models\User;
@@ -44,9 +44,9 @@ class BendaharaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => ['required', 'min:3', 'max:30', function ($attribute, $value, $fail) {
+            'name' => ['required', 'min:3', 'max:30', 'regex:/^[a-zA-Z\s]+$/', function ($attribute, $value, $fail) {
                 if (User::where('name', $value)->exists()) {
-                    $fail($attribute . ' sudah terdaftar.');
+                    $fail($attribute . ' is registered.');
                 }
             }],
             'email' => 'required|unique:users,email',
@@ -93,12 +93,12 @@ class BendaharaController extends Controller
         $guruu = User::find($id);
 
         $request->validate([
-            'name' => ['required', 'min:3', 'max:30'],
+            'name' => ['required', 'min:3', 'max:30', 'regex:/^[a-zA-Z\s]+$/'],
             'email' => 'required|email|unique:users,email,' . $guruu->id,
             'password' => ['nullable', 'min:8', 'max:12'],
             'kelamin' => 'required',
             'alamat' => ['required', 'min:3', 'max:30'],
-            'roles' => 'required|array',
+            'roles' => 'required|array', 
             'roles.*' => 'exists:roles,name',
         ]);
 
@@ -119,9 +119,7 @@ class BendaharaController extends Controller
 
             DB::commit();
 
-            $redirectPath = $guruu->hasRole('admin') ? '/user' : '/home';
-
-            return redirect($redirectPath)->with('update_success', 'Data user berhasil diperbarui.');
+            return redirect('/user')->with('update_success', 'Data user berhasil diperbarui.');
         } catch (\Throwable $th) {
             DB::rollback();
 

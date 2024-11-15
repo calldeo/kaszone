@@ -86,7 +86,7 @@ use Illuminate\Support\Facades\Log;
                         <ul aria-expanded="false">
                             @can('Laporan')
             <li class="{{ request()->is('laporan*') || request()->is('laporan') ? 'mm-active active-no-child' : '' }}">
-                <a href="/laporan" aria-expanded="{{ request()->is('laporan*') || request()->is('laporan') ? 'true' : 'false' }}" class="{{ request()->is('pengeluaran*') || request()->is('laporan') ? 'mm-active' : '' }}">
+                <a href="/laporan" aria-expanded="{{ request()->is('laporan*') || request()->is('laporan') ? 'true' : 'false' }}" class="{{ request()->is('laporan*') || request()->is('laporan') ? 'mm-active' : '' }}">
                     <i class="bi bi-wallet2"></i>
                     <span class="nav-text">Laporan Inflow &<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Outflow</span>
                 </a>
@@ -94,7 +94,7 @@ use Illuminate\Support\Facades\Log;
             @endcan
             @can('Laporan')
             <li class="{{ request()->is('keuangan*') || request()->is('keuangan') ? 'mm-active active-no-child' : '' }}">
-                <a href="/laporan-kas" aria-expanded="{{ request()->is('keuangan*') || request()->is('keuangan') ? 'true' : 'false' }}" class="{{ request()->is('pengeluaran*') || request()->is('keuangan') ? 'mm-active' : '' }}">
+                <a href="/laporan-kas" aria-expanded="{{ request()->is('keuangan*') || request()->is('keuangan') ? 'true' : 'false' }}" class="{{ request()->is('keuangan*') || request()->is('keuangan') ? 'mm-active' : '' }}">
                     <i class="bi bi-cash-coin"></i>
                     <span class="nav-text">Laporan saldo kas</span>
                 </a>
