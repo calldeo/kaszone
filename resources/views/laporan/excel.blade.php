@@ -7,11 +7,26 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            margin: 0 auto;
         }
         th, td {
             border: 1px solid black;
             padding: 8px;
-            text-align: left;
+            text-align: center;
+        }
+        .judul {
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            border: none !important;
+        }
+        .header-row {
+            background-color: #f2f2f2;
+        }
+        .judul h1 {
+            margin: 20px 0;
+            font-size: 28px;
+            text-align: center;
         }
     </style>
 </head>
@@ -21,31 +36,31 @@
     <h2>Pemasukan</h2>
     <table>
         <thead>
-            <tr>
-               <th>No</th>
-                <th>Nama</th>
-                <th>Deskripsi</th>
-                <th>Kategori</th>
-                <th>Jumlah</th>
-                <th>Tanggal</th>
+            <tr class="header-row">
+               <th style="text-align: center;">No</th>
+                <th style="text-align: center;">Nama</th>
+                <th style="text-align: center;">Deskripsi</th>
+                <th style="text-align: center;">Kategori</th>
+                <th style="text-align: center;">Jumlah</th>
+                <th style="text-align: center;">Tanggal</th>
             </tr>
         </thead>
         <tbody>
            @foreach($pemasukan as $key => $item)
             <tr>
-                <td>{{ $key + 1 }}</td>
-                <td>{{ $item->name }}</td>
-                <td>{{ $item->description }}</td>
-                <td>{{ $item->category ? $item->category->name : 'Kategori tidak ditemukan' }}</td>
-                <td>Rp{{ number_format($item->jumlah, 0, ',', '.') }}</td>
-                <td>{{ \Carbon\Carbon::parse($item->date)->format('d-m-Y') }}</td>
+                <td style="text-align: center;">{{ $key + 1 }}</td>
+                <td style="text-align: center;">{{ $item->name }}</td>
+                <td style="text-align: center;">{{ $item->description }}</td>
+                <td style="text-align: center;">{{ $item->category ? $item->category->name : 'Kategori tidak ditemukan' }}</td>
+                <td style="text-align: center;">Rp{{ number_format($item->jumlah, 0, ',', '.') }}</td>
+                <td style="text-align: center;">{{ \Carbon\Carbon::parse($item->date)->format('d-m-Y') }}</td>
             </tr>
             @endforeach
         </tbody>
         <tfoot>
             <tr>
                 <td colspan="4" style="text-align: right;"><strong>Total Pemasukan:</strong></td>
-                <td colspan="2"><strong>Rp{{ number_format($pemasukan->sum('jumlah'), 0, ',', '.') }}</strong></td>
+                <td colspan="2" style="text-align: center;"><strong>Rp{{ number_format($pemasukan->sum('jumlah'), 0, ',', '.') }}</strong></td>
             </tr>
         </tfoot>
     </table>
@@ -53,22 +68,22 @@
     <h2>Pengeluaran</h2>
     <table>
         <thead>
-            <tr>
-              <th>No</th>
-                <th>Nama</th>
-                <th>Deskripsi</th>
-                <th>Kategori</th>
-                <th>Jumlah Item</th>
-                <th>Harga (Rp)</th>
-                <th>Lain - Lain</th>
-                <th>Total</th>
-                {{-- <th>Bukti Pembayaran</th> --}}
-                <th>Tanggal</th>
+            <tr class="header-row">
+              <th style="text-align: center;">No</th>
+                <th style="text-align: center;">Nama</th>
+                <th style="text-align: center;">Deskripsi</th>
+                <th style="text-align: center;">Kategori</th>
+                <th style="text-align: center;">Jumlah Item</th>
+                <th style="text-align: center;">Harga (Rp)</th>
+                <th style="text-align: center;">Lain - Lain</th>
+                <th style="text-align: center;">Total</th>
+                <th style="text-align: center;">Tanggal</th>
             </tr>
         </thead>
         <tbody>
                @foreach($pengeluaran as $key => $pgl)
             <tr>
+<<<<<<< HEAD
                 <td>{{ $key + 1 }}</td>
                 <td>{{ $pgl->name }}</td>
                 <td>{{ $pgl->description }}</td>
@@ -78,13 +93,24 @@
                 <td>Rp{{ $pgl->dll }}</td>
                 <td>Rp{{ number_format($pgl->jumlah, 0, ',', '.') }}</td>
                 <td>{{ $pgl->parentPengeluaran ? \Carbon\Carbon::parse($pgl->parentPengeluaran->tanggal)->format('d-m-Y') : 'Tanggal tidak ditemukan' }}</td>
+=======
+                <td style="text-align: center;">{{ $key + 1 }}</td>
+                <td style="text-align: center;">{{ $pgl->name }}</td>
+                <td style="text-align: center;">{{ $pgl->description }}</td>
+                <td style="text-align: center;">{{ $pgl->category ? $pgl->category->name : 'Kategori tidak ditemukan' }}</td>
+                <td style="text-align: center;">{{ $pgl->jumlah_satuan }}</td>
+                <td style="text-align: center;">Rp{{ number_format($pgl->nominal, 0, ',', '.') }}</td>
+                <td style="text-align: center;">Rp{{ $pgl->dll }}</td>
+                <td style="text-align: center;">Rp{{ number_format($pgl->jumlah, 0, ',', '.') }}</td>
+                <td style="text-align: center;">{{ $pgl->parentPengeluaran ? \Carbon\Carbon::parse($pgl->parentPengeluaran->tanggal)->format('d-m-Y') : 'Tanggal tidak ditemukan' }}</td>
+>>>>>>> 819d42895544094dab6077c264a485a965c434c1
             </tr>
             @endforeach
         </tbody>
         <tfoot>
             <tr>
                 <td colspan="7" style="text-align: right;"><strong>Total Pengeluaran:</strong></td>
-                <td colspan="2"><strong>Rp{{ number_format($pengeluaran->sum('jumlah'), 0, ',', '.') }}</strong></td>
+                <td colspan="2" style="text-align: center;"><strong>Rp{{ number_format($pengeluaran->sum('jumlah'), 0, ',', '.') }}</strong></td>
             </tr>
         </tfoot>
     </table>
@@ -92,17 +118,17 @@
     <h2>Selisih</h2>
     <table>
         <thead>
-            <tr>
-                <th>Total Pemasukan</th>
-                <th>Total Pengeluaran</th>
-                <th>Selisih</th>
+            <tr class="header-row">
+                <th style="text-align: center;">Total Pemasukan</th>
+                <th style="text-align: center;">Total Pengeluaran</th>
+                <th style="text-align: center;">Selisih</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>Rp{{ number_format($pemasukan->sum('jumlah'), 0, ',', '.') }}</td>
-                <td>Rp{{ number_format($pengeluaran->sum('jumlah'), 0, ',', '.') }}</td>
-                <td>Rp{{ number_format($pemasukan->sum('jumlah') - $pengeluaran->sum('jumlah'), 0, ',', '.') }}</td>
+                <td style="text-align: center;">Rp{{ number_format($pemasukan->sum('jumlah'), 0, ',', '.') }}</td>
+                <td style="text-align: center;">Rp{{ number_format($pengeluaran->sum('jumlah'), 0, ',', '.') }}</td>
+                <td style="text-align: center;">Rp{{ number_format($pemasukan->sum('jumlah') - $pengeluaran->sum('jumlah'), 0, ',', '.') }}</td>
             </tr>
         </tbody>
     </table>
