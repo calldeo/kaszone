@@ -76,35 +76,39 @@ use Illuminate\Support\Facades\Log;
             @endcan
 @endif
 
-         @if(in_array('Laporan',$permissions))   
+  @if(in_array('Laporan', $permissions))
+    @can('Laporan')
+        <!-- Menu Induk dengan Dropdown -->
+        <li class="{{ request()->is('laporan*') || request()->is('laporan-kas*') ? 'mm-active' : '' }}">
+            <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="{{ request()->is('laporan*') || request()->is('laporan-kas*') ? 'true' : 'false' }}">
+                <i class="bi bi-file-earmark-text"></i>
+                <span class="nav-text">Laporan Keuangan</span>
+            </a>
+            
+            <!-- Submenu -->
+            <ul aria-expanded="{{ request()->is('laporan*') || request()->is('laporan-kas*') ? 'true' : 'false' }}" class="{{ request()->is('laporan*') || request()->is('laporan-kas*') ? 'mm-show' : 'mm-collapse' }}">
+                
+                <!-- Submenu Laporan Inflow & Outflow -->
+                <li class="{{ request()->is('laporan') ? 'mm-active' : '' }}">
+                    <a href="/laporan" class="{{ request()->is('laporan') ? 'mm-active' : '' }}">
+                        <i class="bi bi-wallet2"></i>
+                        <span class="nav-text">Laporan Inflow &<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Outflow</span>
+                    </a>
+                </li>
 
-            @can('Laporan')
-               <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
-							<i class="flaticon-381-network"></i>
-							<span class="nav-text">Laporan Keuangan</span>
-						</a>
-                        <ul aria-expanded="false">
-                            @can('Laporan')
-            <li class="{{ request()->is('laporan*') || request()->is('laporan') ? 'mm-active active-no-child' : '' }}">
-                <a href="/laporan" aria-expanded="{{ request()->is('laporan*') || request()->is('laporan') ? 'true' : 'false' }}" class="{{ request()->is('laporan*') || request()->is('laporan') ? 'mm-active' : '' }}">
-                    <i class="bi bi-wallet2"></i>
-                    <span class="nav-text">Laporan Inflow &<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Outflow</span>
-                </a>
-            </li>
-            @endcan
-            @can('Laporan')
-            <li class="{{ request()->is('keuangan*') || request()->is('keuangan') ? 'mm-active active-no-child' : '' }}">
-                <a href="/laporan-kas" aria-expanded="{{ request()->is('keuangan*') || request()->is('keuangan') ? 'true' : 'false' }}" class="{{ request()->is('keuangan*') || request()->is('keuangan') ? 'mm-active' : '' }}">
-                    <i class="bi bi-cash-coin"></i>
-                    <span class="nav-text">Laporan saldo kas</span>
-                </a>
-            </li>
-            @endcan
-                        </ul>
-                    </li>
-                    <li>
-           @endcan
+                <!-- Submenu Laporan Saldo Kas -->
+                <li class="{{ request()->is('laporan-kas') ? 'mm-active' : '' }}">
+                    <a href="/laporan-kas" class="{{ request()->is('laporan-kas') ? 'mm-active' : '' }}">
+                        <i class="bi bi-cash-coin"></i>
+                        <span class="nav-text">Laporan Saldo Kas</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    @endcan
 @endif
+
+
 
          @if(in_array('Setting',$permissions))   
             @can('Setting')

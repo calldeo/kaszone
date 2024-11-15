@@ -226,7 +226,7 @@
                                         <input type="hidden" name="year" id="export-year-excel" value="{{ old('year') }}" />
                                         <input type="hidden" name="start_date" id="export-start-date-excel" value="{{ old('start_date') }}" />
                                         <input type="hidden" name="end_date" id="export-end-date-excel" value="{{ old('end_date') }}" />
-                                        <button type="submit" title="Ekspor EXCEl" class="btn btn-outline-informasi animate__animated animate__bounceIn" style="border-color: white;"><i class="fa fa-file-excel" style="color: white;"></i></button>
+                                        <button type="submit" title="Ekspor Excel" class="btn btn-outline-informasi animate__animated animate__bounceIn" style="border-color: white;"><i class="fa fa-file-excel" style="color: white;"></i></button>
                                     </form>
                                     @endif
 
@@ -354,7 +354,7 @@
                             <input type="file" class="dropify" id="file" name="file" required accept=".xls,.xlsx">
 
                         <div style="text-align: left;">
-                            <a href="{{ route('download.template.pemasukan') }}">Unduh Template Excel</a>
+                            <a href="{{ route('download.template.pemasukan') }}">Download Template Excel</a>
                         </div>
 
                         </div>

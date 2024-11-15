@@ -96,10 +96,10 @@
                     </div>
                     <ul class="navbar-nav header-right main-notification">
                         <li class="nav-item dropdown notification_dropdown">
-                            <a class="nav-link bell dz-theme-mode" href="#">
+                            {{-- <a class="nav-link bell dz-theme-mode" href="#">
                                 <i id="icon-light" class="fa fa-sun-o"></i>
                                 <i id="icon-dark" class="fa fa-moon-o"></i>
-                            </a>
+                            </a> --}}
                         </li>
                         <li class="nav-item dropdown notification_dropdown">
                             <a class="nav-link bell dz-fullscreen" >

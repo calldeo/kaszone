@@ -247,7 +247,7 @@
             columns: [
                 { data: 'DT_RowIndex', name: 'DT_RowIndex', width: '50px', orderable: false, searchable: false },
                 { data: 'name', name: 'name' },
-                { data: 'guard_name', name: 'guard_name' },
+                // { data: 'guard_name', name: 'guard_name' },
                 { data: 'opsi', name: 'opsi', orderable: false, searchable: false }
             ],
             columnDefs: [

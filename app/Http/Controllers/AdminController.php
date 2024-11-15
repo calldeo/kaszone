@@ -275,11 +275,10 @@ class AdminController extends Controller
                 ->addIndexColumn()
                 ->addColumn('opsi', function ($row) {
                     return '
-                    <div class="d-flex align-items-center">
+                    <div class="d-flex justify-content-center">
                         <form action="/role/' . $row->id . '/edit" method="GET" class="mr-1">
                             <button type="submit" class="btn btn-warning btn-xs"><i class="fa fa-edit"></i></button>
                         </form>
-
                     </div>
                 ';
                 })

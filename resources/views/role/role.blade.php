@@ -182,11 +182,11 @@
                     <div class="card animate__animated animate__fadeInUp">
                         <div class="card-header">
                             <h4 class="card-title text-white">Data Role</h4>
-                            <div class="text-right">
+                            {{-- <div class="text-right">
                                 <a href="/add" class="btn btn-outline-success" title="Tambah">
                                     <i class="fa fa-plus"></i> Tambah Role
                                 </a>
-                            </div>
+                            </div> --}}
                         </div>
 
                         <div class="card-body">
@@ -216,7 +216,7 @@
                                         <tr>
                                             <th style="width:50px;"><strong>No</strong></th>
                                             <th><strong>Nama</strong></th>
-                                            <th><strong>Guard Nama</strong></th>
+                                            {{-- <th><strong>Guard Nama</strong></th> --}}
                                             <th><strong>Opsi</strong></th>
                                         </tr>
                                     </thead>

@@ -11,8 +11,82 @@
     <title>Login - PityCash</title>
     <!-- BEGIN: CSS Assets-->
     <link rel="stylesheet" href="{{ asset('dashboards/dist/css/app.css') }}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <style>
+        .password-container {
+            position: relative;
+            margin-top: 20px;
+        }
+        .password-container input {
+            width: 100%;
+            padding-right: 40px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            height: 45px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .password-container input:focus {
+            border-color: #EB8153;
+            box-shadow: 0 0 0 2px rgba(235, 129, 83, 0.2);
+            outline: none;
+        }
+        .password-container .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #718096;
+        }
+        .login-input {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            height: 45px;
+            padding: 0 15px;
+            width: 100%;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .login-input:focus {
+            border-color: #EB8153;
+            box-shadow: 0 0 0 2px rgba(235, 129, 83, 0.2);
+            outline: none;
+        }
+        .login-button {
+            background-color: #EB8153;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 0;
+            width: 100%;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .login-button:hover {
+            background-color: #e06b3d;
+            transform: translateY(-1px);
+        }
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            margin: auto;
+        }
+        .form-title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+            color: #2d3748;
+        }
+    </style>
     <!-- END: CSS Assets -->
-    <!-- END: Head -->
 </head>
 <body class="login">
     <div class="container sm:px-10">
@@ -32,23 +106,33 @@
             
             <!-- BEGIN: Login Form -->
             <div class="h-screen xl:h-auto flex py-5 xl:py-0 my-10 xl:my-0">
-                <div class="my-auto mx-auto xl:ml-20 bg-white dark:bg-darkmode-600 xl:bg-transparent px-5 sm:px-8 py-8 xl:p-0 rounded-md shadow-md xl:shadow-none w-full sm:w-3/4 lg:w-2/4 xl:w-auto">
-                    <h2 class="intro-x font-bold text-2xl xl:text-3xl text-center xl:text-left">
-                        Sign In
-                    </h2>
-                    <div class="intro-x mt-2 text-slate-400 xl:hidden text-center">
-                        A few more clicks to sign in to your account. Manage all your e-commerce accounts in one place.
-                    </div>
-
+                <div class="form-container">
+                    <h2 class="form-title">Sign In</h2>
                     <form class="user" method="post" action="/postlogin">
                         {{ csrf_field() }}
-                        <div class="intro-x mt-8">
-                            <input type="email" name="email" value="{{ Session::get('email') }}" class="intro-x login__input form-control py-3 px-4 block" placeholder="Email" required>
-                            <input type="password" name="password" class="intro-x login__input form-control py-3 px-4 block mt-4" placeholder="Password" required>
-                        </div>
+                        <div class="space-y-5">
+                            <div>
+                                <input type="email" 
+                                       name="email" 
+                                       value="{{ Session::get('email') }}" 
+                                       class="login-input" 
+                                       placeholder="Email"
+                                       required>
+                            </div>
+                            
+                            <div class="password-container">
+                                <input type="password" 
+                                       name="password" 
+                                       id="password" 
+                                       class="login-input" 
+                                       placeholder="Password"
+                                       required>
+                                <i class="fas fa-eye-slash toggle-password" id="togglePasswordIcon"></i>
+                            </div>
 
-                        <div class="intro-x mt-5 xl:mt-8 text-center xl:text-left">
-                            <button class="btn btn-primary py-3 px-4 w-full xl:w-32 xl:mr-3 align-top" id="btn" style="background-color: #EB8153; border: none; color: white;">Login</button>
+                            <button type="submit" class="login-button">
+                                Login
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -59,9 +143,18 @@
 
     <!-- BEGIN: JS Assets-->
     <script src="{{ asset('dashboards/dist/js/app.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Include SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // Check for login error message in session
+        const togglePasswordIcon = document.getElementById('togglePasswordIcon');
+        const passwordInput = document.getElementById('password');
+
+        togglePasswordIcon.addEventListener('click', function () {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+
         @if (session('login_error'))
             Swal.fire({
                 title: 'Error!',
@@ -69,26 +162,11 @@
                 icon: 'error',
                 confirmButtonText: 'OK',
                 customClass: {
-                    confirm: 'swal2-confirm custom-confirm' // Add custom class for the confirm button
+                    popup: 'swal2-show',
+                    confirm: 'login-button'
                 },
-                buttonsStyling: false // Disable default button styling
+                buttonsStyling: false
             });
-
-            // Style the confirm button after alert is shown
-            setTimeout(() => {
-                const confirmButton = document.querySelector('.swal2-confirm');
-                if (confirmButton) {
-                    confirmButton.style.backgroundColor = '#EB8153'; // Set button background color
-                    confirmButton.style.color = 'white'; // Set button text color
-                    confirmButton.style.border = 'none'; // Remove border
-                    confirmButton.style.borderRadius = '5px'; // Add rounded corners
-                    confirmButton.style.padding = '10px 20px'; // Add padding for better appearance
-                    confirmButton.style.fontWeight = 'bold'; // Make text bold
-                    confirmButton.style.fontSize = '16px'; // Adjust font size
-                    confirmButton.style.cursor = 'pointer'; // Change cursor on hover
-                    confirmButton.style.boxShadow = 'none'; // Remove any shadow if present
-                }
-            }, 1); // Small timeout to ensure the button is available in the DOM
         @endif
     </script>
     <!-- END: JS Assets-->

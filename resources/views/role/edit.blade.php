@@ -89,7 +89,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group">
+                                    {{-- <div class="form-group">
                                         <label class="text-label">Guard Name *</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
@@ -97,16 +97,16 @@
                                             </div>
                                             <input type="text" class="form-control" name="guard_name" value="{{ $role->guard_name }}" placeholder="Masukkan guard name..." readonly>
                                         </div>
-                                    </div>
+                                    </div> --}}
 
                                     <div class="form-group">
-                                        <label class="text-label">Permissions *</label>
+                                        <label class="text-label">Permissions * <span class="text-danger">(Wajib diisi)</span></label>
                                         <div class="row">
                                             @foreach($permissions as $permission)
                                                 <div class="col-md-4 col-sm-6">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="checkbox" name="permissions[]" value="{{ $permission->id }}" 
-                                                        {{ in_array($permission->id, $rolePermissions) ? 'checked' : '' }}>
+                                                        {{ in_array($permission->id, $rolePermissions) ? 'checked' : '' }} required>
                                                         <label class="form-check-label">{{ $permission->name }}</label>
                                                     </div>
                                                 </div>

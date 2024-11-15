@@ -32,13 +32,11 @@ class SettingController extends Controller
 
     $request->validate([
         'name' => ['required', 'min:3', 'max:30'],
-        'guard_name' => ['required', 'min:3', 'max:30'],
         'permissions' => ['required', 'array'],
     ]);
 
     $role->update([
         'name' => $request->name,
-        'guard_name' => $request->guard_name,
     ]);
 
     $role->permissions()->sync($request->permissions);

@@ -64,13 +64,8 @@
 <body>
     <div class="form-group">
         <div class="kop-surat">
-            {{-- <img src="/foto_calon/print.png" alt="Logo" style="width: 115%;"> --}}
         </div>
-        {{-- <div class="berita-acara">
-            <h2>Berita Acara</h2>
-            <p style="margin-bottom: 10px; text-indent: 20px;">Pada hari ini, tanggal <?php echo date('d F Y'); ?>, telah dilaksanakan pemilihan Ketua dan Wakil Ketua Organisasi Siswa Intra Sekolah (OSIS) di SMKN 1 TAPEN. Setelah proses pemungutan dan penghitungan suara, {{ $calonTerpilih->nama_calon }} terpilih sebagai Ketua OSIS periode 2024/2025 dengan jumlah suara {{ $calonTerpilih->jumlah_vote }} suara.</p>
-            <p style="margin-bottom: 10px;text-indent: 20px;">Dokumen ini menjadi catatan resmi hasil pemilihan Ketua dan Wakil Ketua OSIS. Demikianlah berita acara ini dibuat dengan sebenarnya untuk menjadi catatan resmi hasil pemilihan Ketua dan Wakil Ketua OSIS SMKN 1 TAPEN.</p>
-        </div> --}}
+       
 
         <table class="static" align="center" rules="all" border="1px" style="width: 95%;">
             <thead>
@@ -82,9 +77,9 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($category as $ct)
+                @foreach ($category as $key => $ct)
                 <tr>
-                     <td style="text-align: center;">{{ $ct->id }}</td>
+                     <td style="text-align: center;">{{ $key + 1 }}</td>
                     <td style="text-align: center;">{{ $ct->name }}</td>
                     <td style="text-align: center;">
                         @if($ct->jenis_kategori == 1)

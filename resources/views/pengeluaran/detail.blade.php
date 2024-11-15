@@ -137,10 +137,10 @@
                                             <input type="text" name="name" class="form-control editable-input" value="{{ $pengeluaran->name }}" readonly>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="form-group">
-                                            <label class="font-weight-bold">Deskripsi</label>
-                                            <textarea name="description" class="form-control editable-input" rows="3" style="resize: none; overflow: hidden; font-size: 16px; height: 100px;" readonly>{{ $pengeluaran->description }}</textarea>
+                                            <label class="font-weight-bold">Kategori</label>
+                                            <input type="text" name="category" class="form-control editable-input" value="{{ $pengeluaran->category->name ?? 'Tidak ada kategori' }}" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -170,14 +170,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row mb-3">
-                                    <div class="col-md-4">
+                                
+                                <div class="col-md-6">
                                         <div class="form-group">
-                                            <label class="font-weight-bold">Kategori</label>
-                                            <input type="text" name="category" class="form-control editable-input" value="{{ $pengeluaran->category->name ?? 'Tidak ada kategori' }}" readonly>
+                                            <label class="font-weight-bold">Deskripsi</label>
+                                            <textarea name="description" class="form-control editable-input" rows="3" style="resize: none; overflow: hidden; font-size: 16px; height: 100px;" readonly>{{ $pengeluaran->description }}</textarea>
                                         </div>
                                     </div>
-                                </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
