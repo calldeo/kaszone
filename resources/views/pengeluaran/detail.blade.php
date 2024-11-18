@@ -169,14 +169,15 @@
                                             <input type="text" name="jumlah" class="form-control editable-input" value="Rp{{ number_format($pengeluaran->jumlah, 0, ',', '.') }}" readonly>
                                         </div>
                                     </div>
-                                </div>
-                                
-                                <div class="col-md-6">
+                                       <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="font-weight-bold">Deskripsi</label>
                                             <textarea name="description" class="form-control editable-input" rows="3" style="resize: none; overflow: hidden; font-size: 16px; height: 100px;" readonly>{{ $pengeluaran->description }}</textarea>
                                         </div>
                                     </div>
+                                </div>
+                                
+                             
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">

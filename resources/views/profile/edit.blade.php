@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 
 <head>
@@ -19,7 +19,7 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
         .card-header {
-            background-color: #EB8153  ;
+            background-color: #EB8153;
             color: white;
             border-radius: 15px 15px 0 0;
         }
@@ -55,7 +55,7 @@
             left: 0;
             bottom: 0;
             background-color: #fafbfc;
-            color: white;
+            color: black;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -120,8 +120,8 @@
                                 <div class="form-group text-center">
                                     <img id="preview-image" src="{{ auth()->user()->poto ? asset('storage/' . auth()->user()->poto) : asset('dash/images/usr.png') }}" alt="Foto Profil" class="square-image mb-3" width="150" height="150">
                                     <div class="file-upload-wrapper">
-                                        <label class="file-upload-label" for="foto_profil" style="color: black;">Pilih Foto</label>
-                                        <input type="file" id="foto_profil" name="foto_profil" onchange="displayFileName(); previewImage();">
+                                        <label class="file-upload-label" for="foto_profil">Pilih Foto</label>
+                                        <input type="file" id="foto_profil" name="foto_profil" accept="image/*" onchange="displayFileName(); previewImage();">
                                     </div>
                                     <div id="file-upload-info" class="file-upload-info">Tidak ada file yang dipilih</div>
                                     <small class="text-muted mt-2 d-block">* Jika tidak ada perubahan, tidak perlu diisi</small>
@@ -154,10 +154,7 @@
                                 <div class="form-group">
                                     <label for="password">Password Baru</label>
                                     <input type="password" class="form-control" id="password" name="password" placeholder="Kosongkan jika tidak ingin mengubah password">
-                                    {{-- <small class="text-muted">* Jika tidak ada perubahan, tidak perlu diisi</small> --}}
                                 </div>
-
-                            
 
                                 <div class="form-group text-right">
                                     <button type="button" class="btn btn-danger" onclick="window.location.href='{{ route('home') }}'"><i class="fas fa-times"></i> Batal</button>
@@ -173,25 +170,25 @@
 
     @include('template.scripts')
     <script>
-    function displayFileName() {
-        var input = document.getElementById('foto_profil');
-        var info = document.getElementById('file-upload-info');
-        info.textContent = input.files.length > 0 ? input.files[0].name : 'Tidak ada file yang dipilih';
-    }
-
-    function previewImage() {
-        var input = document.getElementById('foto_profil');
-        var preview = document.getElementById('preview-image');
-        var file = input.files[0];
-
-        if (file) {
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-            }
-            reader.readAsDataURL(file);
+        function displayFileName() {
+            var input = document.getElementById('foto_profil');
+            var info = document.getElementById('file-upload-info');
+            info.textContent = input.files.length > 0 ? input.files[0].name : 'Tidak ada file yang dipilih';
         }
-    }
+
+        function previewImage() {
+            var input = document.getElementById('foto_profil');
+            var preview = document.getElementById('preview-image');
+            var file = input.files[0];
+
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
     </script>
 </body>
 
