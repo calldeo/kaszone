@@ -64,6 +64,7 @@
             font-size: 16px;
             cursor: pointer;
             transition: all 0.3s ease;
+            margin-top: 20px; /* Tambahkan margin-top untuk menggeser button ke bawah */
         }
         .login-button:hover {
             background-color: #e06b3d;
@@ -137,38 +138,52 @@
                     </form>
                 </div>
             </div>
-            <!-- END: Login Form -->
+        
         </div>
     </div>
 
-    <!-- BEGIN: JS Assets-->
+
     <script src="{{ asset('dashboards/dist/js/app.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        const togglePasswordIcon = document.getElementById('togglePasswordIcon');
-        const passwordInput = document.getElementById('password');
+  <script>
+    const togglePasswordIcon = document.getElementById('togglePasswordIcon');
+    const passwordInput = document.getElementById('password');
 
-        togglePasswordIcon.addEventListener('click', function () {
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-            this.classList.toggle('fa-eye');
-            this.classList.toggle('fa-eye-slash');
+    
+    togglePasswordIcon.addEventListener('click', function () {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        this.classList.toggle('fa-eye');
+        this.classList.toggle('fa-eye-slash');
+    });
+
+    passwordInput.addEventListener('input', function () {
+        if (passwordInput.value.length > 0) {
+            togglePasswordIcon.style.display = 'block';
+        } else {
+            togglePasswordIcon.style.display = 'none';
+        }
+    });
+
+ 
+    window.addEventListener('DOMContentLoaded', function () {
+        togglePasswordIcon.style.display = passwordInput.value.length > 0 ? 'block' : 'none';
+    });
+
+    @if (session('login_error'))
+        Swal.fire({
+            title: 'Error!',
+            text: '{{ session('login_error') }}',
+            icon: 'error',
+            confirmButtonText: 'OK',
+            customClass: {
+                popup: 'swal2-show',
+                confirmButton: 'login-button'
+            },
+            buttonsStyling: false
         });
+    @endif
+</script>
 
-        @if (session('login_error'))
-            Swal.fire({
-                title: 'Error!',
-                text: '{{ session('login_error') }}',
-                icon: 'error',
-                confirmButtonText: 'OK',
-                customClass: {
-                    popup: 'swal2-show',
-                    confirm: 'login-button'
-                },
-                buttonsStyling: false
-            });
-        @endif
-    </script>
-    <!-- END: JS Assets-->
 </body>
 </html>
