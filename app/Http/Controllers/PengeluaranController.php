@@ -361,7 +361,6 @@ public function update(Request $request, $id)
             })
             ->make(true);
     }
-
 public function importPengeluaran(Request $request)
 {
     $request->validate([
@@ -377,18 +376,28 @@ public function importPengeluaran(Request $request)
                 $spreadsheet = IOFactory::load($file);
                 $sheetNames = $spreadsheet->getSheetNames();
 
+                // Validasi header file
+                $sheet = $spreadsheet->getSheet(0);
+                $headers = $sheet->rangeToArray('A1:F1', NULL, TRUE, FALSE)[0];
+                $expectedHeaders = ['Nama', 'Deskripsi', 'Jumlah Satuan', 'Nominal', 'DLL', 'Kode Kategori'];
+
+                // Cek apakah header sesuai
+                if ($headers !== $expectedHeaders) {
+                    DB::rollBack();
+                    return redirect()->back()->with('error', 'Format file tidak sesuai. Pastikan menggunakan template yang benar.');
+                }
+
                 foreach ($sheetNames as $sheetIndex => $sheetName) {
-                   
                     try {
                         $tanggal = \Carbon\Carbon::createFromFormat('d-m-Y', $sheetName);
                     } catch (\Exception $e) {
                         Log::error('Format tanggal tidak valid: ' . $sheetName);
-                        continue; 
+                        DB::rollBack();
+                        return redirect()->back()->with('error', 'Format nama sheet harus berupa tanggal (DD-MM-YYYY)');
                     }
 
                     Log::alert('Mengimpor dari sheet: ' . $sheetName);
                     
-                   
                     $parentPengeluaran = new ParentPengeluaran();
                     $parentPengeluaran->tanggal = $tanggal; 
                     $parentPengeluaran->save();
@@ -400,16 +409,19 @@ public function importPengeluaran(Request $request)
                     for ($row = 2; $row <= $highestRow; $row++) {
                         $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE);
 
-                     
                         Log::alert('Row ' . $row . ' Data: ' . json_encode($rowData));
 
-                        
                         if (empty($rowData[0][0])) {
                             Log::warning('Row ' . $row . ' is empty or invalid, skipping.');
                             continue; 
                         }
 
-                        
+                        // Validasi data numerik
+                        if (!is_numeric($rowData[0][2]) || !is_numeric($rowData[0][3]) || !is_numeric($rowData[0][4])) {
+                            DB::rollBack();
+                            return redirect()->back()->with('error', 'Data pada baris ' . $row . ' tidak valid. Jumlah Satuan, Nominal, dan DLL harus berupa angka.');
+                        }
+
                         $pengeluaran = new Pengeluaran();
                         $pengeluaran->name = $rowData[0][0]; 
                         $pengeluaran->description = $rowData[0][1] ?? null;
@@ -417,13 +429,11 @@ public function importPengeluaran(Request $request)
                         $pengeluaran->nominal = $rowData[0][3] ?? 0; 
                         $pengeluaran->dll = $rowData[0][4] ?? 0; 
                         
-                        // Menghitung jumlah secara otomatis
                         $pengeluaran->jumlah = ($pengeluaran->jumlah_satuan * $pengeluaran->nominal) + $pengeluaran->dll;
 
-                        $pengeluaran->id = $rowData[0][5] ?? null; // Mengubah indeks karena kolom jumlah dihapus
+                        $pengeluaran->id = $rowData[0][5] ?? null;
                         $pengeluaran->id_parent = $parentPengeluaran->id;
 
-                      
                         $pengeluaran->save();
 
                         Log::alert('Data row ' . $row . ' disimpan: ' . json_encode($pengeluaran));

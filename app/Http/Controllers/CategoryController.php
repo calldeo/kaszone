@@ -128,37 +128,55 @@ class CategoryController extends Controller
 
     public function kategoriimportexcel(Request $request)
     {
-        
         DB::beginTransaction();
 
         try {
-            
             $request->validate([
-                'file' => 'required|file|mimes:xlsx,xls,csv|max:2048', 
+                'file' => 'required|file|mimes:xlsx,xls,csv|max:2048',
             ]);
 
-            
             $file = $request->file('file');
             $namafile = $file->getClientOriginalName();
             $file->move(public_path('DataKategori'), $namafile);
 
-            
+            // Validasi struktur file Excel
+            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load(public_path('DataKategori/' . $namafile));
+            $worksheet = $spreadsheet->getActiveSheet();
+            $headers = [];
+            foreach ($worksheet->getRowIterator(1, 1) as $row) {
+                $cellIterator = $row->getCellIterator();
+                $cellIterator->setIterateOnlyExistingCells(false);
+                foreach ($cellIterator as $cell) {
+                    $headers[] = $cell->getValue();
+                }
+            }
+
+            // Periksa apakah header sesuai dengan yang diharapkan
+            $expectedHeaders = ['Nama', 'Jenis Kategori', 'Deskripsi'];
+            $missingHeaders = array_diff($expectedHeaders, $headers);
+
+            if (!empty($missingHeaders)) {
+                @unlink(public_path('DataKategori/' . $namafile));
+                    return redirect()->back()->with('error', 'Format file tidak sesuai. Pastikan menggunakan template yang benar.');
+            }
+
             Excel::import(new KategoriImport, public_path('DataKategori/' . $namafile), null, \Maatwebsite\Excel\Excel::XLSX, [
-                'startRow' => 2,
+                'startRow' => 3,
                 'onlySheets' => [0]
             ]);
 
             DB::commit();
-
-        
-            @unlink(public_path('DataKategori/' . $namafile)); 
+            @unlink(public_path('DataKategori/' . $namafile));
 
             return redirect('/kategori')->with('success', 'Data Berhasil Ditambahkan');
-        } catch (\Exception $e) {
-            
-            DB::rollBack();
 
+        } catch (\Exception $e) {
+            DB::rollBack();
             
+            if(file_exists(public_path('DataKategori/' . $namafile))) {
+                @unlink(public_path('DataKategori/' . $namafile));
+            }
+
             \Log::error('Import kategori failed: ' . $e->getMessage());
 
             return redirect('/kategori')->with('error', 'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage());
@@ -196,6 +214,7 @@ class CategoryController extends Controller
         $sheet->setTitle('Data Kategori');
         $sheet->setCellValue('A1', 'Nama');
         $sheet->setCellValue('B1', 'Jenis Kategori');
+        $sheet->setCellValue('B2', 'dari kode didalam jenis kategori');
         $sheet->setCellValue('C1', 'Deskripsi');
         
         

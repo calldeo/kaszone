@@ -216,13 +216,12 @@
                                     @endif
                                     
                                     @if(session('activeRole') == 'Admin' || session('activeRole') == 'Bendahara' || session('activeRole') == 'Reader')
-                                    <form method="GET" action="{{ route('export.pengeluaran.pdf') }}" id="export-pdf-form" class="mr-2">
+                                    <form method="GET" action="{{ route('export.pengeluaran.pdf') }}" id="export-pdf-form" class="mr-2" target="_blank">
                                         <input type="hidden" name="year" id="export-year" value="{{ old('year') }}" />
                                         <input type="hidden" name="start_date" id="export-start-date" value="" />
                                         <input type="hidden" name="end_date" id="export-end-date" value="" />
                                         <button type="submit" title="Ekspor PDF" class="btn btn-outline-info animate__animated animate__bounceIn" style="border-color: white;"><i class="fa fa-print" style="color: white;"></i></button>
                                     </form>
-                                    
                                     <form method="POST" action="{{ route('export.pengeluaran.excel') }}" id="export-excel-form" class="mr-2">
                                         @csrf
                                         <input type="hidden" name="year" id="export-year-excel" value="{{ old('year') }}" />
@@ -251,6 +250,12 @@
                                 <strong>Berhasil!</strong> {{ session('success') }}
                                 <button type="button" class="close h-100" data-dismiss="alert" aria-label="Tutup"><span><i class="mdi mdi-close"></i></span></button>
                             </div>
+                            @endif
+                               @if(session('error'))
+                                <div class="alert alert-danger alert-dismissible fade show animate__animated animate__fadeInDown">
+                                    <strong>Kesalahan!</strong> {{ session('error') }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Tutup"><span><i class="fa fa-times"></i></span></button>
+                                </div>
                             @endif
                             @if(session('update_success'))
                             <div class="alert alert-warning alert-dismissible fade show animate__animated animate__fadeInDown">

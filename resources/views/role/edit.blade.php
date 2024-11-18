@@ -85,7 +85,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fa fa-user"></i></span>
                                             </div>
-                                            <input type="text" class="form-control" name="name" value="{{ $role->name }}" placeholder="Masukkan nama role..." readonly>
+                                            <input type="text" class="form-control bg-light" name="name" value="{{ $role->name }}" placeholder="Masukkan nama role..." readonly>
                                         </div>
                                     </div>
 
@@ -100,7 +100,7 @@
                                     </div> --}}
 
                                     <div class="form-group">
-                                        <label class="text-label">Permissions * <span class="text-danger">(Wajib diisi)</span></label>
+                                        <label class="text-label">Permissions * <span class="text-danger">(tidak boleh kosong)</span></label>
                                         <div class="row">
                                             @foreach($permissions as $permission)
                                                 <div class="col-md-4 col-sm-6">

@@ -156,39 +156,56 @@ class PemasukanController extends Controller
 
     public function pemasukanImportExcel(Request $request)
     {
-        
         DB::beginTransaction();
 
         try {
-            
             $request->validate([
-                'file' => 'required|file|mimes:xlsx,xls,csv|max:2048', 
+                'file' => 'required|file|mimes:xlsx,xls,csv|max:2048',
             ]);
 
-            
             $file = $request->file('file');
             $namafile = $file->getClientOriginalName();
             $file->move(public_path('DataPemasukan'), $namafile);
 
-            
+            // Validasi struktur file Excel
+            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load(public_path('DataPemasukan/' . $namafile));
+            $worksheet = $spreadsheet->getActiveSheet();
+            $headers = [];
+            foreach ($worksheet->getRowIterator(1, 1) as $row) {
+                $cellIterator = $row->getCellIterator();
+                $cellIterator->setIterateOnlyExistingCells(false);
+                foreach ($cellIterator as $cell) {
+                    $headers[] = $cell->getValue();
+                }
+            }
+
+            // Periksa apakah header sesuai dengan yang diharapkan
+            $expectedHeaders = ['Nama', 'Deskripsi', 'Tanggal(DD-MM-YYYY)', 'Jumlah', 'Kode Kategori'];
+            $missingHeaders = array_diff($expectedHeaders, $headers);
+
+            if (!empty($missingHeaders)) {
+                @unlink(public_path('DataPemasukan/' . $namafile));
+                    return redirect()->back()->with('error', 'Format file tidak sesuai. Pastikan menggunakan template yang benar.');
+            }
+
             Excel::import(new PemasukanImport, public_path('DataPemasukan/' . $namafile), null, \Maatwebsite\Excel\Excel::XLSX, [
-                'startRow' => 2, 
-                'onlySheets' => [0] 
+                'startRow' => 2,
+                'onlySheets' => [0]
             ]);
 
-            
             DB::commit();
-
-            
-            @unlink(public_path('DataPemasukan/' . $namafile)); 
+            @unlink(public_path('DataPemasukan/' . $namafile));
 
             return redirect('/pemasukan')->with('success', 'Data Berhasil Ditambahkan');
-        } catch (\Exception $e) {
-            
-            DB::rollBack();
 
-        
-            \Log::error('Import Pemasukan failed: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            if(file_exists(public_path('DataPemasukan/' . $namafile))) {
+                @unlink(public_path('DataPemasukan/' . $namafile));
+            }
+
+            \Log::error('Import pemasukan failed: ' . $e->getMessage());
 
             return redirect('/pemasukan')->with('error', 'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage());
         }

@@ -215,7 +215,7 @@
                                     </a>
                                     @endif
                                     @if(session('activeRole') == 'Admin' || session('activeRole') == 'Bendahara' || session('activeRole') == 'Reader')
-                                    <form method="GET" action="{{ route('export.pemasukan') }}" id="export-pdf-form" class="mr-2">
+                                    <form method="GET" action="{{ route('export.pemasukan') }}" id="export-pdf-form" class="mr-2" target="_blank">
                                         <input type="hidden" name="year" id="export-year" value="{{ old('year') }}" />
                                         <input type="hidden" name="start_date" id="export-start-date" value="{{ old('start_date') }}" />
                                         <input type="hidden" name="end_date" id="export-end-date" value="{{ old('end_date') }}" />
