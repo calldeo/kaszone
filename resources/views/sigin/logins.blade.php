@@ -64,7 +64,7 @@
             font-size: 16px;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 20px; /* Tambahkan margin-top untuk menggeser button ke bawah */
+            margin-top: 20px;
         }
         .login-button:hover {
             background-color: #e06b3d;
@@ -85,6 +85,24 @@
             text-align: center;
             margin-bottom: 25px;
             color: #2d3748;
+        }
+        .swal2-popup {
+            font-size: 14px !important;
+            border-radius: 15px !important;
+        }
+        .swal2-title {
+            color: #2d3748 !important;
+            font-size: 20px !important;
+        }
+        .swal2-confirm {
+            background-color: #EB8153 !important;
+            color: white !important;
+            border-radius: 8px !important;
+            padding: 12px 25px !important;
+            font-weight: 600 !important;
+        }
+        .swal2-confirm:hover {
+            background-color: #e06b3d !important;
         }
     </style>
     <!-- END: CSS Assets -->
@@ -145,45 +163,50 @@
 
     <script src="{{ asset('dashboards/dist/js/app.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script>
-    const togglePasswordIcon = document.getElementById('togglePasswordIcon');
-    const passwordInput = document.getElementById('password');
+    <script>
+        const togglePasswordIcon = document.getElementById('togglePasswordIcon');
+        const passwordInput = document.getElementById('password');
 
-    
-    togglePasswordIcon.addEventListener('click', function () {
-        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordInput.setAttribute('type', type);
-        this.classList.toggle('fa-eye');
-        this.classList.toggle('fa-eye-slash');
-    });
-
-    passwordInput.addEventListener('input', function () {
-        if (passwordInput.value.length > 0) {
-            togglePasswordIcon.style.display = 'block';
-        } else {
-            togglePasswordIcon.style.display = 'none';
-        }
-    });
-
- 
-    window.addEventListener('DOMContentLoaded', function () {
-        togglePasswordIcon.style.display = passwordInput.value.length > 0 ? 'block' : 'none';
-    });
-
-    @if (session('login_error'))
-        Swal.fire({
-            title: 'Error!',
-            text: '{{ session('login_error') }}',
-            icon: 'error',
-            confirmButtonText: 'OK',
-            customClass: {
-                popup: 'swal2-show',
-                confirmButton: 'login-button'
-            },
-            buttonsStyling: false
+        togglePasswordIcon.addEventListener('click', function () {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
         });
-    @endif
-</script>
+
+        passwordInput.addEventListener('input', function () {
+            if (passwordInput.value.length > 0) {
+                togglePasswordIcon.style.display = 'block';
+            } else {
+                togglePasswordIcon.style.display = 'none';
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', function () {
+            togglePasswordIcon.style.display = passwordInput.value.length > 0 ? 'block' : 'none';
+        });
+
+        @if (session('login_error'))
+            Swal.fire({
+                title: 'Login Gagal!',
+                text: '{{ session('login_error') }}',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                showClass: {
+                    popup: 'animate__animated animate__fadeInDown'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp'
+                },
+                customClass: {
+                    popup: 'swal2-popup',
+                    title: 'swal2-title',
+                    confirmButton: 'swal2-confirm'
+                },
+                buttonsStyling: false
+            });
+        @endif
+    </script>
 
 </body>
 </html>
