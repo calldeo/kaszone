@@ -142,9 +142,11 @@ class CategoryController extends Controller
             // Validasi struktur file Excel
             $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load(public_path('DataKategori/' . $namafile));
             $worksheet = $spreadsheet->getActiveSheet();
+            
+            // Ambil header dari baris ke-2 (A2:C2)
             $headers = [];
-            foreach ($worksheet->getRowIterator(1, 1) as $row) {
-                $cellIterator = $row->getCellIterator();
+            foreach ($worksheet->getRowIterator(2, 2) as $row) {
+                $cellIterator = $row->getCellIterator('A', 'C');
                 $cellIterator->setIterateOnlyExistingCells(false);
                 foreach ($cellIterator as $cell) {
                     $headers[] = $cell->getValue();
@@ -157,12 +159,20 @@ class CategoryController extends Controller
 
             if (!empty($missingHeaders)) {
                 @unlink(public_path('DataKategori/' . $namafile));
-                    return redirect()->back()->with('error', 'Format file tidak sesuai. Pastikan menggunakan template yang benar.');
+                return redirect()->back()->with('error', 'Format file tidak sesuai. Pastikan menggunakan template yang benar.');
             }
 
-            Excel::import(new KategoriImport, public_path('DataKategori/' . $namafile), null, \Maatwebsite\Excel\Excel::XLSX, [
-                'startRow' => 3,
-                'onlySheets' => [0]
+            // Baca data dari baris ke-3
+            $row = 3;
+            $nama = $worksheet->getCell('A' . $row)->getValue();
+            $jenisKategori = $worksheet->getCell('B' . $row)->getValue();
+            $deskripsi = $worksheet->getCell('C' . $row)->getValue();
+
+            // Simpan ke database
+            Category::create([
+                'name' => $nama,
+                'jenis_kategori' => $jenisKategori,
+                'description' => $deskripsi
             ]);
 
             DB::commit();
@@ -182,7 +192,49 @@ class CategoryController extends Controller
             return redirect('/kategori')->with('error', 'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage());
         }
     }
-    public function exportkategori()
+  
+    public function downloadTemplateExcel()
+    {
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        
+        
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Data Kategori');
+        $sheet->setCellValue('A1', 'Import Kategori');
+        $sheet->mergeCells('A1:D1');
+        $sheet->getStyle('A1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A1')->getFont()->setBold(true);
+        $sheet->setCellValue('A2', 'Nama');
+        $sheet->setCellValue('B2', 'Jenis Kategori');
+        $sheet->setCellValue('C2', 'Deskripsi');
+        $sheet->setCellValue('E2', 'Keterangan')->getStyle('E2')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('FFFF00');
+        $sheet->setCellValue('E3', '1. Pengisian data dimulai dari baris ke-3');
+        $sheet->setCellValue('E4', '2. Kolom B (Jenis Kategori) dari Kode di dalam sheet Jenis Kategori ');
+
+
+
+        
+        
+        
+        $sheet2 = $spreadsheet->createSheet();
+        $sheet2->setTitle('Jenis Kategori');
+        $sheet2->setCellValue('A1', 'Kode');
+        $sheet2->setCellValue('B1', 'Jenis Kategori');
+        $sheet2->setCellValue('A2', '1');
+        $sheet2->setCellValue('B2', 'Pemasukan');
+        $sheet2->setCellValue('A3', '2');
+        $sheet2->setCellValue('B3', 'Pengeluaran');
+        
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $filename = 'template-category.xlsx';
+        $filePath = storage_path('app/public/' . $filename);
+        $writer->save($filePath);
+        
+        return response()->download($filePath, $filename)->deleteFileAfterSend(true);
+    }
+   
+
+      public function exportkategori()
     {
         
 
@@ -205,34 +257,4 @@ class CategoryController extends Controller
             return response()->json(['message' => 'Kategori tidak ditemukan.'], 404);
         }
     }
-    public function downloadTemplateExcel()
-    {
-        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-        
-        
-        $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setTitle('Data Kategori');
-        $sheet->setCellValue('A1', 'Nama');
-        $sheet->setCellValue('B1', 'Jenis Kategori');
-        $sheet->setCellValue('B2', 'dari kode didalam jenis kategori');
-        $sheet->setCellValue('C1', 'Deskripsi');
-        
-        
-        $sheet2 = $spreadsheet->createSheet();
-        $sheet2->setTitle('Jenis Kategori');
-        $sheet2->setCellValue('A1', 'Kode');
-        $sheet2->setCellValue('B1', 'Jenis Kategori');
-        $sheet2->setCellValue('A2', '1');
-        $sheet2->setCellValue('B2', 'Pemasukan');
-        $sheet2->setCellValue('A3', '2');
-        $sheet2->setCellValue('B3', 'Pengeluaran');
-        
-        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-        $filename = 'template-category.xlsx';
-        $filePath = storage_path('app/public/' . $filename);
-        $writer->save($filePath);
-        
-        return response()->download($filePath, $filename)->deleteFileAfterSend(true);
-    }
-   
 }

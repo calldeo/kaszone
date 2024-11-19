@@ -170,9 +170,11 @@ class PemasukanController extends Controller
             // Validasi struktur file Excel
             $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load(public_path('DataPemasukan/' . $namafile));
             $worksheet = $spreadsheet->getActiveSheet();
+            
+            // Ambil header dari baris ke-2 (A2:E2)
             $headers = [];
-            foreach ($worksheet->getRowIterator(1, 1) as $row) {
-                $cellIterator = $row->getCellIterator();
+            foreach ($worksheet->getRowIterator(2, 2) as $row) {
+                $cellIterator = $row->getCellIterator('A', 'E');
                 $cellIterator->setIterateOnlyExistingCells(false);
                 foreach ($cellIterator as $cell) {
                     $headers[] = $cell->getValue();
@@ -185,12 +187,41 @@ class PemasukanController extends Controller
 
             if (!empty($missingHeaders)) {
                 @unlink(public_path('DataPemasukan/' . $namafile));
-                    return redirect()->back()->with('error', 'Format file tidak sesuai. Pastikan menggunakan template yang benar.');
+                return redirect()->back()->with('error', 'Format file tidak sesuai. Pastikan menggunakan template yang benar.');
             }
 
-            Excel::import(new PemasukanImport, public_path('DataPemasukan/' . $namafile), null, \Maatwebsite\Excel\Excel::XLSX, [
-                'startRow' => 2,
-                'onlySheets' => [0]
+            // Baca data dari baris ke-3
+            $row = 3;
+            $nama = $worksheet->getCell('A' . $row)->getValue();
+            $deskripsi = $worksheet->getCell('B' . $row)->getValue();
+            $tanggal = $worksheet->getCell('C' . $row)->getValue();
+            $jumlah = $worksheet->getCell('D' . $row)->getValue();
+            $kodeKategori = $worksheet->getCell('E' . $row)->getValue();
+
+            // Validasi format tanggal
+            $date = DateTime::createFromFormat('d-m-Y', $tanggal);
+            if (!$date || $date->format('d-m-Y') !== $tanggal) {
+                throw new \Exception('Format tanggal tidak valid. Gunakan format DD-MM-YYYY');
+            }
+
+            // Validasi jumlah harus numerik
+            if (!is_numeric($jumlah)) {
+                throw new \Exception('Jumlah harus berupa angka');
+            }
+
+            // Validasi kategori exists
+            $category = Category::find($kodeKategori);
+            if (!$category) {
+                throw new \Exception('Kode kategori tidak valid');
+            }
+
+            // Simpan ke database
+            Pemasukan::create([
+                'name' => $nama,
+                'description' => $deskripsi,
+                'date' => $date->format('Y-m-d'),
+                'jumlah' => $jumlah,
+                'category_id' => $kodeKategori
             ]);
 
             DB::commit();
@@ -223,11 +254,22 @@ class PemasukanController extends Controller
         $incomeSheet->setTitle('Pemasukan');
 
         
-        $incomeSheet->setCellValue('A1', 'Nama');
-        $incomeSheet->setCellValue('B1', 'Deskripsi');
-        $incomeSheet->setCellValue('C1', 'Tanggal(DD-MM-YYYY)');
-        $incomeSheet->setCellValue('D1', 'Jumlah');
-        $incomeSheet->setCellValue('E1', 'Kode Kategori');
+        $incomeSheet->setCellValue('A1', 'Import Data Pemasukan');
+        $incomeSheet->mergeCells('A1:E1');
+        $incomeSheet->getStyle('A1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        $incomeSheet->getStyle('A1')->getFont()->setBold(true);
+        $incomeSheet->setCellValue('B2', 'Deskripsi');
+        $incomeSheet->setCellValue('C2', 'Tanggal');
+        $incomeSheet->setCellValue('D2', 'Jumlah');
+        $incomeSheet->setCellValue('E2', 'Kode Kategori');
+        $incomeSheet->setCellValue('G2', 'Keterangan')->getStyle('G2')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('FFFF00');
+        $incomeSheet->setCellValue('G3', '1. Pengisian data dimulai dari baris ke-3');
+        $incomeSheet->setCellValue('G4', '2. Kolom C (Tanggal) menggunakan format DD-MM-YYYY');
+        $incomeSheet->setCellValue('G5', '3. Kolom D (Jumlah) hanya boleh menginput angka');
+        $incomeSheet->setCellValue('G6', '4. Kolom E (Kode Kategori) menggunakan Kode dari sheet Kategori Pemasukan');
+
+
+
 
         
         $categorySheet = $spreadsheet->createSheet();

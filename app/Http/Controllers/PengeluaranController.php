@@ -385,9 +385,8 @@ public function update(Request $request, $id)
                         continue; 
                     }
 
-                    Log::alert('Mengimpor dari sheet: ' . $sheetName);
+                    Log::info('Mengimpor dari sheet: ' . $sheetName);
                     
-                   
                     $parentPengeluaran = new ParentPengeluaran();
                     $parentPengeluaran->tanggal = $tanggal; 
                     $parentPengeluaran->save();
@@ -396,36 +395,31 @@ public function update(Request $request, $id)
                     $highestRow = $sheet->getHighestRow();
                     $highestColumn = $sheet->getHighestColumn();
 
-                    for ($row = 2; $row <= $highestRow; $row++) {
+                    for ($row = 3; $row <= $highestRow; $row++) {
                         $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE);
 
-                     
-                        Log::alert('Row ' . $row . ' Data: ' . json_encode($rowData));
+                        Log::info('Row ' . $row . ' Data: ' . json_encode($rowData));
 
-                        
                         if (empty($rowData[0][0])) {
-                            Log::warning('Row ' . $row . ' is empty or invalid, skipping.');
+                            Log::info('Row ' . $row . ' is empty or invalid, skipping.');
                             continue; 
                         }
 
-                        
                         $pengeluaran = new Pengeluaran();
                         $pengeluaran->name = $rowData[0][0]; 
                         $pengeluaran->description = $rowData[0][1] ?? null;
                         $pengeluaran->jumlah_satuan = $rowData[0][2] ?? 0; 
                         $pengeluaran->nominal = $rowData[0][3] ?? 0; 
                         $pengeluaran->dll = $rowData[0][4] ?? 0; 
+                        $pengeluaran->id = $rowData[0][5] ?? null;
                         
                         // Menghitung jumlah secara otomatis
                         $pengeluaran->jumlah = ($pengeluaran->jumlah_satuan * $pengeluaran->nominal) + $pengeluaran->dll;
-
-                        $pengeluaran->id = $rowData[0][5] ?? null; // Mengubah indeks karena kolom jumlah dihapus
                         $pengeluaran->id_parent = $parentPengeluaran->id;
-
-                      
+                        
                         $pengeluaran->save();
 
-                        Log::alert('Data row ' . $row . ' disimpan: ' . json_encode($pengeluaran));
+                        Log::info('Data row ' . $row . ' disimpan: ' . json_encode($pengeluaran));
                     }
                 }
             }
@@ -435,11 +429,11 @@ public function update(Request $request, $id)
         return redirect()->back()->with('success', 'Data pengeluaran berhasil diimpor!');
     } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e) {
         DB::rollBack();
-        \Log::error('Import failed: ' . $e->getMessage()); 
+        Log::error('Import failed: ' . $e->getMessage()); 
         return redirect()->back()->with('error', 'Terjadi kesalahan saat membaca file: ' . $e->getMessage());
     } catch (\Exception $e) {
         DB::rollBack();
-        \Log::error('Import failed: ' . $e->getMessage()); 
+        Log::error('Import failed: ' . $e->getMessage()); 
         return redirect()->back()->with('error', 'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage());
     }
 }
