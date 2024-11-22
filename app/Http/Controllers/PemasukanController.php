@@ -167,61 +167,47 @@ class PemasukanController extends Controller
             $namafile = $file->getClientOriginalName();
             $file->move(public_path('DataPemasukan'), $namafile);
 
-            // Validasi struktur file Excel
             $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load(public_path('DataPemasukan/' . $namafile));
             $worksheet = $spreadsheet->getActiveSheet();
-            
-            // Ambil header dari baris ke-2 (A2:E2)
-            $headers = [];
-            foreach ($worksheet->getRowIterator(2, 2) as $row) {
-                $cellIterator = $row->getCellIterator('A', 'E');
-                $cellIterator->setIterateOnlyExistingCells(false);
-                foreach ($cellIterator as $cell) {
-                    $headers[] = $cell->getValue();
-                }
-            }
 
-            // Periksa apakah header sesuai dengan yang diharapkan
-            $expectedHeaders = ['Nama', 'Deskripsi', 'Tanggal(DD-MM-YYYY)', 'Jumlah', 'Kode Kategori'];
-            $missingHeaders = array_diff($expectedHeaders, $headers);
-
-            if (!empty($missingHeaders)) {
-                @unlink(public_path('DataPemasukan/' . $namafile));
-                return redirect()->back()->with('error', 'Format file tidak sesuai. Pastikan menggunakan template yang benar.');
+            // Validasi format template
+            if ($worksheet->getCell('A2')->getValue() !== 'Nama' ||
+                $worksheet->getCell('B2')->getValue() !== 'Deskripsi' ||
+                $worksheet->getCell('C2')->getValue() !== 'Tanggal' ||
+                $worksheet->getCell('D2')->getValue() !== 'Jumlah' ||
+                $worksheet->getCell('E2')->getValue() !== 'Kode Kategori') {
+                throw new \Exception('Format file tidak sesuai. Pastikan menggunakan template yang benar.');
             }
 
             // Baca data dari baris ke-3
             $row = 3;
             $nama = $worksheet->getCell('A' . $row)->getValue();
-            $deskripsi = $worksheet->getCell('B' . $row)->getValue();
+            $deskripsi = $worksheet->getCell('B' . $row)->getValue(); 
             $tanggal = $worksheet->getCell('C' . $row)->getValue();
-            $jumlah = $worksheet->getCell('D' . $row)->getValue();
-            $kodeKategori = $worksheet->getCell('E' . $row)->getValue();
-
-            // Validasi format tanggal
-            $date = DateTime::createFromFormat('d-m-Y', $tanggal);
-            if (!$date || $date->format('d-m-Y') !== $tanggal) {
+            
+            // Konversi format tanggal Excel ke format MySQL
+            try {
+                // Cek jika tanggal adalah angka Excel
+                if (is_numeric($tanggal)) {
+                    $tanggal = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($tanggal)->format('Y-m-d');
+                } else {
+                    // Jika format DD-MM-YYYY
+                    $tanggal = \Carbon\Carbon::createFromFormat('d-m-Y', $tanggal)->format('Y-m-d');
+                }
+            } catch (\Exception $e) {
                 throw new \Exception('Format tanggal tidak valid. Gunakan format DD-MM-YYYY');
             }
 
-            // Validasi jumlah harus numerik
-            if (!is_numeric($jumlah)) {
-                throw new \Exception('Jumlah harus berupa angka');
-            }
-
-            // Validasi kategori exists
-            $category = Category::find($kodeKategori);
-            if (!$category) {
-                throw new \Exception('Kode kategori tidak valid');
-            }
+            $jumlah = $worksheet->getCell('D' . $row)->getValue();
+            $kategori = $worksheet->getCell('E' . $row)->getValue();
 
             // Simpan ke database
             Pemasukan::create([
                 'name' => $nama,
                 'description' => $deskripsi,
-                'date' => $date->format('Y-m-d'),
+                'date' => $tanggal,
                 'jumlah' => $jumlah,
-                'category_id' => $kodeKategori
+                'id' => $kategori
             ]);
 
             DB::commit();
@@ -236,12 +222,11 @@ class PemasukanController extends Controller
                 @unlink(public_path('DataPemasukan/' . $namafile));
             }
 
-            \Log::error('Import pemasukan failed: ' . $e->getMessage());
+            \Log::error('Import Pemasukan failed: ' . $e->getMessage());
 
             return redirect('/pemasukan')->with('error', 'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage());
         }
     }
-
 
 
      public function downloadTemplate()
@@ -258,6 +243,7 @@ class PemasukanController extends Controller
         $incomeSheet->mergeCells('A1:E1');
         $incomeSheet->getStyle('A1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
         $incomeSheet->getStyle('A1')->getFont()->setBold(true);
+        $incomeSheet->setCellValue('A2', 'Nama');
         $incomeSheet->setCellValue('B2', 'Deskripsi');
         $incomeSheet->setCellValue('C2', 'Tanggal');
         $incomeSheet->setCellValue('D2', 'Jumlah');
