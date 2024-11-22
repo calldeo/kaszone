@@ -119,7 +119,7 @@ class BendaharaController extends Controller
 
             DB::commit();
 
-            return redirect('/user')->with('update_success', 'Data user berhasil diperbarui.');
+            return redirect('/user')->with('success', 'Data user berhasil diperbarui.');
         } catch (\Throwable $th) {
             DB::rollback();
 

@@ -162,18 +162,26 @@ class CategoryController extends Controller
                 return redirect()->back()->with('error', 'Format file tidak sesuai. Pastikan menggunakan template yang benar.');
             }
 
-            // Baca data dari baris ke-3
-            $row = 3;
-            $nama = $worksheet->getCell('A' . $row)->getValue();
-            $jenisKategori = $worksheet->getCell('B' . $row)->getValue();
-            $deskripsi = $worksheet->getCell('C' . $row)->getValue();
+            // Baca semua data dari baris ke-3 sampai baris terakhir
+            $highestRow = $worksheet->getHighestRow();
+            
+            for($row = 3; $row <= $highestRow; $row++) {
+                $nama = $worksheet->getCell('A' . $row)->getValue();
+                $jenisKategori = $worksheet->getCell('B' . $row)->getValue();
+                $deskripsi = $worksheet->getCell('C' . $row)->getValue();
 
-            // Simpan ke database
-            Category::create([
-                'name' => $nama,
-                'jenis_kategori' => $jenisKategori,
-                'description' => $deskripsi
-            ]);
+                // Skip jika baris kosong
+                if(empty($nama) && empty($jenisKategori) && empty($deskripsi)) {
+                    continue;
+                }
+
+                // Simpan ke database
+                Category::create([
+                    'name' => $nama,
+                    'jenis_kategori' => $jenisKategori,
+                    'description' => $deskripsi
+                ]);
+            }
 
             DB::commit();
             @unlink(public_path('DataKategori/' . $namafile));
@@ -192,7 +200,6 @@ class CategoryController extends Controller
             return redirect('/kategori')->with('error', 'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage());
         }
     }
-  
     public function downloadTemplateExcel()
     {
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();

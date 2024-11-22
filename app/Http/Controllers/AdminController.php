@@ -249,7 +249,7 @@ class AdminController extends Controller
                     if (session('activeRole') == 'Admin' || session('activeRole') == 'Bendahara') {
                         $buttons .= '
                         <a href="' . route('pengeluaran.deleteAll', $row->id) . '" class="btn btn-danger btn-xs delete-all" data-id="' . $row->id . '">
-                            <i class="fas fa-dumpster"></i>
+                        <i class="fas fa-trash-alt"></i>
                         </a>';
                     }
 

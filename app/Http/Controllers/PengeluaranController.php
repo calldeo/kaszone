@@ -373,22 +373,21 @@ public function update(Request $request, $id)
     try {
         if ($request->hasFile('file')) {
             foreach ($request->file('file') as $file) {
-                $spreadsheet = IOFactory::load($file);
+                $namafile = $file->getClientOriginalName();
+                $file->move(public_path('DataPengeluaran'), $namafile);
+
+                $spreadsheet = IOFactory::load(public_path('DataPengeluaran/' . $namafile));
                 $sheetNames = $spreadsheet->getSheetNames();
 
                 foreach ($sheetNames as $sheetIndex => $sheetName) {
-                   
                     try {
                         $tanggal = \Carbon\Carbon::createFromFormat('d-m-Y', $sheetName);
                     } catch (\Exception $e) {
-                        Log::error('Format tanggal tidak valid: ' . $sheetName);
-                        continue; 
+                        continue;
                     }
 
-                    Log::info('Mengimpor dari sheet: ' . $sheetName);
-                    
                     $parentPengeluaran = new ParentPengeluaran();
-                    $parentPengeluaran->tanggal = $tanggal; 
+                    $parentPengeluaran->tanggal = $tanggal;
                     $parentPengeluaran->save();
 
                     $sheet = $spreadsheet->getSheet($sheetIndex);
@@ -398,43 +397,49 @@ public function update(Request $request, $id)
                     for ($row = 3; $row <= $highestRow; $row++) {
                         $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE);
 
-                        Log::info('Row ' . $row . ' Data: ' . json_encode($rowData));
-
                         if (empty($rowData[0][0])) {
-                            Log::info('Row ' . $row . ' is empty or invalid, skipping.');
-                            continue; 
+                            continue;
+                        }
+
+                        // Validasi data
+                        if (!is_numeric($rowData[0][2]) || !is_numeric($rowData[0][3]) || !is_numeric($rowData[0][4])) {
+                            throw new \Exception('Kolom Jumlah Satuan, Nominal, dan dll harus berupa angka pada baris ' . $row);
+                        }
+
+                        // Validasi kategori
+                        if (empty($rowData[0][5])) {
+                            throw new \Exception('Kode Kategori tidak boleh kosong pada baris ' . $row);
                         }
 
                         $pengeluaran = new Pengeluaran();
-                        $pengeluaran->name = $rowData[0][0]; 
+                        $pengeluaran->name = $rowData[0][0];
                         $pengeluaran->description = $rowData[0][1] ?? null;
-                        $pengeluaran->jumlah_satuan = $rowData[0][2] ?? 0; 
-                        $pengeluaran->nominal = $rowData[0][3] ?? 0; 
-                        $pengeluaran->dll = $rowData[0][4] ?? 0; 
-                        $pengeluaran->id = $rowData[0][5] ?? null;
-                        
-                        // Menghitung jumlah secara otomatis
+                        $pengeluaran->jumlah_satuan = (float)$rowData[0][2];
+                        $pengeluaran->nominal = (float)$rowData[0][3];
+                        $pengeluaran->dll = (float)$rowData[0][4];
+                        $pengeluaran->id = $rowData[0][5];
                         $pengeluaran->jumlah = ($pengeluaran->jumlah_satuan * $pengeluaran->nominal) + $pengeluaran->dll;
                         $pengeluaran->id_parent = $parentPengeluaran->id;
                         
                         $pengeluaran->save();
-
-                        Log::info('Data row ' . $row . ' disimpan: ' . json_encode($pengeluaran));
                     }
                 }
+
+                @unlink(public_path('DataPengeluaran/' . $namafile));
             }
         }
 
-        DB::commit(); 
+        DB::commit();
         return redirect()->back()->with('success', 'Data pengeluaran berhasil diimpor!');
-    } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e) {
-        DB::rollBack();
-        Log::error('Import failed: ' . $e->getMessage()); 
-        return redirect()->back()->with('error', 'Terjadi kesalahan saat membaca file: ' . $e->getMessage());
+
     } catch (\Exception $e) {
         DB::rollBack();
-        Log::error('Import failed: ' . $e->getMessage()); 
-        return redirect()->back()->with('error', 'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage());
+        
+        if(isset($namafile) && file_exists(public_path('DataPengeluaran/' . $namafile))) {
+            @unlink(public_path('DataPengeluaran/' . $namafile));
+        }
+
+        return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
     }
 }
 

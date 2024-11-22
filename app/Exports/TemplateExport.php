@@ -35,13 +35,13 @@ class DataPengeluaranSheetExport implements FromArray, WithHeadings, WithTitle, 
     public function array(): array
     {
         return [
-            ['Nama Pengeluaran', 'Deskripsi', 'Jumlah Satuan', 'Nominal', 'dll', 'Kategori'],
+            ['Nama Pengeluaran', 'Deskripsi', 'Jumlah Satuan', 'Nominal (Rp)', 'dll (Rp)', 'Kategori'],
         ];
     }
 
     public function headings(): array
     {
-        return ['Nama Pengeluaran', 'Deskripsi', 'Jumlah Satuan', 'Nominal', 'dll', 'Kode Kategori'];
+        return ['Nama Pengeluaran', 'Deskripsi', 'Jumlah Satuan', 'Nominal (Rp)', 'dll (Rp)', 'Kode Kategori'];
     }
 
     public function styles(Worksheet $sheet)
@@ -57,8 +57,8 @@ class DataPengeluaranSheetExport implements FromArray, WithHeadings, WithTitle, 
         $sheet->setCellValue('H3', '1. Pengisian data dimulai dari baris ke-3');
         $sheet->setCellValue('H4', '2. Kolom F (Kode Kategori) diisi sesuai kode pada sheet Jenis Kategori');
         $sheet->setCellValue('H5', '3. Kolom C (Jumlah Satuan) hanya boleh diisi angka');
-        $sheet->setCellValue('H6', '4. Kolom D (Nominal) hanya boleh diisi angka tanpa Rp, titik (.), atau koma (,)');
-        $sheet->setCellValue('H7', '5. Kolom E (dll) hanya boleh diisi angka tanpa Rp, titik (.), atau koma (,)');
+        $sheet->setCellValue('H6', '4. Kolom D (Nominal (Rp)) hanya boleh diisi angka tanpa Rp, titik (.), atau koma (,)');
+        $sheet->setCellValue('H7', '5. Kolom E (dll (Rp)) hanya boleh diisi angka tanpa Rp, titik (.), atau koma (,)');
     }
 }
 
@@ -72,13 +72,13 @@ class DataPengeluaranSheetExport1 implements FromArray, WithHeadings, WithTitle,
     public function array(): array
     {
         return [
-            ['Nama Pengeluaran', 'Deskripsi', 'Jumlah Satuan', 'Nominal', 'dll', 'Kategori'],
+            ['Nama Pengeluaran', 'Deskripsi', 'Jumlah Satuan', 'Nominal (Rp)', 'dll (Rp)', 'Kategori'],
         ];
     }
 
     public function headings(): array
     {
-        return ['Nama Pengeluaran', 'Deskripsi', 'Jumlah Satuan', 'Nominal', 'dll', 'Kode Kategori'];
+        return ['Nama Pengeluaran', 'Deskripsi', 'Jumlah Satuan', 'Nominal (Rp)', 'dll (Rp)', 'Kode Kategori'];
     }
 
     public function styles(Worksheet $sheet)
@@ -94,8 +94,8 @@ class DataPengeluaranSheetExport1 implements FromArray, WithHeadings, WithTitle,
         $sheet->setCellValue('H3', '1. Pengisian data dimulai dari baris ke-3');
         $sheet->setCellValue('H4', '2. Kolom F (Kode Kategori) diisi sesuai kode pada sheet Jenis Kategori');
         $sheet->setCellValue('H5', '3. Kolom C (Jumlah Satuan) hanya boleh diisi angka');
-        $sheet->setCellValue('H6', '4. Kolom D (Nominal) hanya boleh diisi angka tanpa Rp, titik (.), atau koma (,)');
-        $sheet->setCellValue('H7', '5. Kolom E (dll) hanya boleh diisi angka tanpa Rp, titik (.), atau koma (,)');
+        $sheet->setCellValue('H6', '4. Kolom D (Nominal (Rp)) hanya boleh diisi angka tanpa Rp, titik (.), atau koma (,)');
+        $sheet->setCellValue('H7', '5. Kolom E (dll (Rp)) hanya boleh diisi angka tanpa Rp, titik (.), atau koma (,)');
     }
 }
 
