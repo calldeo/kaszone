@@ -26,7 +26,7 @@ public function update(Request $request)
         'email' => 'required|email|max:255',
         'alamat' => 'required|string|max:255',
         'password' => 'nullable|string|min:8',
-        'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
     ]);
 
     DB::beginTransaction();

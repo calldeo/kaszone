@@ -291,7 +291,7 @@ public function updateProfile(Request $request)
         'alamat' => 'required|string|max:255',
         'password' => 'nullable|string|min:8',
         'kelamin' => 'nullable',
-        'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
     ]);
 
     if ($validator->fails()) {
